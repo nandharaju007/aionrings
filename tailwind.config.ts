@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -57,33 +62,84 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // aiOn Custom Colors
+        aion: {
+          midnight: "hsl(var(--aion-midnight))",
+          charcoal: "hsl(var(--aion-charcoal))",
+          teal: "hsl(var(--aion-teal))",
+          "teal-dim": "hsl(var(--aion-teal-dim))",
+          cyan: "hsl(var(--aion-cyan))",
+          platinum: "hsl(var(--aion-platinum))",
+          "platinum-dim": "hsl(var(--aion-platinum-dim))",
+          glow: "hsl(var(--aion-glow))",
+        },
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      },
+      fontSize: {
+        hero: [
+          "clamp(3rem, 8vw, 8rem)",
+          { lineHeight: "1", letterSpacing: "-0.02em" },
+        ],
+        headline: [
+          "clamp(2rem, 5vw, 4rem)",
+          { lineHeight: "1.1", letterSpacing: "-0.02em" },
+        ],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
+        "4xl": "2rem",
+      },
+      boxShadow: {
+        glow: "var(--shadow-glow)",
+        soft: "var(--shadow-soft)",
+        card: "var(--shadow-card)",
+      },
+      backgroundImage: {
+        "gradient-teal": "var(--gradient-teal)",
+        "gradient-ring": "var(--gradient-ring)",
+        "gradient-dark": "var(--gradient-dark)",
+        "gradient-radial-glow": "var(--gradient-radial-glow)",
+        "gradient-hero": "var(--gradient-hero)",
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "pulse-ring": {
+          "0%, 100%": { opacity: "0.3", transform: "scale(1)" },
+          "50%": { opacity: "0.6", transform: "scale(1.05)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 6s ease-in-out infinite",
+        "float-slow": "float 10s ease-in-out infinite",
+        "pulse-ring": "pulse-ring 4s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
+      },
+      transitionDuration: {
+        "400": "400ms",
+        "600": "600ms",
       },
     },
   },

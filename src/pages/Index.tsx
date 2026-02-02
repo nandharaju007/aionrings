@@ -1,12 +1,35 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { CartPanel } from '@/components/CartPanel';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { WhatIsAionSection } from '@/components/sections/WhatIsAionSection';
+import { TheRingSection } from '@/components/sections/TheRingSection';
+import { FeaturesSection } from '@/components/sections/FeaturesSection';
+import { IntelligenceSection } from '@/components/sections/IntelligenceSection';
+import { ConsumerSection } from '@/components/sections/ConsumerSection';
+import { HealthcareSection } from '@/components/sections/HealthcareSection';
+import { PrivacySection } from '@/components/sections/PrivacySection';
+import { FinalCTASection } from '@/components/sections/FinalCTASection';
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <CartPanel />
+      
+      <main>
+        <HeroSection />
+        <WhatIsAionSection />
+        <TheRingSection />
+        <FeaturesSection />
+        <IntelligenceSection />
+        <ConsumerSection />
+        <HealthcareSection />
+        <PrivacySection />
+        <FinalCTASection />
+      </main>
+
+      <Footer />
     </div>
   );
 };
