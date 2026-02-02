@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { AionLogo } from './AionLogo';
@@ -17,6 +17,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems, openCart } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +30,38 @@ export function Header() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  // Handle hash scrolling when location changes
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Check if it's a hash link to the homepage
+    if (href.startsWith('/#')) {
+      e.preventDefault();
+      const hash = href.substring(1); // Remove the leading /
+      const sectionId = hash.substring(1); // Remove the #
+      
+      if (location.pathname === '/') {
+        // Already on homepage, just scroll
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Navigate to homepage with hash
+        navigate('/' + hash);
+      }
+    }
+  };
 
   return (
     <>
@@ -55,6 +88,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   to={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="nav-link"
                 >
                   {link.label}
@@ -118,6 +152,7 @@ export function Header() {
                 >
                   <Link
                     to={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className="text-2xl font-light text-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
