@@ -96,101 +96,53 @@ export default function ShopPage() {
               <h1 className="text-4xl md:text-5xl font-extralight mt-2 mb-4">
                 aiOn Ring
               </h1>
-              
-              <p className="text-3xl font-light text-foreground mb-6">
-                $399
-              </p>
-              
+
               <p className="text-body mb-8">
                 The full circle of health intelligence. Continuous awareness, 
                 effortless comfort, endless insights.
               </p>
 
-              {/* Finish Selection */}
-              <div className="mb-8">
-                <label className="text-sm text-muted-foreground mb-3 block">
-                  Finish
-                </label>
-                <div className="flex gap-3">
-                  {finishes.map((finish) => (
-                    <button
-                      key={finish}
-                      onClick={() => setSelectedFinish(finish)}
-                      className={`px-6 py-3 rounded-full border transition-all ${
-                        selectedFinish === finish
-                          ? 'border-primary bg-primary/10 text-foreground'
-                          : 'border-border text-muted-foreground hover:border-muted-foreground'
-                      }`}
-                    >
-                      {finish}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Size Selection */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm text-muted-foreground">Size</label>
-                  <button
-                    onClick={() => setShowSizingGuide(!showSizingGuide)}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Sizing Guide
-                  </button>
-                </div>
-                
-                <div className="grid grid-cols-4 gap-3">
-                  {sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`py-3 rounded-xl border transition-all ${
-                        selectedSize === size
-                          ? 'border-primary bg-primary/10 text-foreground'
-                          : 'border-border text-muted-foreground hover:border-muted-foreground'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Sizing Guide */}
-                {showSizingGuide && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 p-6 rounded-xl bg-card border border-border"
-                  >
-                    <h3 className="font-light mb-3">Find Your Size</h3>
-                    <p className="text-caption mb-4">
-                      Measure the inner diameter of a ring that fits comfortably 
-                      on your index finger. Match it to our sizing chart below.
-                    </p>
-                    <div className="grid grid-cols-4 gap-2 text-caption">
-                      <div>Size 6: 16.5mm</div>
-                      <div>Size 7: 17.3mm</div>
-                      <div>Size 8: 18.1mm</div>
-                      <div>Size 9: 19.0mm</div>
-                      <div>Size 10: 19.8mm</div>
-                      <div>Size 11: 20.6mm</div>
-                      <div>Size 12: 21.4mm</div>
-                      <div>Size 13: 22.2mm</div>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Coming Soon */}
-              <div className="space-y-4 mb-10">
-                <div className="btn-primary w-full text-center opacity-80 cursor-default">
-                  Coming Soon
-                </div>
-                <p className="text-caption text-center">
-                  Be the first to know when aiOn Ring is available.
+              {/* Excitement Block */}
+              <div className="card-glass p-8 rounded-2xl mb-8 text-center">
+                <p className="text-2xl font-extralight text-foreground mb-2">
+                  Something extraordinary is coming
                 </p>
+                <p className="text-body mb-6">
+                  The future of health intelligence — crafted for your finger, designed for your life.
+                </p>
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/5">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-sm text-primary font-light tracking-wide">Launching Soon</span>
+                </div>
+              </div>
+
+              {/* Teaser Highlights */}
+              <div className="grid grid-cols-3 gap-6 text-center mb-10">
+                <div>
+                  <p className="text-2xl font-light text-foreground">7</p>
+                  <p className="text-caption">Days Battery</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-light text-foreground">4g</p>
+                  <p className="text-caption">Featherlight</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-light text-foreground">100m</p>
+                  <p className="text-caption">Water Resistant</p>
+                </div>
+              </div>
+
+              {/* What's Included */}
+              <div className="border-t border-border pt-8">
+                <h3 className="font-light mb-4">What's Included</h3>
+                <ul className="space-y-3">
+                  {whatsIncluded.map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-muted-foreground">
+                      <Check className="w-4 h-4 text-primary" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {/* What's Included */}
