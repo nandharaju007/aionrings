@@ -26,6 +26,7 @@ const Index = () => {
         <IntelligenceSection />
         <ConsumerSection />
         <HealthcareSection />
+        <HealthcareIntelligenceSection />
         <PrivacySection />
         <FinalCTASection />
       </main>
