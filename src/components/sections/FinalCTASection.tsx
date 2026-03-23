@@ -30,7 +30,7 @@ export function FinalCTASection() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/shop" className="btn-primary">
-              Buy aiOn Ring
+              Coming Soon
             </Link>
             <Link to="/#features" className="btn-secondary">
               Learn More

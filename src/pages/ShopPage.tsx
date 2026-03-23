@@ -183,17 +183,14 @@ export default function ShopPage() {
                 )}
               </div>
 
-              {/* Add to Cart */}
+              {/* Coming Soon */}
               <div className="space-y-4 mb-10">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={!selectedSize}
-                  className={`btn-primary w-full ${
-                    !selectedSize ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                >
-                  {selectedSize ? 'Add to Cart' : 'Select a Size'}
-                </button>
+                <div className="btn-primary w-full text-center opacity-80 cursor-default">
+                  Coming Soon
+                </div>
+                <p className="text-caption text-center">
+                  Be the first to know when aiOn Ring is available.
+                </p>
               </div>
 
               {/* What's Included */}

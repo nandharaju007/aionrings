@@ -61,7 +61,7 @@ export function Footer() {
           </p>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <p className="text-caption">
-              © {new Date().getFullYear()} aiOn. All rights reserved.
+              © {new Date().getFullYear()} Mazo Solutions Inc. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link to="#" className="text-caption hover:text-foreground transition-colors">
