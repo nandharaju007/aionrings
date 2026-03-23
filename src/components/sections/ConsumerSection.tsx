@@ -51,7 +51,7 @@ export function ConsumerSection() {
           </div>
 
           <Link to="/shop" className="btn-primary">
-            Experience aiOn
+            Coming Soon
           </Link>
         </motion.div>
       </div>

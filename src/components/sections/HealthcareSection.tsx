@@ -73,9 +73,15 @@ export function HealthcareSection() {
           transition={{ delay: 0.5 }}
           className="text-center mt-12"
         >
-          <button className="btn-secondary">
-            Partner With Us
-          </button>
+          <p className="text-body mb-4">
+            Interested in a healthcare partnership or business collaboration?
+          </p>
+          <a
+            href="mailto:healthcare@mazosolutions.com"
+            className="btn-secondary inline-block"
+          >
+            Contact Us for Collaboration
+          </a>
         </motion.div>
       </div>
     </section>
