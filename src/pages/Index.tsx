@@ -8,6 +8,7 @@ import { FeaturesSection } from '@/components/sections/FeaturesSection';
 import { IntelligenceSection } from '@/components/sections/IntelligenceSection';
 import { ConsumerSection } from '@/components/sections/ConsumerSection';
 import { HealthcareSection } from '@/components/sections/HealthcareSection';
+import { HealthcareIntelligenceSection } from '@/components/sections/HealthcareIntelligenceSection';
 import { PrivacySection } from '@/components/sections/PrivacySection';
 import { FinalCTASection } from '@/components/sections/FinalCTASection';
 
@@ -25,6 +26,7 @@ const Index = () => {
         <IntelligenceSection />
         <ConsumerSection />
         <HealthcareSection />
+        <HealthcareIntelligenceSection />
         <PrivacySection />
         <FinalCTASection />
       </main>
