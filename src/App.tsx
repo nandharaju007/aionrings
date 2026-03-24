@@ -7,6 +7,9 @@ import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import CookiePolicyPage from "./pages/CookiePolicyPage";
+import CISPolicyPage from "./pages/CISPolicyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
