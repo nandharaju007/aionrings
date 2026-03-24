@@ -7,6 +7,9 @@ import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import CookiePolicyPage from "./pages/CookiePolicyPage";
+import CISPolicyPage from "./pages/CISPolicyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+            <Route path="/cis-policy" element={<CISPolicyPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

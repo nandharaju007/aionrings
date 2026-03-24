@@ -64,14 +64,14 @@ export function Footer() {
               © {new Date().getFullYear()} Mazo Solutions Inc. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link to="#" className="text-caption hover:text-foreground transition-colors">
-                Terms
+              <Link to="/privacy-policy" className="text-caption hover:text-foreground transition-colors">
+                Privacy Policy
               </Link>
-              <Link to="#" className="text-caption hover:text-foreground transition-colors">
-                Privacy
+              <Link to="/cookie-policy" className="text-caption hover:text-foreground transition-colors">
+                Cookie Policy
               </Link>
-              <Link to="#" className="text-caption hover:text-foreground transition-colors">
-                Cookies
+              <Link to="/cis-policy" className="text-caption hover:text-foreground transition-colors">
+                CIS Policy
               </Link>
             </div>
           </div>
