@@ -10,6 +10,10 @@ import CheckoutPage from "./pages/CheckoutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
 import CISPolicyPage from "./pages/CISPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import AccessibilityPage from "./pages/AccessibilityPage";
+import TrademarksPage from "./pages/TrademarksPage";
+import { CookieConsent } from "./components/CookieConsent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,9 +32,13 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/cookie-policy" element={<CookiePolicyPage />} />
             <Route path="/cis-policy" element={<CISPolicyPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/accessibility" element={<AccessibilityPage />} />
+            <Route path="/trademarks" element={<TrademarksPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <CookieConsent />
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>
