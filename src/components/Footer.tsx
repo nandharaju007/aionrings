@@ -12,10 +12,13 @@ const footerLinks = {
     { label: 'Healthcare', href: '/#healthcare' },
     { label: 'Privacy', href: '/#privacy' },
   ],
-  Support: [
-    { label: 'Help Center', href: '#' },
-    { label: 'Contact', href: '#' },
-    { label: 'Returns', href: '#' },
+  Legal: [
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Cookie Policy', href: '/cookie-policy' },
+    { label: 'Terms of Service', href: '/terms-of-service' },
+    { label: 'CIS Policy', href: '/cis-policy' },
+    { label: 'Trademarks', href: '/trademarks' },
+    { label: 'Accessibility', href: '/accessibility' },
   ],
 };
 
@@ -59,6 +62,11 @@ export function Footer() {
             It is not intended for medical diagnosis or treatment. Always consult a healthcare 
             professional for medical advice.
           </p>
+          <p className="text-caption max-w-3xl mb-6">
+            aiOn™, aiOn Ring™, and the aiOn logo are trademarks of Mazo Solutions Inc. All other
+            trademarks are the property of their respective owners. Protected by issued and pending
+            patents in the U.S. and internationally.
+          </p>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <p className="text-caption">
               © {new Date().getFullYear()} Mazo Solutions Inc. All rights reserved.
@@ -70,8 +78,14 @@ export function Footer() {
               <Link to="/cookie-policy" className="text-caption hover:text-foreground transition-colors">
                 Cookie Policy
               </Link>
+              <Link to="/terms-of-service" className="text-caption hover:text-foreground transition-colors">
+                Terms
+              </Link>
               <Link to="/cis-policy" className="text-caption hover:text-foreground transition-colors">
                 CIS Policy
+              </Link>
+              <Link to="/trademarks" className="text-caption hover:text-foreground transition-colors">
+                Trademarks
               </Link>
             </div>
           </div>
