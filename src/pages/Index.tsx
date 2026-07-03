@@ -5,6 +5,9 @@ import { Footer } from '@/components/Footer';
 import { AionLogo } from '@/components/AionLogo';
 import ringHeroImg from '@/assets/ring-hero.jpg';
 import ringProductImg from '@/assets/ring-product.jpg';
+import lifestyle1 from '@/assets/lifestyle-hand-1.jpg';
+import lifestyle2 from '@/assets/lifestyle-hand-2.jpg';
+import lifestyle3 from '@/assets/lifestyle-hand-3.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
 
