@@ -177,6 +177,74 @@ const benefits = [
   { icon: '🏆', bg: '#4ADE80', title: 'You get a health briefing every morning.', body: 'Plain English. What happened overnight. What to do today. Before you open an app.' },
 ];
 
+/* ---------- Proactive signals aiOn watches ---------- */
+const signals = [
+  {
+    icon: '😴',
+    tag: 'SLEEP',
+    title: 'Sleep you can actually feel.',
+    body: 'aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.',
+    quote: 'You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.',
+    glow: '#7C3AED',
+  },
+  {
+    icon: '🧠',
+    tag: 'STRESS',
+    title: 'Stress caught before it stacks.',
+    body: 'Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.',
+    quote: 'Stress load rising since 2pm. A 4-minute breath session can bring it back.',
+    glow: '#EF4444',
+  },
+  {
+    icon: '❤',
+    tag: 'HEART',
+    title: 'Heart rhythm, always in view.',
+    body: 'aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.',
+    quote: 'Resting HR is 8 bpm above your baseline this week. Consider a lighter session.',
+    glow: 'linear-gradient(135deg,#EF4444,#7C3AED)',
+  },
+  {
+    icon: '🩸',
+    tag: 'BLOOD PRESSURE',
+    title: 'BP trends, no cuff, no fuss.',
+    body: 'Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.',
+    quote: 'Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.',
+    glow: '#00C6FF',
+  },
+  {
+    icon: '🍬',
+    tag: 'GLUCOSE RESPONSE',
+    title: 'Feel what food does to you.',
+    body: 'aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.',
+    quote: 'Your evening carbs spiked HR for 90 min. Try earlier dinners this week.',
+    glow: '#FACC15',
+  },
+  {
+    icon: '🌿',
+    tag: 'ANEMIA & OXYGEN',
+    title: 'Low energy, finally explained.',
+    body: 'Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.',
+    quote: 'SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.',
+    glow: '#4ADE80',
+  },
+  {
+    icon: '🔥',
+    tag: 'ENERGY & CALORIES',
+    title: 'Calories that mean something.',
+    body: 'aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.',
+    quote: 'You burned 2,340 kcal today — 320 above your average. Refuel with protein.',
+    glow: '#FACC15',
+  },
+  {
+    icon: '✨',
+    tag: 'DAILY HEALTH',
+    title: 'One score. The whole picture.',
+    body: 'Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.',
+    quote: 'Vitality 78 — Strong. You have room for one hard session before recovery.',
+    glow: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)',
+  },
+];
+
 /* ---------- Phone frame ---------- */
 function PhoneFrame({ children, tilt = 0, forward = false }: { children: React.ReactNode; tilt?: number; forward?: boolean }) {
   return (
@@ -491,6 +559,65 @@ const Index = () => {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============ HOW AION HELPS ============ */}
+      <section className="px-6 py-[120px]">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="text-center">
+            <Reveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
+                PROACTIVE, NOT REACTIVE
+              </p>
+              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+                Eight signals aiOn watches
+                <br />
+                so you don't have to.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[560px] text-[18px] leading-[1.7] text-[#B8C5D3]">
+                aiOn quietly reads your body all day. When something changes, it explains what,
+                why, and what to do — long before you'd notice on your own.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {signals.map((s, i) => (
+              <Reveal key={s.title} delay={i * 80}>
+                <div className="group relative h-full overflow-hidden rounded-2xl border border-[#1E3A5F] bg-[#16243B] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#4FB3FF]">
+                  <div
+                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-40"
+                    style={{ background: s.glow }}
+                  />
+                  <div
+                    className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl text-[22px]"
+                    style={{ background: s.glow, color: '#0A1628' }}
+                  >
+                    {s.icon}
+                  </div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[2px] text-[#8B9DAF]">
+                    {s.tag}
+                  </div>
+                  <h3 className="mt-1 text-[18px] font-semibold text-white">{s.title}</h3>
+                  <p className="mt-3 text-[14px] leading-relaxed text-[#B8C5D3]">{s.body}</p>
+                  <div
+                    className="mt-5 rounded-lg bg-[#0F1B2D] p-3 text-[12px] italic text-[#B8C5D3]"
+                    style={{ borderLeft: '2px solid #4FB3FF' }}
+                  >
+                    "{s.quote}"
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={200}>
+            <p className="mx-auto mt-12 max-w-[600px] text-center text-[13px] text-[#5A6B7E]">
+              aiOn shares wellness insights based on signal trends. It is not a medical device and
+              does not diagnose, treat, or prevent any condition.
+            </p>
+          </Reveal>
         </div>
       </section>
 
