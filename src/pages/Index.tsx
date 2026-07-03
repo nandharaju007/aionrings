@@ -177,6 +177,74 @@ const benefits = [
   { icon: '🏆', bg: '#4ADE80', title: 'You get a health briefing every morning.', body: 'Plain English. What happened overnight. What to do today. Before you open an app.' },
 ];
 
+/* ---------- Proactive signals aiOn watches ---------- */
+const signals = [
+  {
+    icon: '😴',
+    tag: 'SLEEP',
+    title: 'Sleep you can actually feel.',
+    body: 'aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.',
+    quote: 'You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.',
+    glow: '#7C3AED',
+  },
+  {
+    icon: '🧠',
+    tag: 'STRESS',
+    title: 'Stress caught before it stacks.',
+    body: 'Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.',
+    quote: 'Stress load rising since 2pm. A 4-minute breath session can bring it back.',
+    glow: '#EF4444',
+  },
+  {
+    icon: '❤',
+    tag: 'HEART',
+    title: 'Heart rhythm, always in view.',
+    body: 'aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.',
+    quote: 'Resting HR is 8 bpm above your baseline this week. Consider a lighter session.',
+    glow: 'linear-gradient(135deg,#EF4444,#7C3AED)',
+  },
+  {
+    icon: '🩸',
+    tag: 'BLOOD PRESSURE',
+    title: 'BP trends, no cuff, no fuss.',
+    body: 'Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.',
+    quote: 'Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.',
+    glow: '#00C6FF',
+  },
+  {
+    icon: '🍬',
+    tag: 'GLUCOSE RESPONSE',
+    title: 'Feel what food does to you.',
+    body: 'aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.',
+    quote: 'Your evening carbs spiked HR for 90 min. Try earlier dinners this week.',
+    glow: '#FACC15',
+  },
+  {
+    icon: '🌿',
+    tag: 'ANEMIA & OXYGEN',
+    title: 'Low energy, finally explained.',
+    body: 'Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.',
+    quote: 'SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.',
+    glow: '#4ADE80',
+  },
+  {
+    icon: '🔥',
+    tag: 'ENERGY & CALORIES',
+    title: 'Calories that mean something.',
+    body: 'aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.',
+    quote: 'You burned 2,340 kcal today — 320 above your average. Refuel with protein.',
+    glow: '#FACC15',
+  },
+  {
+    icon: '✨',
+    tag: 'DAILY HEALTH',
+    title: 'One score. The whole picture.',
+    body: 'Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.',
+    quote: 'Vitality 78 — Strong. You have room for one hard session before recovery.',
+    glow: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)',
+  },
+];
+
 /* ---------- Phone frame ---------- */
 function PhoneFrame({ children, tilt = 0, forward = false }: { children: React.ReactNode; tilt?: number; forward?: boolean }) {
   return (
