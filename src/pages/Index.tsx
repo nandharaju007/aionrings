@@ -169,7 +169,6 @@ function Particles() {
 /* ---------- Story cards ---------- */
 const storyMoments = [
   { time: '2:14 am', text: 'Your heart rate quietly shifted.', color: '#EF4444' },
-  { time: '3:30 am', text: 'Something changed in your recovery signal.', color: '#EF4444' },
   { time: '4:05 am', text: 'Your body temperature rose slightly.', color: '#EF4444' },
   { time: '6:47 am', text: 'aiOn told you before you felt anything.', color: '#4ADE80' },
 ];
