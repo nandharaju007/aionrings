@@ -108,8 +108,7 @@ function LifestyleCard({
     <Reveal delay={delay}>
       <figure
         ref={ref}
-        className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#4FB3FF]/60"
-        style={{ boxShadow: '0 0 0 transparent' }}
+        className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#4FB3FF]/60 hover:shadow-[0_20px_60px_-20px_rgba(79,179,255,0.25)]"
       >
         <div
           className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
