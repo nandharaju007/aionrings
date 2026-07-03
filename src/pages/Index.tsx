@@ -394,6 +394,56 @@ function VitalityRing({ pct = 78 }: { pct?: number }) {
   );
 }
 
+/* ---------- Full-width cinematic break image ---------- */
+function FullWidthImage({
+  src,
+  alt,
+  caption,
+  aspect = '21/9',
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  aspect?: string;
+}) {
+  const { ref, offset } = useParallax<HTMLElement>(18);
+  return (
+    <Reveal>
+      <figure
+        ref={ref}
+        className="group relative w-full overflow-hidden rounded-3xl"
+        style={{ aspectRatio: aspect }}
+      >
+        <div
+          className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          <img
+            src={src}
+            alt={alt}
+            width={1280}
+            height={1600}
+            loading="lazy"
+            className="h-[120%] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.7) 100%)',
+          }}
+        />
+        {caption && (
+          <figcaption className="absolute bottom-0 left-0 right-0 px-6 py-8">
+            <p className="text-[14px] font-light tracking-wide text-[#B8C5D3]">{caption}</p>
+          </figcaption>
+        )}
+      </figure>
+    </Reveal>
+  );
+}
+
 /* ---------- Ring product ---------- */
 function ProductRing({ color }: { color: string }) {
   return (
@@ -674,6 +724,17 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ============ CINEMATIC BREAK 1 ============ */}
+      <section className="px-6 py-8">
+        <div className="mx-auto max-w-[1200px]">
+          <FullWidthImage
+            src={lifestyle7}
+            alt="Hand wearing the aiOn ring at work"
+            caption="Quiet on the finger. Invisible to the day."
+          />
+        </div>
+      </section>
+
       {/* ============ LIFESTYLE STRIP ============ */}
       <section className="px-6 py-[120px]">
         <div className="mx-auto max-w-[1200px]">
@@ -694,18 +755,26 @@ const Index = () => {
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
               { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
               { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
-              { src: lifestyle7, tag: 'WORK', title: 'Works through the day' },
-              { src: lifestyle8, tag: 'SENSE', title: 'Senses from within' },
-              { src: lifestyle9, tag: 'EVENING', title: 'Winds down with you' },
             ].map((s, i) => (
               <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============ CINEMATIC BREAK 2 ============ */}
+      <section className="px-6 py-8">
+        <div className="mx-auto max-w-[1200px]">
+          <FullWidthImage
+            src={lifestyle8}
+            alt="Close-up of the aiOn ring sensing from the finger"
+            caption="The sensors live inside. The insight lives with you."
+          />
         </div>
       </section>
 
@@ -915,6 +984,17 @@ const Index = () => {
               Google Play · Coming 2026
             </span>
           </div>
+        </div>
+      </section>
+
+      {/* ============ CINEMATIC BREAK 3 ============ */}
+      <section className="px-6 py-8">
+        <div className="mx-auto max-w-[1200px]">
+          <FullWidthImage
+            src={lifestyle9}
+            alt="Hand wearing the aiOn ring winding down in the evening"
+            caption="From the first hour to the last. aiOn is already there."
+          />
         </div>
       </section>
 
