@@ -394,6 +394,56 @@ function VitalityRing({ pct = 78 }: { pct?: number }) {
   );
 }
 
+/* ---------- Full-width cinematic break image ---------- */
+function FullWidthImage({
+  src,
+  alt,
+  caption,
+  aspect = '21/9',
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  aspect?: string;
+}) {
+  const { ref, offset } = useParallax<HTMLElement>(18);
+  return (
+    <Reveal>
+      <figure
+        ref={ref}
+        className="group relative w-full overflow-hidden rounded-3xl"
+        style={{ aspectRatio: aspect }}
+      >
+        <div
+          className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          <img
+            src={src}
+            alt={alt}
+            width={1280}
+            height={1600}
+            loading="lazy"
+            className="h-[120%] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.7) 100%)',
+          }}
+        />
+        {caption && (
+          <figcaption className="absolute bottom-0 left-0 right-0 px-6 py-8">
+            <p className="text-[14px] font-light tracking-wide text-[#B8C5D3]">{caption}</p>
+          </figcaption>
+        )}
+      </figure>
+    </Reveal>
+  );
+}
+
 /* ---------- Ring product ---------- */
 function ProductRing({ color }: { color: string }) {
   return (
