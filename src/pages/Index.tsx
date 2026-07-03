@@ -562,9 +562,8 @@ const Index = () => {
               listens.
             </span>
           </h2>
-          <p className="mx-auto mt-8 max-w-[480px] text-[18px] leading-[1.7] text-[#B8C5D3]">
-            The first smart ring that doesn't just track your health — it understands it. Every
-            morning you wake up knowing exactly how your body is doing and what to do about it.
+          <p className="mx-auto mt-8 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF]">
+            The first smart ring that doesn't just track your health — it understands it.
           </p>
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <button
@@ -1031,7 +1030,7 @@ const Index = () => {
       </section>
 
       {/* ============ WAITLIST ============ */}
-      <section id="waitlist" className="relative overflow-hidden px-6 py-[140px]">
+      <section id="waitlist" className="relative overflow-hidden px-6 py-[180px]">
         <div
           className="absolute inset-0"
           style={{
@@ -1048,8 +1047,8 @@ const Index = () => {
               <br />
               Feel the difference.
             </h2>
-            <p className="mt-4 text-[18px] leading-[1.7] text-[#B8C5D3]">
-              Join the waitlist for launch pricing and early access. No credit card. No obligation.
+            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">
+              Launch pricing and early access. No credit card.
             </p>
             <WaitlistForm />
           </Reveal>
