@@ -704,31 +704,7 @@ const Index = () => {
               { src: lifestyle8, tag: 'SENSE', title: 'Senses from within' },
               { src: lifestyle9, tag: 'EVENING', title: 'Winds down with you' },
             ].map((s, i) => (
-              <Reveal key={s.title} delay={i * 80}>
-                <figure className="group relative overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D]">
-                  <img
-                    src={s.src}
-                    alt={`Hand wearing the aiOn smart ring \u2014 ${s.title}`}
-                    width={1280}
-                    height={1600}
-                    loading="lazy"
-                    className="aspect-[4/5] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      background:
-                        'linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)',
-                    }}
-                  />
-                  <figcaption className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">
-                      {s.tag}
-                    </div>
-                    <div className="mt-2 text-[22px] font-semibold text-white">{s.title}</div>
-                  </figcaption>
-                </figure>
-              </Reveal>
+              <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
           </div>
         </div>
