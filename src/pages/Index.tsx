@@ -489,24 +489,33 @@ const Index = () => {
 
         {/* Ambient glow behind the ring */}
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-[120px]"
+          className="pointer-events-none absolute left-1/2 top-[42%] h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[140px]"
           style={{
-            background: 'radial-gradient(circle, rgba(79,179,255,0.35), transparent 70%)',
+            background:
+              'radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)',
           }}
         />
 
-        {/* Large centered ring */}
+        {/* Large centered ring — blended into the page (no rectangular seam) */}
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
-          style={{ animation: 'floatC 6s ease-in-out infinite' }}
+          className="pointer-events-none absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2"
+          style={{ animation: 'floatC 7s ease-in-out infinite' }}
         >
           <img
             src={ringHeroImg}
             alt="aiOn Ring — the AI-native smart health ring"
             width={1280}
             height={720}
-            className="h-auto w-[min(90vw,900px)] max-w-none opacity-95"
-            style={{ animation: 'floatC 6s ease-in-out infinite' }}
+            className="h-auto w-[min(92vw,1000px)] max-w-none"
+            style={{
+              mixBlendMode: 'screen',
+              opacity: 0.9,
+              WebkitMaskImage:
+                'radial-gradient(ellipse 60% 55% at 50% 50%, #000 55%, transparent 88%)',
+              maskImage:
+                'radial-gradient(ellipse 60% 55% at 50% 50%, #000 55%, transparent 88%)',
+              filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
+            }}
           />
         </div>
 
