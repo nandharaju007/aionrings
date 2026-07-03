@@ -5,9 +5,12 @@ import { Footer } from '@/components/Footer';
 import { AionLogo } from '@/components/AionLogo';
 import ringHeroImg from '@/assets/ring-hero.jpg';
 import ringProductImg from '@/assets/ring-product.jpg';
-import lifestyle1 from '@/assets/lifestyle-hand-1.jpg';
-import lifestyle2 from '@/assets/lifestyle-hand-2.jpg';
-import lifestyle3 from '@/assets/lifestyle-hand-3.jpg';
+import lifestyle4 from '@/assets/lifestyle-hand-4.jpg';
+import lifestyle5 from '@/assets/lifestyle-hand-5.jpg';
+import lifestyle6 from '@/assets/lifestyle-hand-6.jpg';
+import lifestyle7 from '@/assets/lifestyle-hand-7.jpg';
+import lifestyle8 from '@/assets/lifestyle-hand-8.jpg';
+import lifestyle9 from '@/assets/lifestyle-hand-9.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
 
@@ -613,13 +616,16 @@ const Index = () => {
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { src: lifestyle1, tag: 'REST', title: 'Sleeps with you' },
-              { src: lifestyle2, tag: 'MORNING', title: 'Reads before you\u2019re up' },
-              { src: lifestyle3, tag: 'MOVE', title: 'Trains without a screen' },
+              { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
+              { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
+              { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
+              { src: lifestyle7, tag: 'WORK', title: 'Works through the day' },
+              { src: lifestyle8, tag: 'SENSE', title: 'Senses from within' },
+              { src: lifestyle9, tag: 'EVENING', title: 'Winds down with you' },
             ].map((s, i) => (
-              <Reveal key={s.title} delay={i * 100}>
+              <Reveal key={s.title} delay={i * 80}>
                 <figure className="group relative overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D]">
                   <img
                     src={s.src}
