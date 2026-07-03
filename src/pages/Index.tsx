@@ -602,20 +602,21 @@ const Index = () => {
       </section>
 
       {/* ============ STORY ============ */}
-      <section id="how" className="px-6 py-[140px]">
+      <section id="how" className="px-6 py-[180px]">
         <div className="mx-auto max-w-[700px] text-center">
           <Reveal>
-            <p className="text-[28px] font-normal italic leading-relaxed text-white">
-              "Most mornings, you wake up and check your phone. You have no idea what happened
-              inside your body while you slept."
+            <p className="text-[26px] font-light italic leading-[1.5] text-white sm:text-[30px]">
+              "You wake up. You check your phone.
+              <br />
+              You have no idea what happened inside your body while you slept."
             </p>
           </Reveal>
 
-          <div className="mt-16 space-y-4 text-left">
+          <div className="mt-20 space-y-3 text-left">
             {storyMoments.map((m, i) => (
               <Reveal key={i} delay={i * 200}>
                 <div
-                  className="flex items-center gap-6 rounded-xl border border-[#1E3A5F] bg-[#16243B] px-6 py-4"
+                  className="flex items-center gap-6 rounded-xl border border-white/[0.06] bg-white/[0.02] px-6 py-4 backdrop-blur-sm"
                   style={{ borderLeft: `2px solid ${m.color}` }}
                 >
                   <span className="w-20 text-[14px] text-[#8B9DAF]">{m.time}</span>
@@ -627,29 +628,24 @@ const Index = () => {
 
           <Reveal delay={200}>
             <h3
-              className="mt-16 bg-clip-text text-[32px] font-bold leading-tight text-transparent"
+              className="mt-24 bg-clip-text text-[28px] font-semibold leading-tight text-transparent sm:text-[34px]"
               style={{ backgroundImage: GRADIENT }}
             >
-              Twenty-four hours before you felt it.
-              <br />
-              aiOn already knew.
+              aiOn knew hours before you felt it.
             </h3>
-            <p className="mt-4 text-[18px] text-[#8B9DAF]">
-              This is what wearing aiOn actually feels like.
-            </p>
           </Reveal>
         </div>
       </section>
 
       {/* ============ WHAT CHANGES ============ */}
-      <section className="px-6 py-[120px]">
+      <section className="px-6 py-[160px]">
         <div className="mx-auto max-w-[1100px]">
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 WHAT CHANGES WHEN YOU WEAR IT
               </p>
-              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Six things that feel
                 <br />
                 different. Immediately.
@@ -657,18 +653,18 @@ const Index = () => {
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {benefits.map((b, i) => (
               <Reveal key={i} delay={i * 100}>
-                <div className="group h-full rounded-2xl border border-[#1E3A5F] bg-[#16243B] p-7 transition-all duration-200 hover:-translate-y-1 hover:border-[#4FB3FF]">
+                <div className="group h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#4FB3FF]/40 hover:bg-white/[0.03]">
                   <div
-                    className="mb-5 flex h-12 w-12 items-center justify-center rounded-full text-[20px]"
+                    className="mb-6 flex h-11 w-11 items-center justify-center rounded-full text-[18px]"
                     style={{ background: b.bg }}
                   >
                     {b.icon}
                   </div>
-                  <h3 className="text-[18px] font-semibold leading-snug text-white">{b.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-[#B8C5D3]">{b.body}</p>
+                  <h3 className="text-[17px] font-semibold leading-snug text-white">{b.title}</h3>
+                  <p className="mt-3 text-[14px] leading-relaxed text-[#8B9DAF]">{b.body}</p>
                 </div>
               </Reveal>
             ))}
