@@ -593,21 +593,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ============ HOW AION HELPS ============ */}
-      <section className="px-6 py-[120px]">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                PROACTIVE, NOT REACTIVE
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
       {/* ============ LIFESTYLE STRIP ============ */}
-      <section className="px-6 pb-[120px]">
+      <section className="px-6 py-[120px]">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
