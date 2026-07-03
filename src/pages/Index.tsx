@@ -418,6 +418,7 @@ const Index = () => {
         }
         @keyframes scrollBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
         @keyframes ppgLive { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes fadeInUp { from{opacity:0;transform:translate(-50%,-8px)} to{opacity:1;transform:translate(-50%,0)} }
         @media (prefers-reduced-motion: reduce) {
           * { animation: none !important; transition: none !important; }
         }
