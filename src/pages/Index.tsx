@@ -564,6 +564,29 @@ const Index = () => {
       <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6 pt-24">
         <Particles />
 
+        {/* Ambient glow behind the ring */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-[120px]"
+          style={{
+            background: 'radial-gradient(circle, rgba(79,179,255,0.35), transparent 70%)',
+          }}
+        />
+
+        {/* Large centered ring */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
+          style={{ animation: 'floatC 6s ease-in-out infinite' }}
+        >
+          <img
+            src={ringHeroImg}
+            alt="aiOn Ring — the AI-native smart health ring"
+            width={1280}
+            height={720}
+            className="h-auto w-[min(90vw,900px)] max-w-none opacity-95"
+            style={{ animation: 'floatC 6s ease-in-out infinite' }}
+          />
+        </div>
+
         {/* Live ring vitals ticker */}
         <div
           className="pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2"
@@ -590,7 +613,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[680px] text-center">
+        <div className="relative z-10 mx-auto max-w-[720px] text-center">
           <span
             className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
             style={{ backgroundImage: GRADIENT }}
@@ -634,8 +657,6 @@ const Index = () => {
           <p className="mt-6 text-[14px] text-[#5A6B7E]">
             No credit card · Ships 2026 · 30-day returns
           </p>
-
-          <HeroRing />
         </div>
 
         <div
