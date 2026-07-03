@@ -61,7 +61,86 @@ function Reveal({
   );
 }
 
-/* ---------- Hero particles ---------- */
+/* ---------- Parallax card for lifestyle shots ---------- */
+function useParallax<T extends HTMLElement>(maxOffset = 12) {
+  const ref = useRef<T | null>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    let rafId = 0;
+    const handleScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        const el = ref.current;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const center = rect.top + rect.height / 2;
+          const distance = center / viewportHeight - 0.5;
+          setOffset(Math.round(distance * maxOffset * 2));
+        }
+        rafId = 0;
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [maxOffset]);
+  return { ref, offset };
+}
+
+function LifestyleCard({
+  src,
+  tag,
+  title,
+  delay,
+}: {
+  src: string;
+  tag: string;
+  title: string;
+  delay: number;
+}) {
+  const { ref, offset } = useParallax<HTMLElement>(12);
+  return (
+    <Reveal delay={delay}>
+      <figure
+        ref={ref}
+        className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#4FB3FF]/60"
+        style={{ boxShadow: '0 0 0 transparent' }}
+      >
+        <div
+          className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          <img
+            src={src}
+            alt={`Hand wearing the aiOn smart ring \u2014 ${title}`}
+            width={1280}
+            height={1600}
+            loading="lazy"
+            className="h-[112%] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)',
+          }}
+        />
+        <figcaption className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">
+            {tag}
+          </div>
+          <div className="mt-2 text-[22px] font-semibold text-white">{title}</div>
+        </figcaption>
+      </figure>
+    </Reveal>
+  );
+}
 function Particles() {
   const dots = Array.from({ length: 25 });
   return (
