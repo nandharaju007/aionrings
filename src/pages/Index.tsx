@@ -520,7 +520,7 @@ const Index = () => {
 
         {/* Live ring vitals ticker */}
         <div
-          className="pointer-events-none absolute left-1/2 top-6 z-20 -translate-x-1/2 sm:top-20"
+          className="pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2 sm:top-20"
           aria-hidden="true"
           style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
         >
