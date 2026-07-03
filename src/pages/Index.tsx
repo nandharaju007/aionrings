@@ -3,6 +3,8 @@ import { ChevronDown } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AionLogo } from '@/components/AionLogo';
+import ringHeroImg from '@/assets/ring-hero.jpg';
+import ringProductImg from '@/assets/ring-product.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
 
