@@ -651,7 +651,7 @@ const Index = () => {
                     <span>9:41</span>
                     <span>••• 100%</span>
                   </div>
-                  <div className="text-[17px] font-bold text-white">Good morning, Nandha</div>
+                  <div className="text-[17px] font-bold text-white">Good morning</div>
                   <div className="mt-1 flex items-center gap-2 text-[11px] text-[#4ADE80]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" /> aion ring · live
                   </div>
