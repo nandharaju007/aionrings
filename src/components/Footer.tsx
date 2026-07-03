@@ -1,95 +1,94 @@
 import { Link } from 'react-router-dom';
+import { Linkedin, Twitter, Instagram } from 'lucide-react';
 import { AionLogo } from './AionLogo';
 
-const footerLinks = {
-  Product: [
-    { label: 'The Ring', href: '/shop' },
-    { label: 'Features', href: '/#features' },
-    { label: 'Intelligence', href: '/#intelligence' },
-  ],
-  Company: [
-    { label: 'About', href: '/#about' },
-    { label: 'Healthcare', href: '/#healthcare' },
-    { label: 'Privacy', href: '/#privacy' },
-  ],
-  Legal: [
-    { label: 'Privacy Policy', href: '/privacy-policy' },
-    { label: 'Cookie Policy', href: '/cookie-policy' },
-    { label: 'Terms of Service', href: '/terms-of-service' },
-    { label: 'CIS Policy', href: '/cis-policy' },
-    { label: 'Trademarks', href: '/trademarks' },
-    { label: 'Accessibility', href: '/accessibility' },
-  ],
-};
+const productLinks = ['How It Works', 'The App', 'The Ring', 'Pricing', 'Size Guide'];
+const companyLinks: { label: string; href: string }[] = [
+  { label: 'About', href: '#' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms-of-service' },
+  { label: 'Contact', href: 'mailto:healthcare@mazosolutions.com' },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-6 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <AionLogo size="md" animated={false} />
-            <p className="text-body mt-4 max-w-xs">
-              The full circle of health. Eternal awareness, everyday wellness.
+    <footer className="relative bg-[#070E1A] text-[#8B9DAF]">
+      <div
+        className="absolute inset-x-0 top-0 h-[3px]"
+        style={{ background: 'linear-gradient(90deg,#00C6FF,#4FB3FF,#7C3AED)' }}
+      />
+      <div className="mx-auto max-w-[1200px] px-6 pt-16 pb-10">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[2fr_1fr_1fr]">
+          <div>
+            <AionLogo width={150} showTagline />
+            <p className="mt-3 text-[14px] text-[#5A6B7E]">The Full Circle of Health</p>
+            <p className="mt-2 text-[13px] text-[#5A6B7E]">
+              aiOn Health Sciences LLC · A Mazo Solutions Inc company
             </p>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h4 className="text-sm font-medium text-foreground mb-4">{category}</h4>
-              <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link.label}>
+          <div>
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
+              Product
+            </h4>
+            <ul className="space-y-3">
+              {productLinks.map((l) => (
+                <li key={l}>
+                  <a href="#" className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white">
+                    {l}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
+              Company
+            </h4>
+            <ul className="space-y-3">
+              {companyLinks.map((l) => (
+                <li key={l.label}>
+                  {l.href.startsWith('/') ? (
                     <Link
-                      to={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      to={l.href}
+                      className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white"
                     >
-                      {link.label}
+                      {l.label}
                     </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Disclaimer & Copyright */}
-        <div className="pt-8 border-t border-border">
-          <p className="text-caption max-w-3xl mb-6">
-            aiOn provides wellness insights based on physiological signal trends and patterns. 
-            It is not intended for medical diagnosis or treatment. Always consult a healthcare 
-            professional for medical advice.
-          </p>
-          <p className="text-caption max-w-3xl mb-6">
-            aiOn™, aiOn Ring™, and the aiOn logo are trademarks of Mazo Solutions Inc. All other
-            trademarks are the property of their respective owners. Protected by issued and pending
-            patents in the U.S. and internationally.
-          </p>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <p className="text-caption">
-              © {new Date().getFullYear()} Mazo Solutions Inc. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <Link to="/privacy-policy" className="text-caption hover:text-foreground transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/cookie-policy" className="text-caption hover:text-foreground transition-colors">
-                Cookie Policy
-              </Link>
-              <Link to="/terms-of-service" className="text-caption hover:text-foreground transition-colors">
-                Terms
-              </Link>
-              <Link to="/cis-policy" className="text-caption hover:text-foreground transition-colors">
-                CIS Policy
-              </Link>
-              <Link to="/trademarks" className="text-caption hover:text-foreground transition-colors">
-                Trademarks
-              </Link>
-            </div>
+                  ) : (
+                    <a
+                      href={l.href}
+                      className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white"
+                    >
+                      {l.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
+
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#1E3A5F] pt-6 md:flex-row">
+          <p className="text-[13px] text-[#5A6B7E]">© 2026 aiOn Health Sciences LLC</p>
+          <div className="flex gap-5 text-[#5A6B7E]">
+            <a href="#" aria-label="LinkedIn" className="transition-colors hover:text-[#4FB3FF]">
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a href="#" aria-label="Twitter" className="transition-colors hover:text-[#4FB3FF]">
+              <Twitter className="h-5 w-5" />
+            </a>
+            <a href="#" aria-label="Instagram" className="transition-colors hover:text-[#4FB3FF]">
+              <Instagram className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+
+        <p className="mx-auto mt-4 max-w-xl text-center text-[12px] text-[#5A6B7E]">
+          aiOn is a consumer wellness ring. Not a medical device. Not intended to diagnose, treat,
+          cure, or prevent any disease.
+        </p>
       </div>
     </footer>
   );
