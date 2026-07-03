@@ -11,8 +11,9 @@ export function AionLogo({
   showTagline = false,
   gradientId = 'aionLogoGradient',
 }: AionLogoProps) {
-  const height = showTagline ? width * (80 / 200) : width * (60 / 200);
-  const viewBox = showTagline ? '0 0 200 80' : '0 0 200 60';
+  // Tight compact wordmark: ai · O(ring) · n — kerned close together
+  const height = showTagline ? width * (78 / 120) : width * (60 / 120);
+  const viewBox = showTagline ? '0 0 120 78' : '0 0 120 60';
   return (
     <svg
       className={className}
@@ -31,40 +32,40 @@ export function AionLogo({
         </linearGradient>
       </defs>
       <text
-        x="52"
+        x="8"
         y="42"
-        textAnchor="end"
+        textAnchor="start"
         fill="#FFFFFF"
         fontFamily="'Arial Black', 'Inter', sans-serif"
         fontWeight={800}
         fontSize="34"
-        letterSpacing="-1"
+        letterSpacing="-1.5"
       >
         ai
       </text>
       <circle
-        cx="100"
-        cy="28"
-        r="13"
+        cx="60"
+        cy="30"
+        r="12"
         fill="none"
         stroke={`url(#${gradientId})`}
         strokeWidth="4.5"
       />
       <text
-        x="148"
+        x="76"
         y="42"
-        textAnchor="end"
+        textAnchor="start"
         fill="#FFFFFF"
         fontFamily="'Arial Black', 'Inter', sans-serif"
         fontWeight={800}
         fontSize="34"
-        letterSpacing="-1"
+        letterSpacing="-1.5"
       >
         n
       </text>
       {showTagline && (
         <text
-          x="100"
+          x="60"
           y="66"
           textAnchor="middle"
           fill="#5A6B7E"
