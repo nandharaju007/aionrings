@@ -5,6 +5,9 @@ import { Footer } from '@/components/Footer';
 import { AionLogo } from '@/components/AionLogo';
 import ringHeroImg from '@/assets/ring-hero.jpg';
 import ringProductImg from '@/assets/ring-product.jpg';
+import lifestyle1 from '@/assets/lifestyle-hand-1.jpg';
+import lifestyle2 from '@/assets/lifestyle-hand-2.jpg';
+import lifestyle3 from '@/assets/lifestyle-hand-3.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
 
@@ -590,8 +593,64 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ============ HOW AION HELPS ============ */}
+      {/* ============ LIFESTYLE STRIP ============ */}
       <section className="px-6 py-[120px]">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="text-center">
+            <Reveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
+                WORN, NOT WATCHED
+              </p>
+              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+                Made to disappear
+                <br />
+                on your finger.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[560px] text-[18px] leading-[1.7] text-[#B8C5D3]">
+                Titanium-light. Quiet on the skin. aiOn stays with you through sleep, workouts,
+                showers and long mornings — sensing without asking for attention.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              { src: lifestyle1, tag: 'REST', title: 'Sleeps with you' },
+              { src: lifestyle2, tag: 'MORNING', title: 'Reads before you\u2019re up' },
+              { src: lifestyle3, tag: 'MOVE', title: 'Trains without a screen' },
+            ].map((s, i) => (
+              <Reveal key={s.title} delay={i * 100}>
+                <figure className="group relative overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D]">
+                  <img
+                    src={s.src}
+                    alt={`Hand wearing the aiOn smart ring \u2014 ${s.title}`}
+                    width={1280}
+                    height={1600}
+                    loading="lazy"
+                    className="aspect-[4/5] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        'linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)',
+                    }}
+                  />
+                  <figcaption className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">
+                      {s.tag}
+                    </div>
+                    <div className="mt-2 text-[22px] font-semibold text-white">{s.title}</div>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ HOW AION HELPS (continued) ============ */}
+      <section className="px-6 pb-[120px]">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
