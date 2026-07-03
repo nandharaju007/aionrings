@@ -245,32 +245,29 @@ function VitalityRing({ pct = 78 }: { pct?: number }) {
 /* ---------- Ring product ---------- */
 function ProductRing({ color }: { color: string }) {
   return (
-    <svg viewBox="0 0 400 400" className="w-full max-w-[380px]">
-      <defs>
-        <linearGradient id="prodSensor" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00C6FF" />
-          <stop offset="50%" stopColor="#4FB3FF" />
-          <stop offset="100%" stopColor="#7C3AED" />
-        </linearGradient>
-        <radialGradient id="prodBody" cx="50%" cy="45%" r="55%">
-          <stop offset="60%" stopColor={color} />
-          <stop offset="100%" stopColor="#000000" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="200" cy="220" rx="150" ry="14" fill="rgba(79,179,255,0.08)" />
-      <circle cx="200" cy="200" r="150" fill="url(#prodBody)" style={{ transition: 'fill 400ms ease' }} />
-      <circle
-        cx="200"
-        cy="200"
-        r="150"
-        fill="none"
-        stroke="url(#prodSensor)"
-        strokeWidth="18"
-        style={{ animation: 'sensorPulse 3s ease-in-out infinite' }}
+    <div
+      className="relative w-full max-w-[420px] overflow-hidden rounded-3xl"
+      style={{
+        boxShadow: '0 0 100px -20px rgba(79,179,255,0.35)',
+      }}
+    >
+      <img
+        src={ringProductImg}
+        alt="aiOn Ring product view"
+        className="aspect-square w-full object-cover transition-all duration-500"
+        style={{
+          filter:
+            color === '#C0C0CC'
+              ? 'hue-rotate(180deg) brightness(1.6) saturate(0.4)'
+              : color === '#B76E79'
+              ? 'hue-rotate(-70deg) brightness(1.15) saturate(1.3)'
+              : 'none',
+        }}
       />
-      <circle cx="200" cy="200" r="95" fill="#0A1628" />
-      <circle cx="200" cy="200" r="95" fill="none" stroke="#4FB3FF" strokeOpacity="0.25" strokeWidth="1" />
-    </svg>
+      <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2">
+        <AionLogo width={90} />
+      </div>
+    </div>
   );
 }
 
