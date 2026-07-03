@@ -7,7 +7,7 @@ const navLinks = [
   { href: '#how', label: 'How It Works' },
   { href: '#app', label: 'The App' },
   { href: '#ring', label: 'The Ring' },
-  { href: '#ring', label: 'Pricing' },
+  { href: '#waitlist', label: 'Waitlist' },
 ];
 
 export function Header() {

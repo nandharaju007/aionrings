@@ -418,6 +418,7 @@ const Index = () => {
         }
         @keyframes scrollBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
         @keyframes ppgLive { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes fadeInUp { from{opacity:0;transform:translate(-50%,-8px)} to{opacity:1;transform:translate(-50%,0)} }
         @media (prefers-reduced-motion: reduce) {
           * { animation: none !important; transition: none !important; }
         }
@@ -428,6 +429,33 @@ const Index = () => {
       {/* ============ HERO ============ */}
       <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6 pt-24">
         <Particles />
+
+        {/* Live ring vitals ticker */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2"
+          aria-hidden="true"
+          style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
+        >
+          <div
+            className="flex items-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-6 sm:text-[12px]"
+            style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
+          >
+            <span className="flex items-center gap-2">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
+                style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
+              />
+              <span className="text-white/90">Live</span>
+            </span>
+            <span className="hidden h-3 w-px bg-white/10 sm:block" />
+            <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
+            <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
+            <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
+            <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
+            <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
+          </div>
+        </div>
+
         <div className="relative z-10 mx-auto max-w-[680px] text-center">
           <span
             className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
