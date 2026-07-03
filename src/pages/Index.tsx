@@ -724,6 +724,17 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ============ CINEMATIC BREAK 1 ============ */}
+      <section className="px-6 py-8">
+        <div className="mx-auto max-w-[1200px]">
+          <FullWidthImage
+            src={lifestyle7}
+            alt="Hand wearing the aiOn ring at work"
+            caption="Quiet on the finger. Invisible to the day."
+          />
+        </div>
+      </section>
+
       {/* ============ LIFESTYLE STRIP ============ */}
       <section className="px-6 py-[120px]">
         <div className="mx-auto max-w-[1200px]">
