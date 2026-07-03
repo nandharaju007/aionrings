@@ -342,7 +342,7 @@ function ConfirmationView() {
       </div>
 
       <div className="mt-12">
-        <AionLogo size="sm" />
+        <AionLogo width={100} />
       </div>
     </motion.div>
   );
