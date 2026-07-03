@@ -1,168 +1,98 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { AionLogo } from './AionLogo';
-import { useCart } from '@/contexts/CartContext';
 
 const navLinks = [
-  { href: '/#features', label: 'Features' },
-  { href: '/#intelligence', label: 'Intelligence' },
-  { href: '/#healthcare', label: 'Healthcare' },
-  { href: '/shop', label: 'Shop' },
+  { href: '#how', label: 'How It Works' },
+  { href: '#app', label: 'The App' },
+  { href: '#ring', label: 'The Ring' },
+  { href: '#ring', label: 'Pricing' },
 ];
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { totalItems, openCart } = useCart();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
-  // Handle hash scrolling when location changes
-  useEffect(() => {
-    if (location.hash) {
-      const element = document.querySelector(location.hash);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    }
-  }, [location]);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Check if it's a hash link to the homepage
-    if (href.startsWith('/#')) {
-      e.preventDefault();
-      const hash = href.substring(1); // Remove the leading /
-      const sectionId = hash.substring(1); // Remove the #
-      
-      if (location.pathname === '/') {
-        // Already on homepage, just scroll
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      } else {
-        // Navigate to homepage with hash
-        navigate('/' + hash);
-      }
-    }
+  const scrollTo = (id: string) => {
+    setOpen(false);
+    const el = document.querySelector(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-background/80 backdrop-blur-xl border-b border-border/30'
-            : 'bg-transparent'
-        }`}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-[250ms]"
+        style={{
+          background: scrolled ? 'rgba(10,22,40,0.9)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+        }}
       >
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link to="/" className="relative z-10">
-              <AionLogo size="md" />
-            </Link>
+        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
+          <Link to="/" aria-label="aiOn home">
+            <AionLogo width={110} />
+          </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-10">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="nav-link"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Right Side */}
-            <div className="flex items-center gap-6">
-              {/* Cart Button */}
+          <nav className="hidden md:flex items-center gap-8">
+            {navLinks.map((l, i) => (
               <button
-                onClick={openCart}
-                className="relative p-2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Open cart"
+                key={i}
+                onClick={() => scrollTo(l.href)}
+                className="text-[14px] font-medium text-[#B8C5D3] hover:text-white transition-colors"
               >
-                <ShoppingBag className="w-5 h-5" />
-                <AnimatePresence>
-                  {totalItems > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-medium rounded-full flex items-center justify-center"
-                    >
-                      {totalItems}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {l.label}
               </button>
+            ))}
+          </nav>
 
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Toggle menu"
-              >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => scrollTo('#waitlist')}
+              aria-label="Join waitlist"
+              className="hidden sm:inline-flex items-center rounded-full px-6 py-2.5 text-[14px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
+              style={{ background: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)' }}
+            >
+              Join Waitlist →
+            </button>
+            <button
+              className="md:hidden text-white p-2"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/98 backdrop-blur-xl pt-24"
+      {open && (
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-[#0A1628] md:hidden">
+          {navLinks.map((l, i) => (
+            <button
+              key={i}
+              onClick={() => scrollTo(l.href)}
+              className="text-2xl font-medium text-white"
+            >
+              {l.label}
+            </button>
+          ))}
+          <button
+            onClick={() => scrollTo('#waitlist')}
+            className="mt-6 rounded-full px-8 py-4 text-[15px] font-semibold text-white"
+            style={{ background: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)' }}
           >
-            <nav className="container mx-auto px-6 py-8 flex flex-col gap-6">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Link
-                    to={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className="text-2xl font-light text-foreground hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            Join Waitlist →
+          </button>
+        </div>
+      )}
     </>
   );
 }
