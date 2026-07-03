@@ -86,71 +86,33 @@ function Particles() {
 function HeroRing() {
   return (
     <div className="relative mx-auto mt-16 w-full max-w-[640px]">
-      <svg viewBox="0 0 600 300" className="w-full">
-        <defs>
-          <linearGradient id="ringBody" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1A2E4A" />
-            <stop offset="100%" stopColor="#0A1020" />
-          </linearGradient>
-          <linearGradient id="sensorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00C6FF" />
-            <stop offset="50%" stopColor="#4FB3FF" />
-            <stop offset="100%" stopColor="#7C3AED" />
-          </linearGradient>
-        </defs>
-        {/* ground glow */}
-        <ellipse cx="300" cy="220" rx="200" ry="20" fill="rgba(79,179,255,0.06)" />
-        {/* depth path */}
-        <path
-          d="M 40 150 Q 300 260 560 150 Q 300 200 40 150 Z"
-          fill="#070E1A"
-          opacity="0.9"
+      <div
+        className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl"
+        style={{
+          boxShadow: '0 0 120px -20px rgba(79,179,255,0.4)',
+        }}
+      >
+        <img
+          src={ringHeroImg}
+          alt="aiOn Ring — the AI-native smart health ring"
+          className="h-full w-full object-cover"
+          style={{ animation: 'floatC 6s ease-in-out infinite' }}
         />
-        {/* outer ellipse body */}
-        <ellipse cx="300" cy="150" rx="260" ry="100" fill="url(#ringBody)" />
-        {/* bloom */}
-        <ellipse
-          cx="300"
-          cy="150"
-          rx="260"
-          ry="100"
-          fill="none"
-          stroke="url(#sensorGrad)"
-          strokeWidth="32"
-          opacity="0.12"
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, transparent 40%, #0A1628 90%)',
+          }}
         />
-        {/* main sensor band */}
-        <ellipse
-          cx="300"
-          cy="150"
-          rx="260"
-          ry="100"
-          fill="none"
-          stroke="url(#sensorGrad)"
-          strokeWidth="24"
-          style={{ animation: 'sensorPulse 3s ease-in-out infinite' }}
-        />
-        {/* inner hole */}
-        <ellipse cx="300" cy="150" rx="150" ry="57" fill="#0A1628" />
-        <ellipse
-          cx="300"
-          cy="150"
-          rx="150"
-          ry="57"
-          fill="none"
-          stroke="#4FB3FF"
-          strokeOpacity="0.25"
-          strokeWidth="1"
-        />
-        {/* PPG dots */}
-        <circle cx="270" cy="200" r="5" fill="#4FB3FF" style={{ animation: 'ppgPulse 2s ease-in-out infinite' }} />
-        <circle cx="300" cy="205" r="5" fill="#00C6FF" style={{ animation: 'ppgPulse 2s ease-in-out 0.5s infinite' }} />
-        <circle cx="330" cy="200" r="5" fill="#7C3AED" style={{ animation: 'ppgPulse 2s ease-in-out 1s infinite' }} />
-      </svg>
+        <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2">
+          <AionLogo width={90} />
+        </div>
+      </div>
 
       {/* Floating cards */}
       <div
-        className="absolute left-2 top-4 hidden rounded-2xl border border-[#1E3A5F] bg-[#16243B]/90 p-3 backdrop-blur sm:block"
+        className="absolute -left-2 top-8 hidden rounded-2xl border border-[#1E3A5F] bg-[#16243B]/90 p-3 backdrop-blur sm:block"
         style={{ animation: 'floatA 4s ease-in-out infinite', animationDelay: '400ms' }}
       >
         <div className="flex items-center gap-2 text-[11px] text-[#8B9DAF]">
