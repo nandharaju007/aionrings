@@ -684,26 +684,25 @@ const Index = () => {
       </section>
 
       {/* ============ LIFESTYLE STRIP ============ */}
-      <section className="px-6 py-[120px]">
+      <section className="px-6 py-[160px]">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 WORN, NOT WATCHED
               </p>
-              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Made to disappear
                 <br />
                 on your finger.
               </h2>
-              <p className="mx-auto mt-6 max-w-[560px] text-[18px] leading-[1.7] text-[#B8C5D3]">
-                Titanium-light. Quiet on the skin. aiOn stays with you through sleep, workouts,
-                showers and long mornings — sensing without asking for attention.
+              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
+                Titanium-light. Quiet on the skin. Sensing without asking for attention.
               </p>
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {[
               { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
               { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
@@ -727,35 +726,34 @@ const Index = () => {
       </section>
 
       {/* ============ HOW AION HELPS (continued) ============ */}
-      <section className="px-6 pb-[120px]">
+      <section className="px-6 pb-[160px] pt-[40px]">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 PROACTIVE, NOT REACTIVE
               </p>
-              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Eight signals aiOn watches
                 <br />
                 so you don't have to.
               </h2>
-              <p className="mx-auto mt-6 max-w-[560px] text-[18px] leading-[1.7] text-[#B8C5D3]">
-                aiOn quietly reads your body all day. When something changes, it explains what,
-                why, and what to do — long before you'd notice on your own.
+              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
+                Each one explained the moment it changes.
               </p>
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-20 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {signals.map((s, i) => (
               <Reveal key={s.title} delay={i * 80}>
-                <div className="group relative h-full overflow-hidden rounded-2xl border border-[#1E3A5F] bg-[#16243B] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#4FB3FF]">
+                <div className="group relative h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#4FB3FF]/40 hover:bg-white/[0.03]">
                   <div
                     className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-40"
                     style={{ background: s.glow }}
                   />
                   <div
-                    className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl text-[22px]"
+                    className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl text-[20px]"
                     style={{ background: s.glow, color: '#0A1628' }}
                   >
                     {s.icon}
@@ -763,11 +761,10 @@ const Index = () => {
                   <div className="text-[11px] font-semibold uppercase tracking-[2px] text-[#8B9DAF]">
                     {s.tag}
                   </div>
-                  <h3 className="mt-1 text-[18px] font-semibold text-white">{s.title}</h3>
-                  <p className="mt-3 text-[14px] leading-relaxed text-[#B8C5D3]">{s.body}</p>
+                  <h3 className="mt-2 text-[17px] font-semibold leading-snug text-white">{s.title}</h3>
                   <div
-                    className="mt-5 rounded-lg bg-[#0F1B2D] p-3 text-[12px] italic text-[#B8C5D3]"
-                    style={{ borderLeft: '2px solid #4FB3FF' }}
+                    className="mt-6 rounded-lg bg-black/20 p-3 text-[12px] italic leading-relaxed text-[#8B9DAF]"
+                    style={{ borderLeft: '1px solid rgba(79,179,255,0.4)' }}
                   >
                     "{s.quote}"
                   </div>
@@ -777,29 +774,28 @@ const Index = () => {
           </div>
 
           <Reveal delay={200}>
-            <p className="mx-auto mt-12 max-w-[600px] text-center text-[13px] text-[#5A6B7E]">
-              aiOn shares wellness insights based on signal trends. It is not a medical device and
-              does not diagnose, treat, or prevent any condition.
+            <p className="mx-auto mt-16 max-w-[520px] text-center text-[12px] leading-relaxed text-[#5A6B7E]">
+              Wellness insights based on signal trends. Not a medical device.
             </p>
           </Reveal>
         </div>
       </section>
 
       {/* ============ THE APP ============ */}
-      <section id="app" className="px-6 py-[120px]">
+      <section id="app" className="px-6 py-[160px]">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE APP
               </p>
-              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 The app that thinks
                 <br />
                 for you.
               </h2>
-              <p className="mx-auto mt-6 max-w-[520px] text-[18px] leading-[1.7] text-[#B8C5D3]">
-                Not a dashboard. Not a data dump. A morning briefing, written just for you.
+              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
+                A morning briefing. Not a dashboard.
               </p>
             </Reveal>
           </div>
@@ -947,20 +943,20 @@ const Index = () => {
       </section>
 
       {/* ============ THE RING ============ */}
-      <section id="ring" className="px-6 py-[120px]">
+      <section id="ring" className="px-6 py-[160px]">
         <div className="mx-auto max-w-[1100px]">
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE RING
               </p>
-              <h2 className="mt-4 text-[40px] font-bold leading-[1.1] text-white sm:text-[52px]">
+              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Engineered to
                 <br />
                 disappear.
               </h2>
-              <p className="mx-auto mt-6 max-w-[520px] text-[18px] leading-[1.7] text-[#B8C5D3]">
-                You'll forget it's there. Until it tells you something important.
+              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
+                You'll forget it's there.
               </p>
             </Reveal>
           </div>
