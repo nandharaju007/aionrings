@@ -755,18 +755,26 @@ const Index = () => {
             </Reveal>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
               { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
               { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
-              { src: lifestyle7, tag: 'WORK', title: 'Works through the day' },
-              { src: lifestyle8, tag: 'SENSE', title: 'Senses from within' },
-              { src: lifestyle9, tag: 'EVENING', title: 'Winds down with you' },
             ].map((s, i) => (
               <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============ CINEMATIC BREAK 2 ============ */}
+      <section className="px-6 py-8">
+        <div className="mx-auto max-w-[1200px]">
+          <FullWidthImage
+            src={lifestyle8}
+            alt="Close-up of the aiOn ring sensing from the finger"
+            caption="The sensors live inside. The insight lives with you."
+          />
         </div>
       </section>
 
