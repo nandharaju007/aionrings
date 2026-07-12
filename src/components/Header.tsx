@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { AionLogo } from './AionLogo';
 
@@ -13,6 +13,8 @@ const navLinks = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -23,7 +25,11 @@ export function Header() {
   const scrollTo = (id: string) => {
     setOpen(false);
     if (id.startsWith('/')) {
-      window.location.href = id;
+      navigate(id);
+      return;
+    }
+    if (location.pathname !== '/') {
+      navigate('/' + id);
       return;
     }
     const el = document.querySelector(id);
