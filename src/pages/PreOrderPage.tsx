@@ -49,10 +49,13 @@ export default function PreOrderPage() {
 
   useEffect(() => {
     document.title = 'Pre-Order aiOn Ring — Founder Edition';
-    supabase.rpc('reservation_totals').then(({ data }) => {
-      const row = Array.isArray(data) ? data[0] : data;
-      if (row) setTotals({ reservations: Number(row.total_reservations), rings: Number(row.total_rings) });
-    });
+    supabase
+      .from('reservation_totals')
+      .select('total_reservations, total_rings')
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setTotals({ reservations: Number(data.total_reservations), rings: Number(data.total_rings) });
+      });
   }, [confirmed]);
 
   const founderClaimed = totals.rings;

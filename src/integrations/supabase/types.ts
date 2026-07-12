@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      reservation_totals: {
+        Row: {
+          id: boolean
+          total_reservations: number
+          total_rings: number
+        }
+        Insert: {
+          id?: boolean
+          total_reservations?: number
+          total_rings?: number
+        }
+        Update: {
+          id?: boolean
+          total_reservations?: number
+          total_rings?: number
+        }
+        Relationships: []
+      }
       reservations: {
         Row: {
           address: string
@@ -106,13 +124,6 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
-      }
-      reservation_totals: {
-        Args: never
-        Returns: {
-          total_reservations: number
-          total_rings: number
-        }[]
       }
     }
     Enums: {
