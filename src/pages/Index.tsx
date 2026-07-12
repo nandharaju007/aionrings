@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AionLogo } from '@/components/AionLogo';
@@ -453,12 +454,20 @@ const finishes = [
 const Index = () => {
   const [finish, setFinish] = useState(finishes[0]);
   const [showScrollHint, setShowScrollHint] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setShowScrollHint(window.scrollY < 80);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 60);
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
