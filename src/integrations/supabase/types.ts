@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      reservation_totals: {
+        Row: {
+          id: boolean
+          total_reservations: number
+          total_rings: number
+        }
+        Insert: {
+          id?: boolean
+          total_reservations?: number
+          total_rings?: number
+        }
+        Update: {
+          id?: boolean
+          total_reservations?: number
+          total_rings?: number
+        }
+        Relationships: []
+      }
       reservations: {
         Row: {
           address: string
@@ -97,13 +115,7 @@ export type Database = {
       }
     }
     Views: {
-      reservation_totals: {
-        Row: {
-          total_reservations: number | null
-          total_rings: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       has_role: {
