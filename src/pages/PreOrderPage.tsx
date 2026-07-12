@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck } from 'lucide-react';
+import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
@@ -40,12 +40,14 @@ const INITIAL: FormState = {
 export default function PreOrderPage() {
   const [params] = useSearchParams();
   const referral = params.get('ref') || undefined;
+  const partnerCode = (params.get('partner') || '').trim().toLowerCase() || undefined;
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState<{ number: string; name: string } | null>(null);
+  const [confirmed, setConfirmed] = useState<{ number: string; name: string; partner?: string | null } | null>(null);
   const [totals, setTotals] = useState<{ reservations: number; rings: number }>({ reservations: 0, rings: 0 });
+  const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
 
   useEffect(() => {
     document.title = 'Pre-Order aiOn Ring — Founder Edition';
@@ -57,6 +59,19 @@ export default function PreOrderPage() {
         if (data) setTotals({ reservations: Number(data.total_reservations), rings: Number(data.total_rings) });
       });
   }, [confirmed]);
+
+  useEffect(() => {
+    if (!partnerCode) { setPartner(null); return; }
+    supabase
+      .from('partners')
+      .select('code, name, status')
+      .eq('code', partnerCode)
+      .eq('status', 'active')
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setPartner({ code: data.code, name: data.name });
+      });
+  }, [partnerCode]);
 
   const founderClaimed = totals.rings;
   const founderLeft = Math.max(0, FOUNDER_CAP - founderClaimed);
@@ -77,11 +92,11 @@ export default function PreOrderPage() {
     setError(null);
     try {
       const { data, error } = await supabase.functions.invoke('submit-reservation', {
-        body: { ...form, referral_source: referral },
+        body: { ...form, referral_source: referral, partner_code: partner?.code ?? partnerCode },
       });
       if (error) throw error;
       if (!data?.ok) throw new Error(data?.error || 'Reservation failed');
-      setConfirmed({ number: data.reservation_number, name: form.first_name });
+      setConfirmed({ number: data.reservation_number, name: form.first_name, partner: data.partner_name ?? partner?.name ?? null });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -97,9 +112,28 @@ export default function PreOrderPage() {
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
           {confirmed ? (
-            <ConfirmationCard number={confirmed.number} name={confirmed.name} />
+            <ConfirmationCard number={confirmed.number} name={confirmed.name} partner={confirmed.partner} />
           ) : (
             <>
+              {partner && (
+                <div className="mb-10 max-w-3xl mx-auto rounded-2xl border border-[#4FB3FF]/25 bg-gradient-to-br from-[#4FB3FF]/[0.06] to-transparent p-6 md:p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
+                      <Handshake className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF] mb-2">Welcome</div>
+                      <h2 className="text-xl md:text-2xl font-light tracking-tight text-white">
+                        You've been invited by <span className="font-medium">{partner.name}</span> to reserve your aiOn Ring.
+                      </h2>
+                      <p className="mt-2 text-[14px] text-[#B8C5D3] leading-relaxed">
+                        {partner.name} is an official aiOn Partner helping customers gain early access to AI-powered wellness technology. Complete your reservation below — we'll take care of everything else.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Header */}
               <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 mb-6">
@@ -307,22 +341,31 @@ function Input({
   );
 }
 
-function ConfirmationCard({ number, name }: { number: string; name: string }) {
+function ConfirmationCard({ number, name, partner }: { number: string; name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
       <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
         <Check className="w-10 h-10 text-white" />
       </div>
       <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
-        Your ring is reserved, {name}.
+        Thank you, {name}.
       </h1>
       <p className="text-[16px] text-[#8B9DAF] mb-10 max-w-lg mx-auto">
-        We've held your spot in the Founder Edition. A confirmation email is on its way.
+        Your aiOn Ring reservation has been received. A confirmation email is on its way.
       </p>
+      {partner && (
+        <div className="inline-block rounded-2xl border border-[#4FB3FF]/25 bg-[#4FB3FF]/[0.06] px-6 py-4 mb-6">
+          <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-1">Referred by</div>
+          <div className="text-[16px] font-medium">{partner}</div>
+        </div>
+      )}
       <div className="inline-block rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-6 mb-10">
         <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Reservation Number</div>
         <div className="text-2xl font-medium tracking-[2px]">{number}</div>
       </div>
+      <p className="text-[13px] text-[#8B9DAF] mb-8 max-w-md mx-auto">
+        We'll contact you soon regarding pricing, availability and delivery.
+      </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <Link to="/" className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors">
           Back to home

@@ -20,6 +20,7 @@ interface Payload {
   ring_color?: string;
   quantity: number;
   referral_source?: string;
+  partner_code?: string;
 }
 
 function isValid(p: Partial<Payload>): p is Payload {
@@ -51,6 +52,22 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
+    // Look up partner if provided
+    let partner_code: string | null = null;
+    let partner_name: string | null = null;
+    if (body.partner_code?.trim()) {
+      const code = body.partner_code.trim().toLowerCase();
+      const { data: partner } = await supabase
+        .from("partners")
+        .select("code, name, status")
+        .eq("code", code)
+        .maybeSingle();
+      if (partner && partner.status === "active") {
+        partner_code = partner.code;
+        partner_name = partner.name;
+      }
+    }
+
     const { data, error } = await supabase
       .from("reservations")
       .insert({
@@ -67,6 +84,8 @@ Deno.serve(async (req) => {
         ring_color: body.ring_color?.trim() || null,
         quantity: body.quantity,
         referral_source: body.referral_source?.trim() || null,
+        partner_code,
+        partner_name,
       })
       .select("reservation_number, first_name, quantity, ring_size, ring_color")
       .single();
@@ -85,6 +104,7 @@ Deno.serve(async (req) => {
               <div style="font-size:22px;font-weight:500;letter-spacing:2px;">${data.reservation_number}</div>
             </div>
             <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Hi ${data.first_name}, we've secured <strong style="color:#fff;">${data.quantity} × aiOn Ring${data.quantity>1?"s":""}</strong> in size ${data.ring_size}${data.ring_color?` (${data.ring_color})`:""}. You'll be among the first to receive shipping details as we approach launch.</p>
+            ${partner_name ? `<p style="color:#B8C5D3;line-height:1.7;font-size:14px;margin-top:16px;">Referred by <strong style="color:#fff;">${partner_name}</strong> — an official aiOn Partner.</p>` : ""}
             <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Sciences LLC · A Mazo Solutions Inc company</p>
           </div>
         </div>`;
@@ -102,9 +122,28 @@ Deno.serve(async (req) => {
           html,
         }),
       }).catch((e) => console.error("Resend send failed:", e));
+
+      // Internal notification
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: "aiOn Rings <orders@aionrings.com>",
+          to: ["orders@aionrings.com"],
+          subject: `New reservation ${data.reservation_number}${partner_name ? ` · ${partner_name}` : ""}`,
+          html: `<div style="font-family:Inter,sans-serif;padding:20px;">
+            <h2>New aiOn reservation</h2>
+            <p><strong>${data.reservation_number}</strong></p>
+            <p>${body.first_name} ${body.last_name} · ${body.email} · ${body.phone}</p>
+            <p>${body.quantity} × Size ${body.ring_size} ${body.ring_color ? `(${body.ring_color})` : ""}</p>
+            <p>${body.address}, ${body.city}, ${body.state} ${body.zip_code}, ${body.country}</p>
+            ${partner_name ? `<p><strong>Partner:</strong> ${partner_name} (${partner_code})</p>` : ""}
+          </div>`,
+        }),
+      }).catch((e) => console.error("Resend internal send failed:", e));
     }
 
-    return new Response(JSON.stringify({ ok: true, reservation_number: data.reservation_number }), {
+    return new Response(JSON.stringify({ ok: true, reservation_number: data.reservation_number, partner_name }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
