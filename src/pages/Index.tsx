@@ -1008,12 +1008,6 @@ const Index = () => {
                   Sizes US 6–13 · Free sizing kit before you commit
                 </p>
 
-                <div className="mt-8 flex items-baseline gap-3">
-                  <span className="text-[36px] font-bold text-white">$149</span>
-                  <span className="text-[18px] text-[#5A6B7E] line-through">$179</span>
-                  <span className="text-[13px] text-[#FACC15]">Launch pricing</span>
-                </div>
-
                 <button
                   onClick={() =>
                     document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
@@ -1048,7 +1042,7 @@ const Index = () => {
               Feel the difference.
             </h2>
             <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">
-              Launch pricing and early access. No credit card.
+              Early access. No credit card.
             </p>
             <WaitlistForm />
           </Reveal>
