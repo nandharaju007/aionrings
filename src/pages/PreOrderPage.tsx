@@ -9,7 +9,7 @@ import ringProduct from '@/assets/ring-product.jpg';
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
 const FOUNDER_CAP = 500;
 
-const RING_SIZES = ['5', '6', '7', '8', '9', '10', '11', '12', '13'];
+const RING_SIZES = ['6', '7', '8', '9', '10', '11', '12', '13'];
 const RING_COLORS = [
   { id: 'midnight', name: 'Midnight Black', filter: 'brightness(0.75) contrast(1.15) hue-rotate(200deg)' },
   { id: 'silver', name: 'Titanium Silver', filter: 'grayscale(1) brightness(1.1)' },

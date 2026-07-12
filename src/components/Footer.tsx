@@ -2,9 +2,15 @@ import { Link } from 'react-router-dom';
 import { Linkedin, Twitter, Instagram } from 'lucide-react';
 import { AionLogo } from './AionLogo';
 
-const productLinks = ['How It Works', 'The App', 'The Ring', 'Pricing', 'Size Guide'];
+const productLinks: { label: string; href: string }[] = [
+  { label: 'How It Works', href: '/#how' },
+  { label: 'The App', href: '/#app' },
+  { label: 'The Ring', href: '/#ring' },
+  { label: 'Pre-Order', href: '/preorder' },
+  { label: 'Size Guide', href: '/preorder' },
+];
 const companyLinks: { label: string; href: string }[] = [
-  { label: 'About', href: '#' },
+  { label: 'About', href: '/' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms-of-service' },
   { label: 'Contact', href: 'mailto:healthcare@mazosolutions.com' },
@@ -33,10 +39,16 @@ export function Footer() {
             </h4>
             <ul className="space-y-3">
               {productLinks.map((l) => (
-                <li key={l}>
-                  <a href="#" className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white">
-                    {l}
-                  </a>
+                <li key={l.label}>
+                  {l.href.startsWith('/') && !l.href.includes('#') ? (
+                    <Link to={l.href} className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white">
+                      {l.label}
+                    </Link>
+                  ) : (
+                    <a href={l.href} className="text-[14px] text-[#8B9DAF] transition-colors hover:text-white">
+                      {l.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
