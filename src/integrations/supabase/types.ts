@@ -14,6 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      bulk_reservations: {
+        Row: {
+          business_name: string
+          contact_person: string
+          created_at: string
+          email: string
+          estimated_quantity: number
+          id: string
+          notes: string | null
+          partner_code: string | null
+          partner_name: string | null
+          phone: string
+          reservation_number: string
+          size_breakdown: Json | null
+          status: string
+        }
+        Insert: {
+          business_name: string
+          contact_person: string
+          created_at?: string
+          email: string
+          estimated_quantity: number
+          id?: string
+          notes?: string | null
+          partner_code?: string | null
+          partner_name?: string | null
+          phone: string
+          reservation_number?: string
+          size_breakdown?: Json | null
+          status?: string
+        }
+        Update: {
+          business_name?: string
+          contact_person?: string
+          created_at?: string
+          email?: string
+          estimated_quantity?: number
+          id?: string
+          notes?: string | null
+          partner_code?: string | null
+          partner_name?: string | null
+          phone?: string
+          reservation_number?: string
+          size_breakdown?: Json | null
+          status?: string
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          code: string
+          contact_email: string | null
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          code: string
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          code?: string
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       reservation_totals: {
         Row: {
           id: boolean
@@ -42,6 +129,8 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          partner_code: string | null
+          partner_name: string | null
           phone: string
           quantity: number
           referral_source: string | null
@@ -61,6 +150,8 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
+          partner_code?: string | null
+          partner_name?: string | null
           phone: string
           quantity?: number
           referral_source?: string | null
@@ -80,6 +171,8 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          partner_code?: string | null
+          partner_name?: string | null
           phone?: string
           quantity?: number
           referral_source?: string | null
