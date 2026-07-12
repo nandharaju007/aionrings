@@ -97,7 +97,13 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      reservation_totals: {
+        Row: {
+          total_reservations: number | null
+          total_rings: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
@@ -106,13 +112,6 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
-      }
-      reservation_totals: {
-        Args: never
-        Returns: {
-          total_reservations: number
-          total_rings: number
-        }[]
       }
     }
     Enums: {
