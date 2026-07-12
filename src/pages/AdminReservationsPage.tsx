@@ -32,8 +32,8 @@ interface Partner {
   code: string;
   name: string;
   contact_email: string | null;
-  contact_phone: string | null;
-  contact_person: string | null;
+  phone: string | null;
+  website: string | null;
   status: string;
   created_at: string;
 }
@@ -69,7 +69,7 @@ export default function AdminReservationsPage() {
   const [tab, setTab] = useState<Tab>('reservations');
   const [filterPartner, setFilterPartner] = useState<string>('');
   const [qrPartner, setQrPartner] = useState<Partner | null>(null);
-  const [newPartner, setNewPartner] = useState({ code: '', name: '', contact_email: '', contact_phone: '', contact_person: '' });
+  const [newPartner, setNewPartner] = useState({ code: '', name: '', contact_email: '', phone: '', website: '' });
   const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export default function AdminReservationsPage() {
       supabase.from('bulk_reservations').select('*').order('created_at', { ascending: false }),
     ]);
     if (r.error) setError(r.error.message); else setRows(r.data as Reservation[]);
-    if (!p.error) setPartners(p.data as Partner[]);
+    if (!p.error) setPartners(p.data as unknown as Partner[]);
     if (!b.error) setBulk(b.data as BulkRes[]);
   }
 
@@ -168,11 +168,11 @@ export default function AdminReservationsPage() {
       code,
       name: newPartner.name.trim(),
       contact_email: newPartner.contact_email.trim() || null,
-      contact_phone: newPartner.contact_phone.trim() || null,
-      contact_person: newPartner.contact_person.trim() || null,
+      phone: newPartner.phone.trim() || null,
+      website: newPartner.website.trim() || null,
     });
     if (error) { alert(error.message); return; }
-    setNewPartner({ code: '', name: '', contact_email: '', contact_phone: '', contact_person: '' });
+    setNewPartner({ code: '', name: '', contact_email: '', phone: '', website: '' });
     await loadAll();
   }
 
@@ -312,7 +312,7 @@ export default function AdminReservationsPage() {
                       className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
                     <input required placeholder="Business name" value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })}
                       className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] md:col-span-2 focus:outline-none focus:border-[#4FB3FF]" />
-                    <input placeholder="Contact person" value={newPartner.contact_person} onChange={e => setNewPartner({ ...newPartner, contact_person: e.target.value })}
+                    <input placeholder="Website" value={newPartner.website} onChange={e => setNewPartner({ ...newPartner, website: e.target.value })}
                       className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
                     <input placeholder="Email" value={newPartner.contact_email} onChange={e => setNewPartner({ ...newPartner, contact_email: e.target.value })}
                       className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
@@ -336,9 +336,9 @@ export default function AdminReservationsPage() {
                               {p.status}
                             </span>
                           </div>
-                          {(p.contact_person || p.contact_email || p.contact_phone) && (
+                          {(p.website || p.contact_email || p.phone) && (
                             <div className="text-[12px] text-[#8B9DAF] mb-3">
-                              {p.contact_person}{p.contact_email ? ` · ${p.contact_email}` : ''}{p.contact_phone ? ` · ${p.contact_phone}` : ''}
+                              {p.contact_email ?? ''}{p.phone ? ` · ${p.phone}` : ''}{p.website ? ` · ${p.website}` : ''}
                             </div>
                           )}
                           <div className="flex items-center gap-2 text-[12px] text-[#4FB3FF] font-mono break-all mb-3 rounded-lg bg-white/[0.02] px-3 py-2 border border-white/5">
