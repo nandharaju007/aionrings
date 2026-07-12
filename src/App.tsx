@@ -13,6 +13,8 @@ import CISPolicyPage from "./pages/CISPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AccessibilityPage from "./pages/AccessibilityPage";
 import TrademarksPage from "./pages/TrademarksPage";
+import PreOrderPage from "./pages/PreOrderPage";
+import AdminReservationsPage from "./pages/AdminReservationsPage";
 import { CookieConsent } from "./components/CookieConsent";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +30,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/preorder" element={<PreOrderPage />} />
+            <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/cookie-policy" element={<CookiePolicyPage />} />
