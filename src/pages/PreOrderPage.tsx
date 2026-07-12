@@ -341,22 +341,31 @@ function Input({
   );
 }
 
-function ConfirmationCard({ number, name }: { number: string; name: string }) {
+function ConfirmationCard({ number, name, partner }: { number: string; name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
       <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
         <Check className="w-10 h-10 text-white" />
       </div>
       <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
-        Your ring is reserved, {name}.
+        Thank you, {name}.
       </h1>
       <p className="text-[16px] text-[#8B9DAF] mb-10 max-w-lg mx-auto">
-        We've held your spot in the Founder Edition. A confirmation email is on its way.
+        Your aiOn Ring reservation has been received. A confirmation email is on its way.
       </p>
+      {partner && (
+        <div className="inline-block rounded-2xl border border-[#4FB3FF]/25 bg-[#4FB3FF]/[0.06] px-6 py-4 mb-6">
+          <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-1">Referred by</div>
+          <div className="text-[16px] font-medium">{partner}</div>
+        </div>
+      )}
       <div className="inline-block rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-6 mb-10">
         <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Reservation Number</div>
         <div className="text-2xl font-medium tracking-[2px]">{number}</div>
       </div>
+      <p className="text-[13px] text-[#8B9DAF] mb-8 max-w-md mx-auto">
+        We'll contact you soon regarding pricing, availability and delivery.
+      </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <Link to="/" className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors">
           Back to home
