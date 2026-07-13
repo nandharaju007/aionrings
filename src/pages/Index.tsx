@@ -389,9 +389,6 @@ function ProductRing({ color }: { color: string }) {
               : 'none',
         }}
       />
-      <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2">
-        <AionLogo width={90} />
-      </div>
     </div>
   );
 }
