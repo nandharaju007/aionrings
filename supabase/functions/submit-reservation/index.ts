@@ -16,23 +16,28 @@ interface Payload {
   state: string;
   zip_code: string;
   country: string;
-  ring_size: string;
-  ring_color?: string;
-  quantity: number;
+  items: Array<{ ring_size: string; ring_color?: string; quantity: number }>;
   referral_source?: string;
   partner_code?: string;
 }
 
 function isValid(p: Partial<Payload>): p is Payload {
   const required: (keyof Payload)[] = [
-    "first_name","last_name","email","phone","address","city","state","zip_code","country","ring_size","quantity"
+    "first_name","last_name","email","phone","address","city","state","zip_code","country"
   ];
   for (const k of required) {
     const v = p[k];
     if (v === undefined || v === null || (typeof v === "string" && !v.trim())) return false;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email!)) return false;
-  if (typeof p.quantity !== "number" || p.quantity < 1 || p.quantity > 10) return false;
+  if (!Array.isArray(p.items) || p.items.length < 1 || p.items.length > 10) return false;
+  let total = 0;
+  for (const it of p.items) {
+    if (!it || typeof it.ring_size !== "string" || !it.ring_size.trim()) return false;
+    if (typeof it.quantity !== "number" || it.quantity < 1 || it.quantity > 10) return false;
+    total += it.quantity;
+  }
+  if (total > 20) return false;
   return true;
 }
 
@@ -68,29 +73,39 @@ Deno.serve(async (req) => {
       }
     }
 
-    const { data, error } = await supabase
+    const rows = body.items.map((it) => ({
+      first_name: body.first_name.trim(),
+      last_name: body.last_name.trim(),
+      email: body.email.trim().toLowerCase(),
+      phone: body.phone.trim(),
+      address: body.address.trim(),
+      city: body.city.trim(),
+      state: body.state.trim(),
+      zip_code: body.zip_code.trim(),
+      country: body.country.trim(),
+      ring_size: it.ring_size.trim(),
+      ring_color: it.ring_color?.trim() || null,
+      quantity: it.quantity,
+      referral_source: body.referral_source?.trim() || null,
+      partner_code,
+      partner_name,
+    }));
+
+    const { data: inserted, error } = await supabase
       .from("reservations")
-      .insert({
-        first_name: body.first_name.trim(),
-        last_name: body.last_name.trim(),
-        email: body.email.trim().toLowerCase(),
-        phone: body.phone.trim(),
-        address: body.address.trim(),
-        city: body.city.trim(),
-        state: body.state.trim(),
-        zip_code: body.zip_code.trim(),
-        country: body.country.trim(),
-        ring_size: body.ring_size.trim(),
-        ring_color: body.ring_color?.trim() || null,
-        quantity: body.quantity,
-        referral_source: body.referral_source?.trim() || null,
-        partner_code,
-        partner_name,
-      })
-      .select("reservation_number, first_name, quantity, ring_size, ring_color")
-      .single();
+      .insert(rows)
+      .select("reservation_number, ring_size, ring_color, quantity");
 
     if (error) throw error;
+
+    const primary = inserted[0];
+    const totalRings = inserted.reduce((s, r) => s + (r.quantity ?? 0), 0);
+    const itemsHtml = inserted
+      .map((r) => `<li style="margin:4px 0;">${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` · ${r.ring_color}` : ""} — <span style="color:#4FB3FF;font-family:monospace;">${r.reservation_number}</span></li>`)
+      .join("");
+    const itemsPlain = inserted
+      .map((r) => `${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` (${r.ring_color})` : ""} — ${r.reservation_number}`)
+      .join("<br>");
 
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (resendKey) {
@@ -100,10 +115,10 @@ Deno.serve(async (req) => {
             <h1 style="font-size:28px;font-weight:300;letter-spacing:-0.5px;margin:0 0 8px;">Your aiOn Ring is reserved.</h1>
             <p style="color:#8B9DAF;font-size:15px;margin:0 0 32px;">The Full Circle of Health — reserved in your name.</p>
             <div style="background:rgba(79,179,255,0.06);border:1px solid rgba(79,179,255,0.2);border-radius:14px;padding:24px;margin-bottom:24px;">
-              <div style="font-size:11px;letter-spacing:3px;color:#4FB3FF;text-transform:uppercase;margin-bottom:8px;">Reservation</div>
-              <div style="font-size:22px;font-weight:500;letter-spacing:2px;">${data.reservation_number}</div>
+              <div style="font-size:11px;letter-spacing:3px;color:#4FB3FF;text-transform:uppercase;margin-bottom:12px;">Your Rings</div>
+              <ul style="list-style:none;padding:0;margin:0;color:#E8F0F9;font-size:14px;">${itemsHtml}</ul>
             </div>
-            <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Hi ${data.first_name}, we've secured <strong style="color:#fff;">${data.quantity} × aiOn Ring${data.quantity>1?"s":""}</strong> in size ${data.ring_size}${data.ring_color?` (${data.ring_color})`:""}. You'll be among the first to receive shipping details as we approach launch.</p>
+            <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Hi ${body.first_name}, we've secured <strong style="color:#fff;">${totalRings} × aiOn Ring${totalRings>1?"s":""}</strong>. You'll be among the first to receive shipping details as we approach launch.</p>
             ${partner_name ? `<p style="color:#B8C5D3;line-height:1.7;font-size:14px;margin-top:16px;">Referred by <strong style="color:#fff;">${partner_name}</strong> — an official aiOn Partner.</p>` : ""}
             <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Sciences LLC · A Mazo Solutions Inc company</p>
           </div>
@@ -118,7 +133,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: "aiOn Rings <orders@aionrings.com>",
           to: [body.email],
-          subject: `Your aiOn Ring reservation ${data.reservation_number}`,
+          subject: `Your aiOn Ring reservation ${primary.reservation_number}`,
           html,
         }),
       }).catch((e) => console.error("Resend send failed:", e));
@@ -130,12 +145,11 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: "aiOn Rings <orders@aionrings.com>",
           to: ["orders@aionrings.com"],
-          subject: `New reservation ${data.reservation_number}${partner_name ? ` · ${partner_name}` : ""}`,
+          subject: `New reservation ${primary.reservation_number}${partner_name ? ` · ${partner_name}` : ""}`,
           html: `<div style="font-family:Inter,sans-serif;padding:20px;">
             <h2>New aiOn reservation</h2>
-            <p><strong>${data.reservation_number}</strong></p>
             <p>${body.first_name} ${body.last_name} · ${body.email} · ${body.phone}</p>
-            <p>${body.quantity} × Size ${body.ring_size} ${body.ring_color ? `(${body.ring_color})` : ""}</p>
+            <p>${itemsPlain}</p>
             <p>${body.address}, ${body.city}, ${body.state} ${body.zip_code}, ${body.country}</p>
             ${partner_name ? `<p><strong>Partner:</strong> ${partner_name} (${partner_code})</p>` : ""}
           </div>`,
@@ -143,7 +157,12 @@ Deno.serve(async (req) => {
       }).catch((e) => console.error("Resend internal send failed:", e));
     }
 
-    return new Response(JSON.stringify({ ok: true, reservation_number: data.reservation_number, partner_name }), {
+    return new Response(JSON.stringify({
+      ok: true,
+      reservation_number: primary.reservation_number,
+      reservation_numbers: inserted.map((r) => r.reservation_number),
+      partner_name,
+    }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
