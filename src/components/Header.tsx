@@ -48,9 +48,17 @@ export function Header() {
         }}
       >
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
-          <Link to="/" aria-label="aiOn home">
+          <button
+            onClick={() => {
+              setOpen(false);
+              navigate('/');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            aria-label="aiOn home"
+            className="focus:outline-none"
+          >
             <AionLogo width={110} />
-          </Link>
+          </button>
 
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((l, i) => (
