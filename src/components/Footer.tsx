@@ -11,6 +11,7 @@ const productLinks: { label: string; href: string }[] = [
 ];
 const companyLinks: { label: string; href: string }[] = [
   { label: 'About', href: '/' },
+  { label: 'Support', href: '/support' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms-of-service' },
   { label: 'Contact', href: 'mailto:healthcare@mazosolutions.com' },

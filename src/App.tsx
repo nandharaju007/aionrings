@@ -16,6 +16,7 @@ import TrademarksPage from "./pages/TrademarksPage";
 import PreOrderPage from "./pages/PreOrderPage";
 import AdminReservationsPage from "./pages/AdminReservationsPage";
 import PartnersPage from "./pages/PartnersPage";
+import SupportPage from "./pages/SupportPage";
 import { CookieConsent } from "./components/CookieConsent";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/preorder" element={<PreOrderPage />} />
             <Route path="/partners" element={<PartnersPage />} />
+            <Route path="/support" element={<SupportPage />} />
             <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
