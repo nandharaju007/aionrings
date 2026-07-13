@@ -489,113 +489,116 @@ const Index = () => {
       <Header />
 
       {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[100svh] flex-col items-center overflow-hidden px-6 pt-28 pb-12">
+      <section className="relative flex min-h-[100svh] flex-col overflow-hidden px-6 pt-28 pb-12">
         <Particles />
 
-        {/* Ambient glow behind the ring */}
+        {/* Ambient glow behind the ring (right side) */}
         <div
-          className="pointer-events-none absolute left-1/2 top-[28%] h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[120px]"
+          className="pointer-events-none absolute right-[-10%] top-[45%] h-[70vmin] w-[70vmin] -translate-y-1/2 rounded-full opacity-60 blur-[120px]"
           style={{
             background:
               'radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)',
           }}
         />
 
-        {/* Live ring vitals ticker */}
-        <div
-          className="relative z-20 mt-2"
-          aria-hidden="true"
-          style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
-        >
+        <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+          {/* Left column: pill + copy + CTAs */}
+          <div className="text-center lg:text-left">
+            {/* Live ring vitals ticker */}
+            <div
+              className="mb-8 inline-flex"
+              aria-hidden="true"
+              style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
+            >
+              <div
+                className="flex items-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-6 sm:text-[12px]"
+                style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
+              >
+                <span className="flex items-center gap-2">
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
+                    style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
+                  />
+                  <span className="text-white/90">Live</span>
+                </span>
+                <span className="hidden h-3 w-px bg-white/10 sm:block" />
+                <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
+                <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
+                <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
+                <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
+                <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
+              </div>
+            </div>
+
+            <span
+              className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
+              style={{ backgroundImage: GRADIENT }}
+            >
+              AI-NATIVE SMART HEALTH RING
+            </span>
+            <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
+              Your body is always
+              <br />
+              talking.
+            </h1>
+            <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
+              <span className="text-white">aiOn </span>
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
+                listens.
+              </span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF] lg:mx-0">
+              The first smart ring that doesn't just track your health — it understands it.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
+              <button
+                onClick={() =>
+                  document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
+                style={{ background: GRADIENT }}
+              >
+                Join the Waitlist · Free
+              </button>
+              <button
+                onClick={() =>
+                  document.querySelector('#how')?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
+              >
+                See How It Works ↓
+              </button>
+            </div>
+            <p className="mt-5 text-[14px] text-[#5A6B7E]">
+              No credit card · Ships 2026 · 30-day returns
+            </p>
+          </div>
+
+          {/* Right column: ring image */}
           <div
-            className="flex items-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-6 sm:text-[12px]"
-            style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
+            className="relative flex items-center justify-center lg:justify-end"
+            style={{ animation: 'floatC 7s ease-in-out infinite' }}
           >
-            <span className="flex items-center gap-2">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
-                style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
-              />
-              <span className="text-white/90">Live</span>
-            </span>
-            <span className="hidden h-3 w-px bg-white/10 sm:block" />
-            <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
-            <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
-            <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
-            <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
-            <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
+            <img
+              src={ringHeroImg}
+              alt="aiOn Ring — the AI-native smart health ring"
+              width={1280}
+              height={1280}
+              className="h-auto w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[600px]"
+              style={{
+                mixBlendMode: 'screen',
+                WebkitMaskImage:
+                  'radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)',
+                maskImage:
+                  'radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)',
+                filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
+              }}
+            />
           </div>
         </div>
 
-        {/* Single ring image at the top */}
         <div
-          className="relative z-10 mt-4 flex w-full max-w-[720px] items-center justify-center sm:mt-6"
-          style={{ animation: 'floatC 7s ease-in-out infinite' }}
-        >
-          <img
-            src={ringHeroImg}
-            alt="aiOn Ring — the AI-native smart health ring"
-            width={1280}
-            height={720}
-            className="h-auto w-full max-w-[520px] sm:max-w-[600px]"
-            style={{
-              mixBlendMode: 'screen',
-              WebkitMaskImage:
-                'radial-gradient(ellipse 65% 60% at 50% 50%, #000 55%, transparent 92%)',
-              maskImage:
-                'radial-gradient(ellipse 65% 60% at 50% 50%, #000 55%, transparent 92%)',
-              filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-[720px] pb-8 text-center">
-          <span
-            className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
-            style={{ backgroundImage: GRADIENT }}
-          >
-            AI-NATIVE SMART HEALTH RING
-          </span>
-          <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
-            Your body is always
-            <br />
-            talking.
-          </h1>
-          <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
-            <span className="text-white">aiOn </span>
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
-              listens.
-            </span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF]">
-            The first smart ring that doesn't just track your health — it understands it.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <button
-              onClick={() =>
-                document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
-              }
-              className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
-              style={{ background: GRADIENT }}
-            >
-              Join the Waitlist · Free
-            </button>
-            <button
-              onClick={() =>
-                document.querySelector('#how')?.scrollIntoView({ behavior: 'smooth' })
-              }
-              className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
-            >
-              See How It Works ↓
-            </button>
-          </div>
-          <p className="mt-5 text-[14px] text-[#5A6B7E]">
-            No credit card · Ships 2026 · 30-day returns
-          </p>
-        </div>
-
-        <div
-          className="mt-auto transition-opacity duration-500"
+          className="mx-auto mt-8 transition-opacity duration-500"
           style={{
             opacity: showScrollHint ? 1 : 0,
             animation: 'scrollBounce 0.8s ease-in-out infinite',
