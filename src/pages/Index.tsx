@@ -489,44 +489,21 @@ const Index = () => {
       <Header />
 
       {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6 pt-24">
+      <section className="relative flex min-h-[100svh] flex-col items-center overflow-hidden px-6 pt-28 pb-12">
         <Particles />
 
         {/* Ambient glow behind the ring */}
         <div
-          className="pointer-events-none absolute left-1/2 top-[42%] h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[140px]"
+          className="pointer-events-none absolute left-1/2 top-[28%] h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[120px]"
           style={{
             background:
               'radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)',
           }}
         />
 
-        {/* Large centered ring — blended into the page (no rectangular seam) */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2"
-          style={{ animation: 'floatC 7s ease-in-out infinite' }}
-        >
-          <img
-            src={ringHeroImg}
-            alt="aiOn Ring — the AI-native smart health ring"
-            width={1280}
-            height={720}
-            className="h-auto w-[min(92vw,1000px)] max-w-none"
-            style={{
-              mixBlendMode: 'screen',
-              opacity: 0.9,
-              WebkitMaskImage:
-                'radial-gradient(ellipse 60% 55% at 50% 50%, #000 55%, transparent 88%)',
-              maskImage:
-                'radial-gradient(ellipse 60% 55% at 50% 50%, #000 55%, transparent 88%)',
-              filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
-            }}
-          />
-        </div>
-
         {/* Live ring vitals ticker */}
         <div
-          className="pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2 sm:top-20"
+          className="relative z-20 mt-2"
           aria-hidden="true"
           style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
         >
@@ -550,28 +527,45 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[720px] pt-24 text-center sm:pt-0">
+        {/* Single ring image at the top */}
+        <div
+          className="relative z-10 mt-6 flex w-full max-w-[720px] flex-1 items-center justify-center"
+          style={{ animation: 'floatC 7s ease-in-out infinite' }}
+        >
+          <img
+            src={ringHeroImg}
+            alt="aiOn Ring — the AI-native smart health ring"
+            width={1280}
+            height={720}
+            className="h-auto w-full max-w-[600px]"
+            style={{
+              filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-[720px] pb-8 text-center">
           <span
             className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
             style={{ backgroundImage: GRADIENT }}
           >
             AI-NATIVE SMART HEALTH RING
           </span>
-          <h1 className="mt-6 text-[56px] font-extrabold leading-[1] tracking-tight text-white sm:text-[72px] lg:text-[88px]">
+          <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
             Your body is always
             <br />
             talking.
           </h1>
-          <h2 className="mt-2 text-[56px] font-extrabold leading-[1] tracking-tight sm:text-[72px] lg:text-[88px]">
+          <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
             <span className="text-white">aiOn </span>
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
               listens.
             </span>
           </h2>
-          <p className="mx-auto mt-8 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF]">
+          <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF]">
             The first smart ring that doesn't just track your health — it understands it.
           </p>
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <button
               onClick={() =>
                 document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
@@ -590,13 +584,13 @@ const Index = () => {
               See How It Works ↓
             </button>
           </div>
-          <p className="mt-6 text-[14px] text-[#5A6B7E]">
+          <p className="mt-5 text-[14px] text-[#5A6B7E]">
             No credit card · Ships 2026 · 30-day returns
           </p>
         </div>
 
         <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-500"
+          className="mt-auto transition-opacity duration-500"
           style={{
             opacity: showScrollHint ? 1 : 0,
             animation: 'scrollBounce 0.8s ease-in-out infinite',
