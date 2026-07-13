@@ -234,7 +234,7 @@ export default function AdminReservationsPage() {
                 {busy ? 'Signing in…' : 'Sign in'}
               </button>
               <p className="text-[12px] text-[#5A6B7E] text-center pt-2">
-                Admin access is restricted. Contact <a href="mailto:healthcare@mazosolutions.com" className="underline">healthcare@mazosolutions.com</a> if you need access.
+                Admin access is restricted. Contact <a href="mailto:support@aionrings.com" className="underline">support@aionrings.com</a> if you need access.
               </p>
             </form>
           ) : isAdmin === false ? (
