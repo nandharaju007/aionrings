@@ -77,7 +77,7 @@ export function HealthcareSection() {
             Interested in a healthcare partnership or business collaboration?
           </p>
           <a
-            href="mailto:healthcare@mazosolutions.com"
+            href="mailto:support@aionrings.com"
             className="btn-secondary inline-block"
           >
             Contact Us for Collaboration

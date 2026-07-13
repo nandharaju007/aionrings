@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: "aiOn Rings <orders@aionrings.com>",
           to: [body.email],
-          bcc: ["partners@aionrings.com"],
+          bcc: ["support@aionrings.com"],
           subject: `Bulk reservation received ${data.reservation_number}`,
           html,
         }),

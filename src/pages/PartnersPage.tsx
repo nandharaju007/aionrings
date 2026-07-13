@@ -231,7 +231,7 @@ export default function PartnersPage() {
                 <p className="text-[15px] text-[#8B9DAF] mb-8 max-w-xl mx-auto">
                   Reach out to our partnerships team. We'll set up your dedicated partner page and referral link.
                 </p>
-                <a href="mailto:partners@aionrings.com" className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white hover:brightness-110 transition-all" style={{ background: GRADIENT }}>
+                <a href="mailto:support@aionrings.com" className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white hover:brightness-110 transition-all" style={{ background: GRADIENT }}>
                   Contact partnerships →
                 </a>
               </div>
