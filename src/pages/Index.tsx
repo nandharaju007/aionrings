@@ -529,7 +529,7 @@ const Index = () => {
 
         {/* Single ring image at the top */}
         <div
-          className="relative z-10 mt-6 flex w-full max-w-[720px] flex-1 items-center justify-center"
+          className="relative z-10 mt-4 flex w-full max-w-[720px] items-center justify-center sm:mt-6"
           style={{ animation: 'floatC 7s ease-in-out infinite' }}
         >
           <img
@@ -537,8 +537,13 @@ const Index = () => {
             alt="aiOn Ring — the AI-native smart health ring"
             width={1280}
             height={720}
-            className="h-auto w-full max-w-[600px]"
+            className="h-auto w-full max-w-[520px] sm:max-w-[600px]"
             style={{
+              mixBlendMode: 'screen',
+              WebkitMaskImage:
+                'radial-gradient(ellipse 65% 60% at 50% 50%, #000 55%, transparent 92%)',
+              maskImage:
+                'radial-gradient(ellipse 65% 60% at 50% 50%, #000 55%, transparent 92%)',
               filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
             }}
           />
