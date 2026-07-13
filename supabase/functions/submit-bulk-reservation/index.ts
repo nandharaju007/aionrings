@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
               <div style="margin-top:10px;font-size:13px;color:#B8C5D3;">Estimated quantity: ${data.estimated_quantity}</div>
             </div>
             <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Our partnerships team will contact you regarding pricing and delivery.</p>
-            <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Sciences LLC · A Mazo Solutions Inc company</p>
+            <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Sciences · A Mazo Solutions Inc company</p>
           </div>
         </div>`;
 
