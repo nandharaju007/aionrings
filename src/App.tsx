@@ -18,6 +18,7 @@ import AdminReservationsPage from "./pages/AdminReservationsPage";
 import PartnersPage from "./pages/PartnersPage";
 import SupportPage from "./pages/SupportPage";
 import { CookieConsent } from "./components/CookieConsent";
+import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
