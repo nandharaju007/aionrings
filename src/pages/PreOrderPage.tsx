@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake } from 'lucide-react';
+import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +16,32 @@ const RING_COLORS = [
   { id: 'rose', name: 'Rose Gold', filter: 'sepia(0.5) hue-rotate(-15deg) saturate(1.2) brightness(1.05)' },
 ];
 
+// US ring size → inner diameter (mm) reference
+const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
+  { size: '6', diameter: '16.5 mm', circumference: '51.9 mm' },
+  { size: '7', diameter: '17.3 mm', circumference: '54.4 mm' },
+  { size: '8', diameter: '18.1 mm', circumference: '57.0 mm' },
+  { size: '9', diameter: '19.0 mm', circumference: '59.5 mm' },
+  { size: '10', diameter: '19.8 mm', circumference: '62.1 mm' },
+  { size: '11', diameter: '20.6 mm', circumference: '64.6 mm' },
+  { size: '12', diameter: '21.4 mm', circumference: '67.2 mm' },
+  { size: '13', diameter: '22.2 mm', circumference: '69.7 mm' },
+];
+
+interface RingItem {
+  id: string;
+  ring_size: string;
+  ring_color: string;
+  quantity: number;
+}
+
+const newItem = (): RingItem => ({
+  id: Math.random().toString(36).slice(2, 9),
+  ring_size: '',
+  ring_color: 'midnight',
+  quantity: 1,
+});
+
 interface FormState {
   first_name: string;
   last_name: string;
@@ -26,15 +52,11 @@ interface FormState {
   state: string;
   zip_code: string;
   country: string;
-  ring_size: string;
-  ring_color: string;
-  quantity: number;
 }
 
 const INITIAL: FormState = {
   first_name: '', last_name: '', email: '', phone: '',
   address: '', city: '', state: '', zip_code: '', country: 'United States',
-  ring_size: '', ring_color: 'midnight', quantity: 1,
 };
 
 export default function PreOrderPage() {
@@ -43,9 +65,11 @@ export default function PreOrderPage() {
   const partnerCode = (params.get('partner') || '').trim().toLowerCase() || undefined;
 
   const [form, setForm] = useState<FormState>(INITIAL);
+  const [items, setItems] = useState<RingItem[]>([newItem()]);
+  const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState<{ number: string; name: string; partner?: string | null } | null>(null);
+  const [confirmed, setConfirmed] = useState<{ numbers: string[]; name: string; partner?: string | null } | null>(null);
   const [totals, setTotals] = useState<{ reservations: number; rings: number }>({ reservations: 0, rings: 0 });
   const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
 
@@ -76,14 +100,24 @@ export default function PreOrderPage() {
   const founderClaimed = totals.rings;
   const founderLeft = Math.max(0, FOUNDER_CAP - founderClaimed);
   const founderPct = Math.min(100, (founderClaimed / FOUNDER_CAP) * 100);
-  const selectedColor = useMemo(() => RING_COLORS.find(c => c.id === form.ring_color) ?? RING_COLORS[0], [form.ring_color]);
+  const previewColor = useMemo(
+    () => RING_COLORS.find(c => c.id === items[0]?.ring_color) ?? RING_COLORS[0],
+    [items],
+  );
+  const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm(p => ({ ...p, [k]: v }));
+  const updateItem = (id: string, patch: Partial<RingItem>) =>
+    setItems(prev => prev.map(it => (it.id === id ? { ...it, ...patch } : it)));
+  const addItem = () => setItems(prev => (prev.length >= 10 ? prev : [...prev, newItem()]));
+  const removeItem = (id: string) => setItems(prev => (prev.length <= 1 ? prev : prev.filter(it => it.id !== id)));
 
-  const canSubmit =
+  const detailsValid =
     form.first_name.trim() && form.last_name.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
     && form.phone.trim() && form.address.trim() && form.city.trim() && form.state.trim()
-    && form.zip_code.trim() && form.country.trim() && form.ring_size && form.quantity >= 1;
+    && form.zip_code.trim() && form.country.trim();
+  const itemsValid = items.length > 0 && items.every(i => i.ring_size && i.quantity >= 1);
+  const canSubmit = detailsValid && itemsValid;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,11 +126,17 @@ export default function PreOrderPage() {
     setError(null);
     try {
       const { data, error } = await supabase.functions.invoke('submit-reservation', {
-        body: { ...form, referral_source: referral, partner_code: partner?.code ?? partnerCode },
+        body: {
+          ...form,
+          items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
+          referral_source: referral,
+          partner_code: partner?.code ?? partnerCode,
+        },
       });
       if (error) throw error;
       if (!data?.ok) throw new Error(data?.error || 'Reservation failed');
-      setConfirmed({ number: data.reservation_number, name: form.first_name, partner: data.partner_name ?? partner?.name ?? null });
+      const numbers: string[] = data.reservation_numbers ?? [data.reservation_number];
+      setConfirmed({ numbers, name: form.first_name, partner: data.partner_name ?? partner?.name ?? null });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -112,7 +152,7 @@ export default function PreOrderPage() {
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
           {confirmed ? (
-            <ConfirmationCard number={confirmed.number} name={confirmed.name} partner={confirmed.partner} />
+            <ConfirmationCard numbers={confirmed.numbers} name={confirmed.name} partner={confirmed.partner} />
           ) : (
             <>
               {partner && (
@@ -171,27 +211,17 @@ export default function PreOrderPage() {
                         src={ringProduct}
                         alt="aiOn Ring"
                         className="w-4/5 h-4/5 object-contain transition-all duration-500"
-                        style={{ filter: selectedColor.filter }}
+                        style={{ filter: previewColor.filter }}
                       />
                     </div>
                     <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
                       <div>
-                        <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Finish</div>
-                        <div className="text-[15px] font-medium mt-1">{selectedColor.name}</div>
+                        <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Preview</div>
+                        <div className="text-[15px] font-medium mt-1">{previewColor.name}</div>
                       </div>
-                      <div className="flex gap-2">
-                        {RING_COLORS.map(c => (
-                          <button
-                            key={c.id}
-                            type="button"
-                            onClick={() => update('ring_color', c.id)}
-                            aria-label={c.name}
-                            className={`w-9 h-9 rounded-full border-2 transition-all ${form.ring_color === c.id ? 'border-white scale-110' : 'border-white/20'}`}
-                            style={{
-                              background: c.id === 'midnight' ? '#1a1f2e' : c.id === 'silver' ? '#c0c5cc' : '#d4a596',
-                            }}
-                          />
-                        ))}
+                      <div className="text-right">
+                        <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Total</div>
+                        <div className="text-[15px] font-medium mt-1">{totalRings} ring{totalRings === 1 ? '' : 's'}</div>
                       </div>
                     </div>
                   </div>
@@ -213,42 +243,111 @@ export default function PreOrderPage() {
 
                 {/* Form */}
                 <form onSubmit={onSubmit} className="space-y-8">
-                  <Section title="Your ring">
-                    <div>
-                      <Label>Ring size</Label>
-                      <div className="grid grid-cols-5 sm:grid-cols-9 gap-2 mt-2">
-                        {RING_SIZES.map(s => (
+                  <Section title="Your rings">
+                    {/* Sizing help — always visible */}
+                    <div className="rounded-xl border border-[#4FB3FF]/20 bg-[#4FB3FF]/[0.04] px-4 py-3">
+                      <div className="flex items-start gap-3">
+                        <Ruler className="w-4 h-4 text-[#4FB3FF] mt-0.5 shrink-0" />
+                        <div className="flex-1 text-[13px] text-[#B8C5D3] leading-relaxed">
+                          <div className="font-medium text-white mb-1">Not sure of your ring size?</div>
+                          <p className="text-[#8B9DAF]">
+                            Measure the inside diameter of a ring you already wear, or wrap a string around the base of your finger and match the length below.
+                          </p>
                           <button
                             type="button"
-                            key={s}
-                            onClick={() => update('ring_size', s)}
-                            className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${form.ring_size === s ? 'border-[#4FB3FF] bg-[#4FB3FF]/10 text-white' : 'border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20'}`}
+                            onClick={() => setSizingOpen(true)}
+                            className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-[#4FB3FF] hover:text-white transition-colors underline underline-offset-2"
                           >
-                            {s}
+                            View full sizing guide →
                           </button>
-                        ))}
+                          <p className="mt-2 text-[12px] text-[#5A6B7E]">
+                            Prefer to measure at home? A free sizing kit ships before your ring.
+                          </p>
+                        </div>
                       </div>
-                      <p className="mt-2 text-[12px] text-[#5A6B7E]">Not sure? A free sizing kit ships before your ring.</p>
                     </div>
 
-                    <div>
-                      <Label>Quantity</Label>
-                      <div className="mt-2 inline-flex items-center rounded-full border border-white/10 bg-white/[0.02] p-1">
-                        <button
-                          type="button"
-                          onClick={() => update('quantity', Math.max(1, form.quantity - 1))}
-                          className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
-                          aria-label="Decrease"
-                        ><Minus className="w-4 h-4" /></button>
-                        <span className="w-12 text-center text-[16px] font-medium">{form.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => update('quantity', Math.min(10, form.quantity + 1))}
-                          className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
-                          aria-label="Increase"
-                        ><Plus className="w-4 h-4" /></button>
+                    {items.map((item, idx) => (
+                      <div key={item.id} className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="text-[12px] uppercase tracking-[2px] text-[#8B9DAF]">Ring {idx + 1}</div>
+                          {items.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeItem(item.id)}
+                              className="text-[#8B9DAF] hover:text-red-400 transition-colors inline-flex items-center gap-1 text-[12px]"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Remove
+                            </button>
+                          )}
+                        </div>
+
+                        <div>
+                          <Label>Ring size</Label>
+                          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mt-2">
+                            {RING_SIZES.map(s => (
+                              <button
+                                type="button"
+                                key={s}
+                                onClick={() => updateItem(item.id, { ring_size: s })}
+                                className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? 'border-[#4FB3FF] bg-[#4FB3FF]/10 text-white' : 'border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20'}`}
+                              >
+                                {s}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label>Finish</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {RING_COLORS.map(c => (
+                              <button
+                                key={c.id}
+                                type="button"
+                                onClick={() => updateItem(item.id, { ring_color: c.id })}
+                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? 'border-[#4FB3FF] bg-[#4FB3FF]/10 text-white' : 'border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20'}`}
+                              >
+                                <span
+                                  className="w-4 h-4 rounded-full border border-white/20"
+                                  style={{ background: c.id === 'midnight' ? '#1a1f2e' : c.id === 'silver' ? '#c0c5cc' : '#d4a596' }}
+                                />
+                                {c.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label>Quantity</Label>
+                          <div className="mt-2 inline-flex items-center rounded-full border border-white/10 bg-white/[0.02] p-1">
+                            <button
+                              type="button"
+                              onClick={() => updateItem(item.id, { quantity: Math.max(1, item.quantity - 1) })}
+                              className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
+                              aria-label="Decrease"
+                            ><Minus className="w-4 h-4" /></button>
+                            <span className="w-12 text-center text-[16px] font-medium">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => updateItem(item.id, { quantity: Math.min(10, item.quantity + 1) })}
+                              className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
+                              aria-label="Increase"
+                            ><Plus className="w-4 h-4" /></button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
+
+                    {items.length < 10 && (
+                      <button
+                        type="button"
+                        onClick={addItem}
+                        className="w-full h-12 rounded-xl border border-dashed border-white/15 text-[14px] text-[#B8C5D3] hover:border-[#4FB3FF]/50 hover:text-white transition-all inline-flex items-center justify-center gap-2"
+                      >
+                        <Plus className="w-4 h-4" /> Add another ring
+                      </button>
+                    )}
                   </Section>
 
                   <Section title="Your details">
@@ -287,7 +386,7 @@ export default function PreOrderPage() {
                     {submitting ? (
                       <><Loader2 className="w-4 h-4 animate-spin" /> Reserving your ring…</>
                     ) : (
-                      <>Reserve my aiOn Ring →</>
+                      <>Reserve {totalRings > 1 ? `my ${totalRings} aiOn Rings` : 'my aiOn Ring'} →</>
                     )}
                   </button>
 
@@ -302,6 +401,8 @@ export default function PreOrderPage() {
           )}
         </div>
       </main>
+
+      {sizingOpen && <SizingGuide onClose={() => setSizingOpen(false)} />}
 
       <Footer />
     </div>
@@ -341,7 +442,7 @@ function Input({
   );
 }
 
-function ConfirmationCard({ number, name, partner }: { number: string; name: string; partner?: string | null }) {
+function ConfirmationCard({ numbers, name, partner }: { numbers: string[]; name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
       <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
@@ -351,7 +452,7 @@ function ConfirmationCard({ number, name, partner }: { number: string; name: str
         Thank you, {name}.
       </h1>
       <p className="text-[16px] text-[#8B9DAF] mb-10 max-w-lg mx-auto">
-        Your aiOn Ring reservation has been received. A confirmation email is on its way.
+        Your aiOn Ring reservation{numbers.length > 1 ? 's have' : ' has'} been received. A confirmation email is on its way.
       </p>
       {partner && (
         <div className="inline-block rounded-2xl border border-[#4FB3FF]/25 bg-[#4FB3FF]/[0.06] px-6 py-4 mb-6">
@@ -359,9 +460,15 @@ function ConfirmationCard({ number, name, partner }: { number: string; name: str
           <div className="text-[16px] font-medium">{partner}</div>
         </div>
       )}
-      <div className="inline-block rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-6 mb-10">
-        <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Reservation Number</div>
-        <div className="text-2xl font-medium tracking-[2px]">{number}</div>
+      <div className="inline-block rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-6 mb-10 text-left">
+        <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-3 text-center">
+          Reservation Number{numbers.length > 1 ? 's' : ''}
+        </div>
+        <div className="space-y-1.5">
+          {numbers.map(n => (
+            <div key={n} className="text-xl font-medium tracking-[2px] text-center">{n}</div>
+          ))}
+        </div>
       </div>
       <p className="text-[13px] text-[#8B9DAF] mb-8 max-w-md mx-auto">
         We'll contact you soon regarding pricing, availability and delivery.
@@ -370,6 +477,83 @@ function ConfirmationCard({ number, name, partner }: { number: string; name: str
         <Link to="/" className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors">
           Back to home
         </Link>
+      </div>
+    </div>
+  );
+}
+
+function SizingGuide({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="relative w-full max-w-lg rounded-3xl border border-white/10 bg-[#0F1E33] p-8 max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 w-9 h-9 rounded-full border border-white/10 hover:border-white/30 flex items-center justify-center transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Sizing Guide</div>
+        <h3 className="text-2xl font-light tracking-tight mb-4">Find your perfect fit.</h3>
+
+        <div className="space-y-4 text-[13px] text-[#B8C5D3] leading-relaxed">
+          <div>
+            <div className="font-medium text-white mb-1">Method 1 — Existing ring</div>
+            <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
+          </div>
+          <div>
+            <div className="font-medium text-white mb-1">Method 2 — String</div>
+            <p>Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it overlaps and measure the length — that's your circumference.</p>
+          </div>
+          <div>
+            <div className="font-medium text-white mb-1">Tips</div>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Measure at the end of the day when fingers are warmest.</li>
+              <li>Wear it snug — the sensors need skin contact.</li>
+              <li>When in doubt, size up.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-white/10 overflow-hidden">
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr className="bg-white/[0.04] text-[#8B9DAF] text-[11px] uppercase tracking-[2px]">
+                <th className="text-left px-4 py-2 font-medium">US Size</th>
+                <th className="text-left px-4 py-2 font-medium">Inner Diameter</th>
+                <th className="text-left px-4 py-2 font-medium">Circumference</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SIZE_CHART.map(row => (
+                <tr key={row.size} className="border-t border-white/5">
+                  <td className="px-4 py-2 font-medium text-white">{row.size}</td>
+                  <td className="px-4 py-2 text-[#B8C5D3]">{row.diameter}</td>
+                  <td className="px-4 py-2 text-[#B8C5D3]">{row.circumference}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-6 text-[12px] text-[#5A6B7E]">
+          Still unsure? Order any size — we'll ship a free sizing kit before your ring, and you can update your final size before dispatch.
+        </p>
       </div>
     </div>
   );
