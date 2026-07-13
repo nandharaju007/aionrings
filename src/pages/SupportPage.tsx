@@ -78,7 +78,7 @@ const SupportPage = () => {
                 <p>
                   For healthcare partnerships, bulk reservations, and B2B opportunities, please visit
                   our <a href="/partners" className="text-[#4FB3FF] hover:underline">Partners page</a> or
-                  contact <a href="mailto:partners@aionrings.com" className="text-[#4FB3FF] hover:underline">partners@aionrings.com</a>.
+                  contact <a href="mailto:support@aionrings.com" className="text-[#4FB3FF] hover:underline">support@aionrings.com</a>.
                 </p>
               </section>
 
