@@ -402,8 +402,8 @@ function WaitlistForm() {
     <div className="mx-auto mt-12 max-w-[480px]">
       {sent ? (
         <div className="text-center transition-opacity duration-300">
-          <p className="text-[20px] text-[#4ADE80]">✓ You're on the list.</p>
-          <p className="mt-1 text-[15px] text-[#8B9DAF]">We'll reach out before launch.</p>
+          <p className="text-[20px] text-[#4ADE80]">You\u2019re on the list.</p>
+          <p className="mt-1 text-[15px] text-[#B8C5D3]">We\u2019ll email you before your batch is ready. No newsletters in between.</p>
         </div>
       ) : (
         <form
@@ -427,16 +427,16 @@ function WaitlistForm() {
             className="px-6 py-4 text-[15px] font-semibold text-white transition-all duration-150 hover:brightness-110"
             style={{ background: GRADIENT }}
           >
-            Join Waitlist →
+            Reserve
           </button>
         </form>
       )}
       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[14px] text-[#5A6B7E]">
-        <span>🔒 No spam ever</span>
+        <span>Fully refundable</span>
         <span>·</span>
-        <span>📦 Ships 2026</span>
+        <span>Free sizing kit first</span>
         <span>·</span>
-        <span>↩ 30-day returns</span>
+        <span>Ships 2026</span>
       </div>
     </div>
   );
