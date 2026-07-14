@@ -402,8 +402,8 @@ function WaitlistForm() {
     <div className="mx-auto mt-12 max-w-[480px]">
       {sent ? (
         <div className="text-center transition-opacity duration-300">
-          <p className="text-[20px] text-[#4ADE80]">You\u2019re on the list.</p>
-          <p className="mt-1 text-[15px] text-[#B8C5D3]">We\u2019ll email you before your batch is ready. No newsletters in between.</p>
+          <p className="text-[20px] text-[#4ADE80]">You’re on the list.</p>
+          <p className="mt-1 text-[15px] text-[#B8C5D3]">We’ll email you before your batch is ready. No newsletters in between.</p>
         </div>
       ) : (
         <form
@@ -976,7 +976,7 @@ const Index = () => {
                 className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
                 style={{ fontFamily: DISPLAY_FONT }}
               >
-                Held to a jeweller\u2019s
+                Held to a jeweller’s
                 <br />
                 standard.
               </h2>
@@ -1071,7 +1071,7 @@ const Index = () => {
               one ring at a time.
             </h2>
             <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#B8C5D3]">
-              We ship in small batches to make sure every ring lands well. Leave your email and we\u2019ll be in touch before your batch is ready.
+              We ship in small batches to make sure every ring lands well. Leave your email and we’ll be in touch before your batch is ready.
             </p>
             <WaitlistForm />
           </Reveal>
