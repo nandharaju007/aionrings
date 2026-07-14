@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
             </div>
             <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Hi ${body.first_name}, we've secured <strong style="color:#fff;">${totalRings} × aiOn Ring${totalRings>1?"s":""}</strong>. You'll be among the first to receive shipping details as we approach launch.</p>
             ${partner_name ? `<p style="color:#B8C5D3;line-height:1.7;font-size:14px;margin-top:16px;">Referred by <strong style="color:#fff;">${partner_name}</strong> — an official aiOn Partner.</p>` : ""}
-            <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Sciences · A Mazo Solutions Inc company</p>
+            <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Science LLC · A Mazo Solutions Inc company</p>
           </div>
         </div>`;
 

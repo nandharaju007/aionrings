@@ -30,7 +30,7 @@ export function Footer() {
             <AionLogo width={150} showTagline />
             <p className="mt-3 text-[14px] text-[#5A6B7E]">The Full Circle of Health</p>
             <p className="mt-2 text-[13px] text-[#5A6B7E]">
-              aiOn Health Sciences · A Mazo Solutions Inc company
+              aiOn Health Science LLC · A Mazo Solutions Inc company
             </p>
           </div>
 
@@ -84,7 +84,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#1E3A5F] pt-6 md:flex-row">
-          <p className="text-[13px] text-[#5A6B7E]">© 2026 aiOn Health Sciences</p>
+          <p className="text-[13px] text-[#5A6B7E]">© 2026 aiOn Health Science LLC</p>
           <div className="flex gap-5 text-[#5A6B7E]">
             <a href="#" aria-label="LinkedIn" className="transition-colors hover:text-[#4FB3FF]">
               <Linkedin className="h-5 w-5" />
