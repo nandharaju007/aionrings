@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ringProduct from "@/assets/ring-product.jpg";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
-const FOUNDER_CAP = 500;
+const FOUNDER_CAP = 2000;
 
 const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
