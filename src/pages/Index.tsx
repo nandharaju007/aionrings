@@ -14,6 +14,7 @@ import lifestyle8 from '@/assets/lifestyle-hand-8.jpg';
 import lifestyle9 from '@/assets/lifestyle-hand-9.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
+const DISPLAY_FONT = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
 
 /* ---------- Reveal on scroll ---------- */
 function useReveal<T extends HTMLElement>() {
@@ -169,19 +170,19 @@ function Particles() {
 
 /* ---------- Story cards ---------- */
 const storyMoments = [
-  { time: '2:14 am', text: 'Your heart rate quietly shifted.', color: '#EF4444' },
-  { time: '4:05 am', text: 'Your body temperature rose slightly.', color: '#EF4444' },
-  { time: '6:47 am', text: 'aiOn told you before you felt anything.', color: '#4ADE80' },
+  { time: '2:14 am', text: 'Resting heart rate drifted 6 bpm higher than usual.', color: '#EF4444' },
+  { time: '4:05 am', text: 'Skin temperature climbed 0.4° above your baseline.', color: '#EF4444' },
+  { time: '6:47 am', text: 'You woke up. aiOn already had the note ready for you.', color: '#4ADE80' },
 ];
 
 /* ---------- Benefits ---------- */
 const benefits = [
-  { icon: '❤', bg: GRADIENT, title: 'You stop wondering why you\u2019re tired.', body: 'You know. aiOn explains the exact reason — not just a number, but the cause.' },
-  { icon: '💡', bg: '#4FB3FF', title: 'Your numbers finally make sense.', body: 'Not HRV: 27ms. But why it\u2019s low, what caused it, and what to do right now.' },
-  { icon: '😴', bg: '#7C3AED', title: 'Sleep becomes something you understand.', body: 'Every night analysed. Every morning explained. What changed, and why you feel how you feel.' },
-  { icon: '⚡', bg: '#FACC15', title: 'You train on the right days.', body: 'aiOn tells you when to push and when to hold back — before you even lace up.' },
-  { icon: '🧠', bg: '#EF4444', title: 'Stress doesn\u2019t sneak up on you.', body: 'Caught early. Explained clearly. Before it peaks.' },
-  { icon: '🏆', bg: '#4ADE80', title: 'You get a health briefing every morning.', body: 'Plain English. What happened overnight. What to do today. Before you open an app.' },
+  { icon: '❤', bg: GRADIENT, title: 'A reason for the tired days.', body: 'When you wake up flat, aiOn shows you what your night actually looked like — and what likely caused it.' },
+  { icon: '💡', bg: '#4FB3FF', title: 'Numbers with context.', body: 'Your HRV is 27ms. That is low for you. It is probably Friday\u2019s late session. Keep today easy.' },
+  { icon: '😴', bg: '#7C3AED', title: 'Sleep, quietly explained.', body: 'Deep, REM and light stages, mapped to how you woke up feeling. No graphs to decode over coffee.' },
+  { icon: '⚡', bg: '#FACC15', title: 'A read on the day ahead.', body: 'A single line before your first meeting: push today, or protect it. Based on how you actually recovered.' },
+  { icon: '🧠', bg: '#EF4444', title: 'Stress you can see coming.', body: 'HRV and skin response track tension as it builds, not hours after you already feel wrecked.' },
+  { icon: '🏆', bg: '#4ADE80', title: 'A short morning briefing.', body: 'A few plain sentences on your phone. What changed overnight, and one thing worth doing today.' },
 ];
 
 /* ---------- Proactive signals aiOn watches ---------- */
@@ -189,65 +190,65 @@ const signals = [
   {
     icon: '😴',
     tag: 'SLEEP',
-    title: 'Sleep you can actually feel.',
-    body: 'aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.',
-    quote: 'You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.',
+    title: 'A clearer read on your night.',
+    body: 'Stages, timing, restlessness — connected back to how you actually woke up, not just how long you were in bed.',
+    quote: 'Deep sleep was 42 min short. Screens off by 10 tonight would help.',
     glow: '#7C3AED',
   },
   {
     icon: '🧠',
     tag: 'STRESS',
-    title: 'Stress caught before it stacks.',
-    body: 'Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.',
-    quote: 'Stress load rising since 2pm. A 4-minute breath session can bring it back.',
+    title: 'Tension, before it stacks up.',
+    body: 'HRV and skin response, read continuously. You get a nudge while the day is still salvageable.',
+    quote: 'Stress has climbed since 2pm. Four minutes of slow breathing usually resets you.',
     glow: '#EF4444',
   },
   {
     icon: '❤',
     tag: 'HEART',
-    title: 'Heart rhythm, always in view.',
-    body: 'aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.',
-    quote: 'Resting HR is 8 bpm above your baseline this week. Consider a lighter session.',
+    title: 'The quiet days your heart works harder.',
+    body: 'Resting HR, HRV and rhythm trends, watched around the clock. You hear about the days that stand out.',
+    quote: 'Resting HR ran 8 bpm above your baseline this week. A lighter session today is fair.',
     glow: 'linear-gradient(135deg,#EF4444,#7C3AED)',
   },
   {
     icon: '🩸',
     tag: 'BLOOD PRESSURE',
-    title: 'BP trends, no cuff, no fuss.',
-    body: 'Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.',
-    quote: 'Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.',
+    title: 'Trends between check-ups.',
+    body: 'Pulse waveform patterns hint at vascular changes over weeks — the shifts an annual visit tends to miss.',
+    quote: 'Vascular tone has trended up for 12 days. Worth watching hydration and salt.',
     glow: '#00C6FF',
   },
   {
     icon: '🍬',
     tag: 'GLUCOSE RESPONSE',
-    title: 'Feel what food does to you.',
-    body: 'aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.',
-    quote: 'Your evening carbs spiked HR for 90 min. Try earlier dinners this week.',
+    title: 'How your body handles what you eat.',
+    body: 'Meals, heart rate and sleep, cross-referenced. Patterns start to surface after about two weeks of wear.',
+    quote: 'Late-evening carbs kept your HR elevated for 90 min. An earlier dinner may sit better.',
     glow: '#FACC15',
   },
   {
     icon: '🌿',
     tag: 'ANEMIA & OXYGEN',
-    title: 'Low energy, finally explained.',
-    body: 'Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.',
-    quote: 'SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.',
+    title: 'A reason for the flat weeks.',
+    body: 'Overnight SpO\u2082, resting HR and perfusion — patterns worth flagging to a doctor, not diagnosing on your own.',
+    quote: 'SpO\u2082 ran 2% below your baseline for 5 nights. Worth a mention at your next check-up.',
     glow: '#4ADE80',
   },
   {
     icon: '🔥',
     tag: 'ENERGY & CALORIES',
-    title: 'Calories that mean something.',
-    body: 'aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.',
-    quote: 'You burned 2,340 kcal today — 320 above your average. Refuel with protein.',
+    title: 'Energy, not just steps.',
+    body: 'Heart rate, temperature and motion together give a truer read of what your day actually cost you.',
+    quote: 'You burned around 2,340 kcal today, 320 above your average. Refuelling with protein helps.',
     glow: '#FACC15',
   },
   {
     icon: '✨',
     tag: 'DAILY HEALTH',
-    title: 'One score. The whole picture.',
-    body: 'Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.',
-    quote: 'Vitality 78 — Strong. You have room for one hard session before recovery.',
+    title: 'One honest read of the day.',
+    body: 'Recovery, strain, sleep and stress in a single number — with the sentence that explains why it moved.',
+    quote: 'Vitality 78. Room for one hard session, then let tomorrow be easy.',
     glow: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)',
   },
 ];
