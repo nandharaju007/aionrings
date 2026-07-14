@@ -480,7 +480,7 @@ const Index = () => {
         }
         @keyframes scrollBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
         @keyframes ppgLive { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        @keyframes fadeInUp { from{opacity:0;transform:translate(-50%,-8px)} to{opacity:1;transform:translate(-50%,0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
         @media (prefers-reduced-motion: reduce) {
           * { animation: none !important; transition: none !important; }
         }
@@ -501,35 +501,35 @@ const Index = () => {
           }}
         />
 
-        <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
-          {/* Left column: pill + copy + CTAs */}
-          <div className="text-center lg:text-left">
-            {/* Live ring vitals ticker */}
-            <div
-              className="mb-8 inline-flex"
-              aria-hidden="true"
-              style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
-            >
-              <div
-                className="flex items-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-6 sm:text-[12px]"
-                style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
-              >
-                <span className="flex items-center gap-2">
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
-                    style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
-                  />
-                  <span className="text-white/90">Live</span>
-                </span>
-                <span className="hidden h-3 w-px bg-white/10 sm:block" />
-                <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
-                <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
-                <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
-                <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
-                <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
-              </div>
-            </div>
+        {/* Live ring vitals ticker — centered above everything */}
+        <div
+          className="relative z-20 mx-auto mb-6 flex w-full max-w-[1200px] justify-center pt-4"
+          aria-hidden="true"
+          style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
+        >
+          <div
+            className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-5 sm:px-5 sm:py-3 sm:text-[12px]"
+            style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
+          >
+            <span className="flex items-center gap-2">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
+                style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
+              />
+              <span className="text-white/90">Live</span>
+            </span>
+            <span className="hidden h-3 w-px bg-white/10 sm:block" />
+            <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
+            <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
+            <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
+            <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
+            <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
+          </div>
+        </div>
 
+        <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+          {/* Left column: copy + CTAs */}
+          <div className="text-center lg:text-left">
             <span
               className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
               style={{ backgroundImage: GRADIENT }}
