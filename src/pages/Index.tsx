@@ -468,7 +468,7 @@ const Index = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <style>{`
         @keyframes sensorPulse { 0%,100%{opacity:0.75} 50%{opacity:1} }
         @keyframes ppgPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
@@ -535,21 +535,22 @@ const Index = () => {
               className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
               style={{ backgroundImage: GRADIENT }}
             >
-              AI-NATIVE SMART HEALTH RING
+              THE aiOn RING · EARLY ACCESS
             </span>
-            <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
-              Your body is always
+            <h1
+              className="mt-6 text-[52px] font-normal leading-[0.98] tracking-[-0.02em] text-white sm:text-[72px] lg:text-[92px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              A quieter way
               <br />
-              talking.
+              to know your
+              <br />
+              <em className="not-italic bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
+                own body.
+              </em>
             </h1>
-            <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
-              <span className="text-white">aiOn </span>
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
-                listens.
-              </span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF] lg:mx-0">
-              The first smart ring that doesn't just track your health — it understands it.
+            <p className="mx-auto mt-8 max-w-[460px] text-[18px] leading-[1.6] text-[#B8C5D3] lg:mx-0">
+              aiOn is a titanium ring that reads your body around the clock. Every morning, a few plain sentences tell you what changed overnight, why it probably changed, and one thing worth doing today.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
               <button
@@ -559,7 +560,7 @@ const Index = () => {
                 className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
                 style={{ background: GRADIENT }}
               >
-                Join the Waitlist · Free
+                Reserve your ring
               </button>
               <button
                 onClick={() =>
@@ -567,11 +568,11 @@ const Index = () => {
                 }
                 className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
               >
-                See How It Works ↓
+                See how it works
               </button>
             </div>
             <p className="mt-5 text-[14px] text-[#5A6B7E]">
-              No credit card · Ships 2026 · 30-day returns
+              Fully refundable · Free sizing kit · Ships 2026
             </p>
           </div>
 
@@ -582,7 +583,7 @@ const Index = () => {
           >
             <img
               src={ringHeroImg}
-              alt="aiOn Ring — the AI-native smart health ring"
+              alt="aiOn titanium health ring, close-up"
               width={1280}
               height={1280}
               className="h-auto w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[600px]"
@@ -613,10 +614,11 @@ const Index = () => {
       <section id="how" className="px-6 py-[180px]">
         <div className="mx-auto max-w-[700px] text-center">
           <Reveal>
-            <p className="text-[26px] font-light italic leading-[1.5] text-white sm:text-[30px]">
-              "You wake up. You check your phone.
-              <br />
-              You have no idea what happened inside your body while you slept."
+            <p
+              className="text-[30px] font-normal leading-[1.35] text-white sm:text-[38px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              Most mornings, you wake up and reach for your phone with no real idea what your body was doing for the last eight hours.
             </p>
           </Reveal>
 
@@ -636,10 +638,10 @@ const Index = () => {
 
           <Reveal delay={200}>
             <h3
-              className="mt-24 bg-clip-text text-[28px] font-semibold leading-tight text-transparent sm:text-[34px]"
-              style={{ backgroundImage: GRADIENT }}
+              className="mt-24 bg-clip-text text-[32px] font-normal leading-tight text-transparent sm:text-[42px]"
+              style={{ backgroundImage: GRADIENT, fontFamily: DISPLAY_FONT, WebkitBackgroundClip: 'text' }}
             >
-              aiOn knew hours before you felt it.
+              aiOn had noticed it hours earlier.
             </h3>
           </Reveal>
         </div>
@@ -651,12 +653,15 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WHAT CHANGES WHEN YOU WEAR IT
+                WHAT CHANGES, DAY TO DAY
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Six things that feel
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Small things you start
                 <br />
-                different. Immediately.
+                to notice.
               </h2>
             </Reveal>
           </div>
@@ -697,24 +702,27 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WORN, NOT WATCHED
+                LIVES ON YOUR FINGER
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Made to disappear
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                A ring first.
                 <br />
-                on your finger.
+                A sensor second.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Titanium-light. Quiet on the skin. Sensing without asking for attention.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Four grams of titanium. No screen, no notifications. You forget it is there — which is the point.
               </p>
             </Reveal>
           </div>
 
           <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {[
-              { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
-              { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
-              { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
+              { src: lifestyle4, tag: 'NIGHT', title: 'Reads while you sleep' },
+              { src: lifestyle5, tag: 'MORNING', title: 'Ready before you are' },
+              { src: lifestyle6, tag: 'DAY', title: 'Never asks for a glance' },
             ].map((s, i) => (
               <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
@@ -739,15 +747,18 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                PROACTIVE, NOT REACTIVE
+                THE SIGNALS aiOn READS
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Eight signals aiOn watches
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Eight things worth
                 <br />
-                so you don't have to.
+                paying attention to.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Each one explained the moment it changes.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                aiOn reads them quietly in the background. When something moves, you hear about it in a sentence — not a chart.
               </p>
             </Reveal>
           </div>
@@ -783,7 +794,7 @@ const Index = () => {
 
           <Reveal delay={200}>
             <p className="mx-auto mt-16 max-w-[520px] text-center text-[12px] leading-relaxed text-[#5A6B7E]">
-              Wellness insights based on signal trends. Not a medical device.
+              aiOn is a wellness ring. It is not a medical device and is not intended to diagnose, treat, cure or prevent any condition. If a trend concerns you, talk to your doctor.
             </p>
           </Reveal>
         </div>
@@ -797,13 +808,16 @@ const Index = () => {
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE APP
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                The app that thinks
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                A short read, not
                 <br />
-                for you.
+                a dashboard.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                A morning briefing. Not a dashboard.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Open the app and get a few sentences. Ask a follow-up when you want more. Close it and get on with your day.
               </p>
             </Reveal>
           </div>
@@ -958,13 +972,16 @@ const Index = () => {
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE RING
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Engineered to
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Held to a jeweller\u2019s
                 <br />
-                disappear.
+                standard.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                You'll forget it's there.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Medical-grade titanium. A week of battery on a charge. Swim-safe. Sized with a free kit before you ever commit.
               </p>
             </Reveal>
           </div>
@@ -1024,7 +1041,7 @@ const Index = () => {
                   className="mt-6 w-full rounded-2xl py-4 text-[16px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
                   style={{ background: GRADIENT }}
                 >
-                  Join the Waitlist →
+                  Reserve your ring
                 </button>
               </div>
             </Reveal>
@@ -1045,13 +1062,16 @@ const Index = () => {
         </div>
         <div className="relative mx-auto max-w-[560px] text-center">
           <Reveal>
-            <h2 className="text-[44px] font-bold leading-[1.05] text-white sm:text-[56px]">
-              Be first.
+            <h2
+              className="text-[48px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[64px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              Early access,
               <br />
-              Feel the difference.
+              one ring at a time.
             </h2>
-            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">
-              Early access. No credit card.
+            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+              We ship in small batches to make sure every ring lands well. Leave your email and we\u2019ll be in touch before your batch is ready.
             </p>
             <WaitlistForm />
           </Reveal>
