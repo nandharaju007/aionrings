@@ -14,6 +14,7 @@ import lifestyle8 from '@/assets/lifestyle-hand-8.jpg';
 import lifestyle9 from '@/assets/lifestyle-hand-9.jpg';
 
 const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
+const DISPLAY_FONT = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
 
 /* ---------- Reveal on scroll ---------- */
 function useReveal<T extends HTMLElement>() {
@@ -169,19 +170,19 @@ function Particles() {
 
 /* ---------- Story cards ---------- */
 const storyMoments = [
-  { time: '2:14 am', text: 'Your heart rate quietly shifted.', color: '#EF4444' },
-  { time: '4:05 am', text: 'Your body temperature rose slightly.', color: '#EF4444' },
-  { time: '6:47 am', text: 'aiOn told you before you felt anything.', color: '#4ADE80' },
+  { time: '2:14 am', text: 'Resting heart rate drifted 6 bpm higher than usual.', color: '#EF4444' },
+  { time: '4:05 am', text: 'Skin temperature climbed 0.4° above your baseline.', color: '#EF4444' },
+  { time: '6:47 am', text: 'You woke up. aiOn already had the note ready for you.', color: '#4ADE80' },
 ];
 
 /* ---------- Benefits ---------- */
 const benefits = [
-  { icon: '❤', bg: GRADIENT, title: 'You stop wondering why you\u2019re tired.', body: 'You know. aiOn explains the exact reason — not just a number, but the cause.' },
-  { icon: '💡', bg: '#4FB3FF', title: 'Your numbers finally make sense.', body: 'Not HRV: 27ms. But why it\u2019s low, what caused it, and what to do right now.' },
-  { icon: '😴', bg: '#7C3AED', title: 'Sleep becomes something you understand.', body: 'Every night analysed. Every morning explained. What changed, and why you feel how you feel.' },
-  { icon: '⚡', bg: '#FACC15', title: 'You train on the right days.', body: 'aiOn tells you when to push and when to hold back — before you even lace up.' },
-  { icon: '🧠', bg: '#EF4444', title: 'Stress doesn\u2019t sneak up on you.', body: 'Caught early. Explained clearly. Before it peaks.' },
-  { icon: '🏆', bg: '#4ADE80', title: 'You get a health briefing every morning.', body: 'Plain English. What happened overnight. What to do today. Before you open an app.' },
+  { icon: '❤', bg: GRADIENT, title: 'A reason for the tired days.', body: 'When you wake up flat, aiOn shows you what your night actually looked like — and what likely caused it.' },
+  { icon: '💡', bg: '#4FB3FF', title: 'Numbers with context.', body: 'Your HRV is 27ms. That is low for you. It is probably Friday\u2019s late session. Keep today easy.' },
+  { icon: '😴', bg: '#7C3AED', title: 'Sleep, quietly explained.', body: 'Deep, REM and light stages, mapped to how you woke up feeling. No graphs to decode over coffee.' },
+  { icon: '⚡', bg: '#FACC15', title: 'A read on the day ahead.', body: 'A single line before your first meeting: push today, or protect it. Based on how you actually recovered.' },
+  { icon: '🧠', bg: '#EF4444', title: 'Stress you can see coming.', body: 'HRV and skin response track tension as it builds, not hours after you already feel wrecked.' },
+  { icon: '🏆', bg: '#4ADE80', title: 'A short morning briefing.', body: 'A few plain sentences on your phone. What changed overnight, and one thing worth doing today.' },
 ];
 
 /* ---------- Proactive signals aiOn watches ---------- */
@@ -189,65 +190,65 @@ const signals = [
   {
     icon: '😴',
     tag: 'SLEEP',
-    title: 'Sleep you can actually feel.',
-    body: 'aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.',
-    quote: 'You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.',
+    title: 'A clearer read on your night.',
+    body: 'Stages, timing, restlessness — connected back to how you actually woke up, not just how long you were in bed.',
+    quote: 'Deep sleep was 42 min short. Screens off by 10 tonight would help.',
     glow: '#7C3AED',
   },
   {
     icon: '🧠',
     tag: 'STRESS',
-    title: 'Stress caught before it stacks.',
-    body: 'Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.',
-    quote: 'Stress load rising since 2pm. A 4-minute breath session can bring it back.',
+    title: 'Tension, before it stacks up.',
+    body: 'HRV and skin response, read continuously. You get a nudge while the day is still salvageable.',
+    quote: 'Stress has climbed since 2pm. Four minutes of slow breathing usually resets you.',
     glow: '#EF4444',
   },
   {
     icon: '❤',
     tag: 'HEART',
-    title: 'Heart rhythm, always in view.',
-    body: 'aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.',
-    quote: 'Resting HR is 8 bpm above your baseline this week. Consider a lighter session.',
+    title: 'The quiet days your heart works harder.',
+    body: 'Resting HR, HRV and rhythm trends, watched around the clock. You hear about the days that stand out.',
+    quote: 'Resting HR ran 8 bpm above your baseline this week. A lighter session today is fair.',
     glow: 'linear-gradient(135deg,#EF4444,#7C3AED)',
   },
   {
     icon: '🩸',
     tag: 'BLOOD PRESSURE',
-    title: 'BP trends, no cuff, no fuss.',
-    body: 'Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.',
-    quote: 'Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.',
+    title: 'Trends between check-ups.',
+    body: 'Pulse waveform patterns hint at vascular changes over weeks — the shifts an annual visit tends to miss.',
+    quote: 'Vascular tone has trended up for 12 days. Worth watching hydration and salt.',
     glow: '#00C6FF',
   },
   {
     icon: '🍬',
     tag: 'GLUCOSE RESPONSE',
-    title: 'Feel what food does to you.',
-    body: 'aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.',
-    quote: 'Your evening carbs spiked HR for 90 min. Try earlier dinners this week.',
+    title: 'How your body handles what you eat.',
+    body: 'Meals, heart rate and sleep, cross-referenced. Patterns start to surface after about two weeks of wear.',
+    quote: 'Late-evening carbs kept your HR elevated for 90 min. An earlier dinner may sit better.',
     glow: '#FACC15',
   },
   {
     icon: '🌿',
     tag: 'ANEMIA & OXYGEN',
-    title: 'Low energy, finally explained.',
-    body: 'Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.',
-    quote: 'SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.',
+    title: 'A reason for the flat weeks.',
+    body: 'Overnight SpO\u2082, resting HR and perfusion — patterns worth flagging to a doctor, not diagnosing on your own.',
+    quote: 'SpO\u2082 ran 2% below your baseline for 5 nights. Worth a mention at your next check-up.',
     glow: '#4ADE80',
   },
   {
     icon: '🔥',
     tag: 'ENERGY & CALORIES',
-    title: 'Calories that mean something.',
-    body: 'aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.',
-    quote: 'You burned 2,340 kcal today — 320 above your average. Refuel with protein.',
+    title: 'Energy, not just steps.',
+    body: 'Heart rate, temperature and motion together give a truer read of what your day actually cost you.',
+    quote: 'You burned around 2,340 kcal today, 320 above your average. Refuelling with protein helps.',
     glow: '#FACC15',
   },
   {
     icon: '✨',
     tag: 'DAILY HEALTH',
-    title: 'One score. The whole picture.',
-    body: 'Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.',
-    quote: 'Vitality 78 — Strong. You have room for one hard session before recovery.',
+    title: 'One honest read of the day.',
+    body: 'Recovery, strain, sleep and stress in a single number — with the sentence that explains why it moved.',
+    quote: 'Vitality 78. Room for one hard session, then let tomorrow be easy.',
     glow: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)',
   },
 ];
@@ -401,8 +402,8 @@ function WaitlistForm() {
     <div className="mx-auto mt-12 max-w-[480px]">
       {sent ? (
         <div className="text-center transition-opacity duration-300">
-          <p className="text-[20px] text-[#4ADE80]">✓ You're on the list.</p>
-          <p className="mt-1 text-[15px] text-[#8B9DAF]">We'll reach out before launch.</p>
+          <p className="text-[20px] text-[#4ADE80]">You’re on the list.</p>
+          <p className="mt-1 text-[15px] text-[#B8C5D3]">We’ll email you before your batch is ready. No newsletters in between.</p>
         </div>
       ) : (
         <form
@@ -426,16 +427,16 @@ function WaitlistForm() {
             className="px-6 py-4 text-[15px] font-semibold text-white transition-all duration-150 hover:brightness-110"
             style={{ background: GRADIENT }}
           >
-            Join Waitlist →
+            Reserve
           </button>
         </form>
       )}
       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[14px] text-[#5A6B7E]">
-        <span>🔒 No spam ever</span>
+        <span>Fully refundable</span>
         <span>·</span>
-        <span>📦 Ships 2026</span>
+        <span>Free sizing kit first</span>
         <span>·</span>
-        <span>↩ 30-day returns</span>
+        <span>Ships 2026</span>
       </div>
     </div>
   );
@@ -467,7 +468,7 @@ const Index = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <style>{`
         @keyframes sensorPulse { 0%,100%{opacity:0.75} 50%{opacity:1} }
         @keyframes ppgPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
@@ -534,21 +535,22 @@ const Index = () => {
               className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
               style={{ backgroundImage: GRADIENT }}
             >
-              AI-NATIVE SMART HEALTH RING
+              THE aiOn RING · EARLY ACCESS
             </span>
-            <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
-              Your body is always
+            <h1
+              className="mt-6 text-[52px] font-normal leading-[0.98] tracking-[-0.02em] text-white sm:text-[72px] lg:text-[92px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              A quieter way
               <br />
-              talking.
+              to know your
+              <br />
+              <em className="not-italic bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
+                own body.
+              </em>
             </h1>
-            <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
-              <span className="text-white">aiOn </span>
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
-                listens.
-              </span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF] lg:mx-0">
-              The first smart ring that doesn't just track your health — it understands it.
+            <p className="mx-auto mt-8 max-w-[460px] text-[18px] leading-[1.6] text-[#B8C5D3] lg:mx-0">
+              aiOn is a titanium ring that reads your body around the clock. Every morning, a few plain sentences tell you what changed overnight, why it probably changed, and one thing worth doing today.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
               <button
@@ -558,7 +560,7 @@ const Index = () => {
                 className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
                 style={{ background: GRADIENT }}
               >
-                Join the Waitlist · Free
+                Reserve your ring
               </button>
               <button
                 onClick={() =>
@@ -566,11 +568,11 @@ const Index = () => {
                 }
                 className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
               >
-                See How It Works ↓
+                See how it works
               </button>
             </div>
             <p className="mt-5 text-[14px] text-[#5A6B7E]">
-              No credit card · Ships 2026 · 30-day returns
+              Fully refundable · Free sizing kit · Ships 2026
             </p>
           </div>
 
@@ -581,7 +583,7 @@ const Index = () => {
           >
             <img
               src={ringHeroImg}
-              alt="aiOn Ring — the AI-native smart health ring"
+              alt="aiOn titanium health ring, close-up"
               width={1280}
               height={1280}
               className="h-auto w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[600px]"
@@ -612,10 +614,11 @@ const Index = () => {
       <section id="how" className="px-6 py-[180px]">
         <div className="mx-auto max-w-[700px] text-center">
           <Reveal>
-            <p className="text-[26px] font-light italic leading-[1.5] text-white sm:text-[30px]">
-              "You wake up. You check your phone.
-              <br />
-              You have no idea what happened inside your body while you slept."
+            <p
+              className="text-[30px] font-normal leading-[1.35] text-white sm:text-[38px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              Most mornings, you wake up and reach for your phone with no real idea what your body was doing for the last eight hours.
             </p>
           </Reveal>
 
@@ -635,10 +638,10 @@ const Index = () => {
 
           <Reveal delay={200}>
             <h3
-              className="mt-24 bg-clip-text text-[28px] font-semibold leading-tight text-transparent sm:text-[34px]"
-              style={{ backgroundImage: GRADIENT }}
+              className="mt-24 bg-clip-text text-[32px] font-normal leading-tight text-transparent sm:text-[42px]"
+              style={{ backgroundImage: GRADIENT, fontFamily: DISPLAY_FONT, WebkitBackgroundClip: 'text' }}
             >
-              aiOn knew hours before you felt it.
+              aiOn had noticed it hours earlier.
             </h3>
           </Reveal>
         </div>
@@ -650,12 +653,15 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WHAT CHANGES WHEN YOU WEAR IT
+                WHAT CHANGES, DAY TO DAY
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Six things that feel
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Small things you start
                 <br />
-                different. Immediately.
+                to notice.
               </h2>
             </Reveal>
           </div>
@@ -696,24 +702,27 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WORN, NOT WATCHED
+                LIVES ON YOUR FINGER
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Made to disappear
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                A ring first.
                 <br />
-                on your finger.
+                A sensor second.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Titanium-light. Quiet on the skin. Sensing without asking for attention.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Four grams of titanium. No screen, no notifications. You forget it is there — which is the point.
               </p>
             </Reveal>
           </div>
 
           <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {[
-              { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
-              { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
-              { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
+              { src: lifestyle4, tag: 'NIGHT', title: 'Reads while you sleep' },
+              { src: lifestyle5, tag: 'MORNING', title: 'Ready before you are' },
+              { src: lifestyle6, tag: 'DAY', title: 'Never asks for a glance' },
             ].map((s, i) => (
               <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
@@ -738,15 +747,18 @@ const Index = () => {
           <div className="text-center">
             <Reveal>
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                PROACTIVE, NOT REACTIVE
+                THE SIGNALS aiOn READS
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Eight signals aiOn watches
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Eight things worth
                 <br />
-                so you don't have to.
+                paying attention to.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Each one explained the moment it changes.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                aiOn reads them quietly in the background. When something moves, you hear about it in a sentence — not a chart.
               </p>
             </Reveal>
           </div>
@@ -782,7 +794,7 @@ const Index = () => {
 
           <Reveal delay={200}>
             <p className="mx-auto mt-16 max-w-[520px] text-center text-[12px] leading-relaxed text-[#5A6B7E]">
-              Wellness insights based on signal trends. Not a medical device.
+              aiOn is a wellness ring. It is not a medical device and is not intended to diagnose, treat, cure or prevent any condition. If a trend concerns you, talk to your doctor.
             </p>
           </Reveal>
         </div>
@@ -796,13 +808,16 @@ const Index = () => {
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE APP
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                The app that thinks
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                A short read, not
                 <br />
-                for you.
+                a dashboard.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                A morning briefing. Not a dashboard.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Open the app and get a few sentences. Ask a follow-up when you want more. Close it and get on with your day.
               </p>
             </Reveal>
           </div>
@@ -957,13 +972,16 @@ const Index = () => {
               <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
                 THE RING
               </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Engineered to
+              <h2
+                className="mt-5 text-[42px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[60px]"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                Held to a jeweller’s
                 <br />
-                disappear.
+                standard.
               </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                You'll forget it's there.
+              <p className="mx-auto mt-6 max-w-[460px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+                Medical-grade titanium. A week of battery on a charge. Swim-safe. Sized with a free kit before you ever commit.
               </p>
             </Reveal>
           </div>
@@ -1023,7 +1041,7 @@ const Index = () => {
                   className="mt-6 w-full rounded-2xl py-4 text-[16px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
                   style={{ background: GRADIENT }}
                 >
-                  Join the Waitlist →
+                  Reserve your ring
                 </button>
               </div>
             </Reveal>
@@ -1044,13 +1062,16 @@ const Index = () => {
         </div>
         <div className="relative mx-auto max-w-[560px] text-center">
           <Reveal>
-            <h2 className="text-[44px] font-bold leading-[1.05] text-white sm:text-[56px]">
-              Be first.
+            <h2
+              className="text-[48px] font-normal leading-[1.05] tracking-[-0.01em] text-white sm:text-[64px]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
+              Early access,
               <br />
-              Feel the difference.
+              one ring at a time.
             </h2>
-            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">
-              Early access. No credit card.
+            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#B8C5D3]">
+              We ship in small batches to make sure every ring lands well. Leave your email and we’ll be in touch before your batch is ready.
             </p>
             <WaitlistForm />
           </Reveal>
