@@ -1,31 +1,31 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from 'lucide-react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { supabase } from '@/integrations/supabase/client';
-import ringProduct from '@/assets/ring-product.jpg';
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import ringProduct from "@/assets/ring-product.jpg";
 
-const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
+const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 500;
 
-const RING_SIZES = ['6', '7', '8', '9', '10', '11', '12', '13'];
+const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
-  { id: 'midnight', name: 'Midnight Black', filter: 'brightness(0.75) contrast(1.15) hue-rotate(200deg)' },
-  { id: 'silver', name: 'Titanium Silver', filter: 'grayscale(1) brightness(1.1)' },
-  { id: 'rose', name: 'Rose Gold', filter: 'sepia(0.5) hue-rotate(-15deg) saturate(1.2) brightness(1.05)' },
+  { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
+  { id: "silver", name: "Titanium Silver", filter: "grayscale(1) brightness(1.1)" },
+  { id: "rose", name: "Rose Gold", filter: "sepia(0.5) hue-rotate(-15deg) saturate(1.2) brightness(1.05)" },
 ];
 
 // US ring size → inner diameter (mm) reference
 const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
-  { size: '6', diameter: '16.5 mm', circumference: '51.9 mm' },
-  { size: '7', diameter: '17.3 mm', circumference: '54.4 mm' },
-  { size: '8', diameter: '18.1 mm', circumference: '57.0 mm' },
-  { size: '9', diameter: '19.0 mm', circumference: '59.5 mm' },
-  { size: '10', diameter: '19.8 mm', circumference: '62.1 mm' },
-  { size: '11', diameter: '20.6 mm', circumference: '64.6 mm' },
-  { size: '12', diameter: '21.4 mm', circumference: '67.2 mm' },
-  { size: '13', diameter: '22.2 mm', circumference: '69.7 mm' },
+  { size: "6", diameter: "16.5 mm", circumference: "51.9 mm" },
+  { size: "7", diameter: "17.3 mm", circumference: "54.4 mm" },
+  { size: "8", diameter: "18.1 mm", circumference: "57.0 mm" },
+  { size: "9", diameter: "19.0 mm", circumference: "59.5 mm" },
+  { size: "10", diameter: "19.8 mm", circumference: "62.1 mm" },
+  { size: "11", diameter: "20.6 mm", circumference: "64.6 mm" },
+  { size: "12", diameter: "21.4 mm", circumference: "67.2 mm" },
+  { size: "13", diameter: "22.2 mm", circumference: "69.7 mm" },
 ];
 
 interface RingItem {
@@ -37,8 +37,8 @@ interface RingItem {
 
 const newItem = (): RingItem => ({
   id: Math.random().toString(36).slice(2, 9),
-  ring_size: '',
-  ring_color: 'midnight',
+  ring_size: "",
+  ring_color: "midnight",
   quantity: 1,
 });
 
@@ -55,29 +55,36 @@ interface FormState {
 }
 
 const INITIAL: FormState = {
-  first_name: '', last_name: '', email: '', phone: '',
-  address: '', city: '', state: '', zip_code: '', country: 'United States',
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  state: "",
+  zip_code: "",
+  country: "United States",
 };
 
 export default function PreOrderPage() {
   const [params] = useSearchParams();
-  const referral = params.get('ref') || undefined;
-  const partnerCode = (params.get('partner') || '').trim().toLowerCase() || undefined;
+  const referral = params.get("ref") || undefined;
+  const partnerCode = (params.get("partner") || "").trim().toLowerCase() || undefined;
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState<{ numbers: string[]; name: string; partner?: string | null } | null>(null);
+  const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
   const [totals, setTotals] = useState<{ reservations: number; rings: number }>({ reservations: 0, rings: 0 });
   const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
 
   useEffect(() => {
-    document.title = 'Pre-Order aiOn Ring — Founder Edition';
+    document.title = "Pre-Order aiOn Ring — Founder Edition";
     supabase
-      .from('reservation_totals')
-      .select('total_reservations, total_rings')
+      .from("reservation_totals")
+      .select("total_reservations, total_rings")
       .maybeSingle()
       .then(({ data }) => {
         if (data) setTotals({ reservations: Number(data.total_reservations), rings: Number(data.total_rings) });
@@ -85,12 +92,15 @@ export default function PreOrderPage() {
   }, [confirmed]);
 
   useEffect(() => {
-    if (!partnerCode) { setPartner(null); return; }
+    if (!partnerCode) {
+      setPartner(null);
+      return;
+    }
     supabase
-      .from('partners')
-      .select('code, name, status')
-      .eq('code', partnerCode)
-      .eq('status', 'active')
+      .from("partners")
+      .select("code, name, status")
+      .eq("code", partnerCode)
+      .eq("status", "active")
       .maybeSingle()
       .then(({ data }) => {
         if (data) setPartner({ code: data.code, name: data.name });
@@ -100,23 +110,26 @@ export default function PreOrderPage() {
   const founderClaimed = totals.rings;
   const founderLeft = Math.max(0, FOUNDER_CAP - founderClaimed);
   const founderPct = Math.min(100, (founderClaimed / FOUNDER_CAP) * 100);
-  const previewColor = useMemo(
-    () => RING_COLORS.find(c => c.id === items[0]?.ring_color) ?? RING_COLORS[0],
-    [items],
-  );
+  const previewColor = useMemo(() => RING_COLORS.find((c) => c.id === items[0]?.ring_color) ?? RING_COLORS[0], [items]);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm(p => ({ ...p, [k]: v }));
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
   const updateItem = (id: string, patch: Partial<RingItem>) =>
-    setItems(prev => prev.map(it => (it.id === id ? { ...it, ...patch } : it)));
-  const addItem = () => setItems(prev => (prev.length >= 10 ? prev : [...prev, newItem()]));
-  const removeItem = (id: string) => setItems(prev => (prev.length <= 1 ? prev : prev.filter(it => it.id !== id)));
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
+  const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
+  const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
   const detailsValid =
-    form.first_name.trim() && form.last_name.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-    && form.phone.trim() && form.address.trim() && form.city.trim() && form.state.trim()
-    && form.zip_code.trim() && form.country.trim();
-  const itemsValid = items.length > 0 && items.every(i => i.ring_size && i.quantity >= 1);
+    form.first_name.trim() &&
+    form.last_name.trim() &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+    form.phone.trim() &&
+    form.address.trim() &&
+    form.city.trim() &&
+    form.state.trim() &&
+    form.zip_code.trim() &&
+    form.country.trim();
+  const itemsValid = items.length > 0 && items.every((i) => i.ring_size && i.quantity >= 1);
   const canSubmit = detailsValid && itemsValid;
 
   async function onSubmit(e: React.FormEvent) {
@@ -125,21 +138,25 @@ export default function PreOrderPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const { data, error } = await supabase.functions.invoke('submit-reservation', {
-        body: {
-          ...form,
-          items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
-          referral_source: referral,
-          partner_code: partner?.code ?? partnerCode,
+      const response = await fetch(
+        "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...form,
+            items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
+            referral_source: referral,
+            partner_code: partner?.code ?? partnerCode,
+          }),
         },
-      });
-      if (error) throw error;
-      if (!data?.ok) throw new Error(data?.error || 'Reservation failed');
-      const numbers: string[] = data.reservation_numbers ?? [data.reservation_number];
-      setConfirmed({ numbers, name: form.first_name, partner: data.partner_name ?? partner?.name ?? null });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      );
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.message || "Reservation failed");
+      setConfirmed({ name: form.first_name, partner: partner?.name ?? null });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -152,22 +169,29 @@ export default function PreOrderPage() {
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
           {confirmed ? (
-            <ConfirmationCard numbers={confirmed.numbers} name={confirmed.name} partner={confirmed.partner} />
+            <ConfirmationCard name={confirmed.name} partner={confirmed.partner} />
           ) : (
             <>
               {partner && (
                 <div className="mb-10 max-w-3xl mx-auto rounded-2xl border border-[#4FB3FF]/25 bg-gradient-to-br from-[#4FB3FF]/[0.06] to-transparent p-6 md:p-8">
                   <div className="flex items-start gap-4">
-                    <div className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
+                    <div
+                      className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
+                      style={{ background: GRADIENT }}
+                    >
                       <Handshake className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF] mb-2">Welcome</div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF] mb-2">
+                        Welcome
+                      </div>
                       <h2 className="text-xl md:text-2xl font-light tracking-tight text-white">
-                        You've been invited by <span className="font-medium">{partner.name}</span> to reserve your aiOn Ring.
+                        You've been invited by <span className="font-medium">{partner.name}</span> to reserve your aiOn
+                        Ring.
                       </h2>
                       <p className="mt-2 text-[14px] text-[#B8C5D3] leading-relaxed">
-                        {partner.name} is an official aiOn Partner helping customers gain early access to AI-powered wellness technology. Complete your reservation below — we'll take care of everything else.
+                        {partner.name} is an official aiOn Partner helping customers gain early access to AI-powered
+                        wellness technology. Complete your reservation below — we'll take care of everything else.
                       </p>
                     </div>
                   </div>
@@ -183,7 +207,11 @@ export default function PreOrderPage() {
                   </span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-light tracking-tight mb-4">
-                  Reserve your <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: 'text', color: 'transparent' }}>aiOn Ring</span>.
+                  Reserve your{" "}
+                  <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: "text", color: "transparent" }}>
+                    aiOn Ring
+                  </span>
+                  .
                 </h1>
                 <p className="text-[16px] text-[#8B9DAF] max-w-xl mx-auto">
                   Be among the first 500 to wear the future of health awareness. No payment today — your place is held.
@@ -193,10 +221,15 @@ export default function PreOrderPage() {
                 <div className="mt-10 max-w-md mx-auto">
                   <div className="flex items-baseline justify-between text-[13px] mb-2">
                     <span className="text-[#B8C5D3]">Founder Edition claimed</span>
-                    <span className="font-medium text-white">{founderClaimed} / {FOUNDER_CAP}</span>
+                    <span className="font-medium text-white">
+                      {founderClaimed} / {FOUNDER_CAP}
+                    </span>
                   </div>
                   <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                    <div className="h-full transition-all duration-700" style={{ width: `${founderPct}%`, background: GRADIENT }} />
+                    <div
+                      className="h-full transition-all duration-700"
+                      style={{ width: `${founderPct}%`, background: GRADIENT }}
+                    />
                   </div>
                   <p className="mt-3 text-[12px] text-[#5A6B7E]">Only {founderLeft} founder rings remain.</p>
                 </div>
@@ -221,7 +254,9 @@ export default function PreOrderPage() {
                       </div>
                       <div className="text-right">
                         <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Total</div>
-                        <div className="text-[15px] font-medium mt-1">{totalRings} ring{totalRings === 1 ? '' : 's'}</div>
+                        <div className="text-[15px] font-medium mt-1">
+                          {totalRings} ring{totalRings === 1 ? "" : "s"}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -229,11 +264,14 @@ export default function PreOrderPage() {
                   {/* Trust */}
                   <div className="mt-8 grid grid-cols-3 gap-3">
                     {[
-                      { icon: ShieldCheck, label: 'No payment today' },
-                      { icon: Truck, label: 'Priority shipping' },
-                      { icon: Sparkles, label: 'Founder pricing' },
+                      { icon: ShieldCheck, label: "No payment today" },
+                      { icon: Truck, label: "Priority shipping" },
+                      { icon: Sparkles, label: "Founder pricing" },
                     ].map(({ icon: Icon, label }) => (
-                      <div key={label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-center">
+                      <div
+                        key={label}
+                        className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-center"
+                      >
                         <Icon className="w-4 h-4 text-[#4FB3FF] mx-auto mb-1.5" />
                         <div className="text-[11px] text-[#B8C5D3] leading-tight">{label}</div>
                       </div>
@@ -251,7 +289,8 @@ export default function PreOrderPage() {
                         <div className="flex-1 text-[13px] text-[#B8C5D3] leading-relaxed">
                           <div className="font-medium text-white mb-1">Not sure of your ring size?</div>
                           <p className="text-[#8B9DAF]">
-                            Measure the inside diameter of a ring you already wear, or wrap a string around the base of your finger and match the length below.
+                            Measure the inside diameter of a ring you already wear, or wrap a string around the base of
+                            your finger and match the length below.
                           </p>
                           <button
                             type="button"
@@ -268,7 +307,10 @@ export default function PreOrderPage() {
                     </div>
 
                     {items.map((item, idx) => (
-                      <div key={item.id} className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4">
+                      <div
+                        key={item.id}
+                        className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4"
+                      >
                         <div className="flex items-center justify-between">
                           <div className="text-[12px] uppercase tracking-[2px] text-[#8B9DAF]">Ring {idx + 1}</div>
                           {items.length > 1 && (
@@ -285,12 +327,12 @@ export default function PreOrderPage() {
                         <div>
                           <Label>Ring size</Label>
                           <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mt-2">
-                            {RING_SIZES.map(s => (
+                            {RING_SIZES.map((s) => (
                               <button
                                 type="button"
                                 key={s}
                                 onClick={() => updateItem(item.id, { ring_size: s })}
-                                className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? 'border-[#4FB3FF] bg-[#4FB3FF]/10 text-white' : 'border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20'}`}
+                                className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 {s}
                               </button>
@@ -301,16 +343,19 @@ export default function PreOrderPage() {
                         <div>
                           <Label>Finish</Label>
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {RING_COLORS.map(c => (
+                            {RING_COLORS.map((c) => (
                               <button
                                 key={c.id}
                                 type="button"
                                 onClick={() => updateItem(item.id, { ring_color: c.id })}
-                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? 'border-[#4FB3FF] bg-[#4FB3FF]/10 text-white' : 'border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20'}`}
+                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 <span
                                   className="w-4 h-4 rounded-full border border-white/20"
-                                  style={{ background: c.id === 'midnight' ? '#1a1f2e' : c.id === 'silver' ? '#c0c5cc' : '#d4a596' }}
+                                  style={{
+                                    background:
+                                      c.id === "midnight" ? "#1a1f2e" : c.id === "silver" ? "#c0c5cc" : "#d4a596",
+                                  }}
                                 />
                                 {c.name}
                               </button>
@@ -326,14 +371,18 @@ export default function PreOrderPage() {
                               onClick={() => updateItem(item.id, { quantity: Math.max(1, item.quantity - 1) })}
                               className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
                               aria-label="Decrease"
-                            ><Minus className="w-4 h-4" /></button>
+                            >
+                              <Minus className="w-4 h-4" />
+                            </button>
                             <span className="w-12 text-center text-[16px] font-medium">{item.quantity}</span>
                             <button
                               type="button"
-                              onClick={() => updateItem(item.id, { quantity: Math.min(10, item.quantity + 1) })}
+                              onClick={() => updateItem(item.id, { quantity: Math.min(100, item.quantity + 1) })}
                               className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
                               aria-label="Increase"
-                            ><Plus className="w-4 h-4" /></button>
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -352,22 +401,43 @@ export default function PreOrderPage() {
 
                   <Section title="Your details">
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="First name" value={form.first_name} onChange={v => update('first_name', v)} required />
-                      <Input label="Last name" value={form.last_name} onChange={v => update('last_name', v)} required />
+                      <Input
+                        label="First name"
+                        value={form.first_name}
+                        onChange={(v) => update("first_name", v)}
+                        required
+                      />
+                      <Input
+                        label="Last name"
+                        value={form.last_name}
+                        onChange={(v) => update("last_name", v)}
+                        required
+                      />
                     </div>
-                    <Input label="Email" type="email" value={form.email} onChange={v => update('email', v)} required />
-                    <Input label="Phone" type="tel" value={form.phone} onChange={v => update('phone', v)} required />
+                    <Input
+                      label="Email"
+                      type="email"
+                      value={form.email}
+                      onChange={(v) => update("email", v)}
+                      required
+                    />
+                    <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} required />
                   </Section>
 
                   <Section title="Shipping address">
-                    <Input label="Address" value={form.address} onChange={v => update('address', v)} required />
+                    <Input label="Address" value={form.address} onChange={(v) => update("address", v)} required />
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="City" value={form.city} onChange={v => update('city', v)} required />
-                      <Input label="State / Region" value={form.state} onChange={v => update('state', v)} required />
+                      <Input label="City" value={form.city} onChange={(v) => update("city", v)} required />
+                      <Input label="State / Region" value={form.state} onChange={(v) => update("state", v)} required />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="ZIP / Postal code" value={form.zip_code} onChange={v => update('zip_code', v)} required />
-                      <Input label="Country" value={form.country} onChange={v => update('country', v)} required />
+                      <Input
+                        label="ZIP / Postal code"
+                        value={form.zip_code}
+                        onChange={(v) => update("zip_code", v)}
+                        required
+                      />
+                      <Input label="Country" value={form.country} onChange={(v) => update("country", v)} required />
                     </div>
                   </Section>
 
@@ -384,16 +454,24 @@ export default function PreOrderPage() {
                     style={{ background: GRADIENT }}
                   >
                     {submitting ? (
-                      <><Loader2 className="w-4 h-4 animate-spin" /> Reserving your ring…</>
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Reserving your ring…
+                      </>
                     ) : (
-                      <>Reserve {totalRings > 1 ? `my ${totalRings} aiOn Rings` : 'my aiOn Ring'} →</>
+                      <>Reserve {totalRings > 1 ? `my ${totalRings} aiOn Rings` : "my aiOn Ring"} →</>
                     )}
                   </button>
 
                   <p className="text-center text-[12px] text-[#5A6B7E]">
-                    No charge today. We'll email you before we ship. By reserving, you agree to our{' '}
-                    <Link to="/terms-of-service" className="underline hover:text-white">Terms</Link> and{' '}
-                    <Link to="/privacy-policy" className="underline hover:text-white">Privacy Policy</Link>.
+                    No charge today. We'll email you before we ship. By reserving, you agree to our{" "}
+                    <Link to="/terms-of-service" className="underline hover:text-white">
+                      Terms
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy-policy" className="underline hover:text-white">
+                      Privacy Policy
+                    </Link>
+                    .
                   </p>
                 </form>
               </div>
@@ -423,9 +501,17 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function Input({
-  label, value, onChange, type = 'text', required,
+  label,
+  value,
+  onChange,
+  type = "text",
+  required,
 }: {
-  label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -433,7 +519,7 @@ function Input({
       <input
         type={type}
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         required={required}
         maxLength={200}
         className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
@@ -442,17 +528,18 @@ function Input({
   );
 }
 
-function ConfirmationCard({ numbers, name, partner }: { numbers: string[]; name: string; partner?: string | null }) {
+function ConfirmationCard({ name, partner }: { name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
-      <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center" style={{ background: GRADIENT }}>
+      <div
+        className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center"
+        style={{ background: GRADIENT }}
+      >
         <Check className="w-10 h-10 text-white" />
       </div>
-      <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
-        Thank you, {name}.
-      </h1>
+      <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">Thank you, {name}.</h1>
       <p className="text-[16px] text-[#8B9DAF] mb-10 max-w-lg mx-auto">
-        Your aiOn Ring reservation{numbers.length > 1 ? 's have' : ' has'} been received. A confirmation email is on its way.
+        Your aiOn Ring reservation has been received. A confirmation email is on its way.
       </p>
       {partner && (
         <div className="inline-block rounded-2xl border border-[#4FB3FF]/25 bg-[#4FB3FF]/[0.06] px-6 py-4 mb-6">
@@ -460,21 +547,14 @@ function ConfirmationCard({ numbers, name, partner }: { numbers: string[]; name:
           <div className="text-[16px] font-medium">{partner}</div>
         </div>
       )}
-      <div className="inline-block rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-6 mb-10 text-left">
-        <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-3 text-center">
-          Reservation Number{numbers.length > 1 ? 's' : ''}
-        </div>
-        <div className="space-y-1.5">
-          {numbers.map(n => (
-            <div key={n} className="text-xl font-medium tracking-[2px] text-center">{n}</div>
-          ))}
-        </div>
-      </div>
       <p className="text-[13px] text-[#8B9DAF] mb-8 max-w-md mx-auto">
         We'll contact you soon regarding pricing, availability and delivery.
       </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Link to="/" className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors">
+        <Link
+          to="/"
+          className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors"
+        >
           Back to home
         </Link>
       </div>
@@ -484,20 +564,23 @@ function ConfirmationCard({ numbers, name, partner }: { numbers: string[]; name:
 
 function SizingGuide({ onClose }: { onClose: () => void }) {
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
     };
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         className="relative w-full max-w-lg rounded-3xl border border-white/10 bg-[#0F1E33] p-8 max-h-[90vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
@@ -518,7 +601,10 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
           </div>
           <div>
             <div className="font-medium text-white mb-1">Method 2 — String</div>
-            <p>Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it overlaps and measure the length — that's your circumference.</p>
+            <p>
+              Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
+              overlaps and measure the length — that's your circumference.
+            </p>
           </div>
           <div>
             <div className="font-medium text-white mb-1">Tips</div>
@@ -540,7 +626,7 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
               </tr>
             </thead>
             <tbody>
-              {SIZE_CHART.map(row => (
+              {SIZE_CHART.map((row) => (
                 <tr key={row.size} className="border-t border-white/5">
                   <td className="px-4 py-2 font-medium text-white">{row.size}</td>
                   <td className="px-4 py-2 text-[#B8C5D3]">{row.diameter}</td>
@@ -552,7 +638,8 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         </div>
 
         <p className="mt-6 text-[12px] text-[#5A6B7E]">
-          Still unsure? Order any size — we'll ship a free sizing kit before your ring, and you can update your final size before dispatch.
+          Still unsure? Order any size — we'll ship a free sizing kit before your ring, and you can update your final
+          size before dispatch.
         </p>
       </div>
     </div>
