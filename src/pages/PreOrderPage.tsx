@@ -898,22 +898,25 @@ function PhoneInput({
           error ? "border-red-500/60" : "border-white/10 focus-within:border-[#4FB3FF]"
         }`}
       >
-        <select
-          value={selectValue}
-          onChange={(e) => {
-            const [nextIso, nextCode] = e.target.value.split("|");
-            onCodeChange(nextCode, nextIso);
-          }}
-          aria-label="Country dial code"
-          className="h-12 bg-transparent text-[14px] text-white pl-3 pr-2 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
-          style={{ backgroundImage: "none" }}
-        >
-          {PHONE_CODE_OPTIONS.map((o) => (
-            <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
-              {o.iso} +{o.code}
-            </option>
-          ))}
-        </select>
+        <div className="relative flex items-center">
+          <select
+            value={selectValue}
+            onChange={(e) => {
+              const [nextIso, nextCode] = e.target.value.split("|");
+              onCodeChange(nextCode, nextIso);
+            }}
+            aria-label="Country dial code"
+            className="h-12 bg-transparent text-[14px] text-white pl-3 pr-8 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
+            style={{ backgroundImage: "none" }}
+          >
+            {PHONE_CODE_OPTIONS.map((o) => (
+              <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
+                {o.iso} +{o.code}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-2 w-4 h-4 text-[#8B9DAF] pointer-events-none" />
+        </div>
         <input
           type="tel"
           value={value}
