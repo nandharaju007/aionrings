@@ -288,6 +288,7 @@ export default function PreOrderPage() {
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [items, setItems] = useState<RingItem[]>([newItem()]);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -329,27 +330,46 @@ export default function PreOrderPage() {
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
+  const markTouched = (k: string) => setTouched((p) => ({ ...p, [k]: true }));
   const updateItem = (id: string, patch: Partial<RingItem>) =>
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
-  const detailsValid =
-    form.first_name.trim() &&
-    form.last_name.trim() &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
-    form.phone.trim() &&
-    form.address.trim() &&
-    form.city.trim() &&
-    form.state.trim() &&
-    form.zip_code.trim() &&
-    form.country.trim();
-  const itemsValid = items.length > 0 && items.every((i) => i.ring_size && i.quantity >= 1);
-  const canSubmit = detailsValid && itemsValid;
+  // Field-level errors — always computed; only shown once touched or on submit attempt.
+  const errors: Partial<Record<FieldKey, string>> = {};
+  if (!form.first_name.trim()) errors.first_name = "First name is required";
+  if (!form.last_name.trim()) errors.last_name = "Last name is required";
+  if (!isEmail(form.email)) errors.email = "Enter a valid email address";
+  if (!isPhoneDigits(form.phone)) errors.phone = "Enter a valid phone number";
+  if (!form.address.trim()) errors.address = "Address is required";
+  if (!form.city.trim()) errors.city = "City is required";
+  if (!form.state.trim()) errors.state = "State / region is required";
+  if (!form.zip_code.trim()) errors.zip_code = "ZIP / postal code is required";
+  if (!form.country.trim()) errors.country = "Country is required";
+  const ringSizeMissing = items.some((i) => !i.ring_size);
+  if (ringSizeMissing) errors.ring_size = "Please select a ring size";
+  const canSubmit = Object.keys(errors).length === 0;
+
+  // Keep phone_code in sync with country selection
+  useEffect(() => {
+    const code = DIAL_CODES[form.country];
+    if (code && code !== form.phone_code) {
+      setForm((p) => ({ ...p, phone_code: code }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.country]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit || submitting) return;
+    if (submitting) return;
+    if (!canSubmit) {
+      // Reveal all errors
+      const all: Record<string, boolean> = { ring_size: true };
+      (Object.keys(form) as Array<keyof FormState>).forEach((k) => (all[k] = true));
+      setTouched(all);
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -360,6 +380,7 @@ export default function PreOrderPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...form,
+            phone: normalizePhoneForSubmission(form.phone_code, form.phone),
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
             referral_source: referral,
             partner_code: partner?.code ?? partnerCode,
