@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import ringProduct from "@/assets/ring-product.jpg";
-import { DIAL_CODES, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
+import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 2000;
