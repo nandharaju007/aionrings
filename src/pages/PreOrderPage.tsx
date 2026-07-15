@@ -533,6 +533,7 @@ export default function PreOrderPage() {
                   <Section title="Shipping address">
                     <Input
                       label="Address"
+                      placeholder="123 Main Street, Apt 4"
                       value={form.address}
                       onChange={(v) => update("address", v)}
                       onBlur={() => markTouched("address")}
@@ -542,6 +543,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="City"
+                        placeholder="New York"
                         value={form.city}
                         onChange={(v) => update("city", v)}
                         onBlur={() => markTouched("city")}
@@ -550,6 +552,7 @@ export default function PreOrderPage() {
                       />
                       <Input
                         label="State / Region"
+                        placeholder="NY"
                         value={form.state}
                         onChange={(v) => update("state", v)}
                         onBlur={() => markTouched("state")}
@@ -560,6 +563,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
+                        placeholder="10001"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
                         onBlur={() => markTouched("zip_code")}
