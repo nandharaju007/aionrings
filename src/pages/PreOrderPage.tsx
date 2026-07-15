@@ -723,7 +723,7 @@ function PhoneInput({
           onChange={(e) => onNumberChange(e.target.value)}
           onBlur={onBlur}
           maxLength={20}
-          placeholder="Phone number"
+          placeholder="(555) 123-4567"
           aria-invalid={!!error}
           className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
         />
