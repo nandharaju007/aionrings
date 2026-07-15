@@ -368,13 +368,19 @@ export default function PreOrderPage() {
                               <button
                                 type="button"
                                 key={s}
-                                onClick={() => updateItem(item.id, { ring_size: s })}
+                                onClick={() => {
+                                  updateItem(item.id, { ring_size: s });
+                                  markTouched(`item-size:${item.id}`);
+                                }}
                                 className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 {s}
                               </button>
                             ))}
                           </div>
+                          {itemSizeErrors[item.id] && (attemptedSubmit || touched.has(`item-size:${item.id}`)) && (
+                            <p className="mt-2 text-[12px] text-red-400">{itemSizeErrors[item.id]}</p>
+                          )}
                         </div>
 
                         <div>
