@@ -11,6 +11,16 @@ import ringProduct from "@/assets/ring-product.jpg";
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 2000;
 
+const UNIQUE_DIAL_CODES = Array.from(new Set(DIAL_CODE_OPTIONS.map((option) => option.code))).sort(
+  (a, b) => Number(a) - Number(b),
+);
+
+function normalizePhoneForSubmission(phoneCode: string, phoneNumber: string) {
+  const codeDigits = phoneCode.replace(/\D/g, "");
+  const numberDigits = phoneNumber.replace(/\D/g, "");
+  return `+${codeDigits}${numberDigits}`;
+}
+
 const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
   { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
@@ -141,13 +151,13 @@ export default function PreOrderPage() {
   if (!form.last_name.trim()) fieldErrors.last_name = "Last name is required.";
   if (!form.email.trim()) fieldErrors.email = "Email is required.";
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) fieldErrors.email = "Enter a valid email address.";
+  if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
   if (!form.phone_number.trim()) fieldErrors.phone_number = "Phone number is required.";
   else {
-    const digits = form.phone_number.replace(/\D/g, "");
-    if (digits.length < 6 || digits.length > 15)
-      fieldErrors.phone_number = "Enter a valid phone number.";
+    const normalizedPhone = normalizePhoneForSubmission(form.phone_code, form.phone_number);
+    const digits = normalizedPhone.replace(/\D/g, "");
+    if (digits.length < 7 || digits.length > 15) fieldErrors.phone_number = "Enter a valid phone number.";
   }
-  if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
   if (!form.address.trim()) fieldErrors.address = "Address is required.";
   if (!form.city.trim()) fieldErrors.city = "City is required.";
   if (!form.state.trim()) fieldErrors.state = "State / Region is required.";
@@ -179,7 +189,7 @@ export default function PreOrderPage() {
             first_name: form.first_name,
             last_name: form.last_name,
             email: form.email,
-            phone: `+${form.phone_code} ${form.phone_number}`.trim(),
+            phone: normalizePhoneForSubmission(form.phone_code, form.phone_number),
             address: form.address,
             city: form.city,
             state: form.state,
@@ -656,9 +666,9 @@ function PhoneInput({
           className="bg-transparent text-white text-[15px] pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
           aria-label="Country code"
         >
-          {DIAL_CODE_OPTIONS.map((o) => (
-            <option key={`${o.country}-${o.code}`} value={o.code} className="bg-[#0A1628]">
-              {o.code} · {o.country}
+          {UNIQUE_DIAL_CODES.map((dialCode) => (
+            <option key={dialCode} value={dialCode} className="bg-[#0A1628]">
+              +{dialCode}
             </option>
           ))}
         </select>
