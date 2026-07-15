@@ -590,12 +590,16 @@ function Input({
   label,
   value,
   onChange,
+  onBlur,
+  error,
   type = "text",
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
   type?: string;
   required?: boolean;
 }) {
@@ -606,10 +610,69 @@ function Input({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         required={required}
         maxLength={200}
-        className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
+        aria-invalid={!!error}
+        className={`mt-1.5 w-full h-12 rounded-xl border ${
+          error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+        } bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all`}
       />
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
+    </label>
+  );
+}
+
+function PhoneInput({
+  code,
+  number,
+  onCodeChange,
+  onNumberChange,
+  onBlur,
+  error,
+}: {
+  code: string;
+  number: string;
+  onCodeChange: (v: string) => void;
+  onNumberChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-[13px] text-[#B8C5D3]">Phone</span>
+      <div
+        className={`mt-1.5 flex items-stretch rounded-xl border ${
+          error ? "border-red-500/60" : "border-white/10"
+        } bg-white/[0.02] overflow-hidden focus-within:border-[#4FB3FF] focus-within:bg-white/[0.04] transition-all`}
+      >
+        <div className="flex items-center pl-3 pr-1 text-[#8B9DAF] text-[15px] select-none">+</div>
+        <select
+          value={code}
+          onChange={(e) => onCodeChange(e.target.value)}
+          className="bg-transparent text-white text-[15px] pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
+          aria-label="Country code"
+        >
+          {DIAL_CODE_OPTIONS.map((o) => (
+            <option key={`${o.country}-${o.code}`} value={o.code} className="bg-[#0A1628]">
+              {o.code} · {o.country}
+            </option>
+          ))}
+        </select>
+        <div className="w-px bg-white/10" />
+        <input
+          type="tel"
+          inputMode="tel"
+          value={number}
+          onChange={(e) => onNumberChange(e.target.value)}
+          onBlur={onBlur}
+          maxLength={20}
+          placeholder="Phone number"
+          aria-invalid={!!error}
+          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
+        />
+      </div>
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
     </label>
   );
 }
@@ -618,11 +681,15 @@ function CountrySelect({
   label,
   value,
   onChange,
+  onBlur,
+  error,
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
   required?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -647,6 +714,7 @@ function CountrySelect({
     onChange(c);
     setQuery("");
     setOpen(false);
+    onBlur?.();
   };
 
   return (
@@ -656,7 +724,10 @@ function CountrySelect({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-left text-[15px] text-white focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between"
+          onBlur={() => setTimeout(() => onBlur?.(), 150)}
+          className={`w-full h-12 rounded-xl border ${
+            error ? "border-red-500/60" : "border-white/10 focus:border-[#4FB3FF]"
+          } bg-white/[0.02] px-4 text-left text-[15px] text-white focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between`}
         >
           <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select country"}</span>
           <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
@@ -703,6 +774,7 @@ function CountrySelect({
           </div>
         )}
       </div>
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
     </div>
   );
 }
