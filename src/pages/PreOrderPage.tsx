@@ -537,6 +537,7 @@ function Input({
 function ConfirmationCard({ name, partner }: { name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
+      {null}
       <div
         className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center"
         style={{ background: GRADIENT }}
