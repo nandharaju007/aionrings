@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import ringProduct from "@/assets/ring-product.jpg";
-import { DIAL_CODES, COUNTRY_ISO2, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
+import { DIAL_CODES, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 2000;
@@ -269,16 +269,35 @@ const INITIAL: FormState = {
 type FieldKey = keyof FormState | "ring_size";
 
 function normalizePhoneForSubmission(code: string, phone: string) {
-  const digits = phone.replace(/\D+/g, "");
-  return digits ? `+${code}${digits}` : "";
+  const dialCode = code.replace(/\D+/g, "");
+  let digits = phone.replace(/\D+/g, "");
+
+  if (!digits || !dialCode) return "";
+
+  const raw = phone.trim();
+  if (raw.startsWith("+")) return `+${digits}`;
+  if (digits.startsWith("00")) return `+${digits.slice(2)}`;
+
+  // If the customer typed the selected country code in the phone field too,
+  // avoid submitting it twice. Example: US +1 + "1 555 123 4567".
+  if (digits.startsWith(dialCode) && digits.length + dialCode.length > 15) {
+    digits = digits.slice(dialCode.length);
+  }
+
+  // North American numbers are commonly typed as 1 + 10 digits.
+  if (dialCode === "1" && digits.length === 11 && digits.startsWith("1")) {
+    digits = digits.slice(1);
+  }
+
+  return `+${dialCode}${digits}`;
 }
 
 function isEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
-function isPhoneDigits(v: string) {
-  const d = v.replace(/\D+/g, "");
-  return d.length >= 6 && d.length <= 15;
+function isPhoneNumberValid(code: string, phone: string) {
+  const normalizedDigits = normalizePhoneForSubmission(code, phone).replace(/\D+/g, "");
+  return normalizedDigits.length >= 7 && normalizedDigits.length <= 15;
 }
 
 export default function PreOrderPage() {
@@ -341,7 +360,7 @@ export default function PreOrderPage() {
   if (!form.first_name.trim()) errors.first_name = "First name is required";
   if (!form.last_name.trim()) errors.last_name = "Last name is required";
   if (!isEmail(form.email)) errors.email = "Enter a valid email address";
-  if (!isPhoneDigits(form.phone)) errors.phone = "Enter a valid phone number";
+  if (!isPhoneNumberValid(form.phone_code, form.phone)) errors.phone = "Enter a valid phone number";
   if (!form.address.trim()) errors.address = "Address is required";
   if (!form.city.trim()) errors.city = "City is required";
   if (!form.state.trim()) errors.state = "State / region is required";
