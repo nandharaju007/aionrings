@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import ringProduct from "@/assets/ring-product.jpg";
-import { DIAL_CODES, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
+import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 2000;
@@ -246,6 +246,7 @@ interface FormState {
   email: string;
   phone: string;
   phone_code: string;
+  phone_iso: string;
   address: string;
   city: string;
   state: string;
@@ -259,6 +260,7 @@ const INITIAL: FormState = {
   email: "",
   phone: "",
   phone_code: "1",
+  phone_iso: "US",
   address: "",
   city: "",
   state: "",
@@ -370,11 +372,12 @@ export default function PreOrderPage() {
   if (ringSizeMissing) errors.ring_size = "Please select a ring size";
   const canSubmit = Object.keys(errors).length === 0;
 
-  // Keep phone_code in sync with country selection
+  // Keep phone_code + iso in sync with country selection
   useEffect(() => {
     const code = DIAL_CODES[form.country];
-    if (code && code !== form.phone_code) {
-      setForm((p) => ({ ...p, phone_code: code }));
+    const iso = (COUNTRY_ISO2 as Record<string, string>)[form.country];
+    if (code && iso && (code !== form.phone_code || iso !== form.phone_iso)) {
+      setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.country]);
@@ -694,8 +697,9 @@ export default function PreOrderPage() {
                     <PhoneInput
                       label="Phone"
                       code={form.phone_code}
+                      iso={form.phone_iso}
                       value={form.phone}
-                      onCodeChange={(v) => update("phone_code", v)}
+                      onCodeChange={(code, iso) => setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }))}
                       onChange={(v) => update("phone", v)}
                       onBlur={() => markTouched("phone")}
                       error={touched.phone ? errors.phone : undefined}
@@ -765,7 +769,7 @@ export default function PreOrderPage() {
                     type="submit"
                     disabled={submitting}
                     className={`w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all inline-flex items-center justify-center gap-2 ${
-                      canSubmit ? "hover:brightness-110 hover:scale-[1.01]" : "opacity-60"
+                      canSubmit ? "cursor-pointer hover:brightness-110 hover:scale-[1.01]" : "opacity-60 cursor-not-allowed"
                     } disabled:cursor-not-allowed`}
                     style={{ background: GRADIENT }}
                   >
@@ -858,6 +862,7 @@ function Input({
 function PhoneInput({
   label,
   code,
+  iso,
   value,
   onCodeChange,
   onChange,
@@ -867,8 +872,9 @@ function PhoneInput({
 }: {
   label: string;
   code: string;
+  iso?: string;
   value: string;
-  onCodeChange: (v: string) => void;
+  onCodeChange: (code: string, iso: string) => void;
   onChange: (v: string) => void;
   onBlur?: () => void;
   error?: string;
@@ -876,9 +882,13 @@ function PhoneInput({
 }) {
   // Value stored on the select is `${iso}|${code}` so duplicate dial codes (e.g. +1 US/CA) stay distinct.
   const selectValue = useMemo(() => {
+    if (iso) {
+      const exact = PHONE_CODE_OPTIONS.find((o) => o.iso === iso && o.code === code);
+      if (exact) return `${exact.iso}|${exact.code}`;
+    }
     const match = PHONE_CODE_OPTIONS.find((o) => o.code === code);
     return match ? `${match.iso}|${match.code}` : `US|1`;
-  }, [code]);
+  }, [code, iso]);
 
   return (
     <label className="block">
@@ -891,8 +901,8 @@ function PhoneInput({
         <select
           value={selectValue}
           onChange={(e) => {
-            const [, c] = e.target.value.split("|");
-            onCodeChange(c);
+            const [nextIso, nextCode] = e.target.value.split("|");
+            onCodeChange(nextCode, nextIso);
           }}
           aria-label="Country dial code"
           className="h-12 bg-transparent text-[14px] text-white pl-3 pr-2 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
