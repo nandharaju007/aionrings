@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { COUNTRIES } from "@/lib/countries";
 import ringProduct from "@/assets/ring-product.jpg";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
@@ -437,7 +438,12 @@ export default function PreOrderPage() {
                         onChange={(v) => update("zip_code", v)}
                         required
                       />
-                      <Input label="Country" value={form.country} onChange={(v) => update("country", v)} required />
+                      <CountrySelect
+                        label="Country"
+                        value={form.country}
+                        onChange={(v) => update("country", v)}
+                        required
+                      />
                     </div>
                   </Section>
 
