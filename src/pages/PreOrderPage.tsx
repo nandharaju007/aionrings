@@ -694,11 +694,10 @@ function PhoneInput({
           error ? "border-red-500/60" : "border-white/10"
         } bg-white/[0.02] overflow-hidden focus-within:border-[#4FB3FF] focus-within:bg-white/[0.04] transition-all`}
       >
-        <div className="flex items-center pl-3 pr-1 text-[#8B9DAF] text-[15px] select-none">+</div>
         <select
           value={code}
           onChange={(e) => onCodeChange(e.target.value)}
-          className="bg-transparent text-white text-[15px] pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
+          className="bg-transparent text-white text-[15px] pl-3 pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
           aria-label="Country code"
         >
           {PHONE_CODE_OPTIONS.map((option) => (
