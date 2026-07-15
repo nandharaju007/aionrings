@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { COUNTRIES } from "@/lib/countries";
+import { DIAL_CODES, DIAL_CODE_OPTIONS } from "@/lib/dial-codes";
 import ringProduct from "@/assets/ring-product.jpg";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
@@ -47,7 +48,8 @@ interface FormState {
   first_name: string;
   last_name: string;
   email: string;
-  phone: string;
+  phone_code: string;
+  phone_number: string;
   address: string;
   city: string;
   state: string;
@@ -59,7 +61,8 @@ const INITIAL: FormState = {
   first_name: "",
   last_name: "",
   email: "",
-  phone: "",
+  phone_code: "1",
+  phone_number: "",
   address: "",
   city: "",
   state: "",
@@ -74,6 +77,8 @@ export default function PreOrderPage() {
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [items, setItems] = useState<RingItem[]>([newItem()]);
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,27 +119,50 @@ export default function PreOrderPage() {
   const previewColor = useMemo(() => RING_COLORS.find((c) => c.id === items[0]?.ring_color) ?? RING_COLORS[0], [items]);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm((p) => {
+      const next = { ...p, [k]: v };
+      // Auto-sync dial code when country changes (if a match exists)
+      if (k === "country" && typeof v === "string" && DIAL_CODES[v as string]) {
+        next.phone_code = DIAL_CODES[v as string];
+      }
+      return next;
+    });
+  const markTouched = (key: string) => setTouched((prev) => (prev.has(key) ? prev : new Set(prev).add(key)));
+  const showErr = (key: string) => attemptedSubmit || touched.has(key);
   const updateItem = (id: string, patch: Partial<RingItem>) =>
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
-  const detailsValid =
-    form.first_name.trim() &&
-    form.last_name.trim() &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
-    form.phone.trim() &&
-    form.address.trim() &&
-    form.city.trim() &&
-    form.state.trim() &&
-    form.zip_code.trim() &&
-    form.country.trim();
-  const itemsValid = items.length > 0 && items.every((i) => i.ring_size && i.quantity >= 1);
+  // Per-field validation errors
+  const fieldErrors: Partial<Record<keyof FormState, string>> = {};
+  if (!form.first_name.trim()) fieldErrors.first_name = "First name is required.";
+  if (!form.last_name.trim()) fieldErrors.last_name = "Last name is required.";
+  if (!form.email.trim()) fieldErrors.email = "Email is required.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) fieldErrors.email = "Enter a valid email address.";
+  if (!form.phone_number.trim()) fieldErrors.phone_number = "Phone number is required.";
+  else if (!/^[0-9\s\-()]{6,}$/.test(form.phone_number.trim()))
+    fieldErrors.phone_number = "Enter a valid phone number (digits only).";
+  if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
+  if (!form.address.trim()) fieldErrors.address = "Address is required.";
+  if (!form.city.trim()) fieldErrors.city = "City is required.";
+  if (!form.state.trim()) fieldErrors.state = "State / Region is required.";
+  if (!form.zip_code.trim()) fieldErrors.zip_code = "ZIP / Postal code is required.";
+  if (!form.country.trim()) fieldErrors.country = "Country is required.";
+
+  const itemSizeErrors: Record<string, string> = {};
+  items.forEach((i) => {
+    if (!i.ring_size) itemSizeErrors[i.id] = "Please select a ring size.";
+  });
+
+  const detailsValid = Object.keys(fieldErrors).length === 0;
+  const itemsValid = items.length > 0 && Object.keys(itemSizeErrors).length === 0;
   const canSubmit = detailsValid && itemsValid;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setAttemptedSubmit(true);
     if (!canSubmit || submitting) return;
     setSubmitting(true);
     setError(null);
@@ -145,7 +173,15 @@ export default function PreOrderPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...form,
+            first_name: form.first_name,
+            last_name: form.last_name,
+            email: form.email,
+            phone: `+${form.phone_code} ${form.phone_number}`.trim(),
+            address: form.address,
+            city: form.city,
+            state: form.state,
+            zip_code: form.zip_code,
+            country: form.country,
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
             referral_source: referral,
             partner_code: partner?.code ?? partnerCode,
@@ -332,13 +368,19 @@ export default function PreOrderPage() {
                               <button
                                 type="button"
                                 key={s}
-                                onClick={() => updateItem(item.id, { ring_size: s })}
+                                onClick={() => {
+                                  updateItem(item.id, { ring_size: s });
+                                  markTouched(`item-size:${item.id}`);
+                                }}
                                 className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 {s}
                               </button>
                             ))}
                           </div>
+                          {itemSizeErrors[item.id] && (attemptedSubmit || touched.has(`item-size:${item.id}`)) && (
+                            <p className="mt-2 text-[12px] text-red-400">{itemSizeErrors[item.id]}</p>
+                          )}
                         </div>
 
                         <div>
@@ -406,12 +448,16 @@ export default function PreOrderPage() {
                         label="First name"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
+                        onBlur={() => markTouched("first_name")}
+                        error={showErr("first_name") ? fieldErrors.first_name : undefined}
                         required
                       />
                       <Input
                         label="Last name"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
+                        onBlur={() => markTouched("last_name")}
+                        error={showErr("last_name") ? fieldErrors.last_name : undefined}
                         required
                       />
                     </div>
@@ -420,28 +466,62 @@ export default function PreOrderPage() {
                       type="email"
                       value={form.email}
                       onChange={(v) => update("email", v)}
+                      onBlur={() => markTouched("email")}
+                      error={showErr("email") ? fieldErrors.email : undefined}
                       required
                     />
-                    <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} required />
+                    <PhoneInput
+                      code={form.phone_code}
+                      number={form.phone_number}
+                      onCodeChange={(v) => update("phone_code", v)}
+                      onNumberChange={(v) => update("phone_number", v)}
+                      onBlur={() => markTouched("phone_number")}
+                      error={showErr("phone_number") ? fieldErrors.phone_number : undefined}
+                    />
                   </Section>
 
                   <Section title="Shipping address">
-                    <Input label="Address" value={form.address} onChange={(v) => update("address", v)} required />
+                    <Input
+                      label="Address"
+                      value={form.address}
+                      onChange={(v) => update("address", v)}
+                      onBlur={() => markTouched("address")}
+                      error={showErr("address") ? fieldErrors.address : undefined}
+                      required
+                    />
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="City" value={form.city} onChange={(v) => update("city", v)} required />
-                      <Input label="State / Region" value={form.state} onChange={(v) => update("state", v)} required />
+                      <Input
+                        label="City"
+                        value={form.city}
+                        onChange={(v) => update("city", v)}
+                        onBlur={() => markTouched("city")}
+                        error={showErr("city") ? fieldErrors.city : undefined}
+                        required
+                      />
+                      <Input
+                        label="State / Region"
+                        value={form.state}
+                        onChange={(v) => update("state", v)}
+                        onBlur={() => markTouched("state")}
+                        error={showErr("state") ? fieldErrors.state : undefined}
+                        required
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
+                        onBlur={() => markTouched("zip_code")}
+                        error={showErr("zip_code") ? fieldErrors.zip_code : undefined}
                         required
                       />
                       <CountrySelect
                         label="Country"
                         value={form.country}
                         onChange={(v) => update("country", v)}
+                        onBlur={() => markTouched("country")}
+                        error={showErr("country") ? fieldErrors.country : undefined}
                         required
                       />
                     </div>
@@ -455,7 +535,7 @@ export default function PreOrderPage() {
 
                   <button
                     type="submit"
-                    disabled={!canSubmit || submitting}
+                    disabled={submitting}
                     className="w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all hover:brightness-110 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                     style={{ background: GRADIENT }}
                   >
@@ -510,12 +590,16 @@ function Input({
   label,
   value,
   onChange,
+  onBlur,
+  error,
   type = "text",
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
   type?: string;
   required?: boolean;
 }) {
@@ -526,10 +610,69 @@ function Input({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         required={required}
         maxLength={200}
-        className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
+        aria-invalid={!!error}
+        className={`mt-1.5 w-full h-12 rounded-xl border ${
+          error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+        } bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all`}
       />
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
+    </label>
+  );
+}
+
+function PhoneInput({
+  code,
+  number,
+  onCodeChange,
+  onNumberChange,
+  onBlur,
+  error,
+}: {
+  code: string;
+  number: string;
+  onCodeChange: (v: string) => void;
+  onNumberChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-[13px] text-[#B8C5D3]">Phone</span>
+      <div
+        className={`mt-1.5 flex items-stretch rounded-xl border ${
+          error ? "border-red-500/60" : "border-white/10"
+        } bg-white/[0.02] overflow-hidden focus-within:border-[#4FB3FF] focus-within:bg-white/[0.04] transition-all`}
+      >
+        <div className="flex items-center pl-3 pr-1 text-[#8B9DAF] text-[15px] select-none">+</div>
+        <select
+          value={code}
+          onChange={(e) => onCodeChange(e.target.value)}
+          className="bg-transparent text-white text-[15px] pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
+          aria-label="Country code"
+        >
+          {DIAL_CODE_OPTIONS.map((o) => (
+            <option key={`${o.country}-${o.code}`} value={o.code} className="bg-[#0A1628]">
+              {o.code} · {o.country}
+            </option>
+          ))}
+        </select>
+        <div className="w-px bg-white/10" />
+        <input
+          type="tel"
+          inputMode="tel"
+          value={number}
+          onChange={(e) => onNumberChange(e.target.value)}
+          onBlur={onBlur}
+          maxLength={20}
+          placeholder="Phone number"
+          aria-invalid={!!error}
+          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
+        />
+      </div>
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
     </label>
   );
 }
@@ -538,11 +681,15 @@ function CountrySelect({
   label,
   value,
   onChange,
+  onBlur,
+  error,
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
   required?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -567,6 +714,7 @@ function CountrySelect({
     onChange(c);
     setQuery("");
     setOpen(false);
+    onBlur?.();
   };
 
   return (
@@ -576,7 +724,10 @@ function CountrySelect({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-left text-[15px] text-white focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between"
+          onBlur={() => setTimeout(() => onBlur?.(), 150)}
+          className={`w-full h-12 rounded-xl border ${
+            error ? "border-red-500/60" : "border-white/10 focus:border-[#4FB3FF]"
+          } bg-white/[0.02] px-4 text-left text-[15px] text-white focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between`}
         >
           <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select country"}</span>
           <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
@@ -623,6 +774,7 @@ function CountrySelect({
           </div>
         )}
       </div>
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
     </div>
   );
 }
