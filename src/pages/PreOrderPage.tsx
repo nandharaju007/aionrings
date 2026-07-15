@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -898,22 +898,25 @@ function PhoneInput({
           error ? "border-red-500/60" : "border-white/10 focus-within:border-[#4FB3FF]"
         }`}
       >
-        <select
-          value={selectValue}
-          onChange={(e) => {
-            const [nextIso, nextCode] = e.target.value.split("|");
-            onCodeChange(nextCode, nextIso);
-          }}
-          aria-label="Country dial code"
-          className="h-12 bg-transparent text-[14px] text-white pl-3 pr-2 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
-          style={{ backgroundImage: "none" }}
-        >
-          {PHONE_CODE_OPTIONS.map((o) => (
-            <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
-              {o.iso} +{o.code}
-            </option>
-          ))}
-        </select>
+        <div className="relative flex items-center">
+          <select
+            value={selectValue}
+            onChange={(e) => {
+              const [nextIso, nextCode] = e.target.value.split("|");
+              onCodeChange(nextCode, nextIso);
+            }}
+            aria-label="Country dial code"
+            className="h-12 bg-transparent text-[14px] text-white pl-3 pr-8 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
+            style={{ backgroundImage: "none" }}
+          >
+            {PHONE_CODE_OPTIONS.map((o) => (
+              <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
+                {o.iso} +{o.code}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-2 w-4 h-4 text-[#8B9DAF] pointer-events-none" />
+        </div>
         <input
           type="tel"
           value={value}
@@ -973,23 +976,26 @@ function CountryInput({
     <div className="relative" ref={wrapperRef}>
       <label className="block">
         <span className="text-[13px] text-[#B8C5D3]">{label}</span>
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={onBlur}
-          required={required}
-          placeholder={placeholder}
-          maxLength={200}
-          autoComplete="off"
-          className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
-            error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
-          }`}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value);
+              setOpen(true);
+            }}
+            onFocus={() => setOpen(true)}
+            onBlur={onBlur}
+            required={required}
+            placeholder={placeholder}
+            maxLength={200}
+            autoComplete="off"
+            className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] pl-4 pr-10 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
+              error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+            }`}
+          />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B9DAF] pointer-events-none" />
+        </div>
       </label>
       {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
       {open && filtered.length > 0 && (
