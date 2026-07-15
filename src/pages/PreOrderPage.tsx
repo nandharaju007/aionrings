@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { COUNTRIES } from "@/lib/countries";
+import { DIAL_CODES, DIAL_CODE_OPTIONS } from "@/lib/dial-codes";
 import ringProduct from "@/assets/ring-product.jpg";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
@@ -47,7 +48,8 @@ interface FormState {
   first_name: string;
   last_name: string;
   email: string;
-  phone: string;
+  phone_code: string;
+  phone_number: string;
   address: string;
   city: string;
   state: string;
@@ -59,7 +61,8 @@ const INITIAL: FormState = {
   first_name: "",
   last_name: "",
   email: "",
-  phone: "",
+  phone_code: "1",
+  phone_number: "",
   address: "",
   city: "",
   state: "",
@@ -74,6 +77,8 @@ export default function PreOrderPage() {
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [items, setItems] = useState<RingItem[]>([newItem()]);
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,27 +119,50 @@ export default function PreOrderPage() {
   const previewColor = useMemo(() => RING_COLORS.find((c) => c.id === items[0]?.ring_color) ?? RING_COLORS[0], [items]);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm((p) => {
+      const next = { ...p, [k]: v };
+      // Auto-sync dial code when country changes (if a match exists)
+      if (k === "country" && typeof v === "string" && DIAL_CODES[v as string]) {
+        next.phone_code = DIAL_CODES[v as string];
+      }
+      return next;
+    });
+  const markTouched = (key: string) => setTouched((prev) => (prev.has(key) ? prev : new Set(prev).add(key)));
+  const showErr = (key: string) => attemptedSubmit || touched.has(key);
   const updateItem = (id: string, patch: Partial<RingItem>) =>
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
-  const detailsValid =
-    form.first_name.trim() &&
-    form.last_name.trim() &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
-    form.phone.trim() &&
-    form.address.trim() &&
-    form.city.trim() &&
-    form.state.trim() &&
-    form.zip_code.trim() &&
-    form.country.trim();
-  const itemsValid = items.length > 0 && items.every((i) => i.ring_size && i.quantity >= 1);
+  // Per-field validation errors
+  const fieldErrors: Partial<Record<keyof FormState, string>> = {};
+  if (!form.first_name.trim()) fieldErrors.first_name = "First name is required.";
+  if (!form.last_name.trim()) fieldErrors.last_name = "Last name is required.";
+  if (!form.email.trim()) fieldErrors.email = "Email is required.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) fieldErrors.email = "Enter a valid email address.";
+  if (!form.phone_number.trim()) fieldErrors.phone_number = "Phone number is required.";
+  else if (!/^[0-9\s\-()]{6,}$/.test(form.phone_number.trim()))
+    fieldErrors.phone_number = "Enter a valid phone number (digits only).";
+  if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
+  if (!form.address.trim()) fieldErrors.address = "Address is required.";
+  if (!form.city.trim()) fieldErrors.city = "City is required.";
+  if (!form.state.trim()) fieldErrors.state = "State / Region is required.";
+  if (!form.zip_code.trim()) fieldErrors.zip_code = "ZIP / Postal code is required.";
+  if (!form.country.trim()) fieldErrors.country = "Country is required.";
+
+  const itemSizeErrors: Record<string, string> = {};
+  items.forEach((i) => {
+    if (!i.ring_size) itemSizeErrors[i.id] = "Please select a ring size.";
+  });
+
+  const detailsValid = Object.keys(fieldErrors).length === 0;
+  const itemsValid = items.length > 0 && Object.keys(itemSizeErrors).length === 0;
   const canSubmit = detailsValid && itemsValid;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setAttemptedSubmit(true);
     if (!canSubmit || submitting) return;
     setSubmitting(true);
     setError(null);
@@ -145,7 +173,15 @@ export default function PreOrderPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...form,
+            first_name: form.first_name,
+            last_name: form.last_name,
+            email: form.email,
+            phone: `+${form.phone_code} ${form.phone_number}`.trim(),
+            address: form.address,
+            city: form.city,
+            state: form.state,
+            zip_code: form.zip_code,
+            country: form.country,
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
             referral_source: referral,
             partner_code: partner?.code ?? partnerCode,
