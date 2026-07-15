@@ -697,8 +697,9 @@ export default function PreOrderPage() {
                     <PhoneInput
                       label="Phone"
                       code={form.phone_code}
+                      iso={form.phone_iso}
                       value={form.phone}
-                      onCodeChange={(v) => update("phone_code", v)}
+                      onCodeChange={(code, iso) => setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }))}
                       onChange={(v) => update("phone", v)}
                       onBlur={() => markTouched("phone")}
                       error={touched.phone ? errors.phone : undefined}
@@ -768,7 +769,7 @@ export default function PreOrderPage() {
                     type="submit"
                     disabled={submitting}
                     className={`w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all inline-flex items-center justify-center gap-2 ${
-                      canSubmit ? "hover:brightness-110 hover:scale-[1.01]" : "opacity-60"
+                      canSubmit ? "cursor-pointer hover:brightness-110 hover:scale-[1.01]" : "opacity-60 cursor-not-allowed"
                     } disabled:cursor-not-allowed`}
                     style={{ background: GRADIENT }}
                   >
