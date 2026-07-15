@@ -10,7 +10,7 @@ import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 const FOUNDER_CAP = 2000;
 
-const RING_SIZES = ["7", "8", "9", "10", "11", "12", "13"];
+const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
   { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
   { id: "silver", name: "Titanium Silver", filter: "grayscale(1) brightness(1.1)" },
@@ -19,6 +19,7 @@ const RING_COLORS = [
 
 // US ring size → inner diameter (mm) reference
 const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
+  { size: "6", diameter: "16.5 mm", circumference: "51.8 mm" },
   { size: "7", diameter: "17.3 mm", circumference: "54.4 mm" },
   { size: "8", diameter: "18.1 mm", circumference: "57.0 mm" },
   { size: "9", diameter: "19.0 mm", circumference: "59.5 mm" },
