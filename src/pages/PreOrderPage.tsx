@@ -142,8 +142,11 @@ export default function PreOrderPage() {
   if (!form.email.trim()) fieldErrors.email = "Email is required.";
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) fieldErrors.email = "Enter a valid email address.";
   if (!form.phone_number.trim()) fieldErrors.phone_number = "Phone number is required.";
-  else if (!/^[0-9\s\-()]{6,}$/.test(form.phone_number.trim()))
-    fieldErrors.phone_number = "Enter a valid phone number (digits only).";
+  else {
+    const digits = form.phone_number.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15)
+      fieldErrors.phone_number = "Enter a valid phone number.";
+  }
   if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
   if (!form.address.trim()) fieldErrors.address = "Address is required.";
   if (!form.city.trim()) fieldErrors.city = "City is required.";
