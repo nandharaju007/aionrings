@@ -785,7 +785,7 @@ function CountrySelect({
             error ? "border-red-500/60" : "border-white/10 focus:border-[#4FB3FF]"
           } bg-white/[0.02] px-4 text-left text-[15px] text-white focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between`}
         >
-          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select country"}</span>
+          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select your country"}</span>
           <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {/* Hidden input to enforce required validation */}
