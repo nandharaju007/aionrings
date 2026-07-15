@@ -1,62 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Check, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { COUNTRIES } from "@/lib/countries";
-import { DIAL_CODES, DIAL_CODE_OPTIONS } from "@/lib/dial-codes";
 import ringProduct from "@/assets/ring-product.jpg";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
-const FOUNDER_CAP = 2000;
+const FOUNDER_CAP = 500;
 
-const DIAL_CODE_LABELS: Record<string, string> = {
-  Afghanistan: "AF", Albania: "AL", Algeria: "DZ", Andorra: "AD", Angola: "AO", "Antigua and Barbuda": "AG",
-  Argentina: "AR", Armenia: "AM", Australia: "AU", Austria: "AT", Azerbaijan: "AZ", Bahamas: "BS", Bahrain: "BH",
-  Bangladesh: "BD", Barbados: "BB", Belarus: "BY", Belgium: "BE", Belize: "BZ", Benin: "BJ", Bhutan: "BT",
-  Bolivia: "BO", "Bosnia and Herzegovina": "BA", Botswana: "BW", Brazil: "BR", Brunei: "BN", Bulgaria: "BG",
-  "Burkina Faso": "BF", Burundi: "BI", "Cabo Verde": "CV", Cambodia: "KH", Cameroon: "CM", Canada: "CA",
-  "Central African Republic": "CF", Chad: "TD", Chile: "CL", China: "CN", Colombia: "CO", Comoros: "KM",
-  "Congo (Brazzaville)": "CG", "Congo (Kinshasa)": "CD", "Costa Rica": "CR", "Côte d'Ivoire": "CI", Croatia: "HR",
-  Cuba: "CU", Cyprus: "CY", Czechia: "CZ", Denmark: "DK", Djibouti: "DJ", Dominica: "DM", "Dominican Republic": "DO",
-  Ecuador: "EC", Egypt: "EG", "El Salvador": "SV", "Equatorial Guinea": "GQ", Eritrea: "ER", Estonia: "EE",
-  Eswatini: "SZ", Ethiopia: "ET", Fiji: "FJ", Finland: "FI", France: "FR", Gabon: "GA", Gambia: "GM",
-  Georgia: "GE", Germany: "DE", Ghana: "GH", Greece: "GR", Grenada: "GD", Guatemala: "GT", Guinea: "GN",
-  "Guinea-Bissau": "GW", Guyana: "GY", Haiti: "HT", Honduras: "HN", "Hong Kong": "HK", Hungary: "HU", Iceland: "IS",
-  India: "IN", Indonesia: "ID", Iran: "IR", Iraq: "IQ", Ireland: "IE", Israel: "IL", Italy: "IT", Jamaica: "JM",
-  Japan: "JP", Jordan: "JO", Kazakhstan: "KZ", Kenya: "KE", Kiribati: "KI", Kuwait: "KW", Kyrgyzstan: "KG",
-  Laos: "LA", Latvia: "LV", Lebanon: "LB", Lesotho: "LS", Liberia: "LR", Libya: "LY", Liechtenstein: "LI",
-  Lithuania: "LT", Luxembourg: "LU", Macao: "MO", Madagascar: "MG", Malawi: "MW", Malaysia: "MY", Maldives: "MV",
-  Mali: "ML", Malta: "MT", "Marshall Islands": "MH", Mauritania: "MR", Mauritius: "MU", Mexico: "MX",
-  Micronesia: "FM", Moldova: "MD", Monaco: "MC", Mongolia: "MN", Montenegro: "ME", Morocco: "MA",
-  Mozambique: "MZ", Myanmar: "MM", Namibia: "NA", Nauru: "NR", Nepal: "NP", Netherlands: "NL", "New Zealand": "NZ",
-  Nicaragua: "NI", Niger: "NE", Nigeria: "NG", "North Macedonia": "MK", Norway: "NO", Oman: "OM", Pakistan: "PK",
-  Palau: "PW", Palestine: "PS", Panama: "PA", "Papua New Guinea": "PG", Paraguay: "PY", Peru: "PE",
-  Philippines: "PH", Poland: "PL", Portugal: "PT", Qatar: "QA", Romania: "RO", Russia: "RU", Rwanda: "RW",
-  "Saint Kitts and Nevis": "KN", "Saint Lucia": "LC", "Saint Vincent and the Grenadines": "VC", Samoa: "WS",
-  "San Marino": "SM", "Sao Tome and Principe": "ST", "Saudi Arabia": "SA", Senegal: "SN", Serbia: "RS",
-  Seychelles: "SC", "Sierra Leone": "SL", Singapore: "SG", Slovakia: "SK", Slovenia: "SI", "Solomon Islands": "SB",
-  Somalia: "SO", "South Africa": "ZA", "South Korea": "KR", "South Sudan": "SS", Spain: "ES", "Sri Lanka": "LK",
-  Sudan: "SD", Suriname: "SR", Sweden: "SE", Switzerland: "CH", Syria: "SY", Taiwan: "TW", Tajikistan: "TJ",
-  Tanzania: "TZ", Thailand: "TH", "Timor-Leste": "TL", Togo: "TG", Tonga: "TO", "Trinidad and Tobago": "TT",
-  Tunisia: "TN", Turkey: "TR", Turkmenistan: "TM", Tuvalu: "TV", Uganda: "UG", Ukraine: "UA",
-  "United Arab Emirates": "AE", "United Kingdom": "GB", "United States": "US", Uruguay: "UY", Uzbekistan: "UZ",
-  Vanuatu: "VU", "Vatican City": "VA", Venezuela: "VE", Vietnam: "VN", Yemen: "YE", Zambia: "ZM", Zimbabwe: "ZW",
-};
-
-const PHONE_CODE_OPTIONS = DIAL_CODE_OPTIONS.map((option) => ({
-  ...option,
-  label: `${DIAL_CODE_LABELS[option.country] ?? option.country.slice(0, 2).toUpperCase()} +${option.code}`,
-}));
-
-function normalizePhoneForSubmission(phoneCode: string, phoneNumber: string) {
-  const codeDigits = phoneCode.replace(/\D/g, "");
-  const numberDigits = phoneNumber.replace(/\D/g, "");
-  return `+${codeDigits}${numberDigits}`;
-}
-
-const RING_SIZES = ["7", "8", "9", "10", "11", "12", "13"];
+const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
   { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
   { id: "silver", name: "Titanium Silver", filter: "grayscale(1) brightness(1.1)" },
@@ -65,6 +18,7 @@ const RING_COLORS = [
 
 // US ring size → inner diameter (mm) reference
 const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
+  { size: "6", diameter: "16.5 mm", circumference: "51.9 mm" },
   { size: "7", diameter: "17.3 mm", circumference: "54.4 mm" },
   { size: "8", diameter: "18.1 mm", circumference: "57.0 mm" },
   { size: "9", diameter: "19.0 mm", circumference: "59.5 mm" },
@@ -72,6 +26,204 @@ const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string 
   { size: "11", diameter: "20.6 mm", circumference: "64.6 mm" },
   { size: "12", diameter: "21.4 mm", circumference: "67.2 mm" },
   { size: "13", diameter: "22.2 mm", circumference: "69.7 mm" },
+];
+
+// Standard list of country names for the searchable Country field below.
+const COUNTRIES = [
+  "Afghanistan",
+  "Albania",
+  "Algeria",
+  "Andorra",
+  "Angola",
+  "Antigua and Barbuda",
+  "Argentina",
+  "Armenia",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belarus",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bhutan",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Brazil",
+  "Brunei",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cabo Verde",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Central African Republic",
+  "Chad",
+  "Chile",
+  "China",
+  "Colombia",
+  "Comoros",
+  "Congo (Congo-Brazzaville)",
+  "Costa Rica",
+  "Croatia",
+  "Cuba",
+  "Cyprus",
+  "Czechia (Czech Republic)",
+  "Democratic Republic of the Congo",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Dominican Republic",
+  "Ecuador",
+  "Egypt",
+  "El Salvador",
+  "Equatorial Guinea",
+  "Eritrea",
+  "Estonia",
+  'Eswatini (fmr. "Swaziland")',
+  "Ethiopia",
+  "Fiji",
+  "Finland",
+  "France",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Germany",
+  "Ghana",
+  "Greece",
+  "Grenada",
+  "Guatemala",
+  "Guinea",
+  "Guinea-Bissau",
+  "Guyana",
+  "Haiti",
+  "Holy See",
+  "Honduras",
+  "Hungary",
+  "Iceland",
+  "India",
+  "Indonesia",
+  "Iran",
+  "Iraq",
+  "Ireland",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kiribati",
+  "Kuwait",
+  "Kyrgyzstan",
+  "Laos",
+  "Latvia",
+  "Lebanon",
+  "Lesotho",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Madagascar",
+  "Malawi",
+  "Malaysia",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Marshall Islands",
+  "Mauritania",
+  "Mauritius",
+  "Mexico",
+  "Micronesia",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Morocco",
+  "Mozambique",
+  "Myanmar (formerly Burma)",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "North Korea",
+  "North Macedonia",
+  "Norway",
+  "Oman",
+  "Pakistan",
+  "Palau",
+  "Palestine State",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Poland",
+  "Portugal",
+  "Qatar",
+  "Romania",
+  "Russia",
+  "Rwanda",
+  "Saint Kitts and Nevis",
+  "Saint Lucia",
+  "Saint Vincent and the Grenadines",
+  "Samoa",
+  "San Marino",
+  "Sao Tome and Principe",
+  "Saudi Arabia",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Solomon Islands",
+  "Somalia",
+  "South Africa",
+  "South Korea",
+  "South Sudan",
+  "Spain",
+  "Sri Lanka",
+  "Sudan",
+  "Suriname",
+  "Sweden",
+  "Switzerland",
+  "Syria",
+  "Tajikistan",
+  "Tanzania",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkey",
+  "Turkmenistan",
+  "Tuvalu",
+  "Uganda",
+  "Ukraine",
+  "United Arab Emirates",
+  "United Kingdom",
+  "United States",
+  "Uruguay",
+  "Uzbekistan",
+  "Vanuatu",
+  "Venezuela",
+  "Vietnam",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe",
 ];
 
 interface RingItem {
@@ -92,8 +244,7 @@ interface FormState {
   first_name: string;
   last_name: string;
   email: string;
-  phone_code: string;
-  phone_number: string;
+  phone: string;
   address: string;
   city: string;
   state: string;
@@ -105,8 +256,7 @@ const INITIAL: FormState = {
   first_name: "",
   last_name: "",
   email: "",
-  phone_code: "1",
-  phone_number: "",
+  phone: "",
   address: "",
   city: "",
   state: "",
@@ -121,8 +271,6 @@ export default function PreOrderPage() {
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [items, setItems] = useState<RingItem[]>([newItem()]);
-  const [touched, setTouched] = useState<Set<string>>(new Set());
-  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -163,53 +311,27 @@ export default function PreOrderPage() {
   const previewColor = useMemo(() => RING_COLORS.find((c) => c.id === items[0]?.ring_color) ?? RING_COLORS[0], [items]);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
-    setForm((p) => {
-      const next = { ...p, [k]: v };
-      // Auto-sync dial code when country changes (if a match exists)
-      if (k === "country" && typeof v === "string" && DIAL_CODES[v as string]) {
-        next.phone_code = DIAL_CODES[v as string];
-      }
-      return next;
-    });
-  const markTouched = (key: string) => setTouched((prev) => (prev.has(key) ? prev : new Set(prev).add(key)));
-  const showErr = (key: string) => attemptedSubmit || touched.has(key);
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
   const updateItem = (id: string, patch: Partial<RingItem>) =>
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
-  // Per-field validation errors
-  const fieldErrors: Partial<Record<keyof FormState, string>> = {};
-  if (!form.first_name.trim()) fieldErrors.first_name = "First name is required.";
-  if (!form.last_name.trim()) fieldErrors.last_name = "Last name is required.";
-  if (!form.email.trim()) fieldErrors.email = "Email is required.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) fieldErrors.email = "Enter a valid email address.";
-  if (!form.phone_code.trim()) fieldErrors.phone_code = "Select a country code.";
-  if (!form.phone_number.trim()) fieldErrors.phone_number = "Phone number is required.";
-  else {
-    const normalizedPhone = normalizePhoneForSubmission(form.phone_code, form.phone_number);
-    const digits = normalizedPhone.replace(/\D/g, "");
-    if (digits.length < 7 || digits.length > 15) fieldErrors.phone_number = "Enter a valid phone number.";
-  }
-  if (!form.address.trim()) fieldErrors.address = "Address is required.";
-  if (!form.city.trim()) fieldErrors.city = "City is required.";
-  if (!form.state.trim()) fieldErrors.state = "State / Region is required.";
-  if (!form.zip_code.trim()) fieldErrors.zip_code = "ZIP / Postal code is required.";
-  if (!form.country.trim()) fieldErrors.country = "Country is required.";
-
-  const itemSizeErrors: Record<string, string> = {};
-  items.forEach((i) => {
-    if (!i.ring_size) itemSizeErrors[i.id] = "Please select a ring size.";
-  });
-
-  const detailsValid = Object.keys(fieldErrors).length === 0;
-  const itemsValid = items.length > 0 && Object.keys(itemSizeErrors).length === 0;
+  const detailsValid =
+    form.first_name.trim() &&
+    form.last_name.trim() &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+    form.phone.trim() &&
+    form.address.trim() &&
+    form.city.trim() &&
+    form.state.trim() &&
+    form.zip_code.trim() &&
+    form.country.trim();
+  const itemsValid = items.length > 0 && items.every((i) => i.ring_size && i.quantity >= 1);
   const canSubmit = detailsValid && itemsValid;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setAttemptedSubmit(true);
     if (!canSubmit || submitting) return;
     setSubmitting(true);
     setError(null);
@@ -220,15 +342,7 @@ export default function PreOrderPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            first_name: form.first_name,
-            last_name: form.last_name,
-            email: form.email,
-            phone: normalizePhoneForSubmission(form.phone_code, form.phone_number),
-            address: form.address,
-            city: form.city,
-            state: form.state,
-            zip_code: form.zip_code,
-            country: form.country,
+            ...form,
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
             referral_source: referral,
             partner_code: partner?.code ?? partnerCode,
@@ -415,19 +529,13 @@ export default function PreOrderPage() {
                               <button
                                 type="button"
                                 key={s}
-                                onClick={() => {
-                                  updateItem(item.id, { ring_size: s });
-                                  markTouched(`item-size:${item.id}`);
-                                }}
+                                onClick={() => updateItem(item.id, { ring_size: s })}
                                 className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 {s}
                               </button>
                             ))}
                           </div>
-                          {itemSizeErrors[item.id] && (attemptedSubmit || touched.has(`item-size:${item.id}`)) && (
-                            <p className="mt-2 text-[12px] text-red-400">{itemSizeErrors[item.id]}</p>
-                          )}
                         </div>
 
                         <div>
@@ -493,89 +601,44 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="First name"
-                        placeholder="Jane"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
-                        onBlur={() => markTouched("first_name")}
-                        error={showErr("first_name") ? fieldErrors.first_name : undefined}
                         required
                       />
                       <Input
                         label="Last name"
-                        placeholder="Doe"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
-                        onBlur={() => markTouched("last_name")}
-                        error={showErr("last_name") ? fieldErrors.last_name : undefined}
                         required
                       />
                     </div>
                     <Input
                       label="Email"
                       type="email"
-                      placeholder="jane@example.com"
                       value={form.email}
                       onChange={(v) => update("email", v)}
-                      onBlur={() => markTouched("email")}
-                      error={showErr("email") ? fieldErrors.email : undefined}
                       required
                     />
-                    <PhoneInput
-                      code={form.phone_code}
-                      number={form.phone_number}
-                      onCodeChange={(v) => update("phone_code", v)}
-                      onNumberChange={(v) => update("phone_number", v)}
-                      onBlur={() => markTouched("phone_number")}
-                      error={showErr("phone_number") ? fieldErrors.phone_number : undefined}
-                    />
+                    <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} required />
                   </Section>
 
                   <Section title="Shipping address">
-                    <Input
-                      label="Address"
-                      placeholder="123 Main Street, Apt 4"
-                      value={form.address}
-                      onChange={(v) => update("address", v)}
-                      onBlur={() => markTouched("address")}
-                      error={showErr("address") ? fieldErrors.address : undefined}
-                      required
-                    />
+                    <Input label="Address" value={form.address} onChange={(v) => update("address", v)} required />
                     <div className="grid grid-cols-2 gap-3">
-                      <Input
-                        label="City"
-                        placeholder="New York"
-                        value={form.city}
-                        onChange={(v) => update("city", v)}
-                        onBlur={() => markTouched("city")}
-                        error={showErr("city") ? fieldErrors.city : undefined}
-                        required
-                      />
-                      <Input
-                        label="State / Region"
-                        placeholder="NY"
-                        value={form.state}
-                        onChange={(v) => update("state", v)}
-                        onBlur={() => markTouched("state")}
-                        error={showErr("state") ? fieldErrors.state : undefined}
-                        required
-                      />
+                      <Input label="City" value={form.city} onChange={(v) => update("city", v)} required />
+                      <Input label="State / Region" value={form.state} onChange={(v) => update("state", v)} required />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
-                        placeholder="10001"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
-                        onBlur={() => markTouched("zip_code")}
-                        error={showErr("zip_code") ? fieldErrors.zip_code : undefined}
                         required
                       />
-                      <CountrySelect
+                      <CountryInput
                         label="Country"
                         value={form.country}
                         onChange={(v) => update("country", v)}
-                        onBlur={() => markTouched("country")}
-                        error={showErr("country") ? fieldErrors.country : undefined}
                         required
                       />
                     </div>
@@ -589,7 +652,7 @@ export default function PreOrderPage() {
 
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={!canSubmit || submitting}
                     className="w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all hover:brightness-110 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                     style={{ background: GRADIENT }}
                   >
@@ -644,20 +707,14 @@ function Input({
   label,
   value,
   onChange,
-  onBlur,
-  error,
   type = "text",
   required,
-  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
-  onBlur?: () => void;
-  error?: string;
   type?: string;
   required?: boolean;
-  placeholder?: string;
 }) {
   return (
     <label className="block">
@@ -666,171 +723,83 @@ function Input({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onBlur={onBlur}
         required={required}
         maxLength={200}
-        placeholder={placeholder}
-        aria-invalid={!!error}
-        className={`mt-1.5 w-full h-12 rounded-xl border ${
-          error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
-        } bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all`}
+        className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
       />
-      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
     </label>
   );
 }
 
-function PhoneInput({
-  code,
-  number,
-  onCodeChange,
-  onNumberChange,
-  onBlur,
-  error,
-}: {
-  code: string;
-  number: string;
-  onCodeChange: (v: string) => void;
-  onNumberChange: (v: string) => void;
-  onBlur?: () => void;
-  error?: string;
-}) {
-  return (
-    <label className="block">
-      <span className="text-[13px] text-[#B8C5D3]">Phone</span>
-      <div
-        className={`mt-1.5 flex items-stretch rounded-xl border ${
-          error ? "border-red-500/60" : "border-white/10"
-        } bg-white/[0.02] overflow-hidden focus-within:border-[#4FB3FF] focus-within:bg-white/[0.04] transition-all`}
-      >
-        <select
-          value={code}
-          onChange={(e) => onCodeChange(e.target.value)}
-          className="bg-transparent text-white text-[15px] pl-3 pr-2 focus:outline-none appearance-none cursor-pointer max-w-[110px]"
-          aria-label="Country code"
-        >
-          {PHONE_CODE_OPTIONS.map((option) => (
-            <option key={`${option.country}-${option.code}`} value={option.code} className="bg-[#0A1628]">
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <div className="w-px bg-white/10" />
-        <input
-          type="tel"
-          inputMode="tel"
-          value={number}
-          onChange={(e) => onNumberChange(e.target.value)}
-          onBlur={onBlur}
-          maxLength={20}
-          placeholder="(555) 123-4567"
-          aria-invalid={!!error}
-          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
-        />
-      </div>
-      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
-    </label>
-  );
-}
-
-function CountrySelect({
+// Searchable country dropdown — typing filters the list below the field; clicking a
+// suggestion fills it in. Still a plain text field underneath, so it submits/validates
+// exactly like the old Input did (a plain string), and free text still works if the
+// user types something not on the list.
+function CountryInput({
   label,
   value,
   onChange,
-  onBlur,
-  error,
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
-  onBlur?: () => void;
-  error?: string;
   required?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = value.trim().toLowerCase();
     if (!q) return COUNTRIES;
     return COUNTRIES.filter((c) => c.toLowerCase().includes(q));
-  }, [query]);
+  }, [value]);
 
-  const select = (c: string) => {
-    onChange(c);
-    setQuery("");
-    setOpen(false);
-    onBlur?.();
-  };
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="block" ref={ref}>
-      <span className="text-[13px] text-[#B8C5D3]">{label}</span>
-      <div className="relative mt-1.5">
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          onBlur={() => setTimeout(() => onBlur?.(), 150)}
-          className={`w-full h-12 rounded-xl border ${
-            error ? "border-red-500/60" : "border-white/10 focus:border-[#4FB3FF]"
-          } bg-white/[0.02] px-4 text-left text-[15px] text-white focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between`}
-        >
-          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select your country"}</span>
-          <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
-        </button>
-        {/* Hidden input to enforce required validation */}
+    <div className="relative" ref={wrapperRef}>
+      <label className="block">
+        <span className="text-[13px] text-[#B8C5D3]">{label}</span>
         <input
-          tabIndex={-1}
-          aria-hidden="true"
-          required={required}
+          type="text"
           value={value}
-          onChange={() => {}}
-          className="absolute inset-0 opacity-0 pointer-events-none"
+          onChange={(e) => {
+            onChange(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          required={required}
+          maxLength={200}
+          autoComplete="off"
+          className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
         />
-        {open && (
-          <div className="absolute z-30 mt-2 w-full rounded-xl border border-white/10 bg-[#0A1628] shadow-2xl overflow-hidden">
-            <div className="p-2 border-b border-white/10">
-              <input
-                autoFocus
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search country…"
-                className="w-full h-10 rounded-lg bg-white/[0.04] px-3 text-[14px] text-white placeholder-[#5A6B7E] focus:outline-none"
-              />
-            </div>
-            <ul className="max-h-64 overflow-y-auto py-1">
-              {filtered.length === 0 && (
-                <li className="px-4 py-3 text-[13px] text-[#8B9DAF]">No matches</li>
-              )}
-              {filtered.map((c) => (
-                <li key={c}>
-                  <button
-                    type="button"
-                    onClick={() => select(c)}
-                    className={`w-full text-left px-4 py-2 text-[14px] hover:bg-white/[0.05] transition-colors ${
-                      c === value ? "text-[#4FB3FF]" : "text-white"
-                    }`}
-                  >
-                    {c}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
+      </label>
+      {open && filtered.length > 0 && (
+        <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg">
+          {filtered.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => {
+                onChange(c);
+                setOpen(false);
+              }}
+              className="w-full text-left px-4 py-2 text-[14px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
