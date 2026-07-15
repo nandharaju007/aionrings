@@ -493,6 +493,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="First name"
+                        placeholder="Jane"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
                         onBlur={() => markTouched("first_name")}
@@ -501,6 +502,7 @@ export default function PreOrderPage() {
                       />
                       <Input
                         label="Last name"
+                        placeholder="Doe"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
                         onBlur={() => markTouched("last_name")}
@@ -511,6 +513,7 @@ export default function PreOrderPage() {
                     <Input
                       label="Email"
                       type="email"
+                      placeholder="jane@example.com"
                       value={form.email}
                       onChange={(v) => update("email", v)}
                       onBlur={() => markTouched("email")}
