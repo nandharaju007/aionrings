@@ -644,6 +644,7 @@ function Input({
   error,
   type = "text",
   required,
+  placeholder,
 }: {
   label: string;
   value: string;
@@ -652,6 +653,7 @@ function Input({
   error?: string;
   type?: string;
   required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <label className="block">
@@ -663,6 +665,7 @@ function Input({
         onBlur={onBlur}
         required={required}
         maxLength={200}
+        placeholder={placeholder}
         aria-invalid={!!error}
         className={`mt-1.5 w-full h-12 rounded-xl border ${
           error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
