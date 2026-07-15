@@ -448,12 +448,16 @@ export default function PreOrderPage() {
                         label="First name"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
+                        onBlur={() => markTouched("first_name")}
+                        error={showErr("first_name") ? fieldErrors.first_name : undefined}
                         required
                       />
                       <Input
                         label="Last name"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
+                        onBlur={() => markTouched("last_name")}
+                        error={showErr("last_name") ? fieldErrors.last_name : undefined}
                         required
                       />
                     </div>
@@ -462,28 +466,62 @@ export default function PreOrderPage() {
                       type="email"
                       value={form.email}
                       onChange={(v) => update("email", v)}
+                      onBlur={() => markTouched("email")}
+                      error={showErr("email") ? fieldErrors.email : undefined}
                       required
                     />
-                    <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} required />
+                    <PhoneInput
+                      code={form.phone_code}
+                      number={form.phone_number}
+                      onCodeChange={(v) => update("phone_code", v)}
+                      onNumberChange={(v) => update("phone_number", v)}
+                      onBlur={() => markTouched("phone_number")}
+                      error={showErr("phone_number") ? fieldErrors.phone_number : undefined}
+                    />
                   </Section>
 
                   <Section title="Shipping address">
-                    <Input label="Address" value={form.address} onChange={(v) => update("address", v)} required />
+                    <Input
+                      label="Address"
+                      value={form.address}
+                      onChange={(v) => update("address", v)}
+                      onBlur={() => markTouched("address")}
+                      error={showErr("address") ? fieldErrors.address : undefined}
+                      required
+                    />
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="City" value={form.city} onChange={(v) => update("city", v)} required />
-                      <Input label="State / Region" value={form.state} onChange={(v) => update("state", v)} required />
+                      <Input
+                        label="City"
+                        value={form.city}
+                        onChange={(v) => update("city", v)}
+                        onBlur={() => markTouched("city")}
+                        error={showErr("city") ? fieldErrors.city : undefined}
+                        required
+                      />
+                      <Input
+                        label="State / Region"
+                        value={form.state}
+                        onChange={(v) => update("state", v)}
+                        onBlur={() => markTouched("state")}
+                        error={showErr("state") ? fieldErrors.state : undefined}
+                        required
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
+                        onBlur={() => markTouched("zip_code")}
+                        error={showErr("zip_code") ? fieldErrors.zip_code : undefined}
                         required
                       />
                       <CountrySelect
                         label="Country"
                         value={form.country}
                         onChange={(v) => update("country", v)}
+                        onBlur={() => markTouched("country")}
+                        error={showErr("country") ? fieldErrors.country : undefined}
                         required
                       />
                     </div>
@@ -497,7 +535,7 @@ export default function PreOrderPage() {
 
                   <button
                     type="submit"
-                    disabled={!canSubmit || submitting}
+                    disabled={submitting}
                     className="w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all hover:brightness-110 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                     style={{ background: GRADIENT }}
                   >
