@@ -19,6 +19,7 @@ const RING_COLORS = [
 
 // US ring size → inner diameter (mm) reference
 const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
+  { size: "6", diameter: "16.5 mm", circumference: "51.8 mm" },
   { size: "7", diameter: "17.3 mm", circumference: "54.4 mm" },
   { size: "8", diameter: "18.1 mm", circumference: "57.0 mm" },
   { size: "9", diameter: "19.0 mm", circumference: "59.5 mm" },
