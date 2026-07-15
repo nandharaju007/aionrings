@@ -803,12 +803,18 @@ function Input({
   onChange,
   type = "text",
   required,
+  placeholder,
+  onBlur,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   required?: boolean;
+  placeholder?: string;
+  onBlur?: () => void;
+  error?: string;
 }) {
   return (
     <label className="block">
@@ -817,10 +823,79 @@ function Input({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         required={required}
+        placeholder={placeholder}
         maxLength={200}
-        className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
+        className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
+          error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+        }`}
       />
+      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
+    </label>
+  );
+}
+
+function PhoneInput({
+  label,
+  code,
+  value,
+  onCodeChange,
+  onChange,
+  onBlur,
+  error,
+  placeholder,
+}: {
+  label: string;
+  code: string;
+  value: string;
+  onCodeChange: (v: string) => void;
+  onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
+  placeholder?: string;
+}) {
+  // Value stored on the select is `${iso}|${code}` so duplicate dial codes (e.g. +1 US/CA) stay distinct.
+  const selectValue = useMemo(() => {
+    const match = PHONE_CODE_OPTIONS.find((o) => o.code === code);
+    return match ? `${match.iso}|${match.code}` : `US|1`;
+  }, [code]);
+
+  return (
+    <label className="block">
+      <span className="text-[13px] text-[#B8C5D3]">{label}</span>
+      <div
+        className={`mt-1.5 flex items-stretch rounded-xl border bg-white/[0.02] overflow-hidden transition-all ${
+          error ? "border-red-500/60" : "border-white/10 focus-within:border-[#4FB3FF]"
+        }`}
+      >
+        <select
+          value={selectValue}
+          onChange={(e) => {
+            const [, c] = e.target.value.split("|");
+            onCodeChange(c);
+          }}
+          aria-label="Country dial code"
+          className="h-12 bg-transparent text-[14px] text-white pl-3 pr-2 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
+          style={{ backgroundImage: "none" }}
+        >
+          {PHONE_CODE_OPTIONS.map((o) => (
+            <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
+              {o.iso} +{o.code}
+            </option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          maxLength={30}
+          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
+        />
+      </div>
+      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
     </label>
   );
 }
@@ -834,11 +909,17 @@ function CountryInput({
   value,
   onChange,
   required,
+  placeholder,
+  onBlur,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   required?: boolean;
+  placeholder?: string;
+  onBlur?: () => void;
+  error?: string;
 }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -871,12 +952,17 @@ function CountryInput({
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
+          onBlur={onBlur}
           required={required}
+          placeholder={placeholder}
           maxLength={200}
           autoComplete="off"
-          className="mt-1.5 w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all"
+          className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
+            error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+          }`}
         />
       </label>
+      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
       {open && filtered.length > 0 && (
         <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg">
           {filtered.map((c) => (
