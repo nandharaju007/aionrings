@@ -450,7 +450,7 @@ export default function PreOrderPage() {
                   .
                 </h1>
                 <p className="text-[16px] text-[#8B9DAF] max-w-xl mx-auto">
-                  Be among the first 500 to wear the future of health awareness. No payment today — your place is held.
+                  Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of health awareness. No payment today — your place is held.
                 </p>
 
                 {/* Founder counter */}
@@ -567,13 +567,19 @@ export default function PreOrderPage() {
                               <button
                                 type="button"
                                 key={s}
-                                onClick={() => updateItem(item.id, { ring_size: s })}
+                                onClick={() => {
+                                  updateItem(item.id, { ring_size: s });
+                                  markTouched("ring_size");
+                                }}
                                 className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
                               >
                                 {s}
                               </button>
                             ))}
                           </div>
+                          {!item.ring_size && touched.ring_size && (
+                            <p className="mt-2 text-[12px] text-red-400">Please select a ring size</p>
+                          )}
                         </div>
 
                         <div>
@@ -639,44 +645,92 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="First name"
+                        placeholder="Jane"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
+                        onBlur={() => markTouched("first_name")}
+                        error={touched.first_name ? errors.first_name : undefined}
                         required
                       />
                       <Input
                         label="Last name"
+                        placeholder="Doe"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
+                        onBlur={() => markTouched("last_name")}
+                        error={touched.last_name ? errors.last_name : undefined}
                         required
                       />
                     </div>
                     <Input
                       label="Email"
                       type="email"
+                      placeholder="jane@example.com"
                       value={form.email}
                       onChange={(v) => update("email", v)}
+                      onBlur={() => markTouched("email")}
+                      error={touched.email ? errors.email : undefined}
                       required
                     />
-                    <Input label="Phone" type="tel" value={form.phone} onChange={(v) => update("phone", v)} required />
+                    <PhoneInput
+                      label="Phone"
+                      code={form.phone_code}
+                      value={form.phone}
+                      onCodeChange={(v) => update("phone_code", v)}
+                      onChange={(v) => update("phone", v)}
+                      onBlur={() => markTouched("phone")}
+                      error={touched.phone ? errors.phone : undefined}
+                      placeholder="(555) 123-4567"
+                    />
                   </Section>
 
                   <Section title="Shipping address">
-                    <Input label="Address" value={form.address} onChange={(v) => update("address", v)} required />
+                    <Input
+                      label="Address"
+                      placeholder="123 Main Street, Apt 4"
+                      value={form.address}
+                      onChange={(v) => update("address", v)}
+                      onBlur={() => markTouched("address")}
+                      error={touched.address ? errors.address : undefined}
+                      required
+                    />
                     <div className="grid grid-cols-2 gap-3">
-                      <Input label="City" value={form.city} onChange={(v) => update("city", v)} required />
-                      <Input label="State / Region" value={form.state} onChange={(v) => update("state", v)} required />
+                      <Input
+                        label="City"
+                        placeholder="New York"
+                        value={form.city}
+                        onChange={(v) => update("city", v)}
+                        onBlur={() => markTouched("city")}
+                        error={touched.city ? errors.city : undefined}
+                        required
+                      />
+                      <Input
+                        label="State / Region"
+                        placeholder="NY"
+                        value={form.state}
+                        onChange={(v) => update("state", v)}
+                        onBlur={() => markTouched("state")}
+                        error={touched.state ? errors.state : undefined}
+                        required
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
+                        placeholder="10001"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
+                        onBlur={() => markTouched("zip_code")}
+                        error={touched.zip_code ? errors.zip_code : undefined}
                         required
                       />
                       <CountryInput
                         label="Country"
+                        placeholder="Select your country"
                         value={form.country}
                         onChange={(v) => update("country", v)}
+                        onBlur={() => markTouched("country")}
+                        error={touched.country ? errors.country : undefined}
                         required
                       />
                     </div>
@@ -690,8 +744,10 @@ export default function PreOrderPage() {
 
                   <button
                     type="submit"
-                    disabled={!canSubmit || submitting}
-                    className="w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all hover:brightness-110 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+                    disabled={submitting}
+                    className={`w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all inline-flex items-center justify-center gap-2 ${
+                      canSubmit ? "hover:brightness-110 hover:scale-[1.01]" : "opacity-60"
+                    } disabled:cursor-not-allowed`}
                     style={{ background: GRADIENT }}
                   >
                     {submitting ? (
