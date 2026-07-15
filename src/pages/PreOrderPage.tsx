@@ -534,6 +534,99 @@ function Input({
   );
 }
 
+function CountrySelect({
+  label,
+  value,
+  onChange,
+  required,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return COUNTRIES;
+    return COUNTRIES.filter((c) => c.toLowerCase().includes(q));
+  }, [query]);
+
+  const select = (c: string) => {
+    onChange(c);
+    setQuery("");
+    setOpen(false);
+  };
+
+  return (
+    <div className="block" ref={ref}>
+      <span className="text-[13px] text-[#B8C5D3]">{label}</span>
+      <div className="relative mt-1.5">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-left text-[15px] text-white focus:border-[#4FB3FF] focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between"
+        >
+          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select country"}</span>
+          <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+        {/* Hidden input to enforce required validation */}
+        <input
+          tabIndex={-1}
+          aria-hidden="true"
+          required={required}
+          value={value}
+          onChange={() => {}}
+          className="absolute inset-0 opacity-0 pointer-events-none"
+        />
+        {open && (
+          <div className="absolute z-30 mt-2 w-full rounded-xl border border-white/10 bg-[#0A1628] shadow-2xl overflow-hidden">
+            <div className="p-2 border-b border-white/10">
+              <input
+                autoFocus
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search country…"
+                className="w-full h-10 rounded-lg bg-white/[0.04] px-3 text-[14px] text-white placeholder-[#5A6B7E] focus:outline-none"
+              />
+            </div>
+            <ul className="max-h-64 overflow-y-auto py-1">
+              {filtered.length === 0 && (
+                <li className="px-4 py-3 text-[13px] text-[#8B9DAF]">No matches</li>
+              )}
+              {filtered.map((c) => (
+                <li key={c}>
+                  <button
+                    type="button"
+                    onClick={() => select(c)}
+                    className={`w-full text-left px-4 py-2 text-[14px] hover:bg-white/[0.05] transition-colors ${
+                      c === value ? "text-[#4FB3FF]" : "text-white"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ConfirmationCard({ name, partner }: { name: string; partner?: string | null }) {
   return (
     <div className="max-w-2xl mx-auto text-center">
