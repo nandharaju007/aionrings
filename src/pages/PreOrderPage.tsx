@@ -246,6 +246,7 @@ interface FormState {
   email: string;
   phone: string;
   phone_code: string;
+  phone_iso: string;
   address: string;
   city: string;
   state: string;
@@ -259,6 +260,7 @@ const INITIAL: FormState = {
   email: "",
   phone: "",
   phone_code: "1",
+  phone_iso: "US",
   address: "",
   city: "",
   state: "",
@@ -370,11 +372,12 @@ export default function PreOrderPage() {
   if (ringSizeMissing) errors.ring_size = "Please select a ring size";
   const canSubmit = Object.keys(errors).length === 0;
 
-  // Keep phone_code in sync with country selection
+  // Keep phone_code + iso in sync with country selection
   useEffect(() => {
     const code = DIAL_CODES[form.country];
-    if (code && code !== form.phone_code) {
-      setForm((p) => ({ ...p, phone_code: code }));
+    const iso = (COUNTRY_ISO2 as Record<string, string>)[form.country];
+    if (code && iso && (code !== form.phone_code || iso !== form.phone_iso)) {
+      setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.country]);
