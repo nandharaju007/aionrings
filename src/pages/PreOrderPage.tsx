@@ -862,6 +862,7 @@ function Input({
 function PhoneInput({
   label,
   code,
+  iso,
   value,
   onCodeChange,
   onChange,
@@ -871,8 +872,9 @@ function PhoneInput({
 }: {
   label: string;
   code: string;
+  iso?: string;
   value: string;
-  onCodeChange: (v: string) => void;
+  onCodeChange: (code: string, iso: string) => void;
   onChange: (v: string) => void;
   onBlur?: () => void;
   error?: string;
@@ -880,9 +882,13 @@ function PhoneInput({
 }) {
   // Value stored on the select is `${iso}|${code}` so duplicate dial codes (e.g. +1 US/CA) stay distinct.
   const selectValue = useMemo(() => {
+    if (iso) {
+      const exact = PHONE_CODE_OPTIONS.find((o) => o.iso === iso && o.code === code);
+      if (exact) return `${exact.iso}|${exact.code}`;
+    }
     const match = PHONE_CODE_OPTIONS.find((o) => o.code === code);
     return match ? `${match.iso}|${match.code}` : `US|1`;
-  }, [code]);
+  }, [code, iso]);
 
   return (
     <label className="block">
@@ -895,8 +901,8 @@ function PhoneInput({
         <select
           value={selectValue}
           onChange={(e) => {
-            const [, c] = e.target.value.split("|");
-            onCodeChange(c);
+            const [nextIso, nextCode] = e.target.value.split("|");
+            onCodeChange(nextCode, nextIso);
           }}
           aria-label="Country dial code"
           className="h-12 bg-transparent text-[14px] text-white pl-3 pr-2 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
