@@ -245,6 +245,7 @@ interface FormState {
   last_name: string;
   email: string;
   phone: string;
+  phone_code: string;
   address: string;
   city: string;
   state: string;
@@ -257,12 +258,28 @@ const INITIAL: FormState = {
   last_name: "",
   email: "",
   phone: "",
+  phone_code: "1",
   address: "",
   city: "",
   state: "",
   zip_code: "",
   country: "United States",
 };
+
+type FieldKey = keyof FormState | "ring_size";
+
+function normalizePhoneForSubmission(code: string, phone: string) {
+  const digits = phone.replace(/\D+/g, "");
+  return digits ? `+${code}${digits}` : "";
+}
+
+function isEmail(v: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+function isPhoneDigits(v: string) {
+  const d = v.replace(/\D+/g, "");
+  return d.length >= 6 && d.length <= 15;
+}
 
 export default function PreOrderPage() {
   const [params] = useSearchParams();
