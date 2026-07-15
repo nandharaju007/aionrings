@@ -493,6 +493,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="First name"
+                        placeholder="Jane"
                         value={form.first_name}
                         onChange={(v) => update("first_name", v)}
                         onBlur={() => markTouched("first_name")}
@@ -501,6 +502,7 @@ export default function PreOrderPage() {
                       />
                       <Input
                         label="Last name"
+                        placeholder="Doe"
                         value={form.last_name}
                         onChange={(v) => update("last_name", v)}
                         onBlur={() => markTouched("last_name")}
@@ -511,6 +513,7 @@ export default function PreOrderPage() {
                     <Input
                       label="Email"
                       type="email"
+                      placeholder="jane@example.com"
                       value={form.email}
                       onChange={(v) => update("email", v)}
                       onBlur={() => markTouched("email")}
@@ -530,6 +533,7 @@ export default function PreOrderPage() {
                   <Section title="Shipping address">
                     <Input
                       label="Address"
+                      placeholder="123 Main Street, Apt 4"
                       value={form.address}
                       onChange={(v) => update("address", v)}
                       onBlur={() => markTouched("address")}
@@ -539,6 +543,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="City"
+                        placeholder="New York"
                         value={form.city}
                         onChange={(v) => update("city", v)}
                         onBlur={() => markTouched("city")}
@@ -547,6 +552,7 @@ export default function PreOrderPage() {
                       />
                       <Input
                         label="State / Region"
+                        placeholder="NY"
                         value={form.state}
                         onChange={(v) => update("state", v)}
                         onBlur={() => markTouched("state")}
@@ -557,6 +563,7 @@ export default function PreOrderPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         label="ZIP / Postal code"
+                        placeholder="10001"
                         value={form.zip_code}
                         onChange={(v) => update("zip_code", v)}
                         onBlur={() => markTouched("zip_code")}
@@ -641,6 +648,7 @@ function Input({
   error,
   type = "text",
   required,
+  placeholder,
 }: {
   label: string;
   value: string;
@@ -649,6 +657,7 @@ function Input({
   error?: string;
   type?: string;
   required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <label className="block">
@@ -660,6 +669,7 @@ function Input({
         onBlur={onBlur}
         required={required}
         maxLength={200}
+        placeholder={placeholder}
         aria-invalid={!!error}
         className={`mt-1.5 w-full h-12 rounded-xl border ${
           error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
@@ -713,7 +723,7 @@ function PhoneInput({
           onChange={(e) => onNumberChange(e.target.value)}
           onBlur={onBlur}
           maxLength={20}
-          placeholder="Phone number"
+          placeholder="(555) 123-4567"
           aria-invalid={!!error}
           className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
         />
@@ -775,7 +785,7 @@ function CountrySelect({
             error ? "border-red-500/60" : "border-white/10 focus:border-[#4FB3FF]"
           } bg-white/[0.02] px-4 text-left text-[15px] text-white focus:bg-white/[0.04] focus:outline-none transition-all flex items-center justify-between`}
         >
-          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select country"}</span>
+          <span className={value ? "text-white" : "text-[#5A6B7E]"}>{value || "Select your country"}</span>
           <ChevronDown className={`w-4 h-4 text-[#8B9DAF] transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {/* Hidden input to enforce required validation */}
