@@ -80,6 +80,7 @@ function toLocal(iso?: string | null): string {
 
 function StatusPill({ status }: { status: string }) {
   const map: Record<string, string> = {
+    reserved: 'bg-[#4FB3FF]/10 text-[#4FB3FF]',
     pending: 'bg-white/5 text-[#B8C5D3]',
     confirmed: 'bg-sky-500/10 text-sky-300',
     processing: 'bg-amber-500/10 text-amber-300',
@@ -87,7 +88,7 @@ function StatusPill({ status }: { status: string }) {
     delivered: 'bg-emerald-500/10 text-emerald-300',
     cancelled: 'bg-red-500/10 text-red-300',
   };
-  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.pending}`}>{status}</span>;
+  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.reserved}`}>{status}</span>;
 }
 
 export default function AdminReservationsPage() {
