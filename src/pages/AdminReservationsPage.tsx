@@ -133,6 +133,26 @@ interface AuditEntry {
 const WEB_ORDERS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
 
+// UI-only status options for the new web_orders Status column — separate from the
+// existing Fulfillment tab's STATUSES/StatusPill (which belong to the Supabase
+// "reservations" flow and use different values like reserved/confirmed/cancelled).
+const ORDER_STATUS_OPTIONS = [
+  { value: "received", label: "Order Received" },
+  { value: "processing", label: "Processing" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+] as const;
+
+function orderStatusColor(status: string): string {
+  const map: Record<string, string> = {
+    received: "text-[#4FB3FF]",
+    processing: "text-amber-300",
+    shipped: "text-violet-300",
+    delivered: "text-emerald-300",
+  };
+  return map[status] ?? map.received;
+}
+
 function toLocal(iso?: string | null): string {
   if (!iso) return "";
   const d = new Date(iso);
@@ -185,6 +205,10 @@ export default function AdminReservationsPage() {
   const [webOrders, setWebOrders] = useState<WebOrder[] | null>(null);
   const [webOrdersError, setWebOrdersError] = useState<string | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
+  // UI-only for now, per explicit instruction — not yet persisted to any backend/database.
+  // Keyed by orderId; defaults to "received" (using the order's own createdAt) until the
+  // admin changes it, at which point both the status and its timestamp update together.
+  const [orderStatuses, setOrderStatuses] = useState<Record<string, { status: string; updatedAt: string }>>({});
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -315,6 +339,18 @@ export default function AdminReservationsPage() {
     if (!webOrders) return 0;
     return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
   }, [webOrders]);
+
+  // UI-only status update — updates status AND its timestamp together in one action, per
+  // the explicit requirement. Not yet persisted anywhere; will be wired to the backend later.
+  function handleStatusChange(orderId: string, newStatus: string) {
+    setOrderStatuses((prev) => ({ ...prev, [orderId]: { status: newStatus, updatedAt: new Date().toISOString() } }));
+  }
+
+  // Returns the current status + its last-updated date for a given order, defaulting to
+  // "received" using the order's own createdAt if the admin hasn't changed it yet.
+  function getOrderStatus(row: WebOrderRow): { status: string; updatedAt: string } {
+    return orderStatuses[row.orderId] ?? { status: "received", updatedAt: row.createdAt };
+  }
 
   // Rewritten to export the flattened web_orders rows instead of the old Supabase
   // "reservations" rows.
@@ -847,6 +883,7 @@ export default function AdminReservationsPage() {
                           <th className="px-4 py-3 text-center font-medium">Qty</th>
                           <th className="px-4 py-3 text-center font-medium">Location</th>
                           <th className="px-4 py-3 text-center font-medium">Partner</th>
+                          <th className="px-4 py-3 text-center font-medium">Status</th>
                           <th className="px-4 py-3 text-center font-medium">Details</th>
                         </tr>
                       </thead>
@@ -854,6 +891,7 @@ export default function AdminReservationsPage() {
                         {webOrderRows?.map((r) => {
                           const firstItem = r.items[0];
                           const extraItems = r.items.length - 1;
+                          const currentStatus = getOrderStatus(r);
                           return (
                             <tr key={r.orderId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
                               <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
@@ -886,6 +924,22 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-[#4FB3FF] text-center whitespace-nowrap">
                                 {r.partner_code ?? r.referral_source ?? "—"}
                               </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">
+                                <select
+                                  value={currentStatus.status}
+                                  onChange={(e) => handleStatusChange(r.orderId, e.target.value)}
+                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.status)}`}
+                                >
+                                  {ORDER_STATUS_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
+                                      {opt.label}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div className="text-[10px] text-[#5A6B7E] mt-1">
+                                  {new Date(currentStatus.updatedAt).toLocaleDateString()}
+                                </div>
+                              </td>
                               <td className="px-4 py-3 text-center">
                                 <button
                                   onClick={() => setExpandedOrder(r)}
@@ -899,14 +953,14 @@ export default function AdminReservationsPage() {
                         })}
                         {webOrderRows && webOrderRows.length === 0 && (
                           <tr>
-                            <td colSpan={11} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
                               No reservations.
                             </td>
                           </tr>
                         )}
                         {!webOrderRows && !webOrdersError && (
                           <tr>
-                            <td colSpan={11} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading reservations…
                             </td>
@@ -959,6 +1013,13 @@ export default function AdminReservationsPage() {
                         <div className="text-[12px] text-[#5A6B7E]">
                           {new Date(expandedOrder.createdAt).toLocaleString()} ·{" "}
                           {expandedOrder.partner_code ?? expandedOrder.referral_source ?? "Direct"}
+                        </div>
+                        <div
+                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getOrderStatus(expandedOrder).status)}`}
+                        >
+                          Status:{" "}
+                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getOrderStatus(expandedOrder).status)?.label} ·
+                          updated {new Date(getOrderStatus(expandedOrder).updatedAt).toLocaleString()}
                         </div>
                       </div>
                     </div>
