@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { AionLogo } from '@/components/AionLogo';
-import ringHeroImg from '@/assets/ring-hero.jpg';
-import ringProductImg from '@/assets/ring-product.jpg';
-import lifestyle4 from '@/assets/lifestyle-hand-4.jpg';
-import lifestyle5 from '@/assets/lifestyle-hand-5.jpg';
-import lifestyle6 from '@/assets/lifestyle-hand-6.jpg';
-import lifestyle7 from '@/assets/lifestyle-hand-7.jpg';
-import lifestyle8 from '@/assets/lifestyle-hand-8.jpg';
-import lifestyle9 from '@/assets/lifestyle-hand-9.jpg';
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { AionLogo } from "@/components/AionLogo";
+import ringHeroImg from "@/assets/ring-hero.jpg";
+import ringProductImg from "@/assets/ring-product.jpg";
+import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
+import lifestyle5 from "@/assets/lifestyle-hand-5.jpg";
+import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
+import lifestyle7 from "@/assets/lifestyle-hand-7.jpg";
+import lifestyle8 from "@/assets/lifestyle-hand-8.jpg";
+import lifestyle9 from "@/assets/lifestyle-hand-9.jpg";
 
-const GRADIENT = 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)';
+const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
 
 /* ---------- Reveal on scroll ---------- */
 function useReveal<T extends HTMLElement>() {
@@ -29,7 +29,7 @@ function useReveal<T extends HTMLElement>() {
           io.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.15 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -40,7 +40,7 @@ function useReveal<T extends HTMLElement>() {
 function Reveal({
   children,
   delay = 0,
-  className = '',
+  className = "",
 }: {
   children: React.ReactNode;
   delay?: number;
@@ -53,7 +53,7 @@ function Reveal({
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
+        transform: visible ? "translateY(0)" : "translateY(24px)",
         transition: `opacity 600ms cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 600ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
       }}
     >
@@ -83,27 +83,17 @@ function useParallax<T extends HTMLElement>(maxOffset = 12) {
         rafId = 0;
       });
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [maxOffset]);
   return { ref, offset };
 }
 
-function LifestyleCard({
-  src,
-  tag,
-  title,
-  delay,
-}: {
-  src: string;
-  tag: string;
-  title: string;
-  delay: number;
-}) {
+function LifestyleCard({ src, tag, title, delay }: { src: string; tag: string; title: string; delay: number }) {
   const { ref, offset } = useParallax<HTMLElement>(12);
   return (
     <Reveal delay={delay}>
@@ -127,14 +117,11 @@ function LifestyleCard({
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
           style={{
-            background:
-              'linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)',
+            background: "linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)",
           }}
         />
         <figcaption className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">
-            {tag}
-          </div>
+          <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">{tag}</div>
           <div className="mt-2 text-[22px] font-semibold text-white">{title}</div>
         </figcaption>
       </figure>
@@ -157,7 +144,7 @@ function Particles() {
             style={{
               left: `${left}%`,
               top: `${top}%`,
-              background: 'rgba(79,179,255,0.2)',
+              background: "rgba(79,179,255,0.2)",
               animation: `particleDrift ${dur}s ease-in-out ${delay}s infinite`,
             }}
           />
@@ -169,91 +156,129 @@ function Particles() {
 
 /* ---------- Story cards ---------- */
 const storyMoments = [
-  { time: '2:14 am', text: 'Your heart rate quietly shifted.', color: '#EF4444' },
-  { time: '4:05 am', text: 'Your body temperature rose slightly.', color: '#EF4444' },
-  { time: '6:47 am', text: 'aiOn told you before you felt anything.', color: '#4ADE80' },
+  { time: "2:14 am", text: "Your heart rate quietly shifted.", color: "#EF4444" },
+  { time: "4:05 am", text: "Your body temperature rose slightly.", color: "#EF4444" },
+  { time: "6:47 am", text: "aiOn told you before you felt anything.", color: "#4ADE80" },
 ];
 
 /* ---------- Benefits ---------- */
 const benefits = [
-  { icon: '❤', bg: GRADIENT, title: 'You stop wondering why you\u2019re tired.', body: 'You know. aiOn explains the exact reason — not just a number, but the cause.' },
-  { icon: '💡', bg: '#4FB3FF', title: 'Your numbers finally make sense.', body: 'Not HRV: 27ms. But why it\u2019s low, what caused it, and what to do right now.' },
-  { icon: '😴', bg: '#7C3AED', title: 'Sleep becomes something you understand.', body: 'Every night analysed. Every morning explained. What changed, and why you feel how you feel.' },
-  { icon: '⚡', bg: '#FACC15', title: 'You train on the right days.', body: 'aiOn tells you when to push and when to hold back — before you even lace up.' },
-  { icon: '🧠', bg: '#EF4444', title: 'Stress doesn\u2019t sneak up on you.', body: 'Caught early. Explained clearly. Before it peaks.' },
-  { icon: '🏆', bg: '#4ADE80', title: 'You get a health briefing every morning.', body: 'Plain English. What happened overnight. What to do today. Before you open an app.' },
+  {
+    icon: "❤",
+    bg: GRADIENT,
+    title: "You stop wondering why you\u2019re tired.",
+    body: "You know. aiOn explains the exact reason — not just a number, but the cause.",
+  },
+  {
+    icon: "💡",
+    bg: "#4FB3FF",
+    title: "Your numbers finally make sense.",
+    body: "Not HRV: 27ms. But why it\u2019s low, what caused it, and what to do right now.",
+  },
+  {
+    icon: "😴",
+    bg: "#7C3AED",
+    title: "Sleep becomes something you understand.",
+    body: "Every night analysed. Every morning explained. What changed, and why you feel how you feel.",
+  },
+  {
+    icon: "⚡",
+    bg: "#FACC15",
+    title: "You train on the right days.",
+    body: "aiOn tells you when to push and when to hold back — before you even lace up.",
+  },
+  {
+    icon: "🧠",
+    bg: "#EF4444",
+    title: "Stress doesn\u2019t sneak up on you.",
+    body: "Caught early. Explained clearly. Before it peaks.",
+  },
+  {
+    icon: "🏆",
+    bg: "#4ADE80",
+    title: "You get a health briefing every morning.",
+    body: "Plain English. What happened overnight. What to do today. Before you open an app.",
+  },
 ];
 
 /* ---------- Proactive signals aiOn watches ---------- */
 const signals = [
   {
-    icon: '😴',
-    tag: 'SLEEP',
-    title: 'Sleep you can actually feel.',
-    body: 'aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.',
-    quote: 'You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.',
-    glow: '#7C3AED',
+    icon: "😴",
+    tag: "SLEEP",
+    title: "Sleep you can actually feel.",
+    body: "aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.",
+    quote: "You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.",
+    glow: "#7C3AED",
   },
   {
-    icon: '🧠',
-    tag: 'STRESS',
-    title: 'Stress caught before it stacks.',
-    body: 'Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.',
-    quote: 'Stress load rising since 2pm. A 4-minute breath session can bring it back.',
-    glow: '#EF4444',
+    icon: "🧠",
+    tag: "STRESS",
+    title: "Stress caught before it stacks.",
+    body: "Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.",
+    quote: "Stress load rising since 2pm. A 4-minute breath session can bring it back.",
+    glow: "#EF4444",
   },
   {
-    icon: '❤',
-    tag: 'HEART',
-    title: 'Heart rhythm, always in view.',
-    body: 'aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.',
-    quote: 'Resting HR is 8 bpm above your baseline this week. Consider a lighter session.',
-    glow: 'linear-gradient(135deg,#EF4444,#7C3AED)',
+    icon: "❤",
+    tag: "HEART",
+    title: "Heart rhythm, always in view.",
+    body: "aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.",
+    quote: "Resting HR is 8 bpm above your baseline this week. Consider a lighter session.",
+    glow: "linear-gradient(135deg,#EF4444,#7C3AED)",
   },
   {
-    icon: '🩸',
-    tag: 'BLOOD PRESSURE',
-    title: 'BP trends, no cuff, no fuss.',
-    body: 'Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.',
-    quote: 'Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.',
-    glow: '#00C6FF',
+    icon: "🩸",
+    tag: "BLOOD PRESSURE",
+    title: "BP trends, no cuff, no fuss.",
+    body: "Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.",
+    quote: "Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.",
+    glow: "#00C6FF",
   },
   {
-    icon: '🍬',
-    tag: 'GLUCOSE RESPONSE',
-    title: 'Feel what food does to you.',
-    body: 'aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.',
-    quote: 'Your evening carbs spiked HR for 90 min. Try earlier dinners this week.',
-    glow: '#FACC15',
+    icon: "🍬",
+    tag: "GLUCOSE RESPONSE",
+    title: "Feel what food does to you.",
+    body: "aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.",
+    quote: "Your evening carbs spiked HR for 90 min. Try earlier dinners this week.",
+    glow: "#FACC15",
   },
   {
-    icon: '🌿',
-    tag: 'ANEMIA & OXYGEN',
-    title: 'Low energy, finally explained.',
-    body: 'Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.',
-    quote: 'SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.',
-    glow: '#4ADE80',
+    icon: "🌿",
+    tag: "ANEMIA & OXYGEN",
+    title: "Low energy, finally explained.",
+    body: "Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.",
+    quote: "SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.",
+    glow: "#4ADE80",
   },
   {
-    icon: '🔥',
-    tag: 'ENERGY & CALORIES',
-    title: 'Calories that mean something.',
-    body: 'aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.',
-    quote: 'You burned 2,340 kcal today — 320 above your average. Refuel with protein.',
-    glow: '#FACC15',
+    icon: "🔥",
+    tag: "ENERGY & CALORIES",
+    title: "Calories that mean something.",
+    body: "aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.",
+    quote: "You burned 2,340 kcal today — 320 above your average. Refuel with protein.",
+    glow: "#FACC15",
   },
   {
-    icon: '✨',
-    tag: 'DAILY HEALTH',
-    title: 'One score. The whole picture.',
-    body: 'Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.',
-    quote: 'Vitality 78 — Strong. You have room for one hard session before recovery.',
-    glow: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)',
+    icon: "✨",
+    tag: "DAILY HEALTH",
+    title: "One score. The whole picture.",
+    body: "Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.",
+    quote: "Vitality 78 — Strong. You have room for one hard session before recovery.",
+    glow: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)",
   },
 ];
 
 /* ---------- Phone frame ---------- */
-function PhoneFrame({ children, tilt = 0, forward = false }: { children: React.ReactNode; tilt?: number; forward?: boolean }) {
+function PhoneFrame({
+  children,
+  tilt = 0,
+  forward = false,
+}: {
+  children: React.ReactNode;
+  tilt?: number;
+  forward?: boolean;
+}) {
   return (
     <div
       className="relative shrink-0"
@@ -261,19 +286,17 @@ function PhoneFrame({ children, tilt = 0, forward = false }: { children: React.R
         width: 290,
         height: 580,
         transform: `rotateY(${tilt}deg) scale(${forward ? 1.05 : 0.95})`,
-        transformStyle: 'preserve-3d',
+        transformStyle: "preserve-3d",
       }}
     >
       <div
         className="relative h-full w-full overflow-hidden rounded-[44px] bg-[#0A0A14]"
         style={{
-          boxShadow: '0 0 0 1px #2A3A52, 0 32px 64px rgba(0,0,0,0.5)',
+          boxShadow: "0 0 0 1px #2A3A52, 0 32px 64px rgba(0,0,0,0.5)",
         }}
       >
         <div className="absolute left-1/2 top-2 z-10 h-[30px] w-[120px] -translate-x-1/2 rounded-[20px] bg-black" />
-        <div className="absolute inset-2 overflow-hidden rounded-[38px] bg-[#0A1628] p-5 pt-10">
-          {children}
-        </div>
+        <div className="absolute inset-2 overflow-hidden rounded-[38px] bg-[#0A1628] p-5 pt-10">{children}</div>
       </div>
     </div>
   );
@@ -322,7 +345,7 @@ function FullWidthImage({
   src,
   alt,
   caption,
-  aspect = '21/9',
+  aspect = "21/9",
 }: {
   src: string;
   alt: string;
@@ -332,11 +355,7 @@ function FullWidthImage({
   const { ref, offset } = useParallax<HTMLElement>(18);
   return (
     <Reveal>
-      <figure
-        ref={ref}
-        className="group relative w-full overflow-hidden rounded-3xl"
-        style={{ aspectRatio: aspect }}
-      >
+      <figure ref={ref} className="group relative w-full overflow-hidden rounded-3xl" style={{ aspectRatio: aspect }}>
         <div
           className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
           style={{ transform: `translateY(${offset}px)` }}
@@ -353,8 +372,7 @@ function FullWidthImage({
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              'linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.7) 100%)',
+            background: "linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.7) 100%)",
           }}
         />
         {caption && (
@@ -373,7 +391,7 @@ function ProductRing({ color }: { color: string }) {
     <div
       className="relative w-full max-w-[420px] overflow-hidden rounded-3xl"
       style={{
-        boxShadow: '0 0 100px -20px rgba(79,179,255,0.35)',
+        boxShadow: "0 0 100px -20px rgba(79,179,255,0.35)",
       }}
     >
       <img
@@ -382,11 +400,11 @@ function ProductRing({ color }: { color: string }) {
         className="aspect-square w-full object-cover transition-all duration-500"
         style={{
           filter:
-            color === '#C0C0CC'
-              ? 'hue-rotate(180deg) brightness(1.6) saturate(0.4)'
-              : color === '#B76E79'
-              ? 'hue-rotate(-70deg) brightness(1.15) saturate(1.3)'
-              : 'none',
+            color === "#C0C0CC"
+              ? "hue-rotate(180deg) brightness(1.6) saturate(0.4)"
+              : color === "#B76E79"
+                ? "hue-rotate(-70deg) brightness(1.15) saturate(1.3)"
+                : "none",
         }}
       />
     </div>
@@ -395,7 +413,7 @@ function ProductRing({ color }: { color: string }) {
 
 /* ---------- Waitlist form ---------- */
 function WaitlistForm() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   return (
     <div className="mx-auto mt-12 max-w-[480px]">
@@ -443,9 +461,9 @@ function WaitlistForm() {
 
 /* ================= PAGE ================= */
 const finishes = [
-  { name: 'Midnight Black', hex: '#0A0A14' },
-  { name: 'Silver', hex: '#C0C0CC' },
-  { name: 'Rose Gold', hex: '#B76E79' },
+  { name: "Midnight Black", hex: "#0A0A14" },
+  { name: "Silver", hex: "#C0C0CC" },
+  { name: "Rose Gold", hex: "#B76E79" },
 ];
 
 const Index = () => {
@@ -455,14 +473,14 @@ const Index = () => {
 
   useEffect(() => {
     const onScroll = () => setShowScrollHint(window.scrollY < 80);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     if (location.hash) {
       const el = document.querySelector(location.hash);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 60);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 60);
     }
   }, [location]);
 
@@ -496,8 +514,7 @@ const Index = () => {
         <div
           className="pointer-events-none absolute right-[-10%] top-[45%] h-[70vmin] w-[70vmin] -translate-y-1/2 rounded-full opacity-60 blur-[120px]"
           style={{
-            background:
-              'radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)',
+            background: "radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)",
           }}
         />
 
@@ -505,25 +522,35 @@ const Index = () => {
         <div
           className="relative z-20 mx-auto mb-6 flex w-full max-w-[1200px] justify-center pt-4"
           aria-hidden="true"
-          style={{ animation: 'fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both' }}
+          style={{ animation: "fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both" }}
         >
           <div
             className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-5 sm:px-5 sm:py-3 sm:text-[12px]"
-            style={{ boxShadow: '0 8px 40px -12px rgba(0,198,255,0.25)' }}
+            style={{ boxShadow: "0 8px 40px -12px rgba(0,198,255,0.25)" }}
           >
             <span className="flex items-center gap-2">
               <span
                 className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
-                style={{ animation: 'ppgLive 1.4s ease-in-out infinite', boxShadow: '0 0 8px #00C6FF' }}
+                style={{ animation: "ppgLive 1.4s ease-in-out infinite", boxShadow: "0 0 8px #00C6FF" }}
               />
               <span className="text-white/90">Live</span>
             </span>
             <span className="hidden h-3 w-px bg-white/10 sm:block" />
-            <span><span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span></span>
-            <span className="hidden sm:inline"><span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span></span>
-            <span><span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span></span>
-            <span className="hidden sm:inline"><span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span></span>
-            <span className="hidden md:inline"><span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span></span>
+            <span>
+              <span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span>
+            </span>
+            <span className="hidden sm:inline">
+              <span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span>
+            </span>
+            <span>
+              <span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span>
+            </span>
+            <span className="hidden sm:inline">
+              <span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span>
+            </span>
+            <span className="hidden md:inline">
+              <span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span>
+            </span>
           </div>
         </div>
 
@@ -552,32 +579,26 @@ const Index = () => {
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
               <button
-                onClick={() =>
-                  document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
-                }
+                onClick={() => document.querySelector("#waitlist")?.scrollIntoView({ behavior: "smooth" })}
                 className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
                 style={{ background: GRADIENT }}
               >
                 Join the Waitlist · Free
               </button>
               <button
-                onClick={() =>
-                  document.querySelector('#how')?.scrollIntoView({ behavior: 'smooth' })
-                }
+                onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
                 className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
               >
                 See How It Works ↓
               </button>
             </div>
-            <p className="mt-5 text-[14px] text-[#5A6B7E]">
-              No credit card · Ships 2026 · 30-day returns
-            </p>
+            <p className="mt-5 text-[14px] text-[#5A6B7E]">No credit card · Ships 2026 · 30-day returns</p>
           </div>
 
           {/* Right column: ring image */}
           <div
             className="relative flex items-center justify-center lg:justify-end"
-            style={{ animation: 'floatC 7s ease-in-out infinite' }}
+            style={{ animation: "floatC 7s ease-in-out infinite" }}
           >
             <img
               src={ringHeroImg}
@@ -586,12 +607,10 @@ const Index = () => {
               height={1280}
               className="h-auto w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[600px]"
               style={{
-                mixBlendMode: 'screen',
-                WebkitMaskImage:
-                  'radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)',
-                maskImage:
-                  'radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)',
-                filter: 'drop-shadow(0 30px 60px rgba(0,198,255,0.25))',
+                mixBlendMode: "screen",
+                WebkitMaskImage: "radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)",
+                maskImage: "radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)",
+                filter: "drop-shadow(0 30px 60px rgba(0,198,255,0.25))",
               }}
             />
           </div>
@@ -601,7 +620,7 @@ const Index = () => {
           className="mx-auto mt-8 transition-opacity duration-500"
           style={{
             opacity: showScrollHint ? 1 : 0,
-            animation: 'scrollBounce 0.8s ease-in-out infinite',
+            animation: "scrollBounce 0.8s ease-in-out infinite",
           }}
         >
           <ChevronDown className="h-7 w-7 text-[#4FB3FF]" />
@@ -695,9 +714,7 @@ const Index = () => {
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WORN, NOT WATCHED
-              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">WORN, NOT WATCHED</p>
               <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Made to disappear
                 <br />
@@ -711,9 +728,9 @@ const Index = () => {
 
           <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {[
-              { src: lifestyle4, tag: 'REST', title: 'Sleeps with you' },
-              { src: lifestyle5, tag: 'MORNING', title: 'Reads before you\u2019re up' },
-              { src: lifestyle6, tag: 'MOVE', title: 'Trains without a screen' },
+              { src: lifestyle4, tag: "REST", title: "Sleeps with you" },
+              { src: lifestyle5, tag: "MORNING", title: "Reads before you\u2019re up" },
+              { src: lifestyle6, tag: "MOVE", title: "Trains without a screen" },
             ].map((s, i) => (
               <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
             ))}
@@ -761,17 +778,15 @@ const Index = () => {
                   />
                   <div
                     className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl text-[20px]"
-                    style={{ background: s.glow, color: '#0A1628' }}
+                    style={{ background: s.glow, color: "#0A1628" }}
                   >
                     {s.icon}
                   </div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[2px] text-[#8B9DAF]">
-                    {s.tag}
-                  </div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[2px] text-[#8B9DAF]">{s.tag}</div>
                   <h3 className="mt-2 text-[17px] font-semibold leading-snug text-white">{s.title}</h3>
                   <div
                     className="mt-6 rounded-lg bg-black/20 p-3 text-[12px] italic leading-relaxed text-[#8B9DAF]"
-                    style={{ borderLeft: '1px solid rgba(79,179,255,0.4)' }}
+                    style={{ borderLeft: "1px solid rgba(79,179,255,0.4)" }}
                   >
                     "{s.quote}"
                   </div>
@@ -793,9 +808,7 @@ const Index = () => {
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                THE APP
-              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">THE APP</p>
               <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 The app that thinks
                 <br />
@@ -809,7 +822,7 @@ const Index = () => {
 
           <div
             className="mt-16 flex snap-x snap-mandatory items-center justify-start gap-6 overflow-x-auto pb-6 md:justify-center md:overflow-visible"
-            style={{ perspective: '1400px' }}
+            style={{ perspective: "1400px" }}
           >
             <Reveal delay={0}>
               <div className="snap-center">
@@ -836,17 +849,14 @@ const Index = () => {
                       <div className="text-[#8B9DAF]">
                         <span
                           className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EF4444] align-middle"
-                          style={{ animation: 'ppgLive 1.2s ease-in-out infinite' }}
+                          style={{ animation: "ppgLive 1.2s ease-in-out infinite" }}
                         />
                         Live HR
                       </div>
                       <div className="mt-0.5 font-semibold text-white">72 bpm</div>
                     </div>
                   </div>
-                  <div
-                    className="mt-4 rounded-xl bg-[#16243B] p-3"
-                    style={{ borderLeft: '2px solid #4FB3FF' }}
-                  >
+                  <div className="mt-4 rounded-xl bg-[#16243B] p-3" style={{ borderLeft: "2px solid #4FB3FF" }}>
                     <div className="text-[11px] font-semibold text-[#4FB3FF]">WHY 78 TODAY ✦</div>
                     <div className="mt-1 text-[12px] leading-snug text-[#B8C5D3]">
                       Your recovery stayed strong despite yesterday's session. Sleep efficiency was 92%.
@@ -864,10 +874,7 @@ const Index = () => {
                     <span>••• 100%</span>
                   </div>
                   <div className="text-[18px] font-bold text-white">Insights</div>
-                  <div
-                    className="mt-5 rounded-xl bg-[#1A1020] p-4"
-                    style={{ border: '1px solid #EF4444' }}
-                  >
+                  <div className="mt-5 rounded-xl bg-[#1A1020] p-4" style={{ border: "1px solid #EF4444" }}>
                     <span className="inline-block rounded-full bg-[#EF4444]/20 px-2 py-0.5 text-[10px] font-semibold text-[#EF4444]">
                       NEEDS ATTENTION
                     </span>
@@ -907,19 +914,17 @@ const Index = () => {
                     </div>
                     <div
                       className="max-w-[85%] rounded-2xl bg-[#16243B] px-3 py-2 text-[13px] text-[#B8C5D3]"
-                      style={{ borderLeft: '2px solid #4FB3FF' }}
+                      style={{ borderLeft: "2px solid #4FB3FF" }}
                     >
-                      Your HRV of 27ms is below your baseline. This is likely from Friday's late
-                      workout. Light activity today will help you recover faster.
+                      Your HRV of 27ms is below your baseline. This is likely from Friday's late workout. Light activity
+                      today will help you recover faster.
                     </div>
                     <div className="ml-auto max-w-[80%] rounded-2xl bg-[#1E3A5F] px-3 py-2 text-[13px] text-white">
                       What time should I work out tomorrow?
                     </div>
                   </div>
                   <div className="absolute inset-x-5 bottom-5 flex items-center gap-2 rounded-full bg-[#16243B] px-4 py-2">
-                    <span className="flex-1 text-[12px] text-[#5A6B7E]">
-                      Ask anything about your health…
-                    </span>
+                    <span className="flex-1 text-[12px] text-[#5A6B7E]">Ask anything about your health…</span>
                     <span className="text-[#4FB3FF]">🎤</span>
                   </div>
                 </PhoneFrame>
@@ -954,9 +959,7 @@ const Index = () => {
         <div className="mx-auto max-w-[1100px]">
           <div className="text-center">
             <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                THE RING
-              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">THE RING</p>
               <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
                 Engineered to
                 <br />
@@ -982,9 +985,7 @@ const Index = () => {
                       style={{
                         background: f.hex,
                         boxShadow:
-                          finish.name === f.name
-                            ? '0 0 0 2px #4FB3FF, 0 0 0 4px #0A1628'
-                            : '0 0 0 1px #1E3A5F',
+                          finish.name === f.name ? "0 0 0 2px #4FB3FF, 0 0 0 4px #0A1628" : "0 0 0 1px #1E3A5F",
                       }}
                     />
                   ))}
@@ -997,9 +998,9 @@ const Index = () => {
               <div>
                 <div className="space-y-4">
                   {[
-                    { label: 'Material', value: 'Medical-grade Titanium' },
-                    { label: 'Battery', value: 'Up to 7 days' },
-                    { label: 'Water', value: 'IP68 · Swim-safe' },
+                    { label: "Material", value: "Medical-grade Titanium" },
+                    { label: "Battery", value: "Up to 7 days" },
+                    { label: "Water", value: "IP68 · Swim-safe" },
                   ].map((r) => (
                     <div
                       key={r.label}
@@ -1012,14 +1013,10 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-[13px] text-[#8B9DAF]">
-                  Sizes US 6–13 · Free sizing kit before you commit
-                </p>
+                <p className="mt-4 text-[13px] text-[#8B9DAF]">Sizes US 6–13 · Free sizing kit before you commit</p>
 
                 <button
-                  onClick={() =>
-                    document.querySelector('#waitlist')?.scrollIntoView({ behavior: 'smooth' })
-                  }
+                  onClick={() => document.querySelector("#waitlist")?.scrollIntoView({ behavior: "smooth" })}
                   className="mt-6 w-full rounded-2xl py-4 text-[16px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
                   style={{ background: GRADIENT }}
                 >
@@ -1036,10 +1033,13 @@ const Index = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at center, #0F1B2D 0%, #0A1628 70%)',
+            background: "radial-gradient(ellipse at center, #0F1B2D 0%, #0A1628 70%)",
           }}
         />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ opacity: 0.04 }}>
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ opacity: 0.04 }}
+        >
           <AionLogo width={300} />
         </div>
         <div className="relative mx-auto max-w-[560px] text-center">
@@ -1049,9 +1049,7 @@ const Index = () => {
               <br />
               Feel the difference.
             </h2>
-            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">
-              Early access. No credit card.
-            </p>
+            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">Early access. No credit card.</p>
             <WaitlistForm />
           </Reveal>
         </div>

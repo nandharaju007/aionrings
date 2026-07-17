@@ -837,38 +837,17 @@ export default function AdminReservationsPage() {
                     <table className="w-full text-[13px]">
                       <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
                         <tr>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            #
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Date
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Name
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Email
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Phone
-                          </th>
-                          <th colSpan={3} className="px-4 py-2 text-center font-medium border-b border-white/5">
-                            Items
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Location
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Partner
-                          </th>
-                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
-                            Details
-                          </th>
-                        </tr>
-                        <tr>
-                          <th className="px-4 py-2 text-center font-medium">Size</th>
-                          <th className="px-4 py-2 text-center font-medium">Color</th>
-                          <th className="px-4 py-2 text-center font-medium">Qty</th>
+                          <th className="px-4 py-3 text-center font-medium">#</th>
+                          <th className="px-4 py-3 text-center font-medium">Date</th>
+                          <th className="px-4 py-3 text-center font-medium">Name</th>
+                          <th className="px-4 py-3 text-center font-medium">Email</th>
+                          <th className="px-4 py-3 text-center font-medium">Phone</th>
+                          <th className="px-4 py-3 text-center font-medium">Size</th>
+                          <th className="px-4 py-3 text-center font-medium">Color</th>
+                          <th className="px-4 py-3 text-center font-medium">Qty</th>
+                          <th className="px-4 py-3 text-center font-medium">Location</th>
+                          <th className="px-4 py-3 text-center font-medium">Partner</th>
+                          <th className="px-4 py-3 text-center font-medium">Details</th>
                         </tr>
                       </thead>
                       <tbody>
