@@ -60,6 +60,26 @@ interface BulkRes {
 
 type Tab = 'reservations' | 'fulfillment' | 'partners' | 'bulk';
 
+function toLocal(iso?: string | null): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function StatusPill({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    pending: 'bg-white/5 text-[#B8C5D3]',
+    confirmed: 'bg-sky-500/10 text-sky-300',
+    processing: 'bg-amber-500/10 text-amber-300',
+    shipped: 'bg-violet-500/10 text-violet-300',
+    delivered: 'bg-emerald-500/10 text-emerald-300',
+    cancelled: 'bg-red-500/10 text-red-300',
+  };
+  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.pending}`}>{status}</span>;
+}
+
 export default function AdminReservationsPage() {
   const [session, setSession] = useState<{ email: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
