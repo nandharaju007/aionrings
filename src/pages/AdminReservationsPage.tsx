@@ -17,6 +17,8 @@ import {
   CheckCircle2,
   Save,
   History,
+  Eye,
+  X,
 } from "lucide-react";
 
 interface Reservation {
@@ -182,6 +184,7 @@ export default function AdminReservationsPage() {
   // ─── New: web_orders data, fetched from our own backend, not Supabase ───────
   const [webOrders, setWebOrders] = useState<WebOrder[] | null>(null);
   const [webOrdersError, setWebOrdersError] = useState<string | null>(null);
+  const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -834,90 +837,97 @@ export default function AdminReservationsPage() {
                     <table className="w-full text-[13px]">
                       <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
                         <tr>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             #
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Date
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Name
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Email
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Phone
                           </th>
                           <th colSpan={3} className="px-4 py-2 text-center font-medium border-b border-white/5">
                             Items
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Location
                           </th>
-                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
                             Partner
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-center font-medium align-bottom">
+                            Details
                           </th>
                         </tr>
                         <tr>
-                          <th className="px-4 py-2 text-left font-medium">Size</th>
-                          <th className="px-4 py-2 text-left font-medium">Color</th>
-                          <th className="px-4 py-2 text-left font-medium">Qty</th>
+                          <th className="px-4 py-2 text-center font-medium">Size</th>
+                          <th className="px-4 py-2 text-center font-medium">Color</th>
+                          <th className="px-4 py-2 text-center font-medium">Qty</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {webOrderRows?.map((r) => (
-                          <tr key={r.orderId} className="border-t border-white/5 hover:bg-white/[0.02]">
-                            <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] align-top">
-                              {r.orderId.slice(-8)}
-                            </td>
-                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
-                              {new Date(r.createdAt).toLocaleDateString()}
-                            </td>
-                            <td className="px-4 py-3 align-top">
-                              {r.first_name} {r.last_name}
-                            </td>
-                            <td className="px-4 py-3 text-[#B8C5D3] align-top">{r.email}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3] align-top">{r.phone}</td>
-                            <td className="px-4 py-3 align-top">
-                              {r.items.map((item, i) => (
-                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
-                                  {item.ring_size}
-                                </div>
-                              ))}
-                            </td>
-                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
-                              {r.items.map((item, i) => (
-                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
-                                  {item.ring_color ?? "—"}
-                                </div>
-                              ))}
-                            </td>
-                            <td className="px-4 py-3 align-top">
-                              {r.items.map((item, i) => (
-                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
-                                  {item.quantity}
-                                </div>
-                              ))}
-                            </td>
-                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
-                              {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country}
-                            </td>
-                            <td className="px-4 py-3 text-[#4FB3FF] align-top">
-                              {r.partner_code ?? r.referral_source ?? "—"}
-                            </td>
-                          </tr>
-                        ))}
+                        {webOrderRows?.map((r) => {
+                          const firstItem = r.items[0];
+                          const extraItems = r.items.length - 1;
+                          return (
+                            <tr key={r.orderId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
+                              <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
+                                {r.orderId.slice(-8)}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {new Date(r.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[140px]">
+                                {r.first_name} {r.last_name}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[160px]">
+                                {r.email}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">{r.phone}</td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">
+                                {firstItem?.ring_size ?? "—"}
+                                {extraItems > 0 && <span className="text-[#5A6B7E] text-[11px]"> (+{extraItems})</span>}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {firstItem?.ring_color ?? "—"}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">{firstItem?.quantity ?? "—"}</td>
+                              <td
+                                className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
+                                title={`${r.address}, ${r.city}, ${r.state} ${r.zip_code}, ${r.country}`}
+                              >
+                                {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country}
+                              </td>
+                              <td className="px-4 py-3 text-[#4FB3FF] text-center whitespace-nowrap">
+                                {r.partner_code ?? r.referral_source ?? "—"}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  onClick={() => setExpandedOrder(r)}
+                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                         {webOrderRows && webOrderRows.length === 0 && (
                           <tr>
-                            <td colSpan={10} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={11} className="px-4 py-16 text-center text-[#5A6B7E]">
                               No reservations.
                             </td>
                           </tr>
                         )}
                         {!webOrderRows && !webOrdersError && (
                           <tr>
-                            <td colSpan={10} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={11} className="px-4 py-16 text-center text-[#5A6B7E]">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading reservations…
                             </td>
@@ -926,6 +936,54 @@ export default function AdminReservationsPage() {
                       </tbody>
                     </table>
                   </div>
+
+                  {expandedOrder && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => setExpandedOrder(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Reservation Details</div>
+                          <button onClick={() => setExpandedOrder(null)} className="text-[#8B9DAF] hover:text-white">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[16px] font-medium mb-1">
+                          {expandedOrder.first_name} {expandedOrder.last_name}
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {expandedOrder.email} · {expandedOrder.phone}
+                        </div>
+                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-1">Shipping Address</div>
+                        <div className="text-[13px] text-[#B8C5D3] mb-4">
+                          {expandedOrder.address}, {expandedOrder.city}, {expandedOrder.state} {expandedOrder.zip_code},{" "}
+                          {expandedOrder.country}
+                        </div>
+                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-2">Items</div>
+                        <div className="space-y-2 mb-4">
+                          {expandedOrder.items.map((item, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between text-[13px] rounded-lg bg-white/[0.02] border border-white/5 px-3 py-2"
+                            >
+                              <span>
+                                Size {item.ring_size} · {item.ring_color}
+                              </span>
+                              <span className="text-[#B8C5D3]">Qty {item.quantity}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-[12px] text-[#5A6B7E]">
+                          {new Date(expandedOrder.createdAt).toLocaleString()} ·{" "}
+                          {expandedOrder.partner_code ?? expandedOrder.referral_source ?? "Direct"}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
 
