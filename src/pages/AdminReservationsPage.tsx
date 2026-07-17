@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, LogOut, Download, Plus, Trash2, QrCode, Copy, Check } from 'lucide-react';
+import { Loader2, LogOut, Download, Plus, Trash2, QrCode, Copy, Check, Truck, Package, CheckCircle2, Save } from 'lucide-react';
 
 interface Reservation {
   id: string;
@@ -25,6 +25,11 @@ interface Reservation {
   partner_name: string | null;
   status: string;
   created_at: string;
+  tracking_number?: string | null;
+  carrier?: string | null;
+  shipped_at?: string | null;
+  delivered_at?: string | null;
+  admin_notes?: string | null;
 }
 
 interface Partner {
@@ -53,7 +58,27 @@ interface BulkRes {
   created_at: string;
 }
 
-type Tab = 'reservations' | 'partners' | 'bulk';
+type Tab = 'reservations' | 'fulfillment' | 'partners' | 'bulk';
+
+function toLocal(iso?: string | null): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function StatusPill({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    pending: 'bg-white/5 text-[#B8C5D3]',
+    confirmed: 'bg-sky-500/10 text-sky-300',
+    processing: 'bg-amber-500/10 text-amber-300',
+    shipped: 'bg-violet-500/10 text-violet-300',
+    delivered: 'bg-emerald-500/10 text-emerald-300',
+    cancelled: 'bg-red-500/10 text-red-300',
+  };
+  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.pending}`}>{status}</span>;
+}
 
 export default function AdminReservationsPage() {
   const [session, setSession] = useState<{ email: string } | null>(null);
@@ -71,6 +96,9 @@ export default function AdminReservationsPage() {
   const [qrPartner, setQrPartner] = useState<Partner | null>(null);
   const [newPartner, setNewPartner] = useState({ code: '', name: '', contact_email: '', phone: '', website: '' });
   const [copied, setCopied] = useState<string | null>(null);
+  const [edit, setEdit] = useState<Record<string, Partial<Reservation>>>({});
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [fulfillmentFilter, setFulfillmentFilter] = useState<string>('all');
 
   useEffect(() => {
     document.title = 'Admin · Reservations';
@@ -201,6 +229,39 @@ export default function AdminReservationsPage() {
     setCopied(key); setTimeout(() => setCopied(null), 1200);
   }
 
+  function editField(id: string, field: keyof Reservation, value: any) {
+    setEdit(prev => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
+  }
+
+  async function saveFulfillment(r: Reservation) {
+    const changes = edit[r.id];
+    if (!changes) return;
+    setSavingId(r.id);
+    const patch: any = { ...changes };
+    // Auto-timestamp status transitions
+    if (patch.status === 'shipped' && !r.shipped_at && !patch.shipped_at) patch.shipped_at = new Date().toISOString();
+    if (patch.status === 'delivered' && !r.delivered_at && !patch.delivered_at) patch.delivered_at = new Date().toISOString();
+    const { error } = await supabase.from('reservations').update(patch).eq('id', r.id);
+    setSavingId(null);
+    if (error) { alert(error.message); return; }
+    setEdit(prev => { const n = { ...prev }; delete n[r.id]; return n; });
+    await loadAll();
+  }
+
+  const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
+
+  const fulfillmentRows = useMemo(() => {
+    if (!rows) return null;
+    if (fulfillmentFilter === 'all') return rows;
+    return rows.filter(r => (r.status || 'pending') === fulfillmentFilter);
+  }, [rows, fulfillmentFilter]);
+
+  const stats = useMemo(() => {
+    const s: Record<string, number> = { pending: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
+    rows?.forEach(r => { s[r.status || 'pending'] = (s[r.status || 'pending'] ?? 0) + 1; });
+    return s;
+  }, [rows]);
+
   return (
     <div className="min-h-screen bg-[#0A1628] text-white">
       <Header />
@@ -244,14 +305,109 @@ export default function AdminReservationsPage() {
             </div>
           ) : (
             <>
-              <div className="flex gap-1 mb-8 rounded-full border border-white/10 bg-white/[0.02] p-1 w-fit">
-                {(['reservations','partners','bulk'] as Tab[]).map(t => (
+              <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-white/10 bg-white/[0.02] p-1 w-fit">
+                {(['reservations','fulfillment','partners','bulk'] as Tab[]).map(t => (
                   <button key={t} onClick={() => setTab(t)}
                     className={`px-5 py-2 text-[13px] rounded-full transition-colors ${tab === t ? 'bg-white/10 text-white' : 'text-[#8B9DAF] hover:text-white'}`}>
-                    {t === 'reservations' ? 'Reservations' : t === 'partners' ? 'Partners' : 'Bulk Inquiries'}
+                    {t === 'reservations' ? 'Reservations' : t === 'fulfillment' ? 'Orders & Delivery' : t === 'partners' ? 'Partners' : 'Bulk Inquiries'}
                   </button>
                 ))}
               </div>
+
+              {tab === 'fulfillment' && (
+                <>
+                  <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6">
+                    {STATUSES.map(s => (
+                      <button key={s} onClick={() => setFulfillmentFilter(s)}
+                        className={`rounded-2xl border p-4 text-left transition-colors ${fulfillmentFilter === s ? 'border-[#4FB3FF] bg-[#4FB3FF]/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'}`}>
+                        <div className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">{s}</div>
+                        <div className="text-2xl font-light mt-1">{stats[s] ?? 0}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-[13px] text-[#8B9DAF]">
+                      Filter: <button onClick={() => setFulfillmentFilter('all')} className={`ml-1 underline ${fulfillmentFilter === 'all' ? 'text-white' : 'text-[#4FB3FF]'}`}>All ({rows?.length ?? 0})</button>
+                    </div>
+                    <div className="text-[12px] text-[#5A6B7E]">Click a status card to filter · edit rows and hit Save</div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {fulfillmentRows?.map(r => {
+                      const e = edit[r.id] ?? {};
+                      const merged = { ...r, ...e };
+                      const dirty = !!edit[r.id];
+                      return (
+                        <div key={r.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <span className="font-mono text-[13px] text-[#4FB3FF]">{r.reservation_number}</span>
+                                <StatusPill status={merged.status || 'pending'} />
+                              </div>
+                              <div className="text-[15px] font-medium">{r.first_name} {r.last_name} <span className="text-[#8B9DAF] font-normal">· {r.email}</span></div>
+                              <div className="text-[12px] text-[#8B9DAF]">
+                                {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country} · {r.phone}
+                              </div>
+                              <div className="text-[12px] text-[#B8C5D3] mt-1">
+                                Size <span className="text-white">{r.ring_size}</span> · Color <span className="text-white">{r.ring_color ?? '—'}</span> · Qty <span className="text-white">{r.quantity}</span> · {new Date(r.created_at).toLocaleDateString()}
+                              </div>
+                            </div>
+                            <button onClick={() => saveFulfillment(r)} disabled={!dirty || savingId === r.id}
+                              className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[12px] font-medium text-white disabled:opacity-40"
+                              style={{ background: dirty ? 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)' : 'rgba(255,255,255,0.06)' }}>
+                              {savingId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                              {dirty ? 'Save changes' : 'Saved'}
+                            </button>
+                          </div>
+
+                          <div className="grid md:grid-cols-4 gap-3">
+                            <label className="block">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Status</span>
+                              <select value={merged.status || 'pending'} onChange={ev => editField(r.id, 'status', ev.target.value)}
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]">
+                                {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                              </select>
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Carrier</span>
+                              <input value={merged.carrier ?? ''} onChange={ev => editField(r.id, 'carrier', ev.target.value)}
+                                placeholder="UPS, FedEx, USPS…"
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
+                            </label>
+                            <label className="block md:col-span-2">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Tracking number</span>
+                              <input value={merged.tracking_number ?? ''} onChange={ev => editField(r.id, 'tracking_number', ev.target.value)}
+                                placeholder="1Z999AA10123456784"
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Shipped at</span>
+                              <input type="datetime-local" value={toLocal(merged.shipped_at)} onChange={ev => editField(r.id, 'shipped_at', ev.target.value ? new Date(ev.target.value).toISOString() : null)}
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Delivered at</span>
+                              <input type="datetime-local" value={toLocal(merged.delivered_at)} onChange={ev => editField(r.id, 'delivered_at', ev.target.value ? new Date(ev.target.value).toISOString() : null)}
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
+                            </label>
+                            <label className="block md:col-span-2">
+                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Internal notes</span>
+                              <input value={merged.admin_notes ?? ''} onChange={ev => editField(r.id, 'admin_notes', ev.target.value)}
+                                placeholder="Anything worth remembering…"
+                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
+                            </label>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {fulfillmentRows && fulfillmentRows.length === 0 && (
+                      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-10 text-center text-[#5A6B7E]">No orders in this stage.</div>
+                    )}
+                  </div>
+                </>
+              )}
 
               {tab === 'reservations' && (
                 <>

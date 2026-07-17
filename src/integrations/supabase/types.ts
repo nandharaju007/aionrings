@@ -122,9 +122,12 @@ export type Database = {
       reservations: {
         Row: {
           address: string
+          admin_notes: string | null
+          carrier: string | null
           city: string
           country: string
           created_at: string
+          delivered_at: string | null
           email: string
           first_name: string
           id: string
@@ -137,15 +140,20 @@ export type Database = {
           reservation_number: string
           ring_color: string | null
           ring_size: string
+          shipped_at: string | null
           state: string
           status: string
+          tracking_number: string | null
           zip_code: string
         }
         Insert: {
           address: string
+          admin_notes?: string | null
+          carrier?: string | null
           city: string
           country: string
           created_at?: string
+          delivered_at?: string | null
           email: string
           first_name: string
           id?: string
@@ -158,15 +166,20 @@ export type Database = {
           reservation_number?: string
           ring_color?: string | null
           ring_size: string
+          shipped_at?: string | null
           state: string
           status?: string
+          tracking_number?: string | null
           zip_code: string
         }
         Update: {
           address?: string
+          admin_notes?: string | null
+          carrier?: string | null
           city?: string
           country?: string
           created_at?: string
+          delivered_at?: string | null
           email?: string
           first_name?: string
           id?: string
@@ -179,8 +192,10 @@ export type Database = {
           reservation_number?: string
           ring_color?: string | null
           ring_size?: string
+          shipped_at?: string | null
           state?: string
           status?: string
+          tracking_number?: string | null
           zip_code?: string
         }
         Relationships: []
