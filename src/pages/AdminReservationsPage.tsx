@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, LogOut, Download, Plus, Trash2, QrCode, Copy, Check, Truck, Package, CheckCircle2, Save } from 'lucide-react';
+import { Loader2, LogOut, Download, Plus, Trash2, QrCode, Copy, Check, Truck, Package, CheckCircle2, Save, History } from 'lucide-react';
 
 interface Reservation {
   id: string;
@@ -60,6 +60,16 @@ interface BulkRes {
 
 type Tab = 'reservations' | 'fulfillment' | 'partners' | 'bulk';
 
+interface AuditEntry {
+  id: string;
+  reservation_id: string;
+  changed_by_email: string | null;
+  field: string;
+  old_value: string | null;
+  new_value: string | null;
+  created_at: string;
+}
+
 function toLocal(iso?: string | null): string {
   if (!iso) return '';
   const d = new Date(iso);
@@ -99,6 +109,9 @@ export default function AdminReservationsPage() {
   const [edit, setEdit] = useState<Record<string, Partial<Reservation>>>({});
   const [savingId, setSavingId] = useState<string | null>(null);
   const [fulfillmentFilter, setFulfillmentFilter] = useState<string>('all');
+  const [openTimeline, setOpenTimeline] = useState<Record<string, boolean>>({});
+  const [audit, setAudit] = useState<Record<string, AuditEntry[]>>({});
+  const [auditLoading, setAuditLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     document.title = 'Admin · Reservations';
@@ -245,7 +258,25 @@ export default function AdminReservationsPage() {
     setSavingId(null);
     if (error) { alert(error.message); return; }
     setEdit(prev => { const n = { ...prev }; delete n[r.id]; return n; });
+    if (openTimeline[r.id]) await loadAudit(r.id);
     await loadAll();
+  }
+
+  async function loadAudit(reservationId: string) {
+    setAuditLoading(prev => ({ ...prev, [reservationId]: true }));
+    const { data, error } = await supabase
+      .from('reservation_audit_log')
+      .select('*')
+      .eq('reservation_id', reservationId)
+      .order('created_at', { ascending: false });
+    setAuditLoading(prev => ({ ...prev, [reservationId]: false }));
+    if (!error) setAudit(prev => ({ ...prev, [reservationId]: data as AuditEntry[] }));
+  }
+
+  async function toggleTimeline(reservationId: string) {
+    const next = !openTimeline[reservationId];
+    setOpenTimeline(prev => ({ ...prev, [reservationId]: next }));
+    if (next && !audit[reservationId]) await loadAudit(reservationId);
   }
 
   const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
@@ -398,6 +429,44 @@ export default function AdminReservationsPage() {
                                 placeholder="Anything worth remembering…"
                                 className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]" />
                             </label>
+                          </div>
+
+                          <div className="mt-4 pt-4 border-t border-white/5">
+                            <button onClick={() => toggleTimeline(r.id)}
+                              className="inline-flex items-center gap-2 text-[12px] text-[#8B9DAF] hover:text-white">
+                              <History className="w-3.5 h-3.5" />
+                              {openTimeline[r.id] ? 'Hide' : 'Show'} audit timeline
+                              {audit[r.id] && <span className="text-[#5A6B7E]">({audit[r.id].length})</span>}
+                            </button>
+                            {openTimeline[r.id] && (
+                              <div className="mt-3 rounded-xl bg-black/20 border border-white/5 p-4">
+                                {auditLoading[r.id] ? (
+                                  <div className="flex items-center gap-2 text-[12px] text-[#8B9DAF]"><Loader2 className="w-3 h-3 animate-spin" /> Loading…</div>
+                                ) : (audit[r.id]?.length ?? 0) === 0 ? (
+                                  <div className="text-[12px] text-[#5A6B7E]">No changes recorded yet.</div>
+                                ) : (
+                                  <ol className="space-y-3">
+                                    {audit[r.id].map(a => (
+                                      <li key={a.id} className="flex gap-3 text-[12px]">
+                                        <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4FB3FF] shrink-0" />
+                                        <div className="flex-1 min-w-0">
+                                          <div className="text-[#B8C5D3]">
+                                            <span className="text-white font-medium">{a.changed_by_email ?? 'system'}</span>{' '}
+                                            changed <span className="text-[#4FB3FF]">{a.field}</span>
+                                          </div>
+                                          <div className="text-[#8B9DAF] font-mono text-[11px] break-all">
+                                            <span className="line-through text-[#5A6B7E]">{a.old_value ?? '∅'}</span>
+                                            {' → '}
+                                            <span className="text-emerald-300">{a.new_value ?? '∅'}</span>
+                                          </div>
+                                          <div className="text-[10px] text-[#5A6B7E] mt-0.5">{new Date(a.created_at).toLocaleString()}</div>
+                                        </div>
+                                      </li>
+                                    ))}
+                                  </ol>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
                       );
