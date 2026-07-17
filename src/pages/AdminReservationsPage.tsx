@@ -143,6 +143,16 @@ const ORDER_STATUS_OPTIONS = [
   { value: "delivered", label: "Delivered" },
 ] as const;
 
+// Reasonable default estimate offsets (in days from the order's real createdAt) used to
+// display an ESTIMATED date for any step the admin hasn't confirmed yet — matching how
+// Amazon/Flipkart show a projected delivery timeline before each stage actually happens.
+const ORDER_STATUS_ESTIMATE_DAYS: Record<string, number> = {
+  received: 0,
+  processing: 1,
+  shipped: 3,
+  delivered: 6,
+};
+
 function orderStatusColor(status: string): string {
   const map: Record<string, string> = {
     received: "text-[#4FB3FF]",
@@ -207,16 +217,14 @@ export default function AdminReservationsPage() {
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
   const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
   // UI-only for now, per explicit instruction — not yet persisted to any backend/database.
-  // Keyed by orderId; each entry is a LOG of every status change the admin has made, in
-  // order, with the exact date/time it happened. If an order has no log yet, the table/
-  // popup falls back to a single estimated "Order Received" entry using the order's own
-  // createdAt, rather than showing nothing.
-  interface StatusLogEntry {
-    status: string;
-    changedAt: string;
-    estimated: boolean;
-  }
-  const [orderStatusLogs, setOrderStatusLogs] = useState<Record<string, StatusLogEntry[]>>({});
+  // Keyed by orderId, then by status value → the REAL timestamp once that step is reached.
+  // A status with no entry here just means it hasn't happened yet — the timeline shows an
+  // ESTIMATED date for it instead, matching an Amazon/Flipkart-style tracker: all 4 steps
+  // always show, completed ones are colored with the real date, future ones stay grey with
+  // an estimate.
+  const [orderStatusTimestamps, setOrderStatusTimestamps] = useState<Record<string, Partial<Record<string, string>>>>(
+    {},
+  );
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -348,29 +356,54 @@ export default function AdminReservationsPage() {
     return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
   }, [webOrders]);
 
-  // UI-only status update — appends a new log entry with the EXACT current date/time,
-  // per the explicit requirement, marked estimated:false since the admin just did this.
+  // UI-only status update. Confirming a status marks IT and every step before it (in
+  // order) as completed with a real timestamp — matching Amazon/Flipkart's behavior
+  // where jumping to "Shipped" implies "Order Received"/"Processing" already happened.
+  // Moving the status back reverts later steps to estimated again.
   function handleStatusChange(orderId: string, newStatus: string) {
-    setOrderStatusLogs((prev) => {
-      const existing = prev[orderId] ?? [];
-      const entry: StatusLogEntry = { status: newStatus, changedAt: new Date().toISOString(), estimated: false };
-      return { ...prev, [orderId]: [...existing, entry] };
+    const newIndex = ORDER_STATUS_OPTIONS.findIndex((o) => o.value === newStatus);
+    setOrderStatusTimestamps((prev) => {
+      const existing = { ...(prev[orderId] ?? {}) };
+      ORDER_STATUS_OPTIONS.forEach((opt, idx) => {
+        if (idx <= newIndex) {
+          if (!existing[opt.value]) existing[opt.value] = new Date().toISOString();
+        } else {
+          delete existing[opt.value];
+        }
+      });
+      return { ...prev, [orderId]: existing };
     });
   }
 
-  // Returns the full status log for an order — if the admin has never updated it, falls
-  // back to a single ESTIMATED "received" entry using the order's own createdAt, rather
-  // than an empty log.
-  function getOrderStatusLog(row: WebOrderRow): StatusLogEntry[] {
-    const log = orderStatusLogs[row.orderId];
-    if (log && log.length > 0) return log;
-    return [{ status: "received", changedAt: row.createdAt, estimated: true }];
+  // Builds the full 4-step timeline for an order — "Order Received" always uses the
+  // order's real createdAt (that's a known fact, never an estimate). Every other step
+  // uses its real confirmed timestamp if the admin has reached it, otherwise an
+  // estimated date computed from createdAt + a reasonable offset.
+  interface TimelineStep {
+    value: string;
+    label: string;
+    date: string;
+    completed: boolean;
+  }
+  function getOrderTimeline(row: WebOrderRow): TimelineStep[] {
+    const real = orderStatusTimestamps[row.orderId] ?? {};
+    return ORDER_STATUS_OPTIONS.map((opt) => {
+      if (opt.value === "received") {
+        return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
+      }
+      const confirmed = real[opt.value];
+      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed, completed: true };
+      const estimate = new Date(row.createdAt);
+      estimate.setDate(estimate.getDate() + (ORDER_STATUS_ESTIMATE_DAYS[opt.value] ?? 0));
+      return { value: opt.value, label: opt.label, date: estimate.toISOString(), completed: false };
+    });
   }
 
-  // The CURRENT status shown in the dropdown/pill is simply the most recent log entry.
-  function getCurrentStatus(row: WebOrderRow): StatusLogEntry {
-    const log = getOrderStatusLog(row);
-    return log[log.length - 1];
+  // The CURRENT status is the furthest-along completed step.
+  function getCurrentStatus(row: WebOrderRow): TimelineStep {
+    const timeline = getOrderTimeline(row);
+    const completedSteps = timeline.filter((s) => s.completed);
+    return completedSteps[completedSteps.length - 1];
   }
 
   // Rewritten to export the flattened web_orders rows instead of the old Supabase
@@ -948,9 +981,9 @@ export default function AdminReservationsPage() {
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 <select
-                                  value={currentStatus.status}
+                                  value={currentStatus.value}
                                   onChange={(e) => handleStatusChange(r.orderId, e.target.value)}
-                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.status)}`}
+                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.value)}`}
                                 >
                                   {ORDER_STATUS_OPTIONS.map((opt) => (
                                     <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
@@ -959,8 +992,7 @@ export default function AdminReservationsPage() {
                                   ))}
                                 </select>
                                 <div className="text-[10px] text-[#5A6B7E] mt-1">
-                                  {currentStatus.estimated ? "Est. " : ""}
-                                  {new Date(currentStatus.changedAt).toLocaleDateString()}
+                                  {new Date(currentStatus.date).toLocaleDateString()}
                                 </div>
                               </td>
                               <td className="px-4 py-3 text-center">
@@ -1046,10 +1078,10 @@ export default function AdminReservationsPage() {
                           {expandedOrder.partner_code ?? expandedOrder.referral_source ?? "Direct"}
                         </div>
                         <div
-                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getCurrentStatus(expandedOrder).status)}`}
+                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getCurrentStatus(expandedOrder).value)}`}
                         >
                           Status:{" "}
-                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getCurrentStatus(expandedOrder).status)?.label}
+                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getCurrentStatus(expandedOrder).value)?.label}
                         </div>
                       </div>
                     </div>
@@ -1065,7 +1097,7 @@ export default function AdminReservationsPage() {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking Log</div>
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking</div>
                           <button onClick={() => setViewingLogFor(null)} className="text-[#8B9DAF] hover:text-white">
                             <X className="w-4 h-4" />
                           </button>
@@ -1073,17 +1105,27 @@ export default function AdminReservationsPage() {
                         <div className="text-[13px] text-[#8B9DAF] mb-4">
                           {viewingLogFor.first_name} {viewingLogFor.last_name} · #{viewingLogFor.orderId.slice(-8)}
                         </div>
-                        <ol className="space-y-3">
-                          {getOrderStatusLog(viewingLogFor).map((entry, i) => (
-                            <li key={i} className="flex gap-3 text-[13px]">
-                              <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4FB3FF] shrink-0" />
-                              <div className="flex-1">
-                                <div className={orderStatusColor(entry.status)}>
-                                  {ORDER_STATUS_OPTIONS.find((o) => o.value === entry.status)?.label}
+                        <ol>
+                          {getOrderTimeline(viewingLogFor).map((step, i, arr) => (
+                            <li key={step.value} className="flex gap-3 text-[13px]">
+                              <div className="flex flex-col items-center">
+                                <div
+                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-400" : "bg-white/15 border border-white/20"}`}
+                                />
+                                {i < arr.length - 1 && (
+                                  <div
+                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-400" : "bg-white/10"}`}
+                                  />
+                                )}
+                              </div>
+                              <div className="flex-1 pb-4">
+                                <div className={step.completed ? "text-white font-medium" : "text-[#5A6B7E]"}>
+                                  {step.label}
                                 </div>
                                 <div className="text-[11px] text-[#5A6B7E]">
-                                  {entry.estimated ? "Estimated · " : ""}
-                                  {new Date(entry.changedAt).toLocaleString()}
+                                  {step.completed
+                                    ? new Date(step.date).toLocaleString()
+                                    : `Estimated · ${new Date(step.date).toLocaleDateString()}`}
                                 </div>
                               </div>
                             </li>
