@@ -80,6 +80,7 @@ function toLocal(iso?: string | null): string {
 
 function StatusPill({ status }: { status: string }) {
   const map: Record<string, string> = {
+    reserved: 'bg-[#4FB3FF]/10 text-[#4FB3FF]',
     pending: 'bg-white/5 text-[#B8C5D3]',
     confirmed: 'bg-sky-500/10 text-sky-300',
     processing: 'bg-amber-500/10 text-amber-300',
@@ -87,7 +88,7 @@ function StatusPill({ status }: { status: string }) {
     delivered: 'bg-emerald-500/10 text-emerald-300',
     cancelled: 'bg-red-500/10 text-red-300',
   };
-  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.pending}`}>{status}</span>;
+  return <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.reserved}`}>{status}</span>;
 }
 
 export default function AdminReservationsPage() {
@@ -141,6 +142,17 @@ export default function AdminReservationsPage() {
     if (admin) await loadAll();
     setLoading(false);
   }
+
+  // Live refresh: new pre-orders appear in Reservations & Orders/Delivery automatically
+  useEffect(() => {
+    if (!isAdmin) return;
+    const ch = supabase
+      .channel('admin-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, () => loadAll())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bulk_reservations' }, () => loadAll())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [isAdmin]);
 
   async function loadAll() {
     const [r, p, b] = await Promise.all([
@@ -279,17 +291,20 @@ export default function AdminReservationsPage() {
     if (next && !audit[reservationId]) await loadAudit(reservationId);
   }
 
-  const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
+  const STATUSES = ['reserved', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
 
   const fulfillmentRows = useMemo(() => {
     if (!rows) return null;
     if (fulfillmentFilter === 'all') return rows;
-    return rows.filter(r => (r.status || 'pending') === fulfillmentFilter);
+    return rows.filter(r => (r.status || 'reserved') === fulfillmentFilter);
   }, [rows, fulfillmentFilter]);
 
   const stats = useMemo(() => {
-    const s: Record<string, number> = { pending: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
-    rows?.forEach(r => { s[r.status || 'pending'] = (s[r.status || 'pending'] ?? 0) + 1; });
+    const s: Record<string, number> = { reserved: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
+    rows?.forEach(r => {
+      const k = r.status || 'reserved';
+      s[k] = (s[k] ?? 0) + 1;
+    });
     return s;
   }, [rows]);
 
@@ -375,7 +390,7 @@ export default function AdminReservationsPage() {
                             <div>
                               <div className="flex items-center gap-3 mb-1">
                                 <span className="font-mono text-[13px] text-[#4FB3FF]">{r.reservation_number}</span>
-                                <StatusPill status={merged.status || 'pending'} />
+                                <StatusPill status={merged.status || 'reserved'} />
                               </div>
                               <div className="text-[15px] font-medium">{r.first_name} {r.last_name} <span className="text-[#8B9DAF] font-normal">· {r.email}</span></div>
                               <div className="text-[12px] text-[#8B9DAF]">
@@ -396,7 +411,7 @@ export default function AdminReservationsPage() {
                           <div className="grid md:grid-cols-4 gap-3">
                             <label className="block">
                               <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Status</span>
-                              <select value={merged.status || 'pending'} onChange={ev => editField(r.id, 'status', ev.target.value)}
+                              <select value={merged.status || 'reserved'} onChange={ev => editField(r.id, 'status', ev.target.value)}
                                 className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]">
                                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                               </select>
