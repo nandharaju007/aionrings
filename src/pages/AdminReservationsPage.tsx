@@ -378,7 +378,7 @@ export default function AdminReservationsPage() {
                             <div>
                               <div className="flex items-center gap-3 mb-1">
                                 <span className="font-mono text-[13px] text-[#4FB3FF]">{r.reservation_number}</span>
-                                <StatusPill status={merged.status || 'pending'} />
+                                <StatusPill status={merged.status || 'reserved'} />
                               </div>
                               <div className="text-[15px] font-medium">{r.first_name} {r.last_name} <span className="text-[#8B9DAF] font-normal">· {r.email}</span></div>
                               <div className="text-[12px] text-[#8B9DAF]">
@@ -399,7 +399,7 @@ export default function AdminReservationsPage() {
                           <div className="grid md:grid-cols-4 gap-3">
                             <label className="block">
                               <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Status</span>
-                              <select value={merged.status || 'pending'} onChange={ev => editField(r.id, 'status', ev.target.value)}
+                              <select value={merged.status || 'reserved'} onChange={ev => editField(r.id, 'status', ev.target.value)}
                                 className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]">
                                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                               </select>
