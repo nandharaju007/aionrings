@@ -136,19 +136,24 @@ const WEB_ORDERS_API =
 // UI-only status options for the new web_orders Status column — separate from the
 // existing Fulfillment tab's STATUSES/StatusPill (which belong to the Supabase
 // "reservations" flow and use different values like reserved/confirmed/cancelled).
-const ORDER_STATUS_OPTIONS = [
+// Order Received is now a FIXED, always-shown first step (not a dropdown choice — every
+// order starts here automatically). The dropdown only ever offers what comes after it.
+// Processing has been removed entirely per explicit instruction.
+const SHIP_DELIVER_OPTIONS = [
+  { value: "", label: "Awaiting shipment" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+] as const;
+
+const ALL_TIMELINE_STEPS = [
   { value: "received", label: "Order Received" },
-  { value: "processing", label: "Processing" },
   { value: "shipped", label: "Shipped" },
   { value: "delivered", label: "Delivered" },
 ] as const;
 
 // Reasonable default estimate offsets (in days from the order's real createdAt) used to
-// display an ESTIMATED date for any step the admin hasn't confirmed yet — matching how
-// Amazon/Flipkart show a projected delivery timeline before each stage actually happens.
+// display an ESTIMATED date for any step the admin hasn't confirmed yet.
 const ORDER_STATUS_ESTIMATE_DAYS: Record<string, number> = {
-  received: 0,
-  processing: 1,
   shipped: 3,
   delivered: 6,
 };
@@ -356,28 +361,28 @@ export default function AdminReservationsPage() {
     return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
   }, [webOrders]);
 
-  // UI-only status update. Confirming a status marks IT and every step before it (in
-  // order) as completed with a real timestamp — matching Amazon/Flipkart's behavior
-  // where jumping to "Shipped" implies "Order Received"/"Processing" already happened.
-  // Moving the status back reverts later steps to estimated again.
-  function handleStatusChange(orderId: string, newStatus: string) {
-    const newIndex = ORDER_STATUS_OPTIONS.findIndex((o) => o.value === newStatus);
+  // UI-only status update. Picking "Delivered" implies "Shipped" already happened too
+  // (same cascade idea as before) — picking the blank "Awaiting shipment" option clears
+  // both, reverting the order back to just "Order Received".
+  function handleStatusChange(orderId: string, newValue: string) {
     setOrderStatusTimestamps((prev) => {
       const existing = { ...(prev[orderId] ?? {}) };
-      ORDER_STATUS_OPTIONS.forEach((opt, idx) => {
-        if (idx <= newIndex) {
-          if (!existing[opt.value]) existing[opt.value] = new Date().toISOString();
-        } else {
-          delete existing[opt.value];
-        }
-      });
+      if (newValue === "") {
+        delete existing.shipped;
+        delete existing.delivered;
+      } else if (newValue === "shipped") {
+        if (!existing.shipped) existing.shipped = new Date().toISOString();
+        delete existing.delivered;
+      } else if (newValue === "delivered") {
+        if (!existing.shipped) existing.shipped = new Date().toISOString();
+        if (!existing.delivered) existing.delivered = new Date().toISOString();
+      }
       return { ...prev, [orderId]: existing };
     });
   }
 
-  // Builds the full 4-step timeline for an order — "Order Received" always uses the
-  // order's real createdAt (that's a known fact, never an estimate). Every other step
-  // uses its real confirmed timestamp if the admin has reached it, otherwise an
+  // Builds the 3-step timeline — "Order Received" always real (order's own createdAt).
+  // "Shipped"/"Delivered" use their real confirmed timestamp once reached, otherwise an
   // estimated date computed from createdAt + a reasonable offset.
   interface TimelineStep {
     value: string;
@@ -387,7 +392,7 @@ export default function AdminReservationsPage() {
   }
   function getOrderTimeline(row: WebOrderRow): TimelineStep[] {
     const real = orderStatusTimestamps[row.orderId] ?? {};
-    return ORDER_STATUS_OPTIONS.map((opt) => {
+    return ALL_TIMELINE_STEPS.map((opt) => {
       if (opt.value === "received") {
         return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
       }
@@ -404,6 +409,14 @@ export default function AdminReservationsPage() {
     const timeline = getOrderTimeline(row);
     const completedSteps = timeline.filter((s) => s.completed);
     return completedSteps[completedSteps.length - 1];
+  }
+
+  // What the Shipped/Delivered dropdown itself should show as selected right now.
+  function getShipDeliverValue(row: WebOrderRow): string {
+    const real = orderStatusTimestamps[row.orderId] ?? {};
+    if (real.delivered) return "delivered";
+    if (real.shipped) return "shipped";
+    return "";
   }
 
   // Rewritten to export the flattened web_orders rows instead of the old Supabase
@@ -980,20 +993,18 @@ export default function AdminReservationsPage() {
                                 {r.partner_code ?? r.referral_source ?? "—"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
+                                <div className="text-[11px] text-emerald-300 mb-1">● Order Received</div>
                                 <select
-                                  value={currentStatus.value}
+                                  value={getShipDeliverValue(r)}
                                   onChange={(e) => handleStatusChange(r.orderId, e.target.value)}
                                   className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.value)}`}
                                 >
-                                  {ORDER_STATUS_OPTIONS.map((opt) => (
+                                  {SHIP_DELIVER_OPTIONS.map((opt) => (
                                     <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
                                       {opt.label}
                                     </option>
                                   ))}
                                 </select>
-                                <div className="text-[10px] text-[#5A6B7E] mt-1">
-                                  {new Date(currentStatus.date).toLocaleDateString()}
-                                </div>
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <button
@@ -1081,7 +1092,7 @@ export default function AdminReservationsPage() {
                           className={`mt-2 text-[12px] font-medium ${orderStatusColor(getCurrentStatus(expandedOrder).value)}`}
                         >
                           Status:{" "}
-                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getCurrentStatus(expandedOrder).value)?.label}
+                          {ALL_TIMELINE_STEPS.find((o) => o.value === getCurrentStatus(expandedOrder).value)?.label}
                         </div>
                       </div>
                     </div>
