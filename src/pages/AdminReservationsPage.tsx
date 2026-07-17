@@ -284,7 +284,7 @@ export default function AdminReservationsPage() {
   const fulfillmentRows = useMemo(() => {
     if (!rows) return null;
     if (fulfillmentFilter === 'all') return rows;
-    return rows.filter(r => (r.status || 'pending') === fulfillmentFilter);
+    return rows.filter(r => (r.status || 'reserved') === fulfillmentFilter);
   }, [rows, fulfillmentFilter]);
 
   const stats = useMemo(() => {
