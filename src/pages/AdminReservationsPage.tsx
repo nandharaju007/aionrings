@@ -205,10 +205,18 @@ export default function AdminReservationsPage() {
   const [webOrders, setWebOrders] = useState<WebOrder[] | null>(null);
   const [webOrdersError, setWebOrdersError] = useState<string | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
+  const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
   // UI-only for now, per explicit instruction — not yet persisted to any backend/database.
-  // Keyed by orderId; defaults to "received" (using the order's own createdAt) until the
-  // admin changes it, at which point both the status and its timestamp update together.
-  const [orderStatuses, setOrderStatuses] = useState<Record<string, { status: string; updatedAt: string }>>({});
+  // Keyed by orderId; each entry is a LOG of every status change the admin has made, in
+  // order, with the exact date/time it happened. If an order has no log yet, the table/
+  // popup falls back to a single estimated "Order Received" entry using the order's own
+  // createdAt, rather than showing nothing.
+  interface StatusLogEntry {
+    status: string;
+    changedAt: string;
+    estimated: boolean;
+  }
+  const [orderStatusLogs, setOrderStatusLogs] = useState<Record<string, StatusLogEntry[]>>({});
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -340,16 +348,29 @@ export default function AdminReservationsPage() {
     return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
   }, [webOrders]);
 
-  // UI-only status update — updates status AND its timestamp together in one action, per
-  // the explicit requirement. Not yet persisted anywhere; will be wired to the backend later.
+  // UI-only status update — appends a new log entry with the EXACT current date/time,
+  // per the explicit requirement, marked estimated:false since the admin just did this.
   function handleStatusChange(orderId: string, newStatus: string) {
-    setOrderStatuses((prev) => ({ ...prev, [orderId]: { status: newStatus, updatedAt: new Date().toISOString() } }));
+    setOrderStatusLogs((prev) => {
+      const existing = prev[orderId] ?? [];
+      const entry: StatusLogEntry = { status: newStatus, changedAt: new Date().toISOString(), estimated: false };
+      return { ...prev, [orderId]: [...existing, entry] };
+    });
   }
 
-  // Returns the current status + its last-updated date for a given order, defaulting to
-  // "received" using the order's own createdAt if the admin hasn't changed it yet.
-  function getOrderStatus(row: WebOrderRow): { status: string; updatedAt: string } {
-    return orderStatuses[row.orderId] ?? { status: "received", updatedAt: row.createdAt };
+  // Returns the full status log for an order — if the admin has never updated it, falls
+  // back to a single ESTIMATED "received" entry using the order's own createdAt, rather
+  // than an empty log.
+  function getOrderStatusLog(row: WebOrderRow): StatusLogEntry[] {
+    const log = orderStatusLogs[row.orderId];
+    if (log && log.length > 0) return log;
+    return [{ status: "received", changedAt: row.createdAt, estimated: true }];
+  }
+
+  // The CURRENT status shown in the dropdown/pill is simply the most recent log entry.
+  function getCurrentStatus(row: WebOrderRow): StatusLogEntry {
+    const log = getOrderStatusLog(row);
+    return log[log.length - 1];
   }
 
   // Rewritten to export the flattened web_orders rows instead of the old Supabase
@@ -884,6 +905,7 @@ export default function AdminReservationsPage() {
                           <th className="px-4 py-3 text-center font-medium">Location</th>
                           <th className="px-4 py-3 text-center font-medium">Partner</th>
                           <th className="px-4 py-3 text-center font-medium">Status</th>
+                          <th className="px-4 py-3 text-center font-medium">Log</th>
                           <th className="px-4 py-3 text-center font-medium">Details</th>
                         </tr>
                       </thead>
@@ -891,7 +913,7 @@ export default function AdminReservationsPage() {
                         {webOrderRows?.map((r) => {
                           const firstItem = r.items[0];
                           const extraItems = r.items.length - 1;
-                          const currentStatus = getOrderStatus(r);
+                          const currentStatus = getCurrentStatus(r);
                           return (
                             <tr key={r.orderId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
                               <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
@@ -937,8 +959,17 @@ export default function AdminReservationsPage() {
                                   ))}
                                 </select>
                                 <div className="text-[10px] text-[#5A6B7E] mt-1">
-                                  {new Date(currentStatus.updatedAt).toLocaleDateString()}
+                                  {currentStatus.estimated ? "Est. " : ""}
+                                  {new Date(currentStatus.changedAt).toLocaleDateString()}
                                 </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  onClick={() => setViewingLogFor(r)}
+                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                >
+                                  <History className="w-3.5 h-3.5" />
+                                </button>
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <button
@@ -953,14 +984,14 @@ export default function AdminReservationsPage() {
                         })}
                         {webOrderRows && webOrderRows.length === 0 && (
                           <tr>
-                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={13} className="px-4 py-16 text-center text-[#5A6B7E]">
                               No reservations.
                             </td>
                           </tr>
                         )}
                         {!webOrderRows && !webOrdersError && (
                           <tr>
-                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={13} className="px-4 py-16 text-center text-[#5A6B7E]">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading reservations…
                             </td>
@@ -1015,12 +1046,49 @@ export default function AdminReservationsPage() {
                           {expandedOrder.partner_code ?? expandedOrder.referral_source ?? "Direct"}
                         </div>
                         <div
-                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getOrderStatus(expandedOrder).status)}`}
+                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getCurrentStatus(expandedOrder).status)}`}
                         >
                           Status:{" "}
-                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getOrderStatus(expandedOrder).status)?.label} ·
-                          updated {new Date(getOrderStatus(expandedOrder).updatedAt).toLocaleString()}
+                          {ORDER_STATUS_OPTIONS.find((o) => o.value === getCurrentStatus(expandedOrder).status)?.label}
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {viewingLogFor && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => setViewingLogFor(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking Log</div>
+                          <button onClick={() => setViewingLogFor(null)} className="text-[#8B9DAF] hover:text-white">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {viewingLogFor.first_name} {viewingLogFor.last_name} · #{viewingLogFor.orderId.slice(-8)}
+                        </div>
+                        <ol className="space-y-3">
+                          {getOrderStatusLog(viewingLogFor).map((entry, i) => (
+                            <li key={i} className="flex gap-3 text-[13px]">
+                              <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4FB3FF] shrink-0" />
+                              <div className="flex-1">
+                                <div className={orderStatusColor(entry.status)}>
+                                  {ORDER_STATUS_OPTIONS.find((o) => o.value === entry.status)?.label}
+                                </div>
+                                <div className="text-[11px] text-[#5A6B7E]">
+                                  {entry.estimated ? "Estimated · " : ""}
+                                  {new Date(entry.changedAt).toLocaleString()}
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
                       </div>
                     </div>
                   )}
