@@ -96,12 +96,11 @@ interface WebOrder {
   createdAt: string;
 }
 
-// One flattened row per ring item — order-level fields are only populated on the
-// first item of a multi-item order, so grouped rows read as "shared header, one
-// line per ring" in the table below.
+// One row PER ORDER. Items stays as a real array (not flattened per-item rows, not a
+// single joined string) so the table can render Size/Color/Qty as sub-columns under
+// one "Items" header, with each ring on its own line within the same row.
 interface WebOrderRow {
   orderId: string;
-  isFirstItem: boolean;
   createdAt: string;
   first_name: string;
   last_name: string;
@@ -111,9 +110,7 @@ interface WebOrderRow {
   state: string;
   partner_code?: string | null;
   referral_source?: string | null;
-  ring_size: string;
-  ring_color: string;
-  quantity: number;
+  items: WebOrderItem[];
 }
 
 type Tab = "reservations" | "fulfillment" | "partners" | "bulk";
@@ -290,24 +287,19 @@ export default function AdminReservationsPage() {
 
   const webOrderRows = useMemo<WebOrderRow[] | null>(() => {
     if (!filteredWebOrders) return null;
-    return filteredWebOrders.flatMap((order) =>
-      order.items.map((item, idx) => ({
-        orderId: order._id,
-        isFirstItem: idx === 0,
-        createdAt: order.createdAt,
-        first_name: order.first_name,
-        last_name: order.last_name,
-        email: order.email,
-        phone: order.phone,
-        city: order.city,
-        state: order.state,
-        partner_code: order.partner_code,
-        referral_source: order.referral_source,
-        ring_size: item.ring_size,
-        ring_color: item.ring_color,
-        quantity: item.quantity,
-      })),
-    );
+    return filteredWebOrders.map((order) => ({
+      orderId: order._id,
+      createdAt: order.createdAt,
+      first_name: order.first_name,
+      last_name: order.last_name,
+      email: order.email,
+      phone: order.phone,
+      city: order.city,
+      state: order.state,
+      partner_code: order.partner_code,
+      referral_source: order.referral_source,
+      items: order.items,
+    }));
   }, [filteredWebOrders]);
 
   const totalWebOrderRings = useMemo(() => {
@@ -329,14 +321,18 @@ export default function AdminReservationsPage() {
       "phone",
       "city",
       "state",
-      "ring_size",
-      "ring_color",
-      "quantity",
+      "items",
       "partner_code",
       "referral_source",
     ];
     const csv = [headers.join(",")]
-      .concat(data.map((r) => headers.map((h) => `"${String((r as any)[h] ?? "").replace(/"/g, '""')}"`).join(",")))
+      .concat(
+        data.map((r) => {
+          const itemsText = r.items.map((i) => `${i.ring_size} ${i.ring_color} x${i.quantity}`).join(" | ");
+          const row = { ...r, items: itemsText } as any;
+          return headers.map((h) => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(",");
+        }),
+      )
       .join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -829,33 +825,77 @@ export default function AdminReservationsPage() {
                     <table className="w-full text-[13px]">
                       <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
                         <tr>
-                          {["#", "Date", "Name", "Email", "Phone", "Size", "Color", "Qty", "Location", "Partner"].map(
-                            (h) => (
-                              <th key={h} className="px-4 py-3 text-left font-medium">
-                                {h}
-                              </th>
-                            ),
-                          )}
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            #
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Date
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Name
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Email
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Phone
+                          </th>
+                          <th colSpan={3} className="px-4 py-2 text-center font-medium border-b border-white/5">
+                            Items
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Location
+                          </th>
+                          <th rowSpan={2} className="px-4 py-3 text-left font-medium align-bottom">
+                            Partner
+                          </th>
+                        </tr>
+                        <tr>
+                          <th className="px-4 py-2 text-left font-medium">Size</th>
+                          <th className="px-4 py-2 text-left font-medium">Color</th>
+                          <th className="px-4 py-2 text-left font-medium">Qty</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {webOrderRows?.map((r, idx) => (
-                          <tr key={`${r.orderId}-${idx}`} className="border-t border-white/5 hover:bg-white/[0.02]">
-                            <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF]">
-                              {r.isFirstItem ? r.orderId.slice(-8) : ""}
+                        {webOrderRows?.map((r) => (
+                          <tr key={r.orderId} className="border-t border-white/5 hover:bg-white/[0.02]">
+                            <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] align-top">
+                              {r.orderId.slice(-8)}
                             </td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">
-                              {r.isFirstItem ? new Date(r.createdAt).toLocaleDateString() : ""}
+                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
+                              {new Date(r.createdAt).toLocaleDateString()}
                             </td>
-                            <td className="px-4 py-3">{r.isFirstItem ? `${r.first_name} ${r.last_name}` : ""}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.isFirstItem ? r.email : ""}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.isFirstItem ? r.phone : ""}</td>
-                            <td className="px-4 py-3">{r.ring_size}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.ring_color ?? "—"}</td>
-                            <td className="px-4 py-3">{r.quantity}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.isFirstItem ? `${r.city}, ${r.state}` : ""}</td>
-                            <td className="px-4 py-3 text-[#4FB3FF]">
-                              {r.isFirstItem ? (r.partner_code ?? r.referral_source ?? "—") : ""}
+                            <td className="px-4 py-3 align-top">
+                              {r.first_name} {r.last_name}
+                            </td>
+                            <td className="px-4 py-3 text-[#B8C5D3] align-top">{r.email}</td>
+                            <td className="px-4 py-3 text-[#B8C5D3] align-top">{r.phone}</td>
+                            <td className="px-4 py-3 align-top">
+                              {r.items.map((item, i) => (
+                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
+                                  {item.ring_size}
+                                </div>
+                              ))}
+                            </td>
+                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
+                              {r.items.map((item, i) => (
+                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
+                                  {item.ring_color ?? "—"}
+                                </div>
+                              ))}
+                            </td>
+                            <td className="px-4 py-3 align-top">
+                              {r.items.map((item, i) => (
+                                <div key={i} className={i > 0 ? "mt-1.5" : ""}>
+                                  {item.quantity}
+                                </div>
+                              ))}
+                            </td>
+                            <td className="px-4 py-3 text-[#B8C5D3] align-top">
+                              {r.city}, {r.state}
+                            </td>
+                            <td className="px-4 py-3 text-[#4FB3FF] align-top">
+                              {r.partner_code ?? r.referral_source ?? "—"}
                             </td>
                           </tr>
                         ))}
