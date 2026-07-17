@@ -143,6 +143,17 @@ export default function AdminReservationsPage() {
     setLoading(false);
   }
 
+  // Live refresh: new pre-orders appear in Reservations & Orders/Delivery automatically
+  useEffect(() => {
+    if (!isAdmin) return;
+    const ch = supabase
+      .channel('admin-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, () => loadAll())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bulk_reservations' }, () => loadAll())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [isAdmin]);
+
   async function loadAll() {
     const [r, p, b] = await Promise.all([
       supabase.from('reservations').select('*').order('created_at', { ascending: false }),
