@@ -106,8 +106,11 @@ interface WebOrderRow {
   last_name: string;
   email: string;
   phone: string;
+  address: string;
   city: string;
   state: string;
+  zip_code: string;
+  country: string;
   partner_code?: string | null;
   referral_source?: string | null;
   items: WebOrderItem[];
@@ -294,8 +297,11 @@ export default function AdminReservationsPage() {
       last_name: order.last_name,
       email: order.email,
       phone: order.phone,
+      address: order.address,
       city: order.city,
       state: order.state,
+      zip_code: order.zip_code,
+      country: order.country,
       partner_code: order.partner_code,
       referral_source: order.referral_source,
       items: order.items,
@@ -892,7 +898,7 @@ export default function AdminReservationsPage() {
                               ))}
                             </td>
                             <td className="px-4 py-3 text-[#B8C5D3] align-top">
-                              {r.city}, {r.state}
+                              {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country}
                             </td>
                             <td className="px-4 py-3 text-[#4FB3FF] align-top">
                               {r.partner_code ?? r.referral_source ?? "—"}
