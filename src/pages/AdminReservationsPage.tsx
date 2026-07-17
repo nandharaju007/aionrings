@@ -279,7 +279,7 @@ export default function AdminReservationsPage() {
     if (next && !audit[reservationId]) await loadAudit(reservationId);
   }
 
-  const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
+  const STATUSES = ['reserved', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
 
   const fulfillmentRows = useMemo(() => {
     if (!rows) return null;
@@ -288,8 +288,11 @@ export default function AdminReservationsPage() {
   }, [rows, fulfillmentFilter]);
 
   const stats = useMemo(() => {
-    const s: Record<string, number> = { pending: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
-    rows?.forEach(r => { s[r.status || 'pending'] = (s[r.status || 'pending'] ?? 0) + 1; });
+    const s: Record<string, number> = { reserved: 0, confirmed: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 };
+    rows?.forEach(r => {
+      const k = r.status || 'reserved';
+      s[k] = (s[k] ?? 0) + 1;
+    });
     return s;
   }, [rows]);
 
