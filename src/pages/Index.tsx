@@ -275,8 +275,35 @@ function Hero() {
       <ParticleField density={80} opacity={0.4} />
 
       <div className="relative z-10 container mx-auto px-6">
+        {/* Lifestyle hand image at top */}
+        <motion.div
+          className="relative mx-auto -mt-4 mb-6 h-[220px] w-full max-w-3xl overflow-hidden rounded-2xl md:h-[320px] lg:h-[380px]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <img
+            src={lifestyle6}
+            alt="aiOn ring worn on a finger"
+            className="h-full w-full object-cover object-center"
+            style={{ filter: "contrast(1.08) brightness(1.05)" }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, transparent 0%, ${C.navy}90 85%, ${C.navy} 100%)`,
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `radial-gradient(ellipse at center, transparent 30%, ${C.navy} 100%)`,
+            }}
+          />
+        </motion.div>
+
         {/* Headline */}
-        <div className="text-center max-w-5xl mx-auto pt-6 md:pt-10">
+        <div className="text-center max-w-5xl mx-auto pt-2 md:pt-4">
           <motion.h1
             className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.02]"
             initial="hidden" animate="show"
