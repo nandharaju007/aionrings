@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionV
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import ringHero from "@/assets/ring-hero-transparent.png";
+import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
 import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
@@ -260,141 +260,135 @@ function Chip({ children, className = "" }: { children: ReactNode; className?: s
    Hero
    ───────────────────────────────────────────── */
 function Hero() {
-  const chipPos = [
-    { label: "❤️ 72 bpm", cls: "top-[8%] left-[6%] md:top-[12%] md:left-[8%]" },
-    { label: "🫁 98% SpO₂", cls: "top-[8%] right-[6%] md:top-[12%] md:right-[8%]" },
-    { label: "🧠 HRV 34ms", cls: "top-1/2 left-[2%] md:left-[4%] -translate-y-1/2" },
-    { label: "🌙 Sleep 7h 42m", cls: "top-1/2 right-[2%] md:right-[4%] -translate-y-1/2" },
-    { label: "⚡ Recovery 81", cls: "bottom-[22%] left-[8%] md:bottom-[18%] md:left-[10%]" },
-    { label: "🌡️ 36.8°C", cls: "bottom-[22%] right-[8%] md:bottom-[18%] md:right-[10%]" },
+  const chips = [
+    { label: "Live 72 bpm", icon: "❤️", delay: 1.0 },
+    { label: "98% SpO₂", icon: "🫁", delay: 1.15 },
+    { label: "HRV 34ms", icon: "🧠", delay: 1.3 },
+    { label: "Sleep 7h 42m", icon: "🌙", delay: 1.45 },
+    { label: "Recovery 81", icon: "⚡", delay: 1.6 },
+    { label: "36.8°C", icon: "🌡️", delay: 1.75 },
   ];
+
   return (
-    <section className="relative min-h-[100svh] overflow-hidden pt-28" style={{ background: C.navy }}>
+    <section className="relative min-h-[100svh] overflow-hidden" style={{ background: C.navy }}>
       <Aurora intensity={0.9} />
       <GridOverlay />
       <ParticleField density={80} opacity={0.4} />
 
-      <div className="relative z-10 container mx-auto px-6">
-        {/* Lifestyle hand image — blended, no card box */}
+      {/* Top atmospheric vignette */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{
+          background: `radial-gradient(ellipse at 50% 0%, ${C.blue}08 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, ${C.purple}08 0%, transparent 50%)`,
+        }}
+      />
+
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24 pb-12">
+        {/* Brand wordmark */}
         <motion.div
-          className="relative mx-auto mt-2 mb-6 h-[220px] w-[96%] max-w-4xl overflow-hidden sm:h-[260px] md:mt-4 md:h-[320px] lg:h-[380px]"
-          initial={{ opacity: 0, y: 20 }}
+          className="mb-6 md:mb-8"
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <img
-            src={lifestyle6}
-            alt="aiOn ring worn on a finger"
-            className="h-full w-full object-cover object-[center_60%]"
-            style={{ filter: "contrast(1.08) brightness(1.04) saturate(1.06)" }}
-          />
-          {/* Top fade — blends into header/hero copy */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: `linear-gradient(to bottom, ${C.navy} 0%, ${C.navy}00 32%, transparent 52%, ${C.navy}90 92%, ${C.navy} 100%)`,
-            }}
-          />
-          {/* Side + corner vignettes — seamless edge fade into navy */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at center, transparent 42%, ${C.navy} 100%)`,
-            }}
-          />
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: `linear-gradient(90deg, ${C.navy} 0%, ${C.navy}00 12%, transparent 88%, ${C.navy}00 92%, ${C.navy} 100%)`,
-            }}
-          />
-          {/* Cool tint overlay to harmonize warm skin tones with site palette */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: `linear-gradient(180deg, ${C.blue}08 0%, transparent 60%)`, mixBlendMode: "overlay" }}
-          />
-          {/* Subtle bottom rim glow */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ boxShadow: `inset 0 -30px 80px -30px ${C.blue}22` }}
-          />
+          <span className="text-sm font-medium tracking-[0.4em] uppercase text-white/60">aiOn</span>
         </motion.div>
 
         {/* Headline */}
-        <div className="text-center max-w-5xl mx-auto pt-2 md:pt-4">
+        <div className="text-center max-w-5xl mx-auto">
           <motion.h1
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.02]"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.02]"
             initial="hidden" animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.2 } } }}
+            variants={{ show: { transition: { staggerChildren: 0.18 } } }}
           >
-            <motion.span variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="block text-white">
-              Your body has been talking.
+            <motion.span
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="block text-white"
+            >
+              Intelligence,
             </motion.span>
             <motion.span
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block bg-clip-text text-transparent"
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="block italic font-light text-transparent bg-clip-text"
               style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}
             >
-              You just couldn't hear it.
+              refined.
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-6 md:mt-8 text-lg md:text-2xl font-light text-white/70"
+            className="mt-5 md:mt-7 text-base md:text-xl font-light text-white/60 max-w-2xl mx-auto"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
           >
-            aiOn changes that.
+            The world's most advanced health-intelligence smart ring. Healthcare-grade sensors, sculpted for everyday elegance.
           </motion.p>
         </div>
 
-        {/* Ring stage */}
-        <div className="relative mx-auto mt-10 md:mt-12 w-[min(92vw,720px)]">
-          {/* layered glow behind ring */}
+        {/* Cinematic ring stage */}
+        <div className="relative mt-8 md:mt-10 w-full max-w-3xl">
+          {/* Ambient radial glow */}
           <div
-            className="pointer-events-none absolute inset-0 -z-10 scale-90 rounded-full blur-3xl"
-            style={{ background: `radial-gradient(circle, ${C.blue}30 0%, ${C.purple}18 45%, transparent 70%)` }}
-          />
-          <motion.div
-            className="pointer-events-none absolute inset-0 -z-10 rounded-full"
-            animate={{
-              boxShadow: [
-                `0 0 80px 10px ${C.blue}30`,
-                `0 0 160px 40px ${C.blue}15`,
-                `0 0 80px 10px ${C.blue}30`,
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
+            style={{ background: `radial-gradient(circle, ${C.blue}22 0%, ${C.purple}12 45%, transparent 70%)` }}
           />
 
-          {/* Ring image — full premium shot, no harsh circular crop */}
+          {/* Pulsing orbital glow */}
+          <motion.div
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] aspect-square rounded-full"
+            animate={{
+              boxShadow: [
+                `0 0 60px 10px ${C.blue}20`,
+                `0 0 140px 40px ${C.blue}10`,
+                `0 0 60px 10px ${C.blue}20`,
+              ],
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Floating ring */}
           <motion.div
             className="relative flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+            animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
             transition={{
-              opacity: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
-              scale: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
-              y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+              opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+              scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+              y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
             }}
           >
             <img
               src={ringHero}
-              alt="aiOn ring"
-              className="h-auto w-full max-w-[520px] md:max-w-[620px] object-contain"
+              alt="aiOn smart ring floating in cinematic light"
+              width={620}
+              height={620}
+              className="h-auto w-full max-w-[320px] sm:max-w-[420px] md:max-w-[520px] object-contain"
               style={{
-                filter: "drop-shadow(0 20px 60px rgba(79,179,255,0.35))",
+                filter: "drop-shadow(0 30px 80px rgba(79,179,255,0.35))",
               }}
             />
           </motion.div>
 
-          {/* Floating chips (desktop absolute, mobile row below) */}
+          {/* Desktop floating vitals chips — orbital positions */}
           <div className="hidden md:block">
-            {chipPos.map((c, i) => (
+            {[
+              { label: "Live 72 bpm", cls: "top-[8%] left-[4%]" },
+              { label: "98% SpO₂", cls: "top-[8%] right-[4%]" },
+              { label: "HRV 34ms", cls: "top-1/2 -left-[2%] -translate-y-1/2" },
+              { label: "Sleep 7h 42m", cls: "top-1/2 -right-[2%] -translate-y-1/2" },
+              { label: "Recovery 81", cls: "bottom-[14%] left-[6%]" },
+              { label: "36.8°C", cls: "bottom-[14%] right-[6%]" },
+            ].map((c, i) => (
               <motion.div
                 key={i}
                 className={`absolute ${c.cls}`}
                 initial={{ opacity: 0, scale: 0.7, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
-                transition={{ opacity: { delay: 1 + i * 0.12, duration: 0.6 }, scale: { delay: 1 + i * 0.12, duration: 0.6 }, y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" } }}
+                transition={{
+                  opacity: { delay: 1 + i * 0.12, duration: 0.6 },
+                  scale: { delay: 1 + i * 0.12, duration: 0.6 },
+                  y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                }}
               >
                 <Chip>{c.label}</Chip>
               </motion.div>
@@ -402,64 +396,60 @@ function Hero() {
           </div>
         </div>
 
-        {/* Mobile chips below ring */}
-        <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden">
-          {chipPos.map((c, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}>
-              <Chip>{c.label}</Chip>
+        {/* Mobile vitals row */}
+        <div className="mt-4 flex flex-wrap justify-center gap-2 md:hidden">
+          {chips.map((c, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
+            >
+              <Chip>{c.icon} {c.label}</Chip>
             </motion.div>
           ))}
         </div>
 
-        {/* Vitality score */}
-        <div className="mt-10 flex flex-col items-center">
-          <div className="relative h-32 w-32 md:h-40 md:w-40">
-            <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-              <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.1)" strokeWidth="4" fill="none" />
-              <motion.circle
-                cx="50" cy="50" r="44" fill="none" strokeWidth="4" strokeLinecap="round"
-                stroke="url(#vitalGrad)"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 0.84 }} transition={{ duration: 2, delay: 1.2, ease: "easeOut" }}
-                style={{ pathLength: 0.84 }}
-              />
-              <defs>
-                <linearGradient id="vitalGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor={C.blue} />
-                  <stop offset="100%" stopColor={C.green} />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-extralight text-white">
-              <CountUp to={84} duration={1800} />
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-white/60">Your Vitality Score</div>
-          <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: C.green }}>
+        {/* Vitality score + CTA */}
+        <motion.div
+          className="mt-8 md:mt-10 flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.6 }}
+        >
+          <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-md">
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: C.green, boxShadow: `0 0 10px ${C.green}` }} />
-            You're ready today
+            <span className="text-sm text-white/80">Vitality Score <span className="font-medium text-white">84</span> — You're ready today</span>
           </div>
-        </div>
 
-        {/* CTA */}
-        <div className="mt-10 flex flex-col items-center">
-          <Link to="/preorder"
-            className="group relative inline-flex items-center justify-center rounded-full px-8 py-4 text-base font-medium text-[#0A1628]"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}>
+          <Link
+            to="/preorder"
+            className="group relative mt-6 inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-[#0A1628]"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}
+          >
             <motion.span
               className="absolute inset-0 rounded-full"
               animate={{ opacity: [0.5, 0, 0.5] }}
               transition={{ duration: 2.4, repeat: Infinity }}
               style={{ boxShadow: `0 0 0 8px ${C.blue}33` }}
             />
-            <span className="relative">Pre-order Now</span>
+            <span className="relative">Reserve Your aiOn</span>
           </Link>
-          <p className="mt-4 text-xs md:text-sm text-white/50">Free app included with every ring · Ships Q3 2026</p>
-        </div>
+          <p className="mt-3 text-xs md:text-sm text-white/50">Free app included · Ships Q3 2026</p>
+        </motion.div>
 
-        {/* scroll indicator */}
-        <motion.div className="mx-auto mt-12 mb-8 flex justify-center" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+        {/* Scroll indicator */}
+        <motion.div
+          className="mt-auto pt-10 flex justify-center"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           <div className="h-10 w-6 rounded-full border border-white/30 flex justify-center pt-1.5">
-            <motion.div className="h-1.5 w-1 rounded-full bg-white/70" animate={{ y: [0, 14, 0] }} transition={{ duration: 2, repeat: Infinity }} />
+            <motion.div
+              className="h-1.5 w-1 rounded-full bg-white/70"
+              animate={{ y: [0, 14, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
           </div>
         </motion.div>
       </div>
