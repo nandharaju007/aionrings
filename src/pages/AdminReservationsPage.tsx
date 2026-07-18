@@ -1227,18 +1227,29 @@ export default function AdminReservationsPage() {
                                   <span className={`text-[12px] font-medium ${orderStatusColor(currentStatus.value)}`}>
                                     {currentStatus.label}
                                   </span>
-                                  <button
-                                    onClick={() =>
-                                      setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
-                                    }
-                                    className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-white/15 hover:border-white/30 shrink-0"
-                                  >
-                                    <ChevronDown className="w-3 h-3" />
-                                  </button>
+                                  {(() => {
+                                    const shipDeliverValue = getShipDeliverValue(r);
+                                    const isFinal = shipDeliverValue === "delivered";
+                                    return (
+                                      <button
+                                        disabled={isFinal}
+                                        onClick={() =>
+                                          !isFinal &&
+                                          setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
+                                        }
+                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-white/5 opacity-30 cursor-not-allowed" : "border-white/15 hover:border-white/30"}`}
+                                      >
+                                        <ChevronDown className="w-3 h-3" />
+                                      </button>
+                                    );
+                                  })()}
                                 </div>
                                 {openStatusMenuFor === r.orderId && (
                                   <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1 overflow-hidden">
-                                    {SHIP_DELIVER_OPTIONS.filter((opt) => opt.value !== "").map((opt) => (
+                                    {(getShipDeliverValue(r) === "shipped"
+                                      ? SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "delivered")
+                                      : SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "shipped")
+                                    ).map((opt) => (
                                       <button
                                         key={opt.value}
                                         onClick={() => {
