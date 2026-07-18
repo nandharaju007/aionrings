@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionV
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import ringHero from "@/assets/ring-hero.jpg";
+import ringHero from "@/assets/ring-hero-transparent.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
 import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
