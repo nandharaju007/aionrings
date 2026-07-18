@@ -460,9 +460,9 @@ function Hero() {
               transition={{ duration: 2.4, repeat: Infinity }}
               style={{ boxShadow: `0 0 0 8px ${C.blue}33` }}
             />
-            <span className="relative">Reserve Your aiOn</span>
+            <span className="relative">Pre-order Now</span>
           </Link>
-          <p className="mt-3 text-xs md:text-sm text-white/50">Free app included · Ships Q3 2026</p>
+          <p className="mt-3 text-xs md:text-sm text-white/50">Free app included</p>
         </motion.div>
 
         {/* Scroll indicator */}
