@@ -1216,6 +1216,7 @@ export default function Index() {
         <BodyTalkingSection />
         <PillarsSection />
         <QuestSection />
+        <TheAppSection />
         <PreventiveSection />
         <RingSection />
         <PlansSection />
