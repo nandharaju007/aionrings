@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
+import heroFingerRing from "@/assets/hero-finger-ring.png";
 import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
 import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
 import lifestyle8 from "@/assets/lifestyle-hand-8.jpg";
