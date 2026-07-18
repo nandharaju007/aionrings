@@ -971,17 +971,13 @@ export default function Index() {
       <Header />
       <main>
         <Hero />
-        <ProblemSection />
         <VitalityScoreSection />
         <TrackUnderstandActSection />
+        <PillarsSection />
         <QuestSection />
-        <XPLevelsSection />
         <PreventiveSection />
-        <WhoItsForSection />
-        <SignalsSection />
-        <PlansSection />
         <RingSection />
-        <CredibilitySection />
+        <PlansSection />
         <FinalCTA />
       </main>
       <Footer />
