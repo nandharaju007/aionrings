@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ReactNode } from "react";
+import { useEffect, useRef, useState, ReactNode, Fragment } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -545,9 +545,8 @@ function TrackUnderstandActSection() {
 
         <div className="mt-16 grid md:grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-6 md:gap-2">
           {cols.map((c, idx) => (
-            <>
+            <Fragment key={c.title}>
               <motion.div
-                key={c.title}
                 className="rounded-3xl border p-8 backdrop-blur-xl"
                 style={{ borderColor: `${c.color}44`, background: "rgba(10,22,40,0.55)", boxShadow: `0 0 40px ${c.color}22` }}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -584,7 +583,7 @@ function TrackUnderstandActSection() {
                 <p className="mt-4 whitespace-pre-line text-center text-white/60 text-sm md:text-base font-light leading-relaxed">{c.body}</p>
               </motion.div>
               {idx < cols.length - 1 && (
-                <div className="hidden md:flex items-center justify-center" key={`arr-${idx}`}>
+                <div className="hidden md:flex items-center justify-center">
                   <svg width="60" height="20" viewBox="0 0 60 20">
                     <motion.path d="M0 10 L52 10" stroke="rgba(255,255,255,0.4)" strokeWidth="1" fill="none"
                       initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 + idx * 0.2 }} />
@@ -594,9 +593,9 @@ function TrackUnderstandActSection() {
                 </div>
               )}
               {idx < cols.length - 1 && (
-                <div className="md:hidden flex justify-center text-white/30" key={`arr-m-${idx}`}>↓</div>
+                <div className="md:hidden flex justify-center text-white/30">↓</div>
               )}
-            </>
+            </Fragment>
           ))}
         </div>
 
