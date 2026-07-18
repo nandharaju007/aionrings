@@ -369,8 +369,12 @@ function Hero() {
           <motion.div
             className="relative flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+            transition={{
+              opacity: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
+              scale: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
+              y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+            }}
           >
             <img
               src={ringHero}
