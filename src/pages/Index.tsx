@@ -347,23 +347,39 @@ function Hero() {
         </div>
 
         {/* Ring stage */}
-        <div className="relative mx-auto mt-12 md:mt-14 aspect-square w-[min(88vw,640px)]">
-          {/* soft glow */}
-          <div className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 140px 20px ${C.blue}40, inset 0 0 60px ${C.purple}30` }} />
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{ boxShadow: [`0 0 60px 0px ${C.blue}55`, `0 0 140px 30px ${C.blue}20`, `0 0 60px 0px ${C.blue}55`] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        <div className="relative mx-auto mt-10 md:mt-12 w-[min(92vw,720px)]">
+          {/* layered glow behind ring */}
+          <div
+            className="pointer-events-none absolute inset-0 -z-10 scale-90 rounded-full blur-3xl"
+            style={{ background: `radial-gradient(circle, ${C.blue}30 0%, ${C.purple}18 45%, transparent 70%)` }}
           />
-          {/* Ring image with Y-axis rotation */}
           <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ perspective: 1200 }}
-            animate={{ rotateY: [0, 360] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="pointer-events-none absolute inset-0 -z-10 rounded-full"
+            animate={{
+              boxShadow: [
+                `0 0 80px 10px ${C.blue}30`,
+                `0 0 160px 40px ${C.blue}15`,
+                `0 0 80px 10px ${C.blue}30`,
+              ],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Ring image — full premium shot, no harsh circular crop */}
+          <motion.div
+            className="relative flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src={ringHero} alt="aiOn ring" className="h-[78%] w-[78%] rounded-full object-cover opacity-95"
-              style={{ filter: "drop-shadow(0 0 40px rgba(79,179,255,0.6))", mixBlendMode: "screen" }} />
+            <img
+              src={ringHero}
+              alt="aiOn ring"
+              className="h-auto w-full max-w-[520px] md:max-w-[620px] object-contain"
+              style={{
+                filter: "drop-shadow(0 20px 60px rgba(79,179,255,0.35))",
+              }}
+            />
           </motion.div>
 
           {/* Floating chips (desktop absolute, mobile row below) */}
