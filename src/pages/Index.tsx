@@ -6,6 +6,9 @@ import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
+import appScreenVitality from "@/assets/app-screen-vitality.png";
+import appScreenQuest from "@/assets/app-screen-quest.png";
+import appScreenSleep from "@/assets/app-screen-sleep.png";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
@@ -894,6 +897,70 @@ function QuestSection() {
 }
 
 /* ─────────────────────────────────────────────
+   Section — The App (screens)
+   ───────────────────────────────────────────── */
+function TheAppSection() {
+  const screens = [
+    { src: appScreenVitality, alt: "aiOn app — Vitality Score", caption: "Your number, every morning." },
+    { src: appScreenQuest,    alt: "aiOn app — Today's Quest",  caption: "One quest a day." },
+    { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
+  ];
+  return (
+    <section id="the-app" className="relative overflow-hidden py-16 md:py-40" style={{ background: C.navy }}>
+      <ParticleField density={30} opacity={0.25} />
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center max-w-3xl mx-auto">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">The app</p>
+          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            Your body, on screen.
+          </h2>
+          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+            Clean. Calm. Built to answer one question — what should I do today?
+          </p>
+        </FadeUp>
+
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-end">
+          {screens.map((s, i) => (
+            <motion.div
+              key={s.alt}
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.9, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transform: i === 1 ? "translateY(-24px)" : undefined }}
+            >
+              <div
+                className="relative"
+                style={{ filter: `drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 0 40px ${C.blue}33)` }}
+              >
+                <img
+                  src={s.src}
+                  alt={s.alt}
+                  loading="lazy"
+                  width={768}
+                  height={1536}
+                  className="w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
+                />
+              </div>
+              <p className="mt-6 text-sm md:text-base text-white/60 font-light tracking-wide">
+                {s.caption}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        <FadeUp delay={0.3} className="mt-14 text-center">
+          <p className="text-sm md:text-base text-white/50 font-light">
+            Free with every ring. iOS &amp; Android.
+          </p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Section 6 — Preventive
    ───────────────────────────────────────────── */
 function PreventiveSection() {
@@ -1149,6 +1216,7 @@ export default function Index() {
         <BodyTalkingSection />
         <PillarsSection />
         <QuestSection />
+        <TheAppSection />
         <PreventiveSection />
         <RingSection />
         <PlansSection />
