@@ -277,7 +277,7 @@ function Hero() {
       <div className="relative z-10 container mx-auto px-6">
         {/* Lifestyle hand image — blended, no card box */}
         <motion.div
-          className="relative mx-auto mt-2 mb-6 h-[220px] w-full max-w-4xl overflow-hidden sm:h-[260px] md:mt-4 md:h-[320px] lg:h-[380px]"
+          className="relative mx-auto mt-2 mb-6 h-[220px] w-[96%] max-w-4xl overflow-hidden sm:h-[260px] md:mt-4 md:h-[320px] lg:h-[380px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -292,17 +292,28 @@ function Hero() {
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, ${C.navy} 0%, ${C.navy}00 28%, transparent 50%, ${C.navy}90 92%, ${C.navy} 100%)`,
+              background: `linear-gradient(to bottom, ${C.navy} 0%, ${C.navy}00 32%, transparent 52%, ${C.navy}90 92%, ${C.navy} 100%)`,
             }}
           />
-          {/* Side vignettes — soft edge fade into navy */}
+          {/* Side + corner vignettes — seamless edge fade into navy */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, transparent 40%, ${C.navy} 95%)`,
+              background: `radial-gradient(ellipse at center, transparent 42%, ${C.navy} 100%)`,
             }}
           />
-          {/* Subtle cool rim glow to unify with site palette */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `linear-gradient(90deg, ${C.navy} 0%, ${C.navy}00 12%, transparent 88%, ${C.navy}00 92%, ${C.navy} 100%)`,
+            }}
+          />
+          {/* Cool tint overlay to harmonize warm skin tones with site palette */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: `linear-gradient(180deg, ${C.blue}08 0%, transparent 60%)`, mixBlendMode: "overlay" }}
+          />
+          {/* Subtle bottom rim glow */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{ boxShadow: `inset 0 -30px 80px -30px ${C.blue}22` }}
