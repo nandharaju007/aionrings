@@ -70,8 +70,11 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
     if (!ctx) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    const effectiveDensity = isMobile ? Math.min(density, 20) : density;
+    // Aggressive mobile reduction — canvas fill is the biggest scroll cost
+    const effectiveDensity = isMobile ? Math.min(density, 12) : density;
     let raf = 0;
+    let visible = false;
+    let running = false;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0;
     let particles: { x: number; y: number; r: number; vx: number; vy: number; a: number }[] = [];
@@ -104,11 +107,21 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
         ctx.fillStyle = `rgba(200, 220, 255, ${p.a * opacity})`;
         ctx.fill();
       }
-      if (reduced) return;
+      if (reduced || !visible) { running = false; return; }
       raf = requestAnimationFrame(tick);
     };
+    const start = () => { if (running || reduced) return; running = true; raf = requestAnimationFrame(tick); };
+    // Draw one static frame so section is never blank
     tick();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+    // Only animate when the canvas is on-screen
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        visible = e.isIntersecting;
+        if (visible) start();
+      }
+    }, { rootMargin: "50px" });
+    io.observe(canvas);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); window.removeEventListener("resize", resize); };
   }, [density, opacity]);
   return <canvas ref={ref} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden />;
 }
