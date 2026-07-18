@@ -19,6 +19,7 @@ import {
   History,
   Eye,
   X,
+  ChevronDown,
 } from "lucide-react";
 
 interface Reservation {
@@ -289,6 +290,7 @@ export default function AdminReservationsPage() {
   const [webOrdersError, setWebOrdersError] = useState<string | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
   const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
+  const [openStatusMenuFor, setOpenStatusMenuFor] = useState<string | null>(null);
   // UI-only for now, per explicit instruction — not yet persisted to any backend/database.
   // Keyed by orderId, then by status value → the REAL timestamp once that step is reached.
   // A status with no entry here just means it hasn't happened yet — the timeline shows an
@@ -1187,19 +1189,34 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-[#4FB3FF] text-center whitespace-nowrap">
                                 {r.partner_code ?? r.referral_source ?? "—"}
                               </td>
-                              <td className="px-4 py-3 text-center whitespace-nowrap">
-                                <div className="text-[11px] text-emerald-300 mb-1">● Order Received</div>
-                                <select
-                                  value={getShipDeliverValue(r)}
-                                  onChange={(e) => handleStatusChange(r.orderId, e.target.value)}
-                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.value)}`}
+                              <td className="px-4 py-3 text-center whitespace-nowrap relative">
+                                <div className={`text-[12px] font-medium ${orderStatusColor(currentStatus.value)}`}>
+                                  {currentStatus.label}
+                                </div>
+                                <button
+                                  onClick={() =>
+                                    setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
+                                  }
+                                  className="mt-1 inline-flex items-center justify-center w-6 h-6 rounded-full border border-white/15 hover:border-white/30"
                                 >
-                                  {SHIP_DELIVER_OPTIONS.map((opt) => (
-                                    <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
-                                      {opt.label}
-                                    </option>
-                                  ))}
-                                </select>
+                                  <ChevronDown className="w-3 h-3" />
+                                </button>
+                                {openStatusMenuFor === r.orderId && (
+                                  <div className="absolute z-50 top-full mt-1 left-1/2 -translate-x-1/2 w-36 rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1">
+                                    {SHIP_DELIVER_OPTIONS.filter((opt) => opt.value !== "").map((opt) => (
+                                      <button
+                                        key={opt.value}
+                                        onClick={() => {
+                                          handleStatusChange(r.orderId, opt.value);
+                                          setOpenStatusMenuFor(null);
+                                        }}
+                                        className="w-full text-left px-3 py-2 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white"
+                                      >
+                                        {opt.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <button
@@ -1238,6 +1255,10 @@ export default function AdminReservationsPage() {
                       </tbody>
                     </table>
                   </div>
+
+                  {openStatusMenuFor && (
+                    <div className="fixed inset-0 z-40" onClick={() => setOpenStatusMenuFor(null)} />
+                  )}
 
                   {expandedOrder && (
                     <div
