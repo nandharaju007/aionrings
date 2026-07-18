@@ -1204,7 +1204,7 @@ export default function AdminReservationsPage() {
                                   </button>
                                 </div>
                                 {openStatusMenuFor === r.orderId && (
-                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1">
+                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1 overflow-hidden">
                                     {SHIP_DELIVER_OPTIONS.filter((opt) => opt.value !== "").map((opt) => (
                                       <button
                                         key={opt.value}
@@ -1212,7 +1212,7 @@ export default function AdminReservationsPage() {
                                           handleStatusChange(r.orderId, opt.value);
                                           setOpenStatusMenuFor(null);
                                         }}
-                                        className="w-full text-left px-3 py-2 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white"
+                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
                                       >
                                         {opt.label}
                                       </button>
