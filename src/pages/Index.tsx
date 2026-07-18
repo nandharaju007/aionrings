@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
+import heroFingerRing from "@/assets/hero-finger-ring.png";
 import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
 import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
 import lifestyle8 from "@/assets/lifestyle-hand-8.jpg";
@@ -287,6 +288,41 @@ function Hero() {
       />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
+        {/* Cinematic finger-with-ring banner */}
+        <motion.div
+          className="relative w-full max-w-5xl mx-auto mb-8 md:mb-12"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="relative overflow-hidden rounded-2xl">
+            <img
+              src={heroFingerRing}
+              alt="Human finger wearing the aiOn smart ring"
+              width={1920}
+              height={1024}
+              className="w-full h-[140px] sm:h-[180px] md:h-[240px] object-cover"
+              style={{ filter: "contrast(1.05) saturate(1.05)" }}
+            />
+            {/* Blend into navy background on all edges */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `
+                  linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
+                  linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
+                  radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
+                `,
+              }}
+            />
+            {/* Cool tint for color harmony */}
+            <div
+              className="pointer-events-none absolute inset-0 mix-blend-color"
+              style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
+            />
+          </div>
+        </motion.div>
+
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
