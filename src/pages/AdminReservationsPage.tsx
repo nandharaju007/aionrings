@@ -201,6 +201,17 @@ interface AuditEntry {
 const WEB_ORDERS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
 const B2C_ORDERS_API = "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/orders";
+const WEB_ORDER_STATUS_API =
+  "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
+
+// Real backend shape confirmed via GET /api/web-orders/status:
+// { _id, orderId, status, date, __v }
+interface WebOrderStatusEntry {
+  _id: string;
+  orderId: string;
+  status: string;
+  date: string;
+}
 
 // UI-only status options for the new web_orders Status column — separate from the
 // existing Fulfillment tab's STATUSES/StatusPill (which belong to the Supabase
@@ -291,15 +302,11 @@ export default function AdminReservationsPage() {
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
   const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
   const [openStatusMenuFor, setOpenStatusMenuFor] = useState<string | null>(null);
-  // UI-only for now, per explicit instruction — not yet persisted to any backend/database.
-  // Keyed by orderId, then by status value → the REAL timestamp once that step is reached.
-  // A status with no entry here just means it hasn't happened yet — the timeline shows an
-  // ESTIMATED date for it instead, matching an Amazon/Flipkart-style tracker: all 4 steps
-  // always show, completed ones are colored with the real date, future ones stay grey with
-  // an estimate.
-  const [orderStatusTimestamps, setOrderStatusTimestamps] = useState<Record<string, Partial<Record<string, string>>>>(
-    {},
-  );
+  // Real backend-persisted status history for web orders — fetched from
+  // GET /api/web-orders/status, grouped by orderId. Replaces the earlier local-only
+  // UI state now that the backend/database (web_orders_status collection) exists.
+  const [webOrderStatusLog, setWebOrderStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
+  const [webOrderStatusLogError, setWebOrderStatusLogError] = useState<string | null>(null);
 
   // ─── New: B2C tab (mobile app orders collection) — entirely independent state ───────
   const [b2cOrders, setB2cOrders] = useState<B2CUserOrders[] | null>(null);
@@ -347,6 +354,7 @@ export default function AdminReservationsPage() {
       await loadAll();
       await loadWebOrders();
       await loadB2COrders();
+      await loadWebOrderStatuses();
     }
     setLoading(false);
   }
@@ -378,6 +386,22 @@ export default function AdminReservationsPage() {
     } catch (err) {
       console.error("Failed to load B2C orders:", err);
       setB2cOrdersError(err instanceof Error ? err.message : "Failed to load B2C orders");
+    }
+  }
+
+  // Fetches the real, backend-persisted status history for web orders. Called both on
+  // initial admin load and again after every status update, so the UI always reflects
+  // what's actually stored in web_orders_status.
+  async function loadWebOrderStatuses() {
+    try {
+      const res = await fetch(`${WEB_ORDER_STATUS_API}/status`);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const data = await res.json();
+      setWebOrderStatusLog(data);
+      setWebOrderStatusLogError(null);
+    } catch (err) {
+      console.error("Failed to load web order statuses:", err);
+      setWebOrderStatusLogError(err instanceof Error ? err.message : "Failed to load status history");
     }
   }
 
@@ -454,28 +478,36 @@ export default function AdminReservationsPage() {
     return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
   }, [webOrders]);
 
-  // UI-only status update. Picking "Delivered" implies "Shipped" already happened too
-  // (same cascade idea as before) — picking the blank "Awaiting shipment" option clears
-  // both, reverting the order back to just "Order Received".
-  function handleStatusChange(orderId: string, newValue: string) {
-    setOrderStatusTimestamps((prev) => {
-      const existing = { ...(prev[orderId] ?? {}) };
-      if (newValue === "") {
-        delete existing.shipped;
-        delete existing.delivered;
-      } else if (newValue === "shipped") {
-        if (!existing.shipped) existing.shipped = new Date().toISOString();
-        delete existing.delivered;
-      } else if (newValue === "delivered") {
-        if (!existing.shipped) existing.shipped = new Date().toISOString();
-        if (!existing.delivered) existing.delivered = new Date().toISOString();
+  // Real POST to the backend — always appends a new entry, never overwrites. Preserves
+  // the same "Delivered implies Shipped already happened" cascade as before, but now as
+  // genuine separate database inserts if the shipped step hasn't been recorded yet.
+  async function handleStatusChange(orderId: string, newValue: string) {
+    if (newValue === "") return; // "Awaiting shipment" is a display-only state, never posted
+    try {
+      const alreadyShipped = (webOrderStatusLog ?? []).some((e) => e.orderId === orderId && e.status === "shipped");
+      if (newValue === "delivered" && !alreadyShipped) {
+        await fetch(`${WEB_ORDER_STATUS_API}/${orderId}/status`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "shipped" }),
+        });
       }
-      return { ...prev, [orderId]: existing };
-    });
+      await fetch(`${WEB_ORDER_STATUS_API}/${orderId}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newValue }),
+      });
+      await loadWebOrderStatuses();
+    } catch (err) {
+      console.error("Failed to update order status:", err);
+      alert("Could not update status. Please try again.");
+    }
   }
 
-  // Builds the 3-step timeline — "Order Received" always real (order's own createdAt).
-  // "Shipped"/"Delivered" use their real confirmed timestamp once reached, otherwise an
+  // Builds the 3-step timeline for one order from the REAL fetched log — "Order Received"
+  // always uses the order's own createdAt (matches the backend's own auto-created
+  // "received" entry, which fires the instant an order is placed). Shipped/Delivered use
+  // their real logged date if an entry exists for that order+status, otherwise an
   // estimated date computed from createdAt + a reasonable offset.
   interface TimelineStep {
     value: string;
@@ -484,13 +516,13 @@ export default function AdminReservationsPage() {
     completed: boolean;
   }
   function getOrderTimeline(row: WebOrderRow): TimelineStep[] {
-    const real = orderStatusTimestamps[row.orderId] ?? {};
+    const entriesForOrder = (webOrderStatusLog ?? []).filter((e) => e.orderId === row.orderId);
     return ALL_TIMELINE_STEPS.map((opt) => {
       if (opt.value === "received") {
         return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
       }
-      const confirmed = real[opt.value];
-      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed, completed: true };
+      const confirmed = entriesForOrder.find((e) => e.status === opt.value);
+      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed.date, completed: true };
       const estimate = new Date(row.createdAt);
       estimate.setDate(estimate.getDate() + (ORDER_STATUS_ESTIMATE_DAYS[opt.value] ?? 0));
       return { value: opt.value, label: opt.label, date: estimate.toISOString(), completed: false };
@@ -504,11 +536,12 @@ export default function AdminReservationsPage() {
     return completedSteps[completedSteps.length - 1];
   }
 
-  // What the Shipped/Delivered dropdown itself should show as selected right now.
+  // What the Shipped/Delivered dropdown itself should show as selected right now,
+  // derived from the real fetched status log.
   function getShipDeliverValue(row: WebOrderRow): string {
-    const real = orderStatusTimestamps[row.orderId] ?? {};
-    if (real.delivered) return "delivered";
-    if (real.shipped) return "shipped";
+    const entriesForOrder = (webOrderStatusLog ?? []).filter((e) => e.orderId === row.orderId);
+    if (entriesForOrder.some((e) => e.status === "delivered")) return "delivered";
+    if (entriesForOrder.some((e) => e.status === "shipped")) return "shipped";
     return "";
   }
 
