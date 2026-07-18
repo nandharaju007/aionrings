@@ -6,6 +6,9 @@ import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
+import appScreenVitality from "@/assets/app-screen-vitality.png";
+import appScreenQuest from "@/assets/app-screen-quest.png";
+import appScreenSleep from "@/assets/app-screen-sleep.png";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
