@@ -71,6 +71,8 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const effectiveDensity = isMobile ? Math.min(density, 20) : density;
     let raf = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0;
@@ -81,7 +83,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
       w = rect.width; h = rect.height;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      particles = Array.from({ length: density }).map(() => ({
+      particles = Array.from({ length: effectiveDensity }).map(() => ({
         x: Math.random() * w,
         y: Math.random() * h,
         r: Math.random() * 1.4 + 0.3,
@@ -104,6 +106,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
         ctx.fillStyle = `rgba(200, 220, 255, ${p.a * opacity})`;
         ctx.fill();
       }
+      if (reduced) return;
       raf = requestAnimationFrame(tick);
     };
     tick();
