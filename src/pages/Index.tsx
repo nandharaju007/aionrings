@@ -261,12 +261,12 @@ function Chip({ children, className = "" }: { children: ReactNode; className?: s
    ───────────────────────────────────────────── */
 function Hero() {
   const chips = [
-    { label: "Live 72 bpm", icon: "❤️", delay: 1.0 },
-    { label: "98% SpO₂", icon: "🫁", delay: 1.15 },
-    { label: "HRV 34ms", icon: "🧠", delay: 1.3 },
-    { label: "Sleep 7h 42m", icon: "🌙", delay: 1.45 },
-    { label: "Recovery 81", icon: "⚡", delay: 1.6 },
-    { label: "36.8°C", icon: "🌡️", delay: 1.75 },
+    { label: "❤️ 72 bpm", angle: -55, delay: 1.0 },
+    { label: "🫁 98% SpO₂", angle: 55, delay: 1.15 },
+    { label: "🧠 HRV 34ms", angle: -100, delay: 1.3 },
+    { label: "🌙 Sleep 7h 42m", angle: 100, delay: 1.45 },
+    { label: "⚡ Recovery 81", angle: -145, delay: 1.6 },
+    { label: "🌡️ 36.8°C", angle: 145, delay: 1.75 },
   ];
 
   return (
@@ -283,21 +283,11 @@ function Hero() {
         }}
       />
 
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24 pb-12">
-        {/* Brand wordmark */}
-        <motion.div
-          className="mb-6 md:mb-8"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <span className="text-sm font-medium tracking-[0.4em] uppercase text-white/60">aiOn</span>
-        </motion.div>
-
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.02]"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.05]"
             initial="hidden" animate="show"
             variants={{ show: { transition: { staggerChildren: 0.18 } } }}
           >
@@ -306,44 +296,50 @@ function Hero() {
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="block text-white"
             >
-              Intelligence,
+              Your body has been talking.
             </motion.span>
             <motion.span
               variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block italic font-light text-transparent bg-clip-text"
+              className="block text-transparent bg-clip-text"
               style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}
             >
-              refined.
+              You just couldn't hear it.
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-5 md:mt-7 text-base md:text-xl font-light text-white/60 max-w-2xl mx-auto"
+            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-white/70 max-w-2xl mx-auto"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
           >
-            The world's most advanced health-intelligence smart ring. Healthcare-grade sensors, sculpted for everyday elegance.
+            aiOn changes that.
           </motion.p>
         </div>
 
         {/* Cinematic ring stage */}
-        <div className="relative mt-8 md:mt-10 w-full max-w-3xl">
+        <div className="relative mt-10 md:mt-14 w-full max-w-3xl">
+          {/* Outer orbital ring glow */}
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
+            style={{
+              background: `conic-gradient(from 0deg, ${C.blue}20, ${C.purple}20, ${C.blue}20)`,
+              filter: "blur(2px)",
+              opacity: 0.6,
+            }}
+          />
+
+          {/* Dark inner portal */}
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
+            style={{
+              background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
+              boxShadow: `inset 0 0 80px rgba(79,179,255,0.12), 0 0 60px rgba(79,179,255,0.08)`,
+            }}
+          />
+
           {/* Ambient radial glow */}
           <div
             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
-            style={{ background: `radial-gradient(circle, ${C.blue}22 0%, ${C.purple}12 45%, transparent 70%)` }}
-          />
-
-          {/* Pulsing orbital glow */}
-          <motion.div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] aspect-square rounded-full"
-            animate={{
-              boxShadow: [
-                `0 0 60px 10px ${C.blue}20`,
-                `0 0 140px 40px ${C.blue}10`,
-                `0 0 60px 10px ${C.blue}20`,
-              ],
-            }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            style={{ background: `radial-gradient(circle, ${C.blue}18 0%, ${C.purple}10 45%, transparent 70%)` }}
           />
 
           {/* Floating ring */}
@@ -362,42 +358,42 @@ function Hero() {
               alt="aiOn smart ring floating in cinematic light"
               width={620}
               height={620}
-              className="h-auto w-full max-w-[320px] sm:max-w-[420px] md:max-w-[520px] object-contain"
+              className="h-auto w-full max-w-[280px] sm:max-w-[360px] md:max-w-[460px] object-contain"
               style={{
                 filter: "drop-shadow(0 30px 80px rgba(79,179,255,0.35))",
               }}
             />
           </motion.div>
 
-          {/* Desktop floating vitals chips — orbital positions */}
-          <div className="hidden md:block">
-            {[
-              { label: "Live 72 bpm", cls: "top-[8%] left-[4%]" },
-              { label: "98% SpO₂", cls: "top-[8%] right-[4%]" },
-              { label: "HRV 34ms", cls: "top-1/2 -left-[2%] -translate-y-1/2" },
-              { label: "Sleep 7h 42m", cls: "top-1/2 -right-[2%] -translate-y-1/2" },
-              { label: "Recovery 81", cls: "bottom-[14%] left-[6%]" },
-              { label: "36.8°C", cls: "bottom-[14%] right-[6%]" },
-            ].map((c, i) => (
-              <motion.div
-                key={i}
-                className={`absolute ${c.cls}`}
-                initial={{ opacity: 0, scale: 0.7, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
-                transition={{
-                  opacity: { delay: 1 + i * 0.12, duration: 0.6 },
-                  scale: { delay: 1 + i * 0.12, duration: 0.6 },
-                  y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
-                }}
-              >
-                <Chip>{c.label}</Chip>
-              </motion.div>
-            ))}
+          {/* Desktop orbital vitals chips */}
+          <div className="hidden md:block absolute inset-0">
+            {chips.map((c, i) => {
+              const rad = (c.angle * Math.PI) / 180;
+              const radius = 46; // % of container
+              const x = 50 + radius * Math.cos(rad);
+              const y = 50 + radius * Math.sin(rad);
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${x}%`, top: `${y}%` }}
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
+                  transition={{
+                    opacity: { delay: c.delay, duration: 0.6 },
+                    scale: { delay: c.delay, duration: 0.6 },
+                    y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                >
+                  <Chip>{c.label}</Chip>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
         {/* Mobile vitals row */}
-        <div className="mt-4 flex flex-wrap justify-center gap-2 md:hidden">
+        <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
           {chips.map((c, i) => (
             <motion.div
               key={i}
@@ -405,26 +401,21 @@ function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
             >
-              <Chip>{c.icon} {c.label}</Chip>
+              <Chip>{c.label}</Chip>
             </motion.div>
           ))}
         </div>
 
-        {/* Vitality score + CTA */}
+        {/* CTA */}
         <motion.div
-          className="mt-8 md:mt-10 flex flex-col items-center"
+          className="mt-10 md:mt-12 flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6 }}
+          transition={{ duration: 0.8, delay: 1.9 }}
         >
-          <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-md">
-            <span className="inline-block h-2 w-2 rounded-full" style={{ background: C.green, boxShadow: `0 0 10px ${C.green}` }} />
-            <span className="text-sm text-white/80">Vitality Score <span className="font-medium text-white">84</span> — You're ready today</span>
-          </div>
-
           <Link
             to="/preorder"
-            className="group relative mt-6 inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-[#0A1628]"
+            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-[#0A1628]"
             style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}
           >
             <motion.span
