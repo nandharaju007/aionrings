@@ -11,7 +11,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "seo:check": "node scripts/seo-check.mjs"
+    "predev": "bunx tsx scripts/generate-sitemap.ts",
+    "prebuild": "bunx tsx scripts/generate-sitemap.ts",
+    "seo:check": "node scripts/seo-check.mjs",
+    "seo:images": "node scripts/check-og-images.mjs",
+    "seo:sitemap": "bunx tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
