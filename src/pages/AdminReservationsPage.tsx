@@ -1198,12 +1198,10 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
                                 {new Date(r.createdAt).toLocaleDateString()}
                               </td>
-                              <td className="px-4 py-3 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[140px]">
+                              <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {r.first_name} {r.last_name}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[160px]">
-                                {r.email}
-                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">{r.email}</td>
                               <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">{r.phone}</td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {firstItem?.ring_size ?? "—"}
