@@ -275,9 +275,9 @@ function Hero() {
       <ParticleField density={80} opacity={0.4} />
 
       <div className="relative z-10 container mx-auto px-6">
-        {/* Lifestyle hand image at top */}
+        {/* Lifestyle hand image — blended, no card box */}
         <motion.div
-          className="relative mx-auto mt-4 mb-8 h-[240px] w-[92%] max-w-3xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl sm:h-[260px] md:mt-6 md:h-[340px] md:w-full lg:h-[400px]"
+          className="relative mx-auto mt-2 mb-6 h-[220px] w-[96%] max-w-4xl overflow-hidden sm:h-[260px] md:mt-4 md:h-[320px] lg:h-[380px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -285,25 +285,38 @@ function Hero() {
           <img
             src={lifestyle6}
             alt="aiOn ring worn on a finger"
-            className="h-full w-full object-cover object-[center_55%]"
-            style={{ filter: "contrast(1.1) brightness(1.05) saturate(1.05)" }}
+            className="h-full w-full object-cover object-[center_60%]"
+            style={{ filter: "contrast(1.08) brightness(1.04) saturate(1.06)" }}
           />
+          {/* Top fade — blends into header/hero copy */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, transparent 0%, ${C.navy}85 80%, ${C.navy} 100%)`,
+              background: `linear-gradient(to bottom, ${C.navy} 0%, ${C.navy}00 32%, transparent 52%, ${C.navy}90 92%, ${C.navy} 100%)`,
+            }}
+          />
+          {/* Side + corner vignettes — seamless edge fade into navy */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `radial-gradient(ellipse at center, transparent 42%, ${C.navy} 100%)`,
             }}
           />
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, transparent 35%, ${C.navy} 100%)`,
+              background: `linear-gradient(90deg, ${C.navy} 0%, ${C.navy}00 12%, transparent 88%, ${C.navy}00 92%, ${C.navy} 100%)`,
             }}
           />
-          {/* Subtle rim light */}
+          {/* Cool tint overlay to harmonize warm skin tones with site palette */}
           <div
-            className="pointer-events-none absolute inset-0 rounded-3xl"
-            style={{ boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 -20px 60px -20px ${C.blue}30` }}
+            className="pointer-events-none absolute inset-0"
+            style={{ background: `linear-gradient(180deg, ${C.blue}08 0%, transparent 60%)`, mixBlendMode: "overlay" }}
+          />
+          {/* Subtle bottom rim glow */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ boxShadow: `inset 0 -30px 80px -30px ${C.blue}22` }}
           />
         </motion.div>
 
