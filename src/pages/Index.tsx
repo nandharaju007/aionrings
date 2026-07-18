@@ -130,6 +130,29 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
    Aurora background — animated gradient blobs
    ───────────────────────────────────────────── */
 function Aurora({ intensity = 0.5 }: { intensity?: number }) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const upd = () => setIsMobile(mq.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    upd();
+    mq.addEventListener("change", upd);
+    return () => mq.removeEventListener("change", upd);
+  }, []);
+  if (isMobile) {
+    // Static, GPU-cheap gradient on mobile — no framer RAF, smaller blur
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div
+          className="absolute -top-1/4 -left-1/4 h-[70vw] w-[70vw] rounded-full blur-[60px]"
+          style={{ background: C.blue, opacity: intensity * 0.28, willChange: "auto" }}
+        />
+        <div
+          className="absolute -bottom-1/4 -right-1/4 h-[75vw] w-[75vw] rounded-full blur-[70px]"
+          style={{ background: C.purple, opacity: intensity * 0.28 }}
+        />
+      </div>
+    );
+  }
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       <motion.div
