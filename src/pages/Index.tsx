@@ -1,1063 +1,1163 @@
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState, ReactNode, Fragment } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AionLogo } from "@/components/AionLogo";
-import ringHeroImg from "@/assets/ring-hero.jpg";
-import ringProductImg from "@/assets/ring-product.jpg";
+import ringHero from "@/assets/ring-hero.jpg";
+import ringProduct from "@/assets/ring-product.jpg";
 import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
-import lifestyle5 from "@/assets/lifestyle-hand-5.jpg";
 import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
-import lifestyle7 from "@/assets/lifestyle-hand-7.jpg";
 import lifestyle8 from "@/assets/lifestyle-hand-8.jpg";
-import lifestyle9 from "@/assets/lifestyle-hand-9.jpg";
 
-const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
+/* ─────────────────────────────────────────────
+   Brand tokens (inline, no CSS var changes)
+   ───────────────────────────────────────────── */
+const C = {
+  navy: "#0A1628",
+  blue: "#4FB3FF",
+  purple: "#7C3AED",
+  green: "#4ADE80",
+  gold: "#FACC15",
+};
 
-/* ---------- Reveal on scroll ---------- */
-function useReveal<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [visible, setVisible] = useState(false);
+/* ─────────────────────────────────────────────
+   Custom glowing cursor (desktop only)
+   ───────────────────────────────────────────── */
+function GlowCursor() {
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const sx = useSpring(x, { stiffness: 500, damping: 40 });
+  const sy = useSpring(y, { stiffness: 500, damping: 40 });
+  const [enabled, setEnabled] = useState(false);
+
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return { ref, visible };
+    if (window.matchMedia("(hover: none)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setEnabled(true);
+    const onMove = (e: MouseEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [x, y]);
+
+  if (!enabled) return null;
+  return (
+    <motion.div
+      aria-hidden
+      style={{ x: sx, y: sy }}
+      className="pointer-events-none fixed left-0 top-0 z-[100] -ml-3 -mt-3 h-6 w-6 rounded-full"
+    >
+      <div
+        className="h-6 w-6 rounded-full"
+        style={{
+          background: `radial-gradient(circle, ${C.blue} 0%, rgba(79,179,255,0.4) 40%, transparent 70%)`,
+          boxShadow: `0 0 24px ${C.blue}, 0 0 60px rgba(79,179,255,0.6)`,
+        }}
+      />
+    </motion.div>
+  );
 }
 
-function Reveal({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  const { ref, visible } = useReveal<HTMLDivElement>();
+/* ─────────────────────────────────────────────
+   Particle field — slow drifting stars
+   ───────────────────────────────────────────── */
+function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opacity?: number }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0, h = 0;
+    let particles: { x: number; y: number; r: number; vx: number; vy: number; a: number }[] = [];
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width; h = rect.height;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      particles = Array.from({ length: density }).map(() => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.4 + 0.3,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        a: Math.random() * 0.6 + 0.2,
+      }));
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const tick = () => {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of particles) {
+        if (!reduced) { p.x += p.vx; p.y += p.vy; }
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 220, 255, ${p.a * opacity})`;
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, [density, opacity]);
+  return <canvas ref={ref} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden />;
+}
+
+/* ─────────────────────────────────────────────
+   Aurora background — animated gradient blobs
+   ───────────────────────────────────────────── */
+function Aurora({ intensity = 0.5 }: { intensity?: number }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <motion.div
+        className="absolute -top-1/4 -left-1/4 h-[60vw] w-[60vw] rounded-full blur-[120px]"
+        style={{ background: C.blue, opacity: intensity * 0.35 }}
+        animate={{ x: [0, 80, -40, 0], y: [0, 60, -30, 0] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -bottom-1/4 -right-1/4 h-[65vw] w-[65vw] rounded-full blur-[140px]"
+        style={{ background: C.purple, opacity: intensity * 0.35 }}
+        animate={{ x: [0, -60, 40, 0], y: [0, -40, 30, 0] }}
+        transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-1/3 left-1/2 h-[40vw] w-[40vw] -translate-x-1/2 rounded-full blur-[100px]"
+        style={{ background: C.blue, opacity: intensity * 0.2 }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Subtle grid overlay
+   ───────────────────────────────────────────── */
+function GridOverlay() {
   return (
     <div
-      ref={ref}
-      className={className}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 opacity-[0.08]"
       style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 600ms cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 600ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+        backgroundImage:
+          "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
+        maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+        WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
       }}
+    />
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Count-up on view
+   ───────────────────────────────────────────── */
+function CountUp({ to, duration = 1600, suffix = "" }: { to: number; duration?: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(to * eased));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, duration]);
+  return <span ref={ref}>{n}{suffix}</span>;
+}
+
+/* ─────────────────────────────────────────────
+   Typewriter line
+   ───────────────────────────────────────────── */
+function Typewriter({ text, delay = 0, className = "", speed = 28 }: { text: string; delay?: number; className?: string; speed?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [out, setOut] = useState("");
+  useEffect(() => {
+    if (!inView) return;
+    let i = 0;
+    const start = setTimeout(() => {
+      const iv = setInterval(() => {
+        i++;
+        setOut(text.slice(0, i));
+        if (i >= text.length) clearInterval(iv);
+      }, speed);
+    }, delay);
+    return () => clearTimeout(start);
+  }, [inView, text, delay, speed]);
+  return <span ref={ref} className={className}>{out}<span className="opacity-60 animate-pulse">{out.length < text.length ? "▍" : ""}</span></span>;
+}
+
+/* ─────────────────────────────────────────────
+   Fade-up wrapper
+   ───────────────────────────────────────────── */
+function FadeUp({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* Words stagger */
+function WordStagger({ text, className = "", delay = 0 }: { text: string; className?: string; delay?: number }) {
+  const words = text.split(" ");
+  return (
+    <span className={className}>
+      {words.map((w, i) => (
+        <motion.span
+          key={i}
+          className="inline-block"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, delay: delay + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {w}&nbsp;
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Chip
+   ───────────────────────────────────────────── */
+function Chip({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <div
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs sm:text-sm font-light backdrop-blur-md ${className}`}
+      style={{ borderColor: "rgba(79,179,255,0.35)", background: "rgba(10,22,40,0.55)", boxShadow: `0 0 24px rgba(79,179,255,0.15)`, color: "#e6f2ff" }}
     >
       {children}
     </div>
   );
 }
 
-/* ---------- Parallax card for lifestyle shots ---------- */
-function useParallax<T extends HTMLElement>(maxOffset = 12) {
-  const ref = useRef<T | null>(null);
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    let rafId = 0;
-    const handleScroll = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        const el = ref.current;
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const viewportHeight = window.innerHeight;
-          const center = rect.top + rect.height / 2;
-          const distance = center / viewportHeight - 0.5;
-          setOffset(Math.round(distance * maxOffset * 2));
-        }
-        rafId = 0;
-      });
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [maxOffset]);
-  return { ref, offset };
-}
-
-function LifestyleCard({ src, tag, title, delay }: { src: string; tag: string; title: string; delay: number }) {
-  const { ref, offset } = useParallax<HTMLElement>(12);
+/* ─────────────────────────────────────────────
+   Hero
+   ───────────────────────────────────────────── */
+function Hero() {
+  const chipPos = [
+    { label: "❤️ 72 bpm", cls: "top-[8%] left-[6%] md:top-[12%] md:left-[8%]" },
+    { label: "🫁 98% SpO₂", cls: "top-[8%] right-[6%] md:top-[12%] md:right-[8%]" },
+    { label: "🧠 HRV 34ms", cls: "top-1/2 left-[2%] md:left-[4%] -translate-y-1/2" },
+    { label: "🌙 Sleep 7h 42m", cls: "top-1/2 right-[2%] md:right-[4%] -translate-y-1/2" },
+    { label: "⚡ Recovery 81", cls: "bottom-[22%] left-[8%] md:bottom-[18%] md:left-[10%]" },
+    { label: "🌡️ 36.8°C", cls: "bottom-[22%] right-[8%] md:bottom-[18%] md:right-[10%]" },
+  ];
   return (
-    <Reveal delay={delay}>
-      <figure
-        ref={ref}
-        className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-[#1E3A5F] bg-[#0F1B2D] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#4FB3FF]/60 hover:shadow-[0_20px_60px_-20px_rgba(79,179,255,0.25)]"
-      >
-        <div
-          className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
-          style={{ transform: `translateY(${offset}px)` }}
-        >
-          <img
-            src={src}
-            alt={`Hand wearing the aiOn smart ring \u2014 ${title}`}
-            width={1280}
-            height={1600}
-            loading="lazy"
-            className="h-[112%] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
-          />
-        </div>
-        <div
-          className="pointer-events-none absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
-          style={{
-            background: "linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.85) 100%)",
-          }}
-        />
-        <figcaption className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">{tag}</div>
-          <div className="mt-2 text-[22px] font-semibold text-white">{title}</div>
-        </figcaption>
-      </figure>
-    </Reveal>
-  );
-}
-function Particles() {
-  const dots = Array.from({ length: 25 });
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {dots.map((_, i) => {
-        const left = Math.random() * 100;
-        const top = Math.random() * 100;
-        const delay = Math.random() * 8;
-        const dur = 12 + Math.random() * 8;
-        return (
-          <span
-            key={i}
-            className="absolute h-[2px] w-[2px] rounded-full"
-            style={{
-              left: `${left}%`,
-              top: `${top}%`,
-              background: "rgba(79,179,255,0.2)",
-              animation: `particleDrift ${dur}s ease-in-out ${delay}s infinite`,
-            }}
-          />
-        );
-      })}
-    </div>
-  );
-}
+    <section className="relative min-h-[100svh] overflow-hidden pt-24" style={{ background: C.navy }}>
+      <Aurora intensity={0.9} />
+      <GridOverlay />
+      <ParticleField density={80} opacity={0.4} />
 
-/* ---------- Story cards ---------- */
-const storyMoments = [
-  { time: "2:14 am", text: "Your heart rate quietly shifted.", color: "#EF4444" },
-  { time: "4:05 am", text: "Your body temperature rose slightly.", color: "#EF4444" },
-  { time: "6:47 am", text: "aiOn told you before you felt anything.", color: "#4ADE80" },
-];
-
-/* ---------- Benefits ---------- */
-const benefits = [
-  {
-    icon: "❤",
-    bg: GRADIENT,
-    title: "You stop wondering why you\u2019re tired.",
-    body: "You know. aiOn explains the exact reason — not just a number, but the cause.",
-  },
-  {
-    icon: "💡",
-    bg: "#4FB3FF",
-    title: "Your numbers finally make sense.",
-    body: "Not HRV: 27ms. But why it\u2019s low, what caused it, and what to do right now.",
-  },
-  {
-    icon: "😴",
-    bg: "#7C3AED",
-    title: "Sleep becomes something you understand.",
-    body: "Every night analysed. Every morning explained. What changed, and why you feel how you feel.",
-  },
-  {
-    icon: "⚡",
-    bg: "#FACC15",
-    title: "You train on the right days.",
-    body: "aiOn tells you when to push and when to hold back — before you even lace up.",
-  },
-  {
-    icon: "🧠",
-    bg: "#EF4444",
-    title: "Stress doesn\u2019t sneak up on you.",
-    body: "Caught early. Explained clearly. Before it peaks.",
-  },
-  {
-    icon: "🏆",
-    bg: "#4ADE80",
-    title: "You get a health briefing every morning.",
-    body: "Plain English. What happened overnight. What to do today. Before you open an app.",
-  },
-];
-
-/* ---------- Proactive signals aiOn watches ---------- */
-const signals = [
-  {
-    icon: "😴",
-    tag: "SLEEP",
-    title: "Sleep you can actually feel.",
-    body: "aiOn maps every stage of your night — deep, REM, light — and connects it to how you woke up. Restless nights get a reason.",
-    quote: "You lost 42 min of deep sleep. Try dimming screens by 10pm tonight.",
-    glow: "#7C3AED",
-  },
-  {
-    icon: "🧠",
-    tag: "STRESS",
-    title: "Stress caught before it stacks.",
-    body: "Continuous HRV and skin response reveal tension building in real time — not hours later, when you already feel wrecked.",
-    quote: "Stress load rising since 2pm. A 4-minute breath session can bring it back.",
-    glow: "#EF4444",
-  },
-  {
-    icon: "❤",
-    tag: "HEART",
-    title: "Heart rhythm, always in view.",
-    body: "aiOn watches resting HR, HRV, and rhythm patterns 24/7 — flagging days your heart is doing more than usual.",
-    quote: "Resting HR is 8 bpm above your baseline this week. Consider a lighter session.",
-    glow: "linear-gradient(135deg,#EF4444,#7C3AED)",
-  },
-  {
-    icon: "🩸",
-    tag: "BLOOD PRESSURE",
-    title: "BP trends, no cuff, no fuss.",
-    body: "Pulse waveform analysis surfaces long-term shifts in vascular tone — so you spot patterns weeks earlier than an annual check-up.",
-    quote: "Vascular tone trending upward for 12 days. Time to hydrate and slow down salt.",
-    glow: "#00C6FF",
-  },
-  {
-    icon: "🍬",
-    tag: "GLUCOSE RESPONSE",
-    title: "Feel what food does to you.",
-    body: "aiOn correlates your meals, heart rate, and sleep to reveal how your body handles what you eat — even without a CGM.",
-    quote: "Your evening carbs spiked HR for 90 min. Try earlier dinners this week.",
-    glow: "#FACC15",
-  },
-  {
-    icon: "🌿",
-    tag: "ANEMIA & OXYGEN",
-    title: "Low energy, finally explained.",
-    body: "Overnight SpO₂, resting HR, and perfusion trends help surface early signs of low iron or oxygen delivery — the kind labs miss between visits.",
-    quote: "SpO₂ ran 2% below baseline for 5 nights. Worth a check-in with your doctor.",
-    glow: "#4ADE80",
-  },
-  {
-    icon: "🔥",
-    tag: "ENERGY & CALORIES",
-    title: "Calories that mean something.",
-    body: "aiOn uses continuous heart rate, temperature, and motion to model true energy burn — not a generic step-based guess.",
-    quote: "You burned 2,340 kcal today — 320 above your average. Refuel with protein.",
-    glow: "#FACC15",
-  },
-  {
-    icon: "✨",
-    tag: "DAILY HEALTH",
-    title: "One score. The whole picture.",
-    body: "Your Vitality Score fuses recovery, strain, sleep, and stress into a single, honest read of how ready you are for today.",
-    quote: "Vitality 78 — Strong. You have room for one hard session before recovery.",
-    glow: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)",
-  },
-];
-
-/* ---------- Phone frame ---------- */
-function PhoneFrame({
-  children,
-  tilt = 0,
-  forward = false,
-}: {
-  children: React.ReactNode;
-  tilt?: number;
-  forward?: boolean;
-}) {
-  return (
-    <div
-      className="relative shrink-0"
-      style={{
-        width: 290,
-        height: 580,
-        transform: `rotateY(${tilt}deg) scale(${forward ? 1.05 : 0.95})`,
-        transformStyle: "preserve-3d",
-      }}
-    >
-      <div
-        className="relative h-full w-full overflow-hidden rounded-[44px] bg-[#0A0A14]"
-        style={{
-          boxShadow: "0 0 0 1px #2A3A52, 0 32px 64px rgba(0,0,0,0.5)",
-        }}
-      >
-        <div className="absolute left-1/2 top-2 z-10 h-[30px] w-[120px] -translate-x-1/2 rounded-[20px] bg-black" />
-        <div className="absolute inset-2 overflow-hidden rounded-[38px] bg-[#0A1628] p-5 pt-10">{children}</div>
-      </div>
-    </div>
-  );
-}
-
-function VitalityRing({ pct = 78 }: { pct?: number }) {
-  const r = 55;
-  const c = 2 * Math.PI * r;
-  const dash = (pct / 100) * c;
-  return (
-    <svg viewBox="0 0 140 140" className="mx-auto h-[140px] w-[140px]">
-      <defs>
-        <linearGradient id="vrg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00C6FF" />
-          <stop offset="50%" stopColor="#4FB3FF" />
-          <stop offset="100%" stopColor="#7C3AED" />
-        </linearGradient>
-      </defs>
-      <circle cx="70" cy="70" r={r} fill="none" stroke="#1E3A5F" strokeWidth="10" />
-      <circle
-        cx="70"
-        cy="70"
-        r={r}
-        fill="none"
-        stroke="url(#vrg)"
-        strokeWidth="10"
-        strokeLinecap="round"
-        strokeDasharray={`${dash} ${c}`}
-        transform="rotate(-90 70 70)"
-      />
-      <text x="70" y="58" textAnchor="middle" fill="#8B9DAF" fontSize="9" letterSpacing="2">
-        VITALITY
-      </text>
-      <text x="70" y="82" textAnchor="middle" fill="#FFFFFF" fontSize="30" fontWeight="700">
-        {pct}
-      </text>
-      <text x="70" y="98" textAnchor="middle" fill="#4ADE80" fontSize="9" letterSpacing="1">
-        STRONG
-      </text>
-    </svg>
-  );
-}
-
-/* ---------- Full-width cinematic break image ---------- */
-function FullWidthImage({
-  src,
-  alt,
-  caption,
-  aspect = "21/9",
-}: {
-  src: string;
-  alt: string;
-  caption?: string;
-  aspect?: string;
-}) {
-  const { ref, offset } = useParallax<HTMLElement>(18);
-  return (
-    <Reveal>
-      <figure ref={ref} className="group relative w-full overflow-hidden rounded-3xl" style={{ aspectRatio: aspect }}>
-        <div
-          className="absolute inset-0 will-change-transform transition-transform duration-100 ease-out"
-          style={{ transform: `translateY(${offset}px)` }}
-        >
-          <img
-            src={src}
-            alt={alt}
-            width={1280}
-            height={1600}
-            loading="lazy"
-            className="h-[120%] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-          />
-        </div>
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: "linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.7) 100%)",
-          }}
-        />
-        {caption && (
-          <figcaption className="absolute bottom-0 left-0 right-0 px-6 py-8">
-            <p className="text-[14px] font-light tracking-wide text-[#B8C5D3]">{caption}</p>
-          </figcaption>
-        )}
-      </figure>
-    </Reveal>
-  );
-}
-
-/* ---------- Ring product ---------- */
-function ProductRing({ color }: { color: string }) {
-  return (
-    <div
-      className="relative w-full max-w-[420px] overflow-hidden rounded-3xl"
-      style={{
-        boxShadow: "0 0 100px -20px rgba(79,179,255,0.35)",
-      }}
-    >
-      <img
-        src={ringProductImg}
-        alt="aiOn Ring product view"
-        className="aspect-square w-full object-cover transition-all duration-500"
-        style={{
-          filter:
-            color === "#C0C0CC"
-              ? "hue-rotate(180deg) brightness(1.6) saturate(0.4)"
-              : color === "#B76E79"
-                ? "hue-rotate(-70deg) brightness(1.15) saturate(1.3)"
-                : "none",
-        }}
-      />
-    </div>
-  );
-}
-
-/* ---------- Waitlist form ---------- */
-function WaitlistForm() {
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  return (
-    <div className="mx-auto mt-12 max-w-[480px]">
-      {sent ? (
-        <div className="text-center transition-opacity duration-300">
-          <p className="text-[20px] text-[#4ADE80]">✓ You're on the list.</p>
-          <p className="mt-1 text-[15px] text-[#8B9DAF]">We'll reach out before launch.</p>
-        </div>
-      ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (email) setSent(true);
-          }}
-          className="flex overflow-hidden rounded-2xl border border-[#1E3A5F] bg-[#16243B]"
-        >
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            className="flex-1 bg-transparent px-5 py-4 text-[16px] text-white placeholder:text-[#5A6B7E] focus:outline-none"
-            aria-label="Email address"
-          />
-          <button
-            type="submit"
-            className="px-6 py-4 text-[15px] font-semibold text-white transition-all duration-150 hover:brightness-110"
-            style={{ background: GRADIENT }}
+      <div className="relative z-10 container mx-auto px-6">
+        {/* Headline */}
+        <div className="text-center max-w-5xl mx-auto pt-6 md:pt-10">
+          <motion.h1
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.02]"
+            initial="hidden" animate="show"
+            variants={{ show: { transition: { staggerChildren: 0.2 } } }}
           >
-            Join Waitlist →
-          </button>
-        </form>
-      )}
-      <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[14px] text-[#5A6B7E]">
-        <span>🔒 No spam ever</span>
-        <span>·</span>
-        <span>📦 Ships 2026</span>
-        <span>·</span>
-        <span>↩ 30-day returns</span>
+            <motion.span variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="block text-white">
+              Your body has been talking.
+            </motion.span>
+            <motion.span
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="block bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}
+            >
+              You just couldn't hear it.
+            </motion.span>
+          </motion.h1>
+          <motion.p
+            className="mt-6 md:mt-8 text-lg md:text-2xl font-light text-white/70"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
+          >
+            aiOn changes that.
+          </motion.p>
+        </div>
+
+        {/* Ring stage */}
+        <div className="relative mx-auto mt-12 md:mt-14 aspect-square w-[min(88vw,640px)]">
+          {/* soft glow */}
+          <div className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 140px 20px ${C.blue}40, inset 0 0 60px ${C.purple}30` }} />
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{ boxShadow: [`0 0 60px 0px ${C.blue}55`, `0 0 140px 30px ${C.blue}20`, `0 0 60px 0px ${C.blue}55`] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Ring image with Y-axis rotation */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ perspective: 1200 }}
+            animate={{ rotateY: [0, 360] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          >
+            <img src={ringHero} alt="aiOn ring" className="h-[78%] w-[78%] rounded-full object-cover opacity-95"
+              style={{ filter: "drop-shadow(0 0 40px rgba(79,179,255,0.6))", mixBlendMode: "screen" }} />
+          </motion.div>
+
+          {/* Floating chips (desktop absolute, mobile row below) */}
+          <div className="hidden md:block">
+            {chipPos.map((c, i) => (
+              <motion.div
+                key={i}
+                className={`absolute ${c.cls}`}
+                initial={{ opacity: 0, scale: 0.7, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
+                transition={{ opacity: { delay: 1 + i * 0.12, duration: 0.6 }, scale: { delay: 1 + i * 0.12, duration: 0.6 }, y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" } }}
+              >
+                <Chip>{c.label}</Chip>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile chips below ring */}
+        <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden">
+          {chipPos.map((c, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}>
+              <Chip>{c.label}</Chip>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Vitality score */}
+        <div className="mt-10 flex flex-col items-center">
+          <div className="relative h-32 w-32 md:h-40 md:w-40">
+            <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+              <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.1)" strokeWidth="4" fill="none" />
+              <motion.circle
+                cx="50" cy="50" r="44" fill="none" strokeWidth="4" strokeLinecap="round"
+                stroke="url(#vitalGrad)"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 0.84 }} transition={{ duration: 2, delay: 1.2, ease: "easeOut" }}
+                style={{ pathLength: 0.84 }}
+              />
+              <defs>
+                <linearGradient id="vitalGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor={C.blue} />
+                  <stop offset="100%" stopColor={C.green} />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-extralight text-white">
+              <CountUp to={84} duration={1800} />
+            </div>
+          </div>
+          <div className="mt-4 text-sm text-white/60">Your Vitality Score</div>
+          <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: C.green }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ background: C.green, boxShadow: `0 0 10px ${C.green}` }} />
+            You're ready today
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-10 flex flex-col items-center">
+          <Link to="/preorder"
+            className="group relative inline-flex items-center justify-center rounded-full px-8 py-4 text-base font-medium text-[#0A1628]"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}>
+            <motion.span
+              className="absolute inset-0 rounded-full"
+              animate={{ opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2.4, repeat: Infinity }}
+              style={{ boxShadow: `0 0 0 8px ${C.blue}33` }}
+            />
+            <span className="relative">Pre-order Now</span>
+          </Link>
+          <p className="mt-4 text-xs md:text-sm text-white/50">Free app included with every ring · Ships Q3 2026</p>
+        </div>
+
+        {/* scroll indicator */}
+        <motion.div className="mx-auto mt-12 mb-8 flex justify-center" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+          <div className="h-10 w-6 rounded-full border border-white/30 flex justify-center pt-1.5">
+            <motion.div className="h-1.5 w-1 rounded-full bg-white/70" animate={{ y: [0, 14, 0] }} transition={{ duration: 2, repeat: Infinity }} />
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
 
-/* ================= PAGE ================= */
-const finishes = [
-  { name: "Midnight Black", hex: "#0A0A14" },
-  { name: "Silver", hex: "#C0C0CC" },
-  { name: "Rose Gold", hex: "#B76E79" },
-];
+/* ─────────────────────────────────────────────
+   Section 2 — The Problem
+   ───────────────────────────────────────────── */
+function ProblemSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const lines = [
+    { l: "You feel tired.", i: false },
+    { l: "You don't know why.", i: true },
+    { l: "You're working hard.", i: false },
+    { l: "You're not recovering.", i: true },
+    { l: "You're stressed.", i: false },
+    { l: "You can't see what it's doing.", i: true },
+  ];
+  return (
+    <section ref={ref} id="problem" className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+      <ParticleField density={50} opacity={0.25} />
+      {/* ECG line */}
+      <svg viewBox="0 0 1200 200" className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-40 opacity-60">
+        <motion.path
+          d="M0,100 L200,100 L220,60 L240,140 L260,80 L280,120 L300,100 L500,100 L520,40 L540,160 L560,80 L580,110 L600,100 L900,100 L920,50 L940,150 L960,100 L1200,100"
+          fill="none" stroke={C.blue} strokeWidth="2"
+          initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}} transition={{ duration: 4, ease: "easeInOut" }}
+          style={{ filter: `drop-shadow(0 0 6px ${C.blue})` }}
+        />
+      </svg>
+      <div className="relative z-10 container mx-auto px-6 text-center">
+        <div className="space-y-4 md:space-y-6 max-w-3xl mx-auto">
+          {lines.map((ln, i) => (
+            <div key={i} className={`text-2xl md:text-4xl lg:text-5xl font-extralight ${ln.i ? "text-white/60 md:pl-24" : "text-white"}`}>
+              <Typewriter text={ln.l} delay={i * 600} />
+            </div>
+          ))}
+        </div>
+        <FadeUp delay={0.2} className="mt-16 max-w-2xl mx-auto text-white/60 text-base md:text-lg font-light space-y-1">
+          <p>Your annual physical is once a year.</p>
+          <p>Your doctor has 10 minutes.</p>
+          <p>Nobody is watching.</p>
+        </FadeUp>
+        <FadeUp delay={0.5} className="mt-12">
+          <motion.p
+            className="text-3xl md:text-5xl font-light"
+            style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}88` }}
+            animate={{ textShadow: [`0 0 24px ${C.blue}88`, `0 0 48px ${C.blue}`, `0 0 24px ${C.blue}88`] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            Until now.
+          </motion.p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
 
-const Index = () => {
-  const [finish, setFinish] = useState(finishes[0]);
-  const [showScrollHint, setShowScrollHint] = useState(true);
-  const location = useLocation();
+/* ─────────────────────────────────────────────
+   Section 3 — The Vitality Score
+   ───────────────────────────────────────────── */
+function VitalityScoreSection() {
+  const orbitIcons = ["❤️", "🧠", "🌙", "🌡️"];
+  return (
+    <section id="how" className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          {/* Left: score */}
+          <FadeUp>
+            <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
+              <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+                <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none" />
+                <motion.circle
+                  cx="50" cy="50" r="44" fill="none" strokeWidth="3" strokeLinecap="round"
+                  stroke="url(#v2grad)" pathLength={1}
+                  initial={{ pathLength: 0 }} whileInView={{ pathLength: 0.84 }} viewport={{ once: true }} transition={{ duration: 2.2, ease: "easeOut" }}
+                />
+                <defs>
+                  <linearGradient id="v2grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor={C.blue} />
+                    <stop offset="100%" stopColor={C.green} />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-6xl md:text-7xl font-extralight text-white"><CountUp to={84} /></div>
+                <div className="mt-1 text-xs md:text-sm text-white/50 tracking-widest">VITALITY SCORE</div>
+              </div>
+              {/* Orbit icons */}
+              <motion.div className="absolute inset-0" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }}>
+                {orbitIcons.map((ic, i) => {
+                  const angle = (i / orbitIcons.length) * Math.PI * 2;
+                  const x = 50 + 52 * Math.cos(angle);
+                  const y = 50 + 52 * Math.sin(angle);
+                  return (
+                    <div key={i} className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border h-9 w-9 flex items-center justify-center text-base"
+                      style={{ left: `${x}%`, top: `${y}%`, borderColor: `${C.blue}55`, background: "rgba(10,22,40,0.8)", boxShadow: `0 0 20px ${C.blue}33` }}>
+                      {ic}
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+            <div className="mt-8 space-y-2 text-sm">
+              <div className="flex items-center gap-2 text-white/80"><span className="h-2 w-2 rounded-full" style={{ background: C.green }} />You're ready <span className="text-white/40">(75+)</span></div>
+              <div className="flex items-center gap-2 text-white/80"><span className="h-2 w-2 rounded-full" style={{ background: C.gold }} />Take it steady <span className="text-white/40">(50–74)</span></div>
+              <div className="flex items-center gap-2 text-white/80"><span className="h-2 w-2 rounded-full bg-red-400" />Rest today <span className="text-white/40">(&lt; 50)</span></div>
+            </div>
+          </FadeUp>
 
+          {/* Right: text */}
+          <FadeUp delay={0.15}>
+            <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+              <WordStagger text="One number." /><br /><WordStagger text="Everything it means." delay={0.15} />
+            </h2>
+            <div className="mt-8 space-y-4 text-white/70 text-lg font-light">
+              <p>Heart Rate. HRV. SpO₂.<br />Sleep. Recovery. Stress.<br />Temperature.</p>
+              <p>All of it — compressed into a single score that greets you every morning.</p>
+              <p><span className="text-white">High score</span> — go hard.<br /><span className="text-white">Low score</span> — your body needs rest.</p>
+              <p className="text-white">Now you know.</p>
+            </div>
+          </FadeUp>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 4 — Track · Understand · Act
+   ───────────────────────────────────────────── */
+function TrackUnderstandActSection() {
+  const cols = [
+    { title: "TRACK", body: "Every metric.\nEvery moment.\n24 hours a day.", color: C.blue },
+    { title: "UNDERSTAND", body: "One daily score.\nExactly where you stand.\nEvery single morning.", color: C.purple },
+    { title: "ACT", body: "One action.\nBuilt for your body.\nAssigned every morning.", color: C.green },
+  ];
+  return (
+    <section id="app" className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+      <ParticleField density={45} opacity={0.3} />
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">Other rings track. aiOn acts.</p>
+        </FadeUp>
+
+        <div className="mt-16 grid md:grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-6 md:gap-2">
+          {cols.map((c, idx) => (
+            <Fragment key={c.title}>
+              <motion.div
+                className="rounded-3xl border p-8 backdrop-blur-xl"
+                style={{ borderColor: `${c.color}44`, background: "rgba(10,22,40,0.55)", boxShadow: `0 0 40px ${c.color}22` }}
+                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="mb-6 flex items-center justify-center">
+                  {c.title === "TRACK" && (
+                    <motion.div className="h-16 w-16 rounded-full border-2" style={{ borderColor: c.color, borderRightColor: "transparent" }}
+                      animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
+                  )}
+                  {c.title === "UNDERSTAND" && (
+                    <svg width="64" height="64" viewBox="0 0 64 64">
+                      {[[16,20],[32,16],[48,22],[20,36],[32,40],[46,36],[32,52]].map(([x,y],i)=>(
+                        <motion.circle key={i} cx={x} cy={y} r="3" fill={c.color}
+                          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+                          transition={{ delay: 0.2 + i * 0.15, duration: 0.4 }} />
+                      ))}
+                      {[[16,20,32,16],[32,16,48,22],[16,20,20,36],[48,22,46,36],[20,36,32,40],[32,40,46,36],[32,40,32,52]].map(([x1,y1,x2,y2],i)=>(
+                        <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={c.color} strokeWidth="1"
+                          initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 0.6 }} viewport={{ once: true }}
+                          transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }} />
+                      ))}
+                    </svg>
+                  )}
+                  {c.title === "ACT" && (
+                    <motion.svg width="56" height="64" viewBox="0 0 24 24" fill={c.color}
+                      animate={{ opacity: [0.6, 1, 0.6], filter: [`drop-shadow(0 0 4px ${c.color})`, `drop-shadow(0 0 20px ${c.color})`, `drop-shadow(0 0 4px ${c.color})`] }}
+                      transition={{ duration: 1.8, repeat: Infinity }}>
+                      <path d="M13 2L4.09 12.97a1 1 0 00.78 1.63H11l-1.99 7.42a.5.5 0 00.9.36L20 11.4a1 1 0 00-.78-1.63H13.5L15 2.6a.5.5 0 00-.9-.36z"/>
+                    </motion.svg>
+                  )}
+                </div>
+                <h3 className="text-center text-xl md:text-2xl font-light tracking-[0.3em] text-white">{c.title}</h3>
+                <p className="mt-4 whitespace-pre-line text-center text-white/60 text-sm md:text-base font-light leading-relaxed">{c.body}</p>
+              </motion.div>
+              {idx < cols.length - 1 && (
+                <div className="hidden md:flex items-center justify-center">
+                  <svg width="60" height="20" viewBox="0 0 60 20">
+                    <motion.path d="M0 10 L52 10" stroke="rgba(255,255,255,0.4)" strokeWidth="1" fill="none"
+                      initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 + idx * 0.2 }} />
+                    <motion.path d="M46 4 L54 10 L46 16" stroke="rgba(255,255,255,0.4)" strokeWidth="1" fill="none"
+                      initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1 + idx * 0.2 }} />
+                  </svg>
+                </div>
+              )}
+              {idx < cols.length - 1 && (
+                <div className="md:hidden flex justify-center text-white/30">↓</div>
+              )}
+            </Fragment>
+          ))}
+        </div>
+
+        <FadeUp delay={0.3} className="mt-16 text-center">
+          <p className="text-xl md:text-2xl font-extralight text-white/80 max-w-2xl mx-auto">
+            Most wearables stop at the data.<br /><span className="text-white">aiOn starts there.</span>
+          </p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 5 — Today's Quest
+   ───────────────────────────────────────────── */
+function QuestSection() {
+  const quests = [
+    { tag: "TODAY'S QUEST · HRV", title: "Box breathing", sub: "3 minutes · Activates your vagus nerve", progress: 0.4, metric: "🧠 HRV" },
+    { tag: "TODAY'S QUEST · SLEEP", title: "No caffeine after 2pm", sub: "Improves deep sleep by up to 20%", progress: 0, metric: "🌙 Sleep" },
+    { tag: "TODAY'S QUEST · STRESS", title: "10-minute walk outside", sub: "Cuts cortisol, clears your head", progress: 0.5, metric: "⚡ Stress" },
+  ];
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+      {/* constellation */}
+      <svg viewBox="0 0 1200 600" className="pointer-events-none absolute inset-0 h-full w-full opacity-30">
+        {[[100,120],[300,80],[500,200],[750,120],[950,180],[1100,90],[200,400],[420,500],[680,420],[900,500],[1100,420]].map(([x,y],i)=>(
+          <motion.circle key={i} cx={x} cy={y} r="2" fill={C.blue}
+            initial={{ opacity: 0 }} whileInView={{ opacity: 0.8 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} />
+        ))}
+        {[[100,120,300,80],[300,80,500,200],[500,200,750,120],[750,120,950,180],[950,180,1100,90],[200,400,420,500],[420,500,680,420],[680,420,900,500]].map(([x1,y1,x2,y2],i)=>(
+          <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.blue} strokeWidth="0.5"
+            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, delay: 0.4 + i * 0.15 }} />
+        ))}
+      </svg>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <WordStagger text="The one thing you should do today." />
+          </h2>
+          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+            Every morning, aiOn reads your last 7 days and assigns you one single health quest — built for your body, your metrics, your exact moment.
+          </p>
+        </FadeUp>
+
+        <div className="mt-14 flex md:grid md:grid-cols-3 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
+          {quests.map((q, i) => (
+            <motion.div key={i}
+              className="min-w-[85%] md:min-w-0 snap-center rounded-3xl border p-6 backdrop-blur-xl group cursor-pointer"
+              style={{ borderColor: "rgba(79,179,255,0.25)", background: "rgba(10,22,40,0.55)" }}
+              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.12 }}
+              whileHover={{ y: -4, boxShadow: `0 0 60px ${C.blue}44` }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] tracking-[0.25em] text-white/50">{q.tag}</span>
+                <span className="rounded-full border px-2 py-0.5 text-[10px]" style={{ borderColor: `${C.gold}55`, color: C.gold }}>+50 XP</span>
+              </div>
+              <h3 className="mt-4 text-2xl font-light text-white">{q.title}</h3>
+              <p className="mt-2 text-sm text-white/60">{q.sub}</p>
+              <div className="mt-6 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <motion.div className="h-full rounded-full" style={{ background: `linear-gradient(90deg, ${C.blue}, ${C.purple})` }}
+                  initial={{ width: 0 }} whileInView={{ width: `${q.progress * 100}%` }} viewport={{ once: true }} transition={{ duration: 1.4, delay: 0.4 + i * 0.1 }} />
+              </div>
+              <div className="mt-4 flex justify-end">
+                <Chip>{q.metric}</Chip>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Streak */}
+        <FadeUp delay={0.2} className="mt-12 flex flex-col items-center">
+          <div className="flex gap-2">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <motion.div key={i}
+                className="h-4 w-4 rounded-full border"
+                style={{ borderColor: `${C.blue}55` }}
+                initial={{ background: "transparent" }}
+                whileInView={{ background: i < 5 ? C.blue : "transparent", boxShadow: i < 5 ? `0 0 12px ${C.blue}` : "none" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 + i * 0.1, duration: 0.4 }}
+              />
+            ))}
+          </div>
+          <p className="mt-4 text-sm" style={{ color: C.gold }}>🔥 12-day streak</p>
+        </FadeUp>
+
+        <FadeUp delay={0.4} className="mt-16 text-center">
+          <p className="italic text-lg md:text-xl text-white/70">This is health coaching.<br />Without the coach.</p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 6 — XP & Levels
+   ───────────────────────────────────────────── */
+function XPLevelsSection() {
+  const levels = ["Beginner", "Explorer", "Vitalist", "Optimizer", "Achiever", "Champion", "Elite", "Legend", "Immortal"];
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0D1A32 100%)" }}>
+      <ParticleField density={40} opacity={0.25} />
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <WordStagger text="Your health." /><br /><WordStagger text="Now with progress." delay={0.15} />
+          </h2>
+        </FadeUp>
+
+        <div className="mt-16 grid md:grid-cols-2 gap-12 items-center">
+          <FadeUp>
+            <div className="rounded-3xl border p-6 backdrop-blur-xl" style={{ borderColor: `${C.purple}44`, background: "rgba(10,22,40,0.55)" }}>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-white">Level 8 · <span style={{ color: C.gold }}>ACHIEVER</span></span>
+                <span className="text-white/60">2,340 XP</span>
+              </div>
+              <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                <motion.div className="h-full rounded-full" style={{ background: `linear-gradient(90deg, ${C.blue}, ${C.purple})` }}
+                  initial={{ width: 0 }} whileInView={{ width: "72%" }} viewport={{ once: true }} transition={{ duration: 2, ease: "easeOut" }} />
+              </div>
+              <div className="mt-4 flex items-center justify-between text-xs text-white/50">
+                <span>→ Level 9 · PERFORMER</span>
+                <span>488 XP away</span>
+              </div>
+            </div>
+            <div className="mt-6 flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+              {levels.map((lv, i) => (
+                <motion.div key={lv}
+                  className="shrink-0 rounded-2xl border px-4 py-3 text-center min-w-[110px]"
+                  style={{ borderColor: `${i === 4 ? C.gold : C.blue}55`, background: "rgba(10,22,40,0.6)" }}
+                  initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1, boxShadow: `0 0 20px ${i === 4 ? C.gold : C.blue}33` }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.5 }}
+                >
+                  <div className="text-xs text-white/50">LVL {i + 1}</div>
+                  <div className="mt-1 text-sm text-white">{lv}</div>
+                </motion.div>
+              ))}
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={0.15}>
+            <div className="space-y-4 text-lg text-white/70 font-light">
+              <p>Complete your daily quest.<br />Build your streak.<br />Level up.</p>
+              <p className="text-white">Not just your score — your entire relationship with your health.</p>
+            </div>
+          </FadeUp>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 7 — Preventive Health
+   ───────────────────────────────────────────── */
+function PreventiveSection() {
+  return (
+    <section className="relative overflow-hidden py-32 md:py-56" style={{ background: C.navy }}>
+      {/* sine wave background */}
+      <svg viewBox="0 0 1200 400" className="pointer-events-none absolute inset-0 w-full h-full opacity-20">
+        <motion.path
+          d="M0,200 Q150,80 300,200 T600,200 T900,200 T1200,200"
+          fill="none" stroke={C.blue} strokeWidth="1.5"
+          animate={{ x: [0, -300, 0] }} transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.path
+          d="M-300,200 Q-150,80 0,200 T300,200 T600,200 T900,200"
+          fill="none" stroke={C.blue} strokeWidth="1.5"
+          animate={{ x: [0, 300, 0] }} transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+        />
+      </svg>
+
+      <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
+        <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
+          <Typewriter text="Most health problems don't start on the day you feel them." speed={35} />
+        </h2>
+        <FadeUp delay={0.3} className="mt-14 space-y-4 text-white/60 text-lg font-light">
+          <p>They start weeks before.</p>
+          <p>In a HRV that quietly drops.<br />In a heart rate that slowly climbs.<br />In sleep that gets a little worse<br /><span className="text-white/40">— each night —</span><br />until one morning you feel it.</p>
+        </FadeUp>
+        <FadeUp delay={0.6} className="mt-14">
+          <p className="text-2xl md:text-4xl font-light" style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}66` }}>
+            aiOn sees the pattern<br />before you feel the symptom.
+          </p>
+        </FadeUp>
+
+        {/* Trend graph with alert */}
+        <FadeUp delay={0.4} className="mt-16">
+          <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}33`, background: "rgba(10,22,40,0.5)" }}>
+            <div className="text-left text-xs tracking-widest text-white/50">HRV · LAST 14 DAYS</div>
+            <svg viewBox="0 0 400 120" className="mt-3 w-full h-32">
+              <motion.path
+                d="M0,30 L30,32 L60,35 L90,38 L120,42 L150,48 L180,52 L210,58 L240,64 L270,72 L300,80 L330,86 L360,92 L400,96"
+                fill="none" stroke={C.blue} strokeWidth="2"
+                initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 2.5, ease: "easeOut" }}
+              />
+            </svg>
+            <motion.div
+              className="absolute right-4 top-16 rounded-xl border px-3 py-2 text-xs text-left"
+              style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.9)", color: C.gold }}
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 2.5, duration: 0.6 }}
+            >
+              ⚠️ Your HRV has dropped 22% this week
+            </motion.div>
+          </div>
+        </FadeUp>
+
+        <p className="mt-10 text-[10px] text-white/30 tracking-wider">
+          Blood Pressure (EST) and Blood Glucose (EST) are estimates — not for medical diagnosis.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 8 — Who It's For
+   ───────────────────────────────────────────── */
+function WhoItsForSection() {
+  const cards = [
+    { bg: "#0A1628", accent: C.blue, img: lifestyle4, text: "You're running hard. You want to know if your body is keeping up." },
+    { bg: "#1A0A2E", accent: C.purple, img: lifestyle6, text: "You track everything. You want an AI that tells you what it means." },
+    { bg: "#062929", accent: C.green, img: lifestyle8, text: "You don't want to be caught off guard by your own health." },
+  ];
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)" }}>
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp>
+          <p className="text-center text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">Built for you if —</p>
+        </FadeUp>
+        <div className="mt-12 grid md:grid-cols-3 gap-6">
+          {cards.map((c, i) => (
+            <motion.div key={i}
+              className="group relative h-[440px] overflow-hidden rounded-3xl border cursor-pointer"
+              style={{ borderColor: `${c.accent}44`, background: c.bg }}
+              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.12 }}
+              whileHover={{ scale: 1.02, boxShadow: `0 0 60px ${c.accent}55` }}
+            >
+              <img src={c.img} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${c.bg} 100%)` }} />
+              <div className="relative flex h-full flex-col justify-end p-8">
+                <p className="text-2xl md:text-3xl font-light text-white leading-snug">{c.text}</p>
+                <p className="mt-6 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ color: c.accent }}>Sound like you?</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 9 — 12 Health Signals
+   ───────────────────────────────────────────── */
+function SignalsSection() {
+  const signals = [
+    { i: "❤️", l: "Heart Rate" }, { i: "🧠", l: "HRV" }, { i: "🫁", l: "SpO₂" }, { i: "🌡️", l: "Body Temp" },
+    { i: "🌙", l: "Sleep" }, { i: "⚡", l: "Recovery" }, { i: "😮‍💨", l: "Stress Level" }, { i: "✨", l: "Vitality" },
+    { i: "🩸", l: "BP (EST)", prem: true }, { i: "🍬", l: "Glucose (EST)", prem: true }, { i: "📉", l: "ECG", prem: true }, { i: "🤖", l: "AI Coach", prem: true },
+  ];
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+      <ParticleField density={45} opacity={0.25} />
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center">
+          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <WordStagger text="12 health signals." /><br /><WordStagger text="One ring." delay={0.15} />
+          </h2>
+        </FadeUp>
+        <div className="mt-14 grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-5">
+          {signals.map((s, i) => (
+            <motion.div key={i}
+              className="rounded-2xl border p-4 md:p-6 text-center backdrop-blur-xl group"
+              style={{ borderColor: `${s.prem ? C.purple : C.blue}44`, background: "rgba(10,22,40,0.6)" }}
+              initial={{ opacity: 0, scale: 0.85 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
+              whileHover={{ boxShadow: `0 0 40px ${s.prem ? C.purple : C.blue}55`, y: -3 }}
+            >
+              <div className="text-2xl md:text-3xl">{s.i}</div>
+              <div className="mt-2 text-xs md:text-sm text-white/80 font-light">{s.l}</div>
+              {s.prem && <div className="mt-1 text-[9px] tracking-widest" style={{ color: C.purple }}>PREMIUM</div>}
+            </motion.div>
+          ))}
+        </div>
+        <FadeUp delay={0.3} className="mt-8 text-center">
+          <p className="text-[11px] text-white/40">* Premium plan · EST readings are not for medical diagnosis</p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 10 — The Plans (no prices)
+   ───────────────────────────────────────────── */
+function PlansSection() {
+  const plans = [
+    { tag: "FREE WITH EVERY RING", name: "aiOn Vitals", accent: C.blue, features: ["Heart Rate · HRV", "SpO₂ · Temperature", "Sleep · Recovery", "Stress · Vitality Score", "Daily Quest · XP", "aiOn Vitals app"] },
+    { tag: "MOST POPULAR", name: "aiOn Vitals + Insights", accent: C.purple, highlight: true, features: ["Everything in Vitals", "Insights · Trends", "Sleep Coaching", "Goal Tracking", "Full History"] },
+    { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", accent: C.gold, features: ["Everything in Insights", "AI Coach", "Preventive Alerts", "BP (EST) · Glucose (EST)", "ECG", "Priority Support"] },
+  ];
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <WordStagger text="Start free." /><br /><WordStagger text="Unlock more when you're ready." delay={0.15} />
+          </h2>
+        </FadeUp>
+        <div className="mt-16 grid md:grid-cols-3 gap-6 items-stretch">
+          {plans.map((p, i) => (
+            <motion.div key={i}
+              className={`relative rounded-3xl border p-8 backdrop-blur-xl flex flex-col ${p.highlight ? "md:scale-105" : ""}`}
+              style={{ borderColor: `${p.accent}66`, background: "rgba(10,22,40,0.6)", boxShadow: p.highlight ? `0 0 60px ${p.accent}44` : `0 0 20px ${p.accent}22` }}
+              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.7 }}
+            >
+              <span className="self-start rounded-full border px-3 py-1 text-[10px] tracking-widest" style={{ borderColor: `${p.accent}88`, color: p.accent }}>{p.tag}</span>
+              <h3 className="mt-4 text-2xl font-light text-white">{p.name}</h3>
+              <ul className="mt-6 space-y-2 text-sm text-white/70 font-light flex-1">
+                {p.features.map((f, j) => <li key={j} className="flex gap-2"><span style={{ color: p.accent }}>·</span>{f}</li>)}
+              </ul>
+              <Link to="/preorder" className="mt-8 inline-flex items-center justify-center rounded-full py-3 text-sm font-medium text-[#0A1628]"
+                style={{ background: p.highlight ? `linear-gradient(120deg, ${C.blue}, ${C.purple})` : "rgba(255,255,255,0.9)" }}>
+                Pre-order Now
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+        <p className="mt-8 text-center text-xs text-white/40">30-day free trial on all paid plans</p>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 11 — The Ring (sticky scroll reveal)
+   ───────────────────────────────────────────── */
+function RingSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const positions = [
+    { title: "Titanium. PVD Coated.", body: "Built to last." },
+    { title: "IP68 waterproof.", body: "Wear it everywhere." },
+    { title: "The sensor that never stops.", body: "Heart Rate. HRV. SpO₂. Temperature. ECG." },
+    { title: "Sizes 6 through 13.", body: "Find your fit." },
+    { title: "5-day battery.", body: "Magnetic charging dock. Always ready." },
+    { title: "Midnight Black.", body: "More colors and matte finish coming." },
+  ];
+  const [activeIdx, setActiveIdx] = useState(0);
   useEffect(() => {
-    const onScroll = () => setShowScrollHint(window.scrollY < 80);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    return scrollYProgress.on("change", (v) => {
+      const idx = Math.min(positions.length - 1, Math.floor(v * positions.length));
+      setActiveIdx(idx);
+    });
+  }, [scrollYProgress]);
+  const rot = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const [selectedSize, setSelectedSize] = useState(9);
 
+  return (
+    <section id="ring" ref={ref} className="relative" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)", height: `${positions.length * 90}vh` }}>
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+        <ParticleField density={40} opacity={0.2} />
+        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center relative z-10">
+          <motion.div className="relative mx-auto aspect-square w-[min(80vw,500px)]" style={{ rotate: rot }}>
+            <div className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 100px ${C.blue}44` }} />
+            <img src={ringProduct} alt="aiOn ring" className="h-full w-full rounded-full object-cover" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 30px rgba(79,179,255,0.5))" }} />
+          </motion.div>
+          <div>
+            <p className="text-xs tracking-[0.35em] text-white/40 uppercase">The Ring · {activeIdx + 1} / {positions.length}</p>
+            <AnimatePresence mode="wait">
+              <motion.div key={activeIdx}
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5 }}
+              >
+                <h3 className="mt-4 text-3xl md:text-5xl font-extralight text-white">{positions[activeIdx].title}</h3>
+                <p className="mt-4 text-lg text-white/60 font-light">{positions[activeIdx].body}</p>
+                {activeIdx === 3 && (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {[6,7,8,9,10,11,12,13].map(s => (
+                      <button key={s} onClick={() => setSelectedSize(s)}
+                        className="h-10 w-10 rounded-full border text-sm transition"
+                        style={{
+                          borderColor: selectedSize === s ? C.blue : "rgba(255,255,255,0.25)",
+                          background: selectedSize === s ? `${C.blue}33` : "transparent",
+                          color: selectedSize === s ? C.blue : "rgba(255,255,255,0.7)",
+                          boxShadow: selectedSize === s ? `0 0 20px ${C.blue}66` : "none",
+                        }}>{s}</button>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+            {/* progress dots */}
+            <div className="mt-8 flex gap-2">
+              {positions.map((_, i) => (
+                <div key={i} className="h-1 flex-1 rounded-full overflow-hidden bg-white/10">
+                  <div className="h-full transition-all duration-500" style={{ width: i <= activeIdx ? "100%" : "0%", background: C.blue }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 12 — Credibility
+   ───────────────────────────────────────────── */
+function CredibilitySection() {
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+      {/* network graph */}
+      <svg viewBox="0 0 1200 600" className="pointer-events-none absolute inset-0 h-full w-full opacity-20">
+        {Array.from({ length: 20 }).map((_, i) => {
+          const x = (i * 137) % 1200;
+          const y = (i * 89) % 600;
+          return <motion.circle key={i} cx={x} cy={y} r="2" fill={C.blue}
+            initial={{ opacity: 0 }} whileInView={{ opacity: 0.6 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} />;
+        })}
+        {Array.from({ length: 15 }).map((_, i) => {
+          const x1 = (i * 137) % 1200, y1 = (i * 89) % 600;
+          const x2 = ((i + 3) * 137) % 1200, y2 = ((i + 3) * 89) % 600;
+          return <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.blue} strokeWidth="0.3"
+            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, delay: 0.3 + i * 0.08 }} />;
+        })}
+      </svg>
+      <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
+        <FadeUp>
+          <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
+            <WordStagger text="Built by people who know what's possible." />
+          </h2>
+        </FadeUp>
+        <FadeUp delay={0.2} className="mt-8 space-y-4 text-white/60 font-light text-lg">
+          <p>A healthcare technology team with over a decade of experience in AI, health systems, and platforms serving millions of patients.</p>
+          <p>We built aiOn because we know what health data looks like when it's used well.</p>
+          <p>And what's lost when it isn't.</p>
+        </FadeUp>
+        <FadeUp delay={0.4} className="mt-12">
+          <p className="text-xs text-white/40 tracking-widest">aiOn Health Science LLC · Ashburn, Virginia</p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Section 13 — Final CTA
+   ───────────────────────────────────────────── */
+function FinalCTA() {
+  return (
+    <section className="relative overflow-hidden py-32 md:py-56 min-h-[90svh] flex items-center" style={{ background: C.navy }}>
+      <Aurora intensity={1.2} />
+      <ParticleField density={70} opacity={0.4} />
+      <div className="container mx-auto px-6 relative z-10 text-center">
+        <motion.div
+          className="mx-auto aspect-square w-[min(70vw,420px)] relative"
+          initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
+        >
+          <motion.div className="absolute inset-0 rounded-full"
+            animate={{ boxShadow: [`0 0 80px ${C.blue}66`, `0 0 200px ${C.purple}66`, `0 0 80px ${C.blue}66`] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          />
+          <motion.img src={ringHero} alt="aiOn ring" className="h-full w-full rounded-full object-cover"
+            style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 40px rgba(79,179,255,0.7))" }}
+            animate={{ rotateY: [0, 360] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          />
+        </motion.div>
+        <FadeUp delay={0.3} className="mt-10">
+          <h2 className="text-4xl md:text-7xl font-extralight text-white leading-[1.05]">
+            Your body has answers.
+          </h2>
+          <p className="mt-4 text-2xl md:text-4xl font-extralight bg-clip-text text-transparent"
+            style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>
+            aiOn helps you hear them.
+          </p>
+        </FadeUp>
+        <FadeUp delay={0.5} className="mt-10">
+          <Link to="/preorder"
+            className="relative inline-flex items-center justify-center rounded-full px-10 py-5 text-lg font-medium text-[#0A1628]"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 60px ${C.blue}88` }}>
+            <motion.span className="absolute inset-0 rounded-full"
+              animate={{ boxShadow: [`0 0 0 0 ${C.blue}66`, `0 0 0 20px transparent`] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="relative">Pre-order Now</span>
+          </Link>
+          <p className="mt-6 text-xs md:text-sm text-white/50">
+            Free aiOn Vitals app · Sizes 6–13 · Ships Q3 2026 · Midnight Black · More colors coming
+          </p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Page load intro
+   ───────────────────────────────────────────── */
+function IntroOverlay() {
+  const [gone, setGone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setGone(true), 1400);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <AnimatePresence>
+      {!gone && (
+        <motion.div
+          className="fixed inset-0 z-[90] flex items-center justify-center"
+          style={{ background: C.navy }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="text-5xl md:text-7xl font-extralight tracking-tight text-white">
+            ai<span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>O</span>n
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main Index
+   ───────────────────────────────────────────── */
+export default function Index() {
+  const location = useLocation();
   useEffect(() => {
     if (location.hash) {
       const el = document.querySelector(location.hash);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 60);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 200);
     }
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <style>{`
-        @keyframes sensorPulse { 0%,100%{opacity:0.75} 50%{opacity:1} }
-        @keyframes ppgPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
-        @keyframes floatA { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(6px)} }
-        @keyframes floatB { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(6px)} }
-        @keyframes floatC { 0%,100%{transform:translateY(-4px)} 50%{transform:translateY(4px)} }
-        @keyframes particleDrift {
-          0%,100% { transform: translate(0,0); opacity:0.2 }
-          50% { transform: translate(20px,-30px); opacity:0.6 }
-        }
-        @keyframes scrollBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
-        @keyframes ppgLive { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-        @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; transition: none !important; }
-        }
-      `}</style>
-
+    <div className="min-h-screen text-white" style={{ background: C.navy }}>
+      <IntroOverlay />
+      <GlowCursor />
       <Header />
-
-      {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[100svh] flex-col overflow-hidden px-6 pt-28 pb-12">
-        <Particles />
-
-        {/* Ambient glow behind the ring (right side) */}
-        <div
-          className="pointer-events-none absolute right-[-10%] top-[45%] h-[70vmin] w-[70vmin] -translate-y-1/2 rounded-full opacity-60 blur-[120px]"
-          style={{
-            background: "radial-gradient(circle, rgba(0,198,255,0.35), rgba(79,179,255,0.15) 40%, transparent 70%)",
-          }}
-        />
-
-        {/* Live ring vitals ticker — centered above everything */}
-        <div
-          className="relative z-20 mx-auto mb-6 flex w-full max-w-[1200px] justify-center pt-4"
-          aria-hidden="true"
-          style={{ animation: "fadeInUp 900ms cubic-bezier(0.16,1,0.3,1) 200ms both" }}
-        >
-          <div
-            className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[11px] font-medium uppercase tracking-[2px] text-[#B8C5D3] backdrop-blur-xl sm:gap-5 sm:px-5 sm:py-3 sm:text-[12px]"
-            style={{ boxShadow: "0 8px 40px -12px rgba(0,198,255,0.25)" }}
-          >
-            <span className="flex items-center gap-2">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-[#00C6FF]"
-                style={{ animation: "ppgLive 1.4s ease-in-out infinite", boxShadow: "0 0 8px #00C6FF" }}
-              />
-              <span className="text-white/90">Live</span>
-            </span>
-            <span className="hidden h-3 w-px bg-white/10 sm:block" />
-            <span>
-              <span className="text-white/90">62</span> <span className="text-[9px] tracking-[1.5px]">bpm</span>
-            </span>
-            <span className="hidden sm:inline">
-              <span className="text-white/90">74</span> <span className="text-[9px] tracking-[1.5px]">hrv</span>
-            </span>
-            <span>
-              <span className="text-white/90">98%</span> <span className="text-[9px] tracking-[1.5px]">spo₂</span>
-            </span>
-            <span className="hidden sm:inline">
-              <span className="text-white/90">36.7°</span> <span className="text-[9px] tracking-[1.5px]">temp</span>
-            </span>
-            <span className="hidden md:inline">
-              <span className="text-white/90">87</span> <span className="text-[9px] tracking-[1.5px]">sleep</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
-          {/* Left column: copy + CTAs */}
-          <div className="text-center lg:text-left">
-            <span
-              className="inline-block bg-clip-text text-[11px] font-semibold uppercase tracking-[3px] text-transparent"
-              style={{ backgroundImage: GRADIENT }}
-            >
-              AI-NATIVE SMART HEALTH RING
-            </span>
-            <h1 className="mt-5 text-[48px] font-extrabold leading-[1] tracking-tight text-white sm:text-[64px] lg:text-[80px]">
-              Your body is always
-              <br />
-              talking.
-            </h1>
-            <h2 className="mt-2 text-[48px] font-extrabold leading-[1] tracking-tight sm:text-[64px] lg:text-[80px]">
-              <span className="text-white">aiOn </span>
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
-                listens.
-              </span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-[420px] text-[17px] leading-[1.65] text-[#8B9DAF] lg:mx-0">
-              The first smart ring that doesn't just track your health — it understands it.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-              <button
-                onClick={() => document.querySelector("#waitlist")?.scrollIntoView({ behavior: "smooth" })}
-                className="rounded-full px-9 py-4 text-[17px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.03]"
-                style={{ background: GRADIENT }}
-              >
-                Join the Waitlist · Free
-              </button>
-              <button
-                onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
-                className="rounded-full border border-[#8B9DAF] px-9 py-4 text-[17px] font-medium text-[#B8C5D3] transition-colors hover:border-white hover:text-white"
-              >
-                See How It Works ↓
-              </button>
-            </div>
-            <p className="mt-5 text-[14px] text-[#5A6B7E]">No credit card · Ships 2026 · 30-day returns</p>
-          </div>
-
-          {/* Right column: ring image */}
-          <div
-            className="relative flex items-center justify-center lg:justify-end"
-            style={{ animation: "floatC 7s ease-in-out infinite" }}
-          >
-            <img
-              src={ringHeroImg}
-              alt="aiOn Ring — the AI-native smart health ring"
-              width={1280}
-              height={1280}
-              className="h-auto w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[600px]"
-              style={{
-                mixBlendMode: "screen",
-                WebkitMaskImage: "radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)",
-                maskImage: "radial-gradient(ellipse 65% 60% at 55% 55%, #000 55%, transparent 92%)",
-                filter: "drop-shadow(0 30px 60px rgba(0,198,255,0.25))",
-              }}
-            />
-          </div>
-        </div>
-
-        <div
-          className="mx-auto mt-8 transition-opacity duration-500"
-          style={{
-            opacity: showScrollHint ? 1 : 0,
-            animation: "scrollBounce 0.8s ease-in-out infinite",
-          }}
-        >
-          <ChevronDown className="h-7 w-7 text-[#4FB3FF]" />
-        </div>
-      </section>
-
-      {/* ============ STORY ============ */}
-      <section id="how" className="px-6 py-[180px]">
-        <div className="mx-auto max-w-[700px] text-center">
-          <Reveal>
-            <p className="text-[26px] font-light italic leading-[1.5] text-white sm:text-[30px]">
-              "You wake up. You check your phone.
-              <br />
-              You have no idea what happened inside your body while you slept."
-            </p>
-          </Reveal>
-
-          <div className="mt-20 space-y-3 text-left">
-            {storyMoments.map((m, i) => (
-              <Reveal key={i} delay={i * 200}>
-                <div
-                  className="flex items-center gap-6 rounded-xl border border-white/[0.06] bg-white/[0.02] px-6 py-4 backdrop-blur-sm"
-                  style={{ borderLeft: `2px solid ${m.color}` }}
-                >
-                  <span className="w-20 text-[14px] text-[#8B9DAF]">{m.time}</span>
-                  <span className="text-[16px] text-white">{m.text}</span>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={200}>
-            <h3
-              className="mt-24 bg-clip-text text-[28px] font-semibold leading-tight text-transparent sm:text-[34px]"
-              style={{ backgroundImage: GRADIENT }}
-            >
-              aiOn knew hours before you felt it.
-            </h3>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============ WHAT CHANGES ============ */}
-      <section className="px-6 py-[160px]">
-        <div className="mx-auto max-w-[1100px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                WHAT CHANGES WHEN YOU WEAR IT
-              </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Six things that feel
-                <br />
-                different. Immediately.
-              </h2>
-            </Reveal>
-          </div>
-
-          <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {benefits.map((b, i) => (
-              <Reveal key={i} delay={i * 100}>
-                <div className="group h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#4FB3FF]/40 hover:bg-white/[0.03]">
-                  <div
-                    className="mb-6 flex h-11 w-11 items-center justify-center rounded-full text-[18px]"
-                    style={{ background: b.bg }}
-                  >
-                    {b.icon}
-                  </div>
-                  <h3 className="text-[17px] font-semibold leading-snug text-white">{b.title}</h3>
-                  <p className="mt-3 text-[14px] leading-relaxed text-[#8B9DAF]">{b.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ CINEMATIC BREAK 1 ============ */}
-      <section className="px-6 py-8">
-        <div className="mx-auto max-w-[1200px]">
-          <FullWidthImage
-            src={lifestyle7}
-            alt="Hand wearing the aiOn ring at work"
-            caption="Quiet on the finger. Invisible to the day."
-          />
-        </div>
-      </section>
-
-      {/* ============ LIFESTYLE STRIP ============ */}
-      <section className="px-6 py-[160px]">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">WORN, NOT WATCHED</p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Made to disappear
-                <br />
-                on your finger.
-              </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Titanium-light. Quiet on the skin. Sensing without asking for attention.
-              </p>
-            </Reveal>
-          </div>
-
-          <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {[
-              { src: lifestyle4, tag: "REST", title: "Sleeps with you" },
-              { src: lifestyle5, tag: "MORNING", title: "Reads before you\u2019re up" },
-              { src: lifestyle6, tag: "MOVE", title: "Trains without a screen" },
-            ].map((s, i) => (
-              <LifestyleCard key={s.title} src={s.src} tag={s.tag} title={s.title} delay={i * 80} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ CINEMATIC BREAK 2 ============ */}
-      <section className="px-6 py-8">
-        <div className="mx-auto max-w-[1200px]">
-          <FullWidthImage
-            src={lifestyle8}
-            alt="Close-up of the aiOn ring sensing from the finger"
-            caption="The sensors live inside. The insight lives with you."
-          />
-        </div>
-      </section>
-
-      {/* ============ HOW AION HELPS (continued) ============ */}
-      <section className="px-6 pb-[160px] pt-[40px]">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                PROACTIVE, NOT REACTIVE
-              </p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Eight signals aiOn watches
-                <br />
-                so you don't have to.
-              </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                Each one explained the moment it changes.
-              </p>
-            </Reveal>
-          </div>
-
-          <div className="mt-20 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {signals.map((s, i) => (
-              <Reveal key={s.title} delay={i * 80}>
-                <div className="group relative h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#4FB3FF]/40 hover:bg-white/[0.03]">
-                  <div
-                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-40"
-                    style={{ background: s.glow }}
-                  />
-                  <div
-                    className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl text-[20px]"
-                    style={{ background: s.glow, color: "#0A1628" }}
-                  >
-                    {s.icon}
-                  </div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[2px] text-[#8B9DAF]">{s.tag}</div>
-                  <h3 className="mt-2 text-[17px] font-semibold leading-snug text-white">{s.title}</h3>
-                  <div
-                    className="mt-6 rounded-lg bg-black/20 p-3 text-[12px] italic leading-relaxed text-[#8B9DAF]"
-                    style={{ borderLeft: "1px solid rgba(79,179,255,0.4)" }}
-                  >
-                    "{s.quote}"
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={200}>
-            <p className="mx-auto mt-16 max-w-[520px] text-center text-[12px] leading-relaxed text-[#5A6B7E]">
-              Wellness insights based on signal trends. Not a medical device.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============ THE APP ============ */}
-      <section id="app" className="px-6 py-[160px]">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">THE APP</p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                The app that thinks
-                <br />
-                for you.
-              </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                A morning briefing. Not a dashboard.
-              </p>
-            </Reveal>
-          </div>
-
-          <div
-            className="mt-16 flex snap-x snap-mandatory items-center justify-start gap-6 overflow-x-auto pb-6 md:justify-center md:overflow-visible"
-            style={{ perspective: "1400px" }}
-          >
-            <Reveal delay={0}>
-              <div className="snap-center">
-                <PhoneFrame tilt={8}>
-                  <div className="mb-2 flex justify-between text-[11px] text-white">
-                    <span>9:41</span>
-                    <span>••• 100%</span>
-                  </div>
-                  <div className="text-[17px] font-bold text-white">Good morning</div>
-                  <div className="mt-1 flex items-center gap-2 text-[11px] text-[#4ADE80]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" /> aion ring · live
-                  </div>
-                  <div className="mt-6">
-                    <VitalityRing pct={78} />
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="rounded-xl bg-[#16243B] p-3 text-[11px]">
-                      <div className="text-[#8B9DAF]">🧬 Health Age</div>
-                      <div className="mt-0.5 font-semibold text-white">
-                        32 <span className="text-[#4ADE80]">−3 yrs</span>
-                      </div>
-                    </div>
-                    <div className="rounded-xl bg-[#16243B] p-3 text-[11px]">
-                      <div className="text-[#8B9DAF]">
-                        <span
-                          className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EF4444] align-middle"
-                          style={{ animation: "ppgLive 1.2s ease-in-out infinite" }}
-                        />
-                        Live HR
-                      </div>
-                      <div className="mt-0.5 font-semibold text-white">72 bpm</div>
-                    </div>
-                  </div>
-                  <div className="mt-4 rounded-xl bg-[#16243B] p-3" style={{ borderLeft: "2px solid #4FB3FF" }}>
-                    <div className="text-[11px] font-semibold text-[#4FB3FF]">WHY 78 TODAY ✦</div>
-                    <div className="mt-1 text-[12px] leading-snug text-[#B8C5D3]">
-                      Your recovery stayed strong despite yesterday's session. Sleep efficiency was 92%.
-                    </div>
-                  </div>
-                </PhoneFrame>
-              </div>
-            </Reveal>
-
-            <Reveal delay={150}>
-              <div className="snap-center">
-                <PhoneFrame forward>
-                  <div className="mb-4 flex justify-between text-[11px] text-white">
-                    <span>9:41</span>
-                    <span>••• 100%</span>
-                  </div>
-                  <div className="text-[18px] font-bold text-white">Insights</div>
-                  <div className="mt-5 rounded-xl bg-[#1A1020] p-4" style={{ border: "1px solid #EF4444" }}>
-                    <span className="inline-block rounded-full bg-[#EF4444]/20 px-2 py-0.5 text-[10px] font-semibold text-[#EF4444]">
-                      NEEDS ATTENTION
-                    </span>
-                    <div className="mt-2 text-[16px] font-bold text-white">HRV down this week</div>
-                    <div className="mt-1 text-[13px] text-[#B8C5D3]">
-                      Consistent training load is showing — your body needs recovery time.
-                    </div>
-                  </div>
-                  <div className="mt-6 text-[10px] font-semibold uppercase tracking-widest text-[#8B9DAF]">
-                    Also worth knowing
-                  </div>
-                  <div className="mt-2 space-y-2">
-                    <div className="flex items-center justify-between rounded-lg bg-[#16243B] p-3">
-                      <span className="text-[12px] text-white">😴 Sleep debt easing</span>
-                      <span className="text-[#5A6B7E]">›</span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg bg-[#16243B] p-3">
-                      <span className="text-[12px] text-white">🌡 Temp trending up 0.3°</span>
-                      <span className="text-[#5A6B7E]">›</span>
-                    </div>
-                  </div>
-                </PhoneFrame>
-              </div>
-            </Reveal>
-
-            <Reveal delay={300}>
-              <div className="snap-center">
-                <PhoneFrame tilt={-8}>
-                  <div className="mb-4 flex justify-between text-[11px] text-white">
-                    <span>9:41</span>
-                    <span>••• 100%</span>
-                  </div>
-                  <div className="text-[18px] font-bold text-white">Ask aiOn</div>
-                  <div className="mt-5 space-y-3">
-                    <div className="ml-auto max-w-[80%] rounded-2xl bg-[#1E3A5F] px-3 py-2 text-[13px] text-white">
-                      Why is my HRV low today?
-                    </div>
-                    <div
-                      className="max-w-[85%] rounded-2xl bg-[#16243B] px-3 py-2 text-[13px] text-[#B8C5D3]"
-                      style={{ borderLeft: "2px solid #4FB3FF" }}
-                    >
-                      Your HRV of 27ms is below your baseline. This is likely from Friday's late workout. Light activity
-                      today will help you recover faster.
-                    </div>
-                    <div className="ml-auto max-w-[80%] rounded-2xl bg-[#1E3A5F] px-3 py-2 text-[13px] text-white">
-                      What time should I work out tomorrow?
-                    </div>
-                  </div>
-                  <div className="absolute inset-x-5 bottom-5 flex items-center gap-2 rounded-full bg-[#16243B] px-4 py-2">
-                    <span className="flex-1 text-[12px] text-[#5A6B7E]">Ask anything about your health…</span>
-                    <span className="text-[#4FB3FF]">🎤</span>
-                  </div>
-                </PhoneFrame>
-              </div>
-            </Reveal>
-          </div>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <span className="rounded-full border border-[#1E3A5F] px-5 py-2 text-[13px] text-[#B8C5D3]">
-              App Store · Coming 2026
-            </span>
-            <span className="rounded-full border border-[#1E3A5F] px-5 py-2 text-[13px] text-[#B8C5D3]">
-              Google Play · Coming 2026
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ CINEMATIC BREAK 3 ============ */}
-      <section className="px-6 py-8">
-        <div className="mx-auto max-w-[1200px]">
-          <FullWidthImage
-            src={lifestyle9}
-            alt="Hand wearing the aiOn ring winding down in the evening"
-            caption="From the first hour to the last. aiOn is already there."
-          />
-        </div>
-      </section>
-
-      {/* ============ THE RING ============ */}
-      <section id="ring" className="px-6 py-[160px]">
-        <div className="mx-auto max-w-[1100px]">
-          <div className="text-center">
-            <Reveal>
-              <p className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">THE RING</p>
-              <h2 className="mt-5 text-[40px] font-bold leading-[1.05] tracking-tight text-white sm:text-[52px]">
-                Engineered to
-                <br />
-                disappear.
-              </h2>
-              <p className="mx-auto mt-6 max-w-[440px] text-[17px] leading-[1.6] text-[#8B9DAF]">
-                You'll forget it's there.
-              </p>
-            </Reveal>
-          </div>
-
-          <div className="mt-16 grid grid-cols-1 items-center gap-16 md:grid-cols-2">
-            <Reveal>
-              <div className="flex flex-col items-center">
-                <ProductRing color={finish.hex} />
-                <div className="mt-6 flex items-center gap-4">
-                  {finishes.map((f) => (
-                    <button
-                      key={f.name}
-                      onClick={() => setFinish(f)}
-                      aria-label={f.name}
-                      className="h-10 w-10 rounded-full transition-all duration-300"
-                      style={{
-                        background: f.hex,
-                        boxShadow:
-                          finish.name === f.name ? "0 0 0 2px #4FB3FF, 0 0 0 4px #0A1628" : "0 0 0 1px #1E3A5F",
-                      }}
-                    />
-                  ))}
-                </div>
-                <p className="mt-3 text-[13px] text-[#8B9DAF]">{finish.name}</p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={150}>
-              <div>
-                <div className="space-y-4">
-                  {[
-                    { label: "Material", value: "Medical-grade Titanium" },
-                    { label: "Battery", value: "Up to 7 days" },
-                    { label: "Water", value: "IP68 · Swim-safe" },
-                  ].map((r) => (
-                    <div
-                      key={r.label}
-                      className="flex items-center justify-between rounded-xl border border-[#1E3A5F] bg-[#16243B] px-5 py-4"
-                    >
-                      <span className="text-[11px] font-semibold uppercase tracking-[3px] text-[#8B9DAF]">
-                        {r.label}
-                      </span>
-                      <span className="text-[15px] font-medium text-white">{r.value}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-4 text-[13px] text-[#8B9DAF]">Sizes US 6–13 · Free sizing kit before you commit</p>
-
-                <button
-                  onClick={() => document.querySelector("#waitlist")?.scrollIntoView({ behavior: "smooth" })}
-                  className="mt-6 w-full rounded-2xl py-4 text-[16px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
-                  style={{ background: GRADIENT }}
-                >
-                  Join the Waitlist →
-                </button>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ WAITLIST ============ */}
-      <section id="waitlist" className="relative overflow-hidden px-6 py-[180px]">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse at center, #0F1B2D 0%, #0A1628 70%)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ opacity: 0.04 }}
-        >
-          <AionLogo width={300} />
-        </div>
-        <div className="relative mx-auto max-w-[560px] text-center">
-          <Reveal>
-            <h2 className="text-[44px] font-bold leading-[1.05] text-white sm:text-[56px]">
-              Be first.
-              <br />
-              Feel the difference.
-            </h2>
-            <p className="mt-5 text-[17px] leading-[1.6] text-[#8B9DAF]">Early access. No credit card.</p>
-            <WaitlistForm />
-          </Reveal>
-        </div>
-      </section>
-
+      <main>
+        <Hero />
+        <ProblemSection />
+        <VitalityScoreSection />
+        <TrackUnderstandActSection />
+        <QuestSection />
+        <XPLevelsSection />
+        <PreventiveSection />
+        <WhoItsForSection />
+        <SignalsSection />
+        <PlansSection />
+        <RingSection />
+        <CredibilitySection />
+        <FinalCTA />
+      </main>
       <Footer />
     </div>
   );
-};
-
-export default Index;
+}
