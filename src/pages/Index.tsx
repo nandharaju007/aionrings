@@ -269,7 +269,7 @@ function Hero() {
     { label: "🌡️ 36.8°C", cls: "bottom-[22%] right-[8%] md:bottom-[18%] md:right-[10%]" },
   ];
   return (
-    <section className="relative min-h-[100svh] overflow-hidden pt-24" style={{ background: C.navy }}>
+    <section className="relative min-h-[100svh] overflow-hidden pt-28" style={{ background: C.navy }}>
       <Aurora intensity={0.9} />
       <GridOverlay />
       <ParticleField density={80} opacity={0.4} />
@@ -277,7 +277,7 @@ function Hero() {
       <div className="relative z-10 container mx-auto px-6">
         {/* Lifestyle hand image at top */}
         <motion.div
-          className="relative mx-auto -mt-4 mb-6 h-[220px] w-full max-w-3xl overflow-hidden rounded-2xl md:h-[320px] lg:h-[380px]"
+          className="relative mx-auto mt-4 mb-8 h-[240px] w-[92%] max-w-3xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl sm:h-[260px] md:mt-6 md:h-[340px] md:w-full lg:h-[400px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -285,20 +285,25 @@ function Hero() {
           <img
             src={lifestyle6}
             alt="aiOn ring worn on a finger"
-            className="h-full w-full object-cover object-center"
-            style={{ filter: "contrast(1.08) brightness(1.05)" }}
+            className="h-full w-full object-cover object-[center_55%]"
+            style={{ filter: "contrast(1.1) brightness(1.05) saturate(1.05)" }}
           />
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, transparent 0%, ${C.navy}90 85%, ${C.navy} 100%)`,
+              background: `linear-gradient(to bottom, transparent 0%, ${C.navy}85 80%, ${C.navy} 100%)`,
             }}
           />
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, transparent 30%, ${C.navy} 100%)`,
+              background: `radial-gradient(ellipse at center, transparent 35%, ${C.navy} 100%)`,
             }}
+          />
+          {/* Subtle rim light */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-3xl"
+            style={{ boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 -20px 60px -20px ${C.blue}30` }}
           />
         </motion.div>
 
