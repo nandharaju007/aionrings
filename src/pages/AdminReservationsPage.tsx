@@ -1190,19 +1190,21 @@ export default function AdminReservationsPage() {
                                 {r.partner_code ?? r.referral_source ?? "—"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap relative">
-                                <div className={`text-[12px] font-medium ${orderStatusColor(currentStatus.value)}`}>
-                                  {currentStatus.label}
+                                <div className="inline-flex items-center gap-2">
+                                  <span className={`text-[12px] font-medium ${orderStatusColor(currentStatus.value)}`}>
+                                    {currentStatus.label}
+                                  </span>
+                                  <button
+                                    onClick={() =>
+                                      setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
+                                    }
+                                    className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-white/15 hover:border-white/30 shrink-0"
+                                  >
+                                    <ChevronDown className="w-3 h-3" />
+                                  </button>
                                 </div>
-                                <button
-                                  onClick={() =>
-                                    setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
-                                  }
-                                  className="mt-1 inline-flex items-center justify-center w-6 h-6 rounded-full border border-white/15 hover:border-white/30"
-                                >
-                                  <ChevronDown className="w-3 h-3" />
-                                </button>
                                 {openStatusMenuFor === r.orderId && (
-                                  <div className="absolute z-50 top-full mt-1 left-1/2 -translate-x-1/2 w-36 rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1">
+                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1">
                                     {SHIP_DELIVER_OPTIONS.filter((opt) => opt.value !== "").map((opt) => (
                                       <button
                                         key={opt.value}
