@@ -118,7 +118,74 @@ interface WebOrderRow {
   items: WebOrderItem[];
 }
 
-type Tab = "reservations" | "fulfillment" | "partners" | "bulk";
+type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c";
+
+// ─── New: real shape of documents in the mobile app's "orders" collection ───
+// Note: many order items only ever reach the "interest" browsing stage and never
+// finish checkout, so shippingAddress/total/deliveryMethod/paymentMethod are often
+// simply absent — every field below is optional except the ones Mongoose always sets.
+interface B2CShippingAddress {
+  fullName?: string;
+  address1?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  phone?: string;
+  email?: string;
+}
+
+interface B2COrderItem {
+  _id: string;
+  shippingAddress?: B2CShippingAddress;
+  size?: string;
+  material?: string;
+  engraving?: string;
+  subscription?: string;
+  deliveryMethod?: string;
+  saveAddress?: boolean;
+  total?: number;
+  paymentMethod?: string; // legacy field on older documents only — not written anymore
+  createdAt: string;
+}
+
+interface B2CUserOrders {
+  _id: string;
+  userId?: string | null;
+  email: string;
+  orders: B2COrderItem[];
+}
+
+// One flattened row per ORDER ITEM (not per user document) — each item is its own
+// distinct ring configuration/attempt with its own timestamp.
+interface B2CRow {
+  orderItemId: string;
+  createdAt: string;
+  accountEmail: string;
+  fullName: string;
+  phone: string;
+  size: string;
+  materialLabel: string;
+  subscription: string;
+  deliveryMethod: string;
+  total: number | null;
+  address1: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  engraving: string;
+}
+
+// The material field is stored as an i18n key (e.g. "chooseYourRing.finishes.midnightBlack.name"),
+// not human text — this maps it to a readable label without needing the app's own i18n system.
+function humanizeMaterial(key?: string): string {
+  if (!key) return "—";
+  if (key.includes("midnightBlack")) return "Midnight Black";
+  if (key.includes("silver")) return "Silver";
+  if (key.includes("roseGold")) return "Rose Gold";
+  return key;
+}
 
 interface AuditEntry {
   id: string;
@@ -132,6 +199,7 @@ interface AuditEntry {
 
 const WEB_ORDERS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
+const B2C_ORDERS_API = "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/orders";
 
 // UI-only status options for the new web_orders Status column — separate from the
 // existing Fulfillment tab's STATUSES/StatusPill (which belong to the Supabase
@@ -231,6 +299,13 @@ export default function AdminReservationsPage() {
     {},
   );
 
+  // ─── New: B2C tab (mobile app orders collection) — entirely independent state ───────
+  const [b2cOrders, setB2cOrders] = useState<B2CUserOrders[] | null>(null);
+  const [b2cOrdersError, setB2cOrdersError] = useState<string | null>(null);
+  const [expandedB2CRow, setExpandedB2CRow] = useState<B2CRow | null>(null);
+  const [viewingB2CLogFor, setViewingB2CLogFor] = useState<B2CRow | null>(null);
+  const [b2cStatusTimestamps, setB2cStatusTimestamps] = useState<Record<string, Partial<Record<string, string>>>>({});
+
   useEffect(() => {
     document.title = "Admin · Reservations";
 
@@ -269,6 +344,7 @@ export default function AdminReservationsPage() {
     if (admin) {
       await loadAll();
       await loadWebOrders();
+      await loadB2COrders();
     }
     setLoading(false);
   }
@@ -285,6 +361,21 @@ export default function AdminReservationsPage() {
     } catch (err) {
       console.error("Failed to load web orders:", err);
       setWebOrdersError(err instanceof Error ? err.message : "Failed to load reservations");
+    }
+  }
+
+  // New: independent fetch for the mobile app's "orders" collection (B2C tab) — same
+  // pattern as loadWebOrders, completely separate from it and from Supabase.
+  async function loadB2COrders() {
+    try {
+      const res = await fetch(B2C_ORDERS_API);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const data = await res.json();
+      setB2cOrders(data);
+      setB2cOrdersError(null);
+    } catch (err) {
+      console.error("Failed to load B2C orders:", err);
+      setB2cOrdersError(err instanceof Error ? err.message : "Failed to load B2C orders");
     }
   }
 
@@ -414,6 +505,108 @@ export default function AdminReservationsPage() {
   // What the Shipped/Delivered dropdown itself should show as selected right now.
   function getShipDeliverValue(row: WebOrderRow): string {
     const real = orderStatusTimestamps[row.orderId] ?? {};
+    if (real.delivered) return "delivered";
+    if (real.shipped) return "shipped";
+    return "";
+  }
+
+  // ─── New: B2C tab logic — flattening, status/timeline, all independent of the above ──
+  const b2cRows = useMemo<B2CRow[] | null>(() => {
+    if (!b2cOrders) return null;
+    return b2cOrders.flatMap((doc) =>
+      doc.orders.map((item) => ({
+        orderItemId: item._id,
+        createdAt: item.createdAt,
+        accountEmail: doc.email,
+        fullName: item.shippingAddress?.fullName ?? "",
+        phone: item.shippingAddress?.phone ?? "",
+        size: item.size ?? "—",
+        materialLabel: humanizeMaterial(item.material),
+        subscription: item.subscription ?? "—",
+        deliveryMethod: item.deliveryMethod ?? "—",
+        total: item.total ?? null,
+        address1: item.shippingAddress?.address1 ?? "",
+        city: item.shippingAddress?.city ?? "",
+        state: item.shippingAddress?.state ?? "",
+        zip: item.shippingAddress?.zip ?? "",
+        country: item.shippingAddress?.country ?? "",
+        engraving: item.engraving ?? "",
+      })),
+    );
+  }, [b2cOrders]);
+
+  function exportB2CCSV() {
+    const data = b2cRows;
+    if (!data) return;
+    const headers = [
+      "orderItemId",
+      "createdAt",
+      "accountEmail",
+      "fullName",
+      "phone",
+      "size",
+      "materialLabel",
+      "subscription",
+      "deliveryMethod",
+      "total",
+      "address1",
+      "city",
+      "state",
+      "zip",
+      "country",
+      "engraving",
+    ];
+    const csv = [headers.join(",")]
+      .concat(data.map((r) => headers.map((h) => `"${String((r as any)[h] ?? "").replace(/"/g, '""')}"`).join(",")))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `b2c-orders-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleB2CStatusChange(orderItemId: string, newValue: string) {
+    setB2cStatusTimestamps((prev) => {
+      const existing = { ...(prev[orderItemId] ?? {}) };
+      if (newValue === "") {
+        delete existing.shipped;
+        delete existing.delivered;
+      } else if (newValue === "shipped") {
+        if (!existing.shipped) existing.shipped = new Date().toISOString();
+        delete existing.delivered;
+      } else if (newValue === "delivered") {
+        if (!existing.shipped) existing.shipped = new Date().toISOString();
+        if (!existing.delivered) existing.delivered = new Date().toISOString();
+      }
+      return { ...prev, [orderItemId]: existing };
+    });
+  }
+
+  function getB2COrderTimeline(row: B2CRow): TimelineStep[] {
+    const real = b2cStatusTimestamps[row.orderItemId] ?? {};
+    return ALL_TIMELINE_STEPS.map((opt) => {
+      if (opt.value === "received") {
+        return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
+      }
+      const confirmed = real[opt.value];
+      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed, completed: true };
+      const estimate = new Date(row.createdAt);
+      estimate.setDate(estimate.getDate() + (ORDER_STATUS_ESTIMATE_DAYS[opt.value] ?? 0));
+      return { value: opt.value, label: opt.label, date: estimate.toISOString(), completed: false };
+    });
+  }
+
+  function getB2CCurrentStatus(row: B2CRow): TimelineStep {
+    const timeline = getB2COrderTimeline(row);
+    const completedSteps = timeline.filter((s) => s.completed);
+    return completedSteps[completedSteps.length - 1];
+  }
+
+  function getB2CShipDeliverValue(row: B2CRow): string {
+    const real = b2cStatusTimestamps[row.orderItemId] ?? {};
     if (real.delivered) return "delivered";
     if (real.shipped) return "shipped";
     return "";
@@ -672,7 +865,7 @@ export default function AdminReservationsPage() {
           ) : (
             <>
               <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-white/10 bg-white/[0.02] p-1 w-fit">
-                {(["reservations", "fulfillment", "partners", "bulk"] as Tab[]).map((t) => (
+                {(["reservations", "fulfillment", "partners", "bulk", "b2c"] as Tab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
@@ -684,7 +877,9 @@ export default function AdminReservationsPage() {
                         ? "Orders & Delivery"
                         : t === "partners"
                           ? "Partners"
-                          : "Bulk Inquiries"}
+                          : t === "bulk"
+                            ? "Bulk Inquiries"
+                            : "B2C"}
                   </button>
                 ))}
               </div>
@@ -1343,6 +1538,236 @@ export default function AdminReservationsPage() {
                       </tbody>
                     </table>
                   </div>
+                </>
+              )}
+
+              {tab === "b2c" && (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                    <div className="text-[14px] text-[#8B9DAF]">
+                      <span className="text-white font-medium">{b2cRows?.length ?? 0}</span> orders
+                    </div>
+                    <button
+                      onClick={exportB2CCSV}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Export CSV
+                    </button>
+                  </div>
+
+                  {b2cOrdersError && (
+                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                      Couldn't load B2C orders: {b2cOrdersError}
+                    </div>
+                  )}
+
+                  <div className="overflow-x-auto rounded-2xl border border-white/10">
+                    <table className="w-full text-[13px]">
+                      <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
+                        <tr>
+                          <th className="px-4 py-3 text-center font-medium">#</th>
+                          <th className="px-4 py-3 text-center font-medium">Date</th>
+                          <th className="px-4 py-3 text-center font-medium">Name</th>
+                          <th className="px-4 py-3 text-center font-medium">Email</th>
+                          <th className="px-4 py-3 text-center font-medium">Phone</th>
+                          <th className="px-4 py-3 text-center font-medium">Size</th>
+                          <th className="px-4 py-3 text-center font-medium">Material</th>
+                          <th className="px-4 py-3 text-center font-medium">Total</th>
+                          <th className="px-4 py-3 text-center font-medium">Location</th>
+                          <th className="px-4 py-3 text-center font-medium">Status</th>
+                          <th className="px-4 py-3 text-center font-medium">Log</th>
+                          <th className="px-4 py-3 text-center font-medium">Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {b2cRows?.map((r) => {
+                          const currentStatus = getB2CCurrentStatus(r);
+                          const hasAddress = !!(r.address1 || r.city || r.state || r.zip || r.country);
+                          return (
+                            <tr key={r.orderItemId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
+                              <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
+                                {r.orderItemId.slice(-8)}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {new Date(r.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[140px]">
+                                {r.fullName || "—"}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[160px]">
+                                {r.accountEmail}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {r.phone || "—"}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">{r.size}</td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {r.materialLabel}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">
+                                {r.total != null ? `$${r.total.toFixed(2)}` : "—"}
+                              </td>
+                              <td
+                                className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
+                                title={hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : ""}
+                              >
+                                {hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : "—"}
+                              </td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">
+                                <div className="text-[11px] text-emerald-300 mb-1">● Order Received</div>
+                                <select
+                                  value={getB2CShipDeliverValue(r)}
+                                  onChange={(e) => handleB2CStatusChange(r.orderItemId, e.target.value)}
+                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.value)}`}
+                                >
+                                  {SHIP_DELIVER_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
+                                      {opt.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  onClick={() => setViewingB2CLogFor(r)}
+                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                >
+                                  <History className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  onClick={() => setExpandedB2CRow(r)}
+                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {b2cRows && b2cRows.length === 0 && (
+                          <tr>
+                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                              No orders.
+                            </td>
+                          </tr>
+                        )}
+                        {!b2cRows && !b2cOrdersError && (
+                          <tr>
+                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                              <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
+                              Loading orders…
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {expandedB2CRow && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => setExpandedB2CRow(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Details</div>
+                          <button onClick={() => setExpandedB2CRow(null)} className="text-[#8B9DAF] hover:text-white">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[16px] font-medium mb-1">
+                          {expandedB2CRow.fullName || "No name on file"}
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {expandedB2CRow.accountEmail}
+                          {expandedB2CRow.phone ? ` · ${expandedB2CRow.phone}` : ""}
+                        </div>
+                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-1">Shipping Address</div>
+                        <div className="text-[13px] text-[#B8C5D3] mb-4">
+                          {expandedB2CRow.address1 || expandedB2CRow.city
+                            ? `${expandedB2CRow.address1}, ${expandedB2CRow.city}, ${expandedB2CRow.state} ${expandedB2CRow.zip}, ${expandedB2CRow.country}`
+                            : "Not provided yet"}
+                        </div>
+                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-2">
+                          Ring Configuration
+                        </div>
+                        <div className="space-y-2 mb-4 text-[13px] rounded-lg bg-white/[0.02] border border-white/5 px-3 py-2">
+                          <div>
+                            Size {expandedB2CRow.size} · {expandedB2CRow.materialLabel}
+                          </div>
+                          {expandedB2CRow.engraving && (
+                            <div className="text-[#B8C5D3]">Engraving: "{expandedB2CRow.engraving}"</div>
+                          )}
+                          <div className="text-[#B8C5D3]">Subscription: {expandedB2CRow.subscription}</div>
+                          <div className="text-[#B8C5D3]">Delivery: {expandedB2CRow.deliveryMethod}</div>
+                          <div className="text-[#B8C5D3]">
+                            Total:{" "}
+                            {expandedB2CRow.total != null ? `$${expandedB2CRow.total.toFixed(2)}` : "Not completed"}
+                          </div>
+                        </div>
+                        <div
+                          className={`mt-2 text-[12px] font-medium ${orderStatusColor(getB2CCurrentStatus(expandedB2CRow).value)}`}
+                        >
+                          Status:{" "}
+                          {ALL_TIMELINE_STEPS.find((o) => o.value === getB2CCurrentStatus(expandedB2CRow).value)?.label}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {viewingB2CLogFor && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => setViewingB2CLogFor(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking</div>
+                          <button onClick={() => setViewingB2CLogFor(null)} className="text-[#8B9DAF] hover:text-white">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {viewingB2CLogFor.fullName || viewingB2CLogFor.accountEmail} · #
+                          {viewingB2CLogFor.orderItemId.slice(-8)}
+                        </div>
+                        <ol>
+                          {getB2COrderTimeline(viewingB2CLogFor).map((step, i, arr) => (
+                            <li key={step.value} className="flex gap-3 text-[13px]">
+                              <div className="flex flex-col items-center">
+                                <div
+                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-400" : "bg-white/15 border border-white/20"}`}
+                                />
+                                {i < arr.length - 1 && (
+                                  <div
+                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-400" : "bg-white/10"}`}
+                                  />
+                                )}
+                              </div>
+                              <div className="flex-1 pb-4">
+                                <div className={step.completed ? "text-white font-medium" : "text-[#5A6B7E]"}>
+                                  {step.label}
+                                </div>
+                                <div className="text-[11px] text-[#5A6B7E]">
+                                  {step.completed
+                                    ? new Date(step.date).toLocaleString()
+                                    : `Estimated · ${new Date(step.date).toLocaleDateString()}`}
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </>
