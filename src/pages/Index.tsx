@@ -749,7 +749,7 @@ function PillarsSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
+    <section id="signals" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       <ParticleField density={35} opacity={0.22} />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1110,6 +1110,7 @@ export default function Index() {
         <Hero />
         <VitalityScoreSection />
         <TrackUnderstandActSection />
+        <BodyTalkingSection />
         <PillarsSection />
         <QuestSection />
         <PreventiveSection />
