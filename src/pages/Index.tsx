@@ -838,8 +838,8 @@ function WhoItsForSection() {
               transition={{ duration: 0.7, delay: i * 0.12 }}
               whileHover={{ scale: 1.02, boxShadow: `0 0 60px ${c.accent}55` }}
             >
-              <img src={c.img} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
-              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${c.bg} 100%)` }} />
+              <img src={c.img} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${c.bg}22 0%, ${c.bg}cc 65%, ${c.bg} 100%)` }} />
               <div className="relative flex h-full flex-col justify-end p-8">
                 <p className="text-2xl md:text-3xl font-light text-white leading-snug">{c.text}</p>
                 <p className="mt-6 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ color: c.accent }}>Sound like you?</p>
