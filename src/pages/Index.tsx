@@ -463,7 +463,7 @@ function ProblemSection() {
     { l: "You can't see what it's doing.", i: true },
   ];
   return (
-    <section ref={ref} id="problem" className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+    <section ref={ref} id="problem" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       <ParticleField density={50} opacity={0.25} />
       {/* ECG line */}
       <svg viewBox="0 0 1200 200" className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-40 opacity-60">
@@ -508,7 +508,7 @@ function ProblemSection() {
 function VitalityScoreSection() {
   const orbitIcons = ["❤️", "🧠", "🌙", "🌡️"];
   return (
-    <section id="how" className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section id="how" className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Left: score */}
@@ -582,7 +582,7 @@ function TrackUnderstandActSection() {
     { title: "ACT", body: "One action.\nBuilt for your body.\nAssigned every morning.", color: C.green },
   ];
   return (
-    <section id="app" className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+    <section id="app" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       <ParticleField density={45} opacity={0.3} />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
@@ -665,7 +665,7 @@ function QuestSection() {
     { tag: "TODAY'S QUEST · STRESS", title: "10-minute walk outside", sub: "Cuts cortisol, clears your head", progress: 0.5, metric: "⚡ Stress" },
   ];
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       {/* constellation */}
       <svg viewBox="0 0 1200 600" className="pointer-events-none absolute inset-0 h-full w-full opacity-30">
         {[[100,120],[300,80],[500,200],[750,120],[950,180],[1100,90],[200,400],[420,500],[680,420],[900,500],[1100,420]].map(([x,y],i)=>(
@@ -745,7 +745,7 @@ function QuestSection() {
 function XPLevelsSection() {
   const levels = ["Beginner", "Explorer", "Vitalist", "Optimizer", "Achiever", "Champion", "Elite", "Legend", "Immortal"];
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0D1A32 100%)" }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0D1A32 100%)" }}>
       <ParticleField density={40} opacity={0.25} />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -802,7 +802,7 @@ function XPLevelsSection() {
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
-    <section className="relative overflow-hidden py-32 md:py-56" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-56" style={{ background: C.navy }}>
       {/* sine wave background */}
       <svg viewBox="0 0 1200 400" className="pointer-events-none absolute inset-0 w-full h-full opacity-20">
         <motion.path
@@ -870,7 +870,7 @@ function WhoItsForSection() {
     { bg: "#062929", accent: C.green, img: lifestyle8, text: "You don't want to be caught off guard by your own health." },
   ];
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)" }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp>
           <p className="text-center text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">Built for you if —</p>
@@ -908,7 +908,7 @@ function SignalsSection() {
     { i: "🩸", l: "BP (EST)", prem: true }, { i: "🍬", l: "Glucose (EST)", prem: true }, { i: "📉", l: "ECG", prem: true }, { i: "🤖", l: "AI Coach", prem: true },
   ];
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       <ParticleField density={45} opacity={0.25} />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
@@ -949,7 +949,7 @@ function PlansSection() {
     { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", accent: C.gold, features: ["Everything in Insights", "AI Coach", "Preventive Alerts", "BP (EST) · Glucose (EST)", "ECG", "Priority Support"] },
   ];
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-2xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
@@ -1058,7 +1058,7 @@ function RingSection() {
    ───────────────────────────────────────────── */
 function CredibilitySection() {
   return (
-    <section className="relative overflow-hidden py-32 md:py-48" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
       {/* network graph */}
       <svg viewBox="0 0 1200 600" className="pointer-events-none absolute inset-0 h-full w-full opacity-20">
         {Array.from({ length: 20 }).map((_, i) => {
@@ -1098,7 +1098,7 @@ function CredibilitySection() {
    ───────────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="relative overflow-hidden py-32 md:py-56 min-h-[90svh] flex items-center" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-56 min-h-[90svh] flex items-center" style={{ background: C.navy }}>
       <Aurora intensity={1.2} />
       <ParticleField density={70} opacity={0.4} />
       <div className="container mx-auto px-6 relative z-10 text-center">
