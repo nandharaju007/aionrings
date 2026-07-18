@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
+import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import ringProduct from "@/assets/ring-product.jpg";
@@ -423,6 +424,7 @@ export default function PreOrderPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white">
+      <SEO title={"Pre-order aiOn — Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart health ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026."} path="/preorder" image="/og-preorder.jpg" />
       <Header />
 
       <main className="pt-32 pb-32">

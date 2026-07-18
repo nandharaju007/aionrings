@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
+import { SEO } from '@/components/SEO';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
 import { Handshake, Users, Building2, ArrowRight, Check, Loader2, QrCode, Sparkles } from 'lucide-react';
@@ -74,6 +75,7 @@ export default function PartnersPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white">
+      <SEO title={"aiOn Partner Program — Bring proactive health to your community"} description={"Join the aiOn Partner Program. Referral tools, bulk reservations, and co-branded launches for healthcare providers, clinics, and creators."} path="/partners" image="/og-partners.jpg" />
       <Header />
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
