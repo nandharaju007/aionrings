@@ -1,14 +1,11 @@
-import { useEffect, useRef, useState, ReactNode, Fragment } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef, useState, ReactNode } from "react";
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
-import lifestyle4 from "@/assets/lifestyle-hand-4.jpg";
-import lifestyle6 from "@/assets/lifestyle-hand-6.jpg";
-import lifestyle8 from "@/assets/lifestyle-hand-8.jpg";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
