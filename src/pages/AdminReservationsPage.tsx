@@ -1572,6 +1572,8 @@ export default function AdminReservationsPage() {
                           <th className="px-4 py-3 text-center font-medium">Phone</th>
                           <th className="px-4 py-3 text-center font-medium">Size</th>
                           <th className="px-4 py-3 text-center font-medium">Material</th>
+                          <th className="px-4 py-3 text-center font-medium">Subscription</th>
+                          <th className="px-4 py-3 text-center font-medium">Delivery</th>
                           <th className="px-4 py-3 text-center font-medium">Total</th>
                           <th className="px-4 py-3 text-center font-medium">Location</th>
                           <th className="px-4 py-3 text-center font-medium">Status</th>
@@ -1603,6 +1605,12 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-center whitespace-nowrap">{r.size}</td>
                               <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
                                 {r.materialLabel}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {r.subscription}
+                              </td>
+                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                                {r.deliveryMethod}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {r.total != null ? `$${r.total.toFixed(2)}` : "—"}
@@ -1648,14 +1656,14 @@ export default function AdminReservationsPage() {
                         })}
                         {b2cRows && b2cRows.length === 0 && (
                           <tr>
-                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={14} className="px-4 py-16 text-center text-[#5A6B7E]">
                               No orders.
                             </td>
                           </tr>
                         )}
                         {!b2cRows && !b2cOrdersError && (
                           <tr>
-                            <td colSpan={12} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={14} className="px-4 py-16 text-center text-[#5A6B7E]">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading orders…
                             </td>
