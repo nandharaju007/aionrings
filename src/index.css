@@ -119,6 +119,20 @@
   }
 }
 
+/* Mobile scroll optimizations — let the browser skip painting offscreen sections */
+@media (max-width: 768px) {
+  main > section,
+  section[id] {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 800px;
+  }
+  /* Cheaper blurs on mobile — huge blur-[120px]+ tanks scroll FPS */
+  .blur-\[120px\] { filter: blur(48px); }
+  .blur-\[140px\] { filter: blur(56px); }
+  .blur-\[100px\] { filter: blur(40px); }
+  .blur-\[80px\]  { filter: blur(32px); }
+}
+
 @layer components {
   /* Cinematic section styles */
   .section-cinematic {
