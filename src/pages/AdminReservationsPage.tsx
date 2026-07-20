@@ -314,6 +314,7 @@ export default function AdminReservationsPage() {
   const [expandedB2CRow, setExpandedB2CRow] = useState<B2CRow | null>(null);
   const [viewingB2CLogFor, setViewingB2CLogFor] = useState<B2CRow | null>(null);
   const [b2cStatusTimestamps, setB2cStatusTimestamps] = useState<Record<string, Partial<Record<string, string>>>>({});
+  const [openB2CStatusMenuFor, setOpenB2CStatusMenuFor] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -1686,19 +1687,49 @@ export default function AdminReservationsPage() {
                               >
                                 {hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : "—"}
                               </td>
-                              <td className="px-4 py-3 text-center whitespace-nowrap">
-                                <div className="text-[11px] text-emerald-300 mb-1">● Order Received</div>
-                                <select
-                                  value={getB2CShipDeliverValue(r)}
-                                  onChange={(e) => handleB2CStatusChange(r.orderItemId, e.target.value)}
-                                  className={`h-8 rounded-lg border border-white/10 bg-white/[0.02] px-2 text-[12px] focus:outline-none focus:border-[#4FB3FF] ${orderStatusColor(currentStatus.value)}`}
-                                >
-                                  {SHIP_DELIVER_OPTIONS.map((opt) => (
-                                    <option key={opt.value} value={opt.value} className="bg-[#0A1628] text-white">
-                                      {opt.label}
-                                    </option>
-                                  ))}
-                                </select>
+                              <td className="px-4 py-3 text-center whitespace-nowrap relative">
+                                <div className="inline-flex items-center gap-2">
+                                  <span className={`text-[12px] font-medium ${orderStatusColor(currentStatus.value)}`}>
+                                    {currentStatus.label}
+                                  </span>
+                                  {(() => {
+                                    const shipDeliverValue = getB2CShipDeliverValue(r);
+                                    const isFinal = shipDeliverValue === "delivered";
+                                    return (
+                                      <button
+                                        disabled={isFinal}
+                                        onClick={() =>
+                                          !isFinal &&
+                                          setOpenB2CStatusMenuFor(
+                                            openB2CStatusMenuFor === r.orderItemId ? null : r.orderItemId,
+                                          )
+                                        }
+                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-white/5 opacity-30 cursor-not-allowed" : "border-white/15 hover:border-white/30"}`}
+                                      >
+                                        <ChevronDown className="w-3 h-3" />
+                                      </button>
+                                    );
+                                  })()}
+                                </div>
+                                {openB2CStatusMenuFor === r.orderItemId && (
+                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1 overflow-hidden">
+                                    {(getB2CShipDeliverValue(r) === "shipped"
+                                      ? SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "delivered")
+                                      : SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "shipped")
+                                    ).map((opt) => (
+                                      <button
+                                        key={opt.value}
+                                        onClick={() => {
+                                          handleB2CStatusChange(r.orderItemId, opt.value);
+                                          setOpenB2CStatusMenuFor(null);
+                                        }}
+                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
+                                      >
+                                        {opt.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <button
@@ -1737,6 +1768,10 @@ export default function AdminReservationsPage() {
                       </tbody>
                     </table>
                   </div>
+
+                  {openB2CStatusMenuFor && (
+                    <div className="fixed inset-0 z-40" onClick={() => setOpenB2CStatusMenuFor(null)} />
+                  )}
 
                   {expandedB2CRow && (
                     <div
