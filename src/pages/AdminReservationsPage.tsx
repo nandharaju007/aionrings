@@ -719,12 +719,19 @@ export default function AdminReservationsPage() {
 
   function getB2COrderTimeline(row: B2CRow): TimelineStep[] {
     const entriesForOrder = (b2cStatusLog ?? []).filter((e) => e.orderId === row.orderItemId);
+    const shippedEntry = entriesForOrder.find((e) => e.status === "shipped");
     return ALL_TIMELINE_STEPS.map((opt) => {
       if (opt.value === "received") {
         return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
       }
       const confirmed = entriesForOrder.find((e) => e.status === opt.value);
       if (confirmed) return { value: opt.value, label: opt.label, date: confirmed.date, completed: true };
+      // Prefer the REAL admin-entered estimatedDelivery (stored on the shipped entry)
+      // for the Delivered step's estimate, once a shipped entry exists — only fall back
+      // to the generic offset guess if the order hasn't shipped yet at all.
+      if (opt.value === "delivered" && shippedEntry?.estimatedDelivery) {
+        return { value: opt.value, label: opt.label, date: shippedEntry.estimatedDelivery, completed: false };
+      }
       const estimate = new Date(row.createdAt);
       estimate.setDate(estimate.getDate() + (ORDER_STATUS_ESTIMATE_DAYS[opt.value] ?? 0));
       return { value: opt.value, label: opt.label, date: estimate.toISOString(), completed: false };
