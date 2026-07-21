@@ -203,9 +203,11 @@ const WEB_ORDERS_API =
 const B2C_ORDERS_API = "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/orders";
 const WEB_ORDER_STATUS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
+const B2C_ORDER_STATUS_API =
+  "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/orders";
 
-// Real backend shape confirmed via GET /api/web-orders/status:
-// { _id, orderId, status, date, __v }
+// Real backend shape confirmed via GET /api/web-orders/status and GET /api/orders/status
+// (identical shape, separate collections): { _id, orderId, status, date, __v }
 interface WebOrderStatusEntry {
   _id: string;
   orderId: string;
@@ -313,7 +315,11 @@ export default function AdminReservationsPage() {
   const [b2cOrdersError, setB2cOrdersError] = useState<string | null>(null);
   const [expandedB2CRow, setExpandedB2CRow] = useState<B2CRow | null>(null);
   const [viewingB2CLogFor, setViewingB2CLogFor] = useState<B2CRow | null>(null);
-  const [b2cStatusTimestamps, setB2cStatusTimestamps] = useState<Record<string, Partial<Record<string, string>>>>({});
+  // Real backend-persisted status history for B2C orders — fetched from
+  // GET /api/orders/status, grouped by orderId. Replaces the earlier local-only UI
+  // state now that the backend/database (orders_status collection) exists.
+  const [b2cStatusLog, setB2cStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
+  const [b2cStatusLogError, setB2cStatusLogError] = useState<string | null>(null);
   const [openB2CStatusMenuFor, setOpenB2CStatusMenuFor] = useState<string | null>(null);
 
   useEffect(() => {
@@ -356,6 +362,7 @@ export default function AdminReservationsPage() {
       await loadWebOrders();
       await loadB2COrders();
       await loadWebOrderStatuses();
+      await loadB2COrderStatuses();
     }
     setLoading(false);
   }
@@ -403,6 +410,21 @@ export default function AdminReservationsPage() {
     } catch (err) {
       console.error("Failed to load web order statuses:", err);
       setWebOrderStatusLogError(err instanceof Error ? err.message : "Failed to load status history");
+    }
+  }
+
+  // Same pattern, but for the B2C (mobile app) orders_status collection — entirely
+  // separate from the web-orders status log above.
+  async function loadB2COrderStatuses() {
+    try {
+      const res = await fetch(`${B2C_ORDER_STATUS_API}/status`);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const data = await res.json();
+      setB2cStatusLog(data);
+      setB2cStatusLogError(null);
+    } catch (err) {
+      console.error("Failed to load B2C order statuses:", err);
+      setB2cStatusLogError(err instanceof Error ? err.message : "Failed to load status history");
     }
   }
 
@@ -605,30 +627,38 @@ export default function AdminReservationsPage() {
   }
 
   function handleB2CStatusChange(orderItemId: string, newValue: string) {
-    setB2cStatusTimestamps((prev) => {
-      const existing = { ...(prev[orderItemId] ?? {}) };
-      if (newValue === "") {
-        delete existing.shipped;
-        delete existing.delivered;
-      } else if (newValue === "shipped") {
-        if (!existing.shipped) existing.shipped = new Date().toISOString();
-        delete existing.delivered;
-      } else if (newValue === "delivered") {
-        if (!existing.shipped) existing.shipped = new Date().toISOString();
-        if (!existing.delivered) existing.delivered = new Date().toISOString();
+    if (newValue === "") return;
+    (async () => {
+      try {
+        const alreadyShipped = (b2cStatusLog ?? []).some((e) => e.orderId === orderItemId && e.status === "shipped");
+        if (newValue === "delivered" && !alreadyShipped) {
+          await fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "shipped" }),
+          });
+        }
+        await fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newValue }),
+        });
+        await loadB2COrderStatuses();
+      } catch (err) {
+        console.error("Failed to update B2C order status:", err);
+        alert("Could not update status. Please try again.");
       }
-      return { ...prev, [orderItemId]: existing };
-    });
+    })();
   }
 
   function getB2COrderTimeline(row: B2CRow): TimelineStep[] {
-    const real = b2cStatusTimestamps[row.orderItemId] ?? {};
+    const entriesForOrder = (b2cStatusLog ?? []).filter((e) => e.orderId === row.orderItemId);
     return ALL_TIMELINE_STEPS.map((opt) => {
       if (opt.value === "received") {
         return { value: opt.value, label: opt.label, date: row.createdAt, completed: true };
       }
-      const confirmed = real[opt.value];
-      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed, completed: true };
+      const confirmed = entriesForOrder.find((e) => e.status === opt.value);
+      if (confirmed) return { value: opt.value, label: opt.label, date: confirmed.date, completed: true };
       const estimate = new Date(row.createdAt);
       estimate.setDate(estimate.getDate() + (ORDER_STATUS_ESTIMATE_DAYS[opt.value] ?? 0));
       return { value: opt.value, label: opt.label, date: estimate.toISOString(), completed: false };
@@ -642,9 +672,9 @@ export default function AdminReservationsPage() {
   }
 
   function getB2CShipDeliverValue(row: B2CRow): string {
-    const real = b2cStatusTimestamps[row.orderItemId] ?? {};
-    if (real.delivered) return "delivered";
-    if (real.shipped) return "shipped";
+    const entriesForOrder = (b2cStatusLog ?? []).filter((e) => e.orderId === row.orderItemId);
+    if (entriesForOrder.some((e) => e.status === "delivered")) return "delivered";
+    if (entriesForOrder.some((e) => e.status === "shipped")) return "shipped";
     return "";
   }
 
