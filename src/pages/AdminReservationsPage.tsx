@@ -321,6 +321,16 @@ export default function AdminReservationsPage() {
   const [b2cStatusLog, setB2cStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
   const [b2cStatusLogError, setB2cStatusLogError] = useState<string | null>(null);
   const [openB2CStatusMenuFor, setOpenB2CStatusMenuFor] = useState<string | null>(null);
+  const [shippingModalFor, setShippingModalFor] = useState<B2CRow | null>(null);
+  const [deliveredModalFor, setDeliveredModalFor] = useState<B2CRow | null>(null);
+  const [shippingForm, setShippingForm] = useState({
+    carrier: "",
+    trackingNumber: "",
+    shippedDate: "",
+    estimatedDelivery: "",
+  });
+  const [deliveredForm, setDeliveredForm] = useState({ location: "" });
+  const [savingB2CStatus, setSavingB2CStatus] = useState(false);
 
   useEffect(() => {
     document.title = "Admin · Reservations";
@@ -626,29 +636,85 @@ export default function AdminReservationsPage() {
     URL.revokeObjectURL(url);
   }
 
-  function handleB2CStatusChange(orderItemId: string, newValue: string) {
-    if (newValue === "") return;
-    (async () => {
-      try {
-        const alreadyShipped = (b2cStatusLog ?? []).some((e) => e.orderId === orderItemId && e.status === "shipped");
-        if (newValue === "delivered" && !alreadyShipped) {
-          await fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "shipped" }),
-          });
-        }
-        await fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newValue }),
-        });
-        await loadB2COrderStatuses();
-      } catch (err) {
-        console.error("Failed to update B2C order status:", err);
-        alert("Could not update status. Please try again.");
+  // Shared low-level POST, reused by both modals below and by the (rare, defensive)
+  // auto-shipped-insert if an order somehow reaches Delivered without a prior Shipped
+  // entry — mirrors the exact same fetch this file already used before the modals existed.
+  async function postB2CStatus(orderItemId: string, body: Record<string, unknown>) {
+    return fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+
+  function openShippingModal(row: B2CRow) {
+    setShippingForm({ carrier: "", trackingNumber: "", shippedDate: "", estimatedDelivery: "" });
+    setShippingModalFor(row);
+  }
+
+  function openDeliveredModal(row: B2CRow) {
+    setDeliveredForm({ location: "" });
+    setDeliveredModalFor(row);
+  }
+
+  async function submitShippingModal() {
+    if (!shippingModalFor) return;
+    if (
+      !shippingForm.carrier.trim() ||
+      !shippingForm.trackingNumber.trim() ||
+      !shippingForm.shippedDate ||
+      !shippingForm.estimatedDelivery
+    ) {
+      alert("Please fill in all four fields.");
+      return;
+    }
+    setSavingB2CStatus(true);
+    try {
+      await postB2CStatus(shippingModalFor.orderItemId, {
+        status: "shipped",
+        carrier: shippingForm.carrier.trim(),
+        trackingNumber: shippingForm.trackingNumber.trim(),
+        date: new Date(shippingForm.shippedDate).toISOString(),
+        estimatedDelivery: new Date(shippingForm.estimatedDelivery).toISOString(),
+      });
+      await loadB2COrderStatuses();
+      setShippingModalFor(null);
+    } catch (err) {
+      console.error("Failed to mark order shipped:", err);
+      alert("Could not update status. Please try again.");
+    } finally {
+      setSavingB2CStatus(false);
+    }
+  }
+
+  async function submitDeliveredModal() {
+    if (!deliveredModalFor) return;
+    if (!deliveredForm.location.trim()) {
+      alert("Please enter a location.");
+      return;
+    }
+    setSavingB2CStatus(true);
+    try {
+      // Defensive fallback only — the progressive dropdown UI already prevents reaching
+      // "Delivered" before "Shipped", so this should rarely fire in normal use.
+      const alreadyShipped = (b2cStatusLog ?? []).some(
+        (e) => e.orderId === deliveredModalFor.orderItemId && e.status === "shipped",
+      );
+      if (!alreadyShipped) {
+        await postB2CStatus(deliveredModalFor.orderItemId, { status: "shipped" });
       }
-    })();
+      await postB2CStatus(deliveredModalFor.orderItemId, {
+        status: "delivered",
+        location: deliveredForm.location.trim(),
+      });
+      await loadB2COrderStatuses();
+      setDeliveredModalFor(null);
+    } catch (err) {
+      console.error("Failed to mark order delivered:", err);
+      alert("Could not update status. Please try again.");
+    } finally {
+      setSavingB2CStatus(false);
+    }
   }
 
   function getB2COrderTimeline(row: B2CRow): TimelineStep[] {
@@ -1748,8 +1814,9 @@ export default function AdminReservationsPage() {
                                       <button
                                         key={opt.value}
                                         onClick={() => {
-                                          handleB2CStatusChange(r.orderItemId, opt.value);
                                           setOpenB2CStatusMenuFor(null);
+                                          if (opt.value === "shipped") openShippingModal(r);
+                                          else if (opt.value === "delivered") openDeliveredModal(r);
                                         }}
                                         className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
                                       >
@@ -1901,6 +1968,127 @@ export default function AdminReservationsPage() {
                             </li>
                           ))}
                         </ol>
+                      </div>
+                    </div>
+                  )}
+
+                  {shippingModalFor && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => !savingB2CStatus && setShippingModalFor(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Mark as Shipped</div>
+                          <button
+                            onClick={() => !savingB2CStatus && setShippingModalFor(null)}
+                            className="text-[#8B9DAF] hover:text-white"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {shippingModalFor.fullName || shippingModalFor.accountEmail} · #
+                          {shippingModalFor.orderItemId.slice(-8)}
+                        </div>
+                        <div className="space-y-3">
+                          <label className="block">
+                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Carrier</span>
+                            <input
+                              value={shippingForm.carrier}
+                              onChange={(e) => setShippingForm((prev) => ({ ...prev, carrier: e.target.value }))}
+                              placeholder="UPS, FedEx, USPS…"
+                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                            />
+                          </label>
+                          <label className="block">
+                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Tracking Number</span>
+                            <input
+                              value={shippingForm.trackingNumber}
+                              onChange={(e) => setShippingForm((prev) => ({ ...prev, trackingNumber: e.target.value }))}
+                              placeholder="1Z999AA10123456784"
+                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                            />
+                          </label>
+                          <label className="block">
+                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Shipped Date</span>
+                            <input
+                              type="date"
+                              value={shippingForm.shippedDate}
+                              onChange={(e) => setShippingForm((prev) => ({ ...prev, shippedDate: e.target.value }))}
+                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                            />
+                          </label>
+                          <label className="block">
+                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">
+                              Estimated Delivery
+                            </span>
+                            <input
+                              type="date"
+                              value={shippingForm.estimatedDelivery}
+                              onChange={(e) =>
+                                setShippingForm((prev) => ({ ...prev, estimatedDelivery: e.target.value }))
+                              }
+                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                            />
+                          </label>
+                        </div>
+                        <button
+                          onClick={submitShippingModal}
+                          disabled={savingB2CStatus}
+                          className="mt-5 w-full h-11 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                        >
+                          {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                          {savingB2CStatus ? "Saving…" : "Confirm Shipped"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {deliveredModalFor && (
+                    <div
+                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      onClick={() => !savingB2CStatus && setDeliveredModalFor(null)}
+                    >
+                      <div
+                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Mark as Delivered</div>
+                          <button
+                            onClick={() => !savingB2CStatus && setDeliveredModalFor(null)}
+                            className="text-[#8B9DAF] hover:text-white"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                          {deliveredModalFor.fullName || deliveredModalFor.accountEmail} · #
+                          {deliveredModalFor.orderItemId.slice(-8)}
+                        </div>
+                        <label className="block">
+                          <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Location</span>
+                          <input
+                            value={deliveredForm.location}
+                            onChange={(e) => setDeliveredForm({ location: e.target.value })}
+                            placeholder="Front door · Ashburn, VA"
+                            className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                        <button
+                          onClick={submitDeliveredModal}
+                          disabled={savingB2CStatus}
+                          className="mt-5 w-full h-11 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                        >
+                          {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                          {savingB2CStatus ? "Saving…" : "Confirm Delivered"}
+                        </button>
                       </div>
                     </div>
                   )}
