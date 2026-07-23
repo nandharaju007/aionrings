@@ -119,7 +119,7 @@ interface WebOrderRow {
   items: WebOrderItem[];
 }
 
-type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c";
+type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c" | "pricing";
 
 // ─── New: real shape of documents in the mobile app's "orders" collection ───
 // Note: many order items only ever reach the "interest" browsing stage and never
@@ -205,6 +205,24 @@ const WEB_ORDER_STATUS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/web-orders";
 const B2C_ORDER_STATUS_API =
   "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/orders";
+const PRICING_API = "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/pricing";
+
+// Real backend shape confirmed via GET /api/pricing
+interface PricingConfig {
+  _id: string;
+  ringBasePrice: number;
+  ringOriginalPrice: number;
+  subscriptionPrices: {
+    threeMonthsFree: number;
+    annual: number;
+    lifetime: number;
+  };
+  deliveryPrices: {
+    standard: number;
+    express: number;
+  };
+  taxRate: number;
+}
 
 // Real backend shape confirmed via GET /api/web-orders/status and GET /api/orders/status
 // (identical shape, separate collections): { _id, orderId, status, date, __v }
@@ -321,6 +339,22 @@ export default function AdminReservationsPage() {
   const [b2cStatusLog, setB2cStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
   const [b2cStatusLogError, setB2cStatusLogError] = useState<string | null>(null);
   const [openB2CStatusMenuFor, setOpenB2CStatusMenuFor] = useState<string | null>(null);
+
+  // ─── New: Pricing tab ─────────────────────────────────────────────────────
+  const [pricingConfig, setPricingConfig] = useState<PricingConfig | null>(null);
+  const [pricingError, setPricingError] = useState<string | null>(null);
+  const [pricingForm, setPricingForm] = useState({
+    ringBasePrice: "",
+    ringOriginalPrice: "",
+    threeMonthsFree: "",
+    annual: "",
+    lifetime: "",
+    standard: "",
+    express: "",
+    taxRatePercent: "",
+  });
+  const [savingPricing, setSavingPricing] = useState(false);
+  const [pricingSaved, setPricingSaved] = useState(false);
   const [shippingModalFor, setShippingModalFor] = useState<B2CRow | null>(null);
   const [deliveredModalFor, setDeliveredModalFor] = useState<B2CRow | null>(null);
   const [shippingForm, setShippingForm] = useState({
@@ -373,6 +407,7 @@ export default function AdminReservationsPage() {
       await loadB2COrders();
       await loadWebOrderStatuses();
       await loadB2COrderStatuses();
+      await loadPricing();
     }
     setLoading(false);
   }
@@ -435,6 +470,86 @@ export default function AdminReservationsPage() {
     } catch (err) {
       console.error("Failed to load B2C order statuses:", err);
       setB2cStatusLogError(err instanceof Error ? err.message : "Failed to load status history");
+    }
+  }
+
+  // Fetches the single shared pricing document and populates the edit form fields.
+  // taxRate is stored as a decimal (e.g. 0.085) but shown/edited as a percentage
+  // (e.g. "8.5") for a much more natural admin experience.
+  async function loadPricing() {
+    try {
+      const res = await fetch(PRICING_API);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const data: PricingConfig = await res.json();
+      setPricingConfig(data);
+      setPricingForm({
+        ringBasePrice: String(data.ringBasePrice),
+        ringOriginalPrice: String(data.ringOriginalPrice),
+        threeMonthsFree: String(data.subscriptionPrices.threeMonthsFree),
+        annual: String(data.subscriptionPrices.annual),
+        lifetime: String(data.subscriptionPrices.lifetime),
+        standard: String(data.deliveryPrices.standard),
+        express: String(data.deliveryPrices.express),
+        taxRatePercent: (data.taxRate * 100).toFixed(2),
+      });
+      setPricingError(null);
+    } catch (err) {
+      console.error("Failed to load pricing:", err);
+      setPricingError(err instanceof Error ? err.message : "Failed to load pricing");
+    }
+  }
+
+  function updatePricingField(field: keyof typeof pricingForm, value: string) {
+    setPricingForm((prev) => ({ ...prev, [field]: value }));
+    setPricingSaved(false);
+  }
+
+  async function savePricing() {
+    const parsed = {
+      ringBasePrice: parseFloat(pricingForm.ringBasePrice),
+      ringOriginalPrice: parseFloat(pricingForm.ringOriginalPrice),
+      subscriptionPrices: {
+        threeMonthsFree: parseFloat(pricingForm.threeMonthsFree),
+        annual: parseFloat(pricingForm.annual),
+        lifetime: parseFloat(pricingForm.lifetime),
+      },
+      deliveryPrices: {
+        standard: parseFloat(pricingForm.standard),
+        express: parseFloat(pricingForm.express),
+      },
+      taxRate: parseFloat(pricingForm.taxRatePercent) / 100,
+    };
+
+    const allValues = [
+      parsed.ringBasePrice,
+      parsed.ringOriginalPrice,
+      parsed.subscriptionPrices.threeMonthsFree,
+      parsed.subscriptionPrices.annual,
+      parsed.subscriptionPrices.lifetime,
+      parsed.deliveryPrices.standard,
+      parsed.deliveryPrices.express,
+      parsed.taxRate,
+    ];
+    if (allValues.some((v) => Number.isNaN(v) || v < 0)) {
+      alert("Please enter valid, non-negative numbers in every field.");
+      return;
+    }
+
+    setSavingPricing(true);
+    try {
+      const res = await fetch(PRICING_API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      await loadPricing();
+      setPricingSaved(true);
+    } catch (err) {
+      console.error("Failed to save pricing:", err);
+      alert("Could not save pricing. Please try again.");
+    } finally {
+      setSavingPricing(false);
     }
   }
 
@@ -1004,7 +1119,7 @@ export default function AdminReservationsPage() {
           ) : (
             <>
               <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-white/10 bg-white/[0.02] p-1 w-fit">
-                {(["reservations", "fulfillment", "partners", "bulk", "b2c"] as Tab[]).map((t) => (
+                {(["reservations", "fulfillment", "partners", "bulk", "b2c", "pricing"] as Tab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
@@ -1018,7 +1133,9 @@ export default function AdminReservationsPage() {
                           ? "Partners"
                           : t === "bulk"
                             ? "Bulk Inquiries"
-                            : "B2C"}
+                            : t === "b2c"
+                              ? "B2C"
+                              : "Pricing"}
                   </button>
                 ))}
               </div>
@@ -2096,6 +2213,148 @@ export default function AdminReservationsPage() {
                           {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                           {savingB2CStatus ? "Saving…" : "Confirm Delivered"}
                         </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {tab === "pricing" && (
+                <>
+                  {pricingError && (
+                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                      Couldn't load pricing: {pricingError}
+                    </div>
+                  )}
+
+                  {!pricingConfig && !pricingError && (
+                    <div className="flex items-center gap-2 text-[13px] text-[#8B9DAF] py-10 justify-center">
+                      <Loader2 className="w-4 h-4 animate-spin" /> Loading pricing…
+                    </div>
+                  )}
+
+                  {pricingConfig && (
+                    <div className="max-w-2xl">
+                      <div className="text-[13px] text-[#8B9DAF] mb-6">
+                        These prices are live — the mobile app fetches them directly, so changes here take effect the
+                        next time a user opens the app.
+                      </div>
+
+                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Ring</div>
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Base Price ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.ringBasePrice}
+                            onChange={(e) => updatePricingField("ringBasePrice", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Original / Strikethrough Price ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.ringOriginalPrice}
+                            onChange={(e) => updatePricingField("ringOriginalPrice", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Subscription Plans</div>
+                      <div className="grid grid-cols-3 gap-4 mb-6">
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">3 Months Free ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.threeMonthsFree}
+                            onChange={(e) => updatePricingField("threeMonthsFree", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Annual ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.annual}
+                            onChange={(e) => updatePricingField("annual", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Lifetime ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.lifetime}
+                            onChange={(e) => updatePricingField("lifetime", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Delivery Methods</div>
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Standard ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.standard}
+                            onChange={(e) => updatePricingField("standard", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Express ($)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.express}
+                            onChange={(e) => updatePricingField("express", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Tax</div>
+                      <div className="grid grid-cols-2 gap-4 mb-8">
+                        <label className="block">
+                          <span className="text-[12px] text-[#B8C5D3]">Tax Rate (%)</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={pricingForm.taxRatePercent}
+                            onChange={(e) => updatePricingField("taxRatePercent", e.target.value)}
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={savePricing}
+                          disabled={savingPricing}
+                          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white disabled:opacity-50"
+                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                        >
+                          {savingPricing ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Save className="w-3.5 h-3.5" />
+                          )}
+                          {savingPricing ? "Saving…" : "Save Pricing"}
+                        </button>
+                        {pricingSaved && !savingPricing && (
+                          <span className="text-[13px] text-emerald-300 inline-flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4" /> Saved
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
