@@ -2272,9 +2272,13 @@ export default function AdminReservationsPage() {
                             type="number"
                             step="0.01"
                             value={pricingForm.threeMonthsFree}
-                            onChange={(e) => updatePricingField("threeMonthsFree", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            disabled
+                            readOnly
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] text-[#5A6B7E] cursor-not-allowed opacity-60"
                           />
+                          <span className="text-[11px] text-[#5A6B7E] mt-1 block">
+                            This field will not update in the mobile app.
+                          </span>
                         </label>
                         <label className="block">
                           <span className="text-[12px] text-[#B8C5D3]">Annual ($)</span>
@@ -2306,9 +2310,13 @@ export default function AdminReservationsPage() {
                             type="number"
                             step="0.01"
                             value={pricingForm.standard}
-                            onChange={(e) => updatePricingField("standard", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            disabled
+                            readOnly
+                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] text-[#5A6B7E] cursor-not-allowed opacity-60"
                           />
+                          <span className="text-[11px] text-[#5A6B7E] mt-1 block">
+                            This field will not update in the mobile app.
+                          </span>
                         </label>
                         <label className="block">
                           <span className="text-[12px] text-[#B8C5D3]">Express ($)</span>
