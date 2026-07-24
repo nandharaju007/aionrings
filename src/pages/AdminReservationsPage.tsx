@@ -231,6 +231,7 @@ interface WebOrderStatusEntry {
   orderId: string;
   status: string;
   date: string;
+  estimatedDelivery?: string;
 }
 
 // UI-only status options for the new web_orders Status column — separate from the
