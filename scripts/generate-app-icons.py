@@ -19,7 +19,7 @@ IOS_SIZES = [
     (60, [2, 3]),
     (76, [2]),
     (83.5, [2]),
-    (1024, [1, "marketing"]),
+    (1024, ["marketing"]),
 ]
 
 ANDROID_DENSITIES = [
