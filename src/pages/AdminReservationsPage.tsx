@@ -369,14 +369,12 @@ export default function AdminReservationsPage() {
   const [savingPricing, setSavingPricing] = useState(false);
   const [pricingSaved, setPricingSaved] = useState(false);
   const [shippingModalFor, setShippingModalFor] = useState<B2CRow | null>(null);
-  const [deliveredModalFor, setDeliveredModalFor] = useState<B2CRow | null>(null);
   const [shippingForm, setShippingForm] = useState({
     carrier: "",
     trackingNumber: "",
     shippedDate: "",
     estimatedDelivery: "",
   });
-  const [deliveredForm, setDeliveredForm] = useState({ location: "" });
   const [savingB2CStatus, setSavingB2CStatus] = useState(false);
 
   useEffect(() => {
@@ -782,9 +780,24 @@ export default function AdminReservationsPage() {
     setShippingModalFor(row);
   }
 
-  function openDeliveredModal(row: B2CRow) {
-    setDeliveredForm({ location: "" });
-    setDeliveredModalFor(row);
+  // No modal needed anymore — Delivered no longer collects a manually-typed location,
+  // since it's now derived directly from the order's own shipping address wherever it's
+  // displayed (admin Log popup, mobile Order Tracking, and the delivered email).
+  async function submitDelivered(row: B2CRow) {
+    setSavingB2CStatus(true);
+    try {
+      const alreadyShipped = (b2cStatusLog ?? []).some((e) => e.orderId === row.orderItemId && e.status === "shipped");
+      if (!alreadyShipped) {
+        await postB2CStatus(row.orderItemId, { status: "shipped" });
+      }
+      await postB2CStatus(row.orderItemId, { status: "delivered" });
+      await loadB2COrderStatuses();
+    } catch (err) {
+      console.error("Failed to mark order delivered:", err);
+      alert("Could not update status. Please try again.");
+    } finally {
+      setSavingB2CStatus(false);
+    }
   }
 
   async function submitShippingModal() {
@@ -811,36 +824,6 @@ export default function AdminReservationsPage() {
       setShippingModalFor(null);
     } catch (err) {
       console.error("Failed to mark order shipped:", err);
-      alert("Could not update status. Please try again.");
-    } finally {
-      setSavingB2CStatus(false);
-    }
-  }
-
-  async function submitDeliveredModal() {
-    if (!deliveredModalFor) return;
-    if (!deliveredForm.location.trim()) {
-      alert("Please enter a location.");
-      return;
-    }
-    setSavingB2CStatus(true);
-    try {
-      // Defensive fallback only — the progressive dropdown UI already prevents reaching
-      // "Delivered" before "Shipped", so this should rarely fire in normal use.
-      const alreadyShipped = (b2cStatusLog ?? []).some(
-        (e) => e.orderId === deliveredModalFor.orderItemId && e.status === "shipped",
-      );
-      if (!alreadyShipped) {
-        await postB2CStatus(deliveredModalFor.orderItemId, { status: "shipped" });
-      }
-      await postB2CStatus(deliveredModalFor.orderItemId, {
-        status: "delivered",
-        location: deliveredForm.location.trim(),
-      });
-      await loadB2COrderStatuses();
-      setDeliveredModalFor(null);
-    } catch (err) {
-      console.error("Failed to mark order delivered:", err);
       alert("Could not update status. Please try again.");
     } finally {
       setSavingB2CStatus(false);
@@ -1976,7 +1959,7 @@ export default function AdminReservationsPage() {
                                         onClick={() => {
                                           setOpenB2CStatusMenuFor(null);
                                           if (opt.value === "shipped") openShippingModal(r);
-                                          else if (opt.value === "delivered") openDeliveredModal(r);
+                                          else if (opt.value === "delivered") submitDelivered(r);
                                         }}
                                         className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
                                       >
@@ -2226,50 +2209,6 @@ export default function AdminReservationsPage() {
                         >
                           {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                           {savingB2CStatus ? "Saving…" : "Confirm Shipped"}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {deliveredModalFor && (
-                    <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
-                      onClick={() => !savingB2CStatus && setDeliveredModalFor(null)}
-                    >
-                      <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Mark as Delivered</div>
-                          <button
-                            onClick={() => !savingB2CStatus && setDeliveredModalFor(null)}
-                            className="text-[#8B9DAF] hover:text-white"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
-                          {deliveredModalFor.fullName || deliveredModalFor.accountEmail} · #
-                          {deliveredModalFor.orderItemId.slice(-8)}
-                        </div>
-                        <label className="block">
-                          <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Location</span>
-                          <input
-                            value={deliveredForm.location}
-                            onChange={(e) => setDeliveredForm({ location: e.target.value })}
-                            placeholder="Front door · Ashburn, VA"
-                            className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
-                          />
-                        </label>
-                        <button
-                          onClick={submitDeliveredModal}
-                          disabled={savingB2CStatus}
-                          className="mt-5 w-full h-11 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 disabled:opacity-50"
-                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
-                        >
-                          {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                          {savingB2CStatus ? "Saving…" : "Confirm Delivered"}
                         </button>
                       </div>
                     </div>
