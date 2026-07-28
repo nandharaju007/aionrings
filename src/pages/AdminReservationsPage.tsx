@@ -157,6 +157,13 @@ interface B2CUserOrders {
   orders: B2COrderItem[];
 }
 
+// New: the backend's GET /api/orders route now returns already-flattened,
+// paginated individual order items directly (via a $unwind aggregation) —
+// each item includes its own email, no more nested outer account document.
+interface B2CFlatItem extends B2COrderItem {
+  email: string;
+}
+
 // One flattened row per ORDER ITEM (not per user document) — each item is its own
 // distinct ring configuration/attempt with its own timestamp.
 interface B2CRow {
@@ -231,7 +238,6 @@ interface WebOrderStatusEntry {
   orderId: string;
   status: string;
   date: string;
-  estimatedDelivery?: string;
 }
 
 // UI-only status options for the new web_orders Status column — separate from the
@@ -320,6 +326,9 @@ export default function AdminReservationsPage() {
   // ─── New: web_orders data, fetched from our own backend, not Supabase ───────
   const [webOrders, setWebOrders] = useState<WebOrder[] | null>(null);
   const [webOrdersError, setWebOrdersError] = useState<string | null>(null);
+  const [webOrdersPage, setWebOrdersPage] = useState(1);
+  const [webOrdersTotal, setWebOrdersTotal] = useState(0);
+  const [webOrdersHasMore, setWebOrdersHasMore] = useState(false);
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
   const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
   const [openStatusMenuFor, setOpenStatusMenuFor] = useState<string | null>(null);
@@ -330,8 +339,11 @@ export default function AdminReservationsPage() {
   const [webOrderStatusLogError, setWebOrderStatusLogError] = useState<string | null>(null);
 
   // ─── New: B2C tab (mobile app orders collection) — entirely independent state ───────
-  const [b2cOrders, setB2cOrders] = useState<B2CUserOrders[] | null>(null);
+  const [b2cOrders, setB2cOrders] = useState<B2CFlatItem[] | null>(null);
   const [b2cOrdersError, setB2cOrdersError] = useState<string | null>(null);
+  const [b2cOrdersPage, setB2cOrdersPage] = useState(1);
+  const [b2cOrdersTotal, setB2cOrdersTotal] = useState(0);
+  const [b2cOrdersHasMore, setB2cOrdersHasMore] = useState(false);
   const [expandedB2CRow, setExpandedB2CRow] = useState<B2CRow | null>(null);
   const [viewingB2CLogFor, setViewingB2CLogFor] = useState<B2CRow | null>(null);
   // Real backend-persisted status history for B2C orders — fetched from
@@ -415,12 +427,15 @@ export default function AdminReservationsPage() {
 
   // New: independent fetch for web_orders — kept separate from loadAll()/Supabase so
   // the existing realtime-subscription flow for Fulfillment/Partners/Bulk is untouched.
-  async function loadWebOrders() {
+  async function loadWebOrders(page = 1) {
     try {
-      const res = await fetch(WEB_ORDERS_API);
+      const res = await fetch(`${WEB_ORDERS_API}?page=${page}&limit=10`);
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const data = await res.json();
-      setWebOrders(data);
+      setWebOrders(data.orders);
+      setWebOrdersPage(data.page);
+      setWebOrdersTotal(data.total);
+      setWebOrdersHasMore(data.hasMore);
       setWebOrdersError(null);
     } catch (err) {
       console.error("Failed to load web orders:", err);
@@ -429,13 +444,17 @@ export default function AdminReservationsPage() {
   }
 
   // New: independent fetch for the mobile app's "orders" collection (B2C tab) — same
-  // pattern as loadWebOrders, completely separate from it and from Supabase.
-  async function loadB2COrders() {
+  // pattern as loadWebOrders, completely separate from it and from Supabase. The
+  // backend now returns already-flattened, paginated individual order items directly.
+  async function loadB2COrders(page = 1) {
     try {
-      const res = await fetch(B2C_ORDERS_API);
+      const res = await fetch(`${B2C_ORDERS_API}?page=${page}&limit=10`);
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const data = await res.json();
-      setB2cOrders(data);
+      setB2cOrders(data.orders);
+      setB2cOrdersPage(data.page);
+      setB2cOrdersTotal(data.total);
+      setB2cOrdersHasMore(data.hasMore);
       setB2cOrdersError(null);
     } catch (err) {
       console.error("Failed to load B2C orders:", err);
@@ -622,11 +641,6 @@ export default function AdminReservationsPage() {
     }));
   }, [filteredWebOrders]);
 
-  const totalWebOrderRings = useMemo(() => {
-    if (!webOrders) return 0;
-    return webOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
-  }, [webOrders]);
-
   // Real POST to the backend — always appends a new entry, never overwrites. Preserves
   // the same "Delivered implies Shipped already happened" cascade as before, but now as
   // genuine separate database inserts if the shipped step hasn't been recorded yet.
@@ -694,29 +708,29 @@ export default function AdminReservationsPage() {
     return "";
   }
 
-  // ─── New: B2C tab logic — flattening, status/timeline, all independent of the above ──
+  // ─── New: B2C tab logic — reshaping, status/timeline, all independent of the above ──
+  // The backend now returns already-flattened, paginated items directly (one per row),
+  // so this is a simple reshape (field renaming + material humanizing), not a flatMap.
   const b2cRows = useMemo<B2CRow[] | null>(() => {
     if (!b2cOrders) return null;
-    return b2cOrders.flatMap((doc) =>
-      doc.orders.map((item) => ({
-        orderItemId: item._id,
-        createdAt: item.createdAt,
-        accountEmail: doc.email,
-        fullName: item.shippingAddress?.fullName ?? "",
-        phone: item.shippingAddress?.phone ?? "",
-        size: item.size ?? "—",
-        materialLabel: humanizeMaterial(item.material),
-        subscription: item.subscription ?? "—",
-        deliveryMethod: item.deliveryMethod ?? "—",
-        total: item.total ?? null,
-        address1: item.shippingAddress?.address1 ?? "",
-        city: item.shippingAddress?.city ?? "",
-        state: item.shippingAddress?.state ?? "",
-        zip: item.shippingAddress?.zip ?? "",
-        country: item.shippingAddress?.country ?? "",
-        engraving: item.engraving ?? "",
-      })),
-    );
+    return b2cOrders.map((item) => ({
+      orderItemId: item._id,
+      createdAt: item.createdAt,
+      accountEmail: item.email,
+      fullName: item.shippingAddress?.fullName ?? "",
+      phone: item.shippingAddress?.phone ?? "",
+      size: item.size ?? "—",
+      materialLabel: humanizeMaterial(item.material),
+      subscription: item.subscription ?? "—",
+      deliveryMethod: item.deliveryMethod ?? "—",
+      total: item.total ?? null,
+      address1: item.shippingAddress?.address1 ?? "",
+      city: item.shippingAddress?.city ?? "",
+      state: item.shippingAddress?.state ?? "",
+      zip: item.shippingAddress?.zip ?? "",
+      country: item.shippingAddress?.country ?? "",
+      engraving: item.engraving ?? "",
+    }));
   }, [b2cOrders]);
 
   function exportB2CCSV() {
@@ -1356,8 +1370,7 @@ export default function AdminReservationsPage() {
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="text-[14px] text-[#8B9DAF]">
-                      <span className="text-white font-medium">{webOrders?.length ?? 0}</span> reservations ·{" "}
-                      <span className="text-white font-medium">{totalWebOrderRings}</span> rings
+                      <span className="text-white font-medium">{webOrdersTotal}</span> reservations total
                     </div>
                     <div className="flex items-center gap-3">
                       <select
@@ -1520,6 +1533,28 @@ export default function AdminReservationsPage() {
                         )}
                       </tbody>
                     </table>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="text-[13px] text-[#8B9DAF]">
+                      Page {webOrdersPage} of {Math.max(1, Math.ceil(webOrdersTotal / 10))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => loadWebOrders(webOrdersPage - 1)}
+                        disabled={webOrdersPage <= 1}
+                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        onClick={() => loadWebOrders(webOrdersPage + 1)}
+                        disabled={!webOrdersHasMore}
+                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Next
+                      </button>
+                    </div>
                   </div>
 
                   {openStatusMenuFor && (
@@ -1832,7 +1867,7 @@ export default function AdminReservationsPage() {
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="text-[14px] text-[#8B9DAF]">
-                      <span className="text-white font-medium">{b2cRows?.length ?? 0}</span> orders
+                      <span className="text-white font-medium">{b2cOrdersTotal}</span> orders total
                     </div>
                     <button
                       onClick={exportB2CCSV}
@@ -1987,6 +2022,28 @@ export default function AdminReservationsPage() {
                         )}
                       </tbody>
                     </table>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="text-[13px] text-[#8B9DAF]">
+                      Page {b2cOrdersPage} of {Math.max(1, Math.ceil(b2cOrdersTotal / 10))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => loadB2COrders(b2cOrdersPage - 1)}
+                        disabled={b2cOrdersPage <= 1}
+                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        onClick={() => loadB2COrders(b2cOrdersPage + 1)}
+                        disabled={!b2cOrdersHasMore}
+                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Next
+                      </button>
+                    </div>
                   </div>
 
                   {openB2CStatusMenuFor && (
