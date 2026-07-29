@@ -98,8 +98,8 @@ export default function ShopPage() {
               </h1>
 
               <p className="text-body mb-8">
-                The full circle of health intelligence. Continuous awareness, 
-                effortless comfort, endless insights.
+                The full circle of everyday wellness. Continuous awareness,
+                effortless comfort, endless insight into your habits.
               </p>
 
               {/* Excitement Block */}
@@ -108,7 +108,7 @@ export default function ShopPage() {
                   Something extraordinary is coming
                 </p>
                 <p className="text-body mb-6">
-                  The future of health intelligence — crafted for your finger, designed for your life.
+                  The future of everyday wellness — crafted for your finger, designed for your life.
                 </p>
                 <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/5">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />

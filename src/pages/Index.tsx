@@ -755,14 +755,14 @@ function BodyTalkingSection() {
    ───────────────────────────────────────────── */
 function PillarsSection() {
   const pillars = [
-    { icon: "❤️", name: "Heart Health", line: "Resting HR · HRV · ECG · BP (EST)", bullets: [
-      "HRV — your stress and resilience in one number",
-      "ECG — detect irregular rhythms on demand",
-      "BP trend (EST) — direction, not just readings",
+    { icon: "❤️", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
+      "HRV — a simple daily read on stress and resilience",
+      "Heart rhythm insight — wellness awareness, on demand",
+      "BP trend (EST) — general direction, not a reading",
     ]},
     { icon: "🌙", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
       "Deep, REM, Light — every stage, every night",
-      "Breathing rate during sleep is an early illness signal",
+      "Breathing rate trends while you sleep",
       "7 hours in bed is not 7 hours of sleep",
     ]},
     { icon: "🌸", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
@@ -772,18 +772,18 @@ function PillarsSection() {
     ]},
     { icon: "💪", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
       "Know when to go hard and when to rest",
-      "Overtraining detection before you feel it",
+      "Training load awareness before you feel drained",
       "The workout doesn't make you stronger. Recovery does.",
     ]},
-    { icon: "🧠", name: "Stress & Mental", line: "Real-time stress · HRV · Burnout risk", bullets: [
-      "See how each meeting affects your nervous system",
-      "Burnout shows up in data weeks before you feel it",
-      "Stress is invisible until aiOn shows it",
+    { icon: "🧠", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
+      "See how a busy day shows up in your body",
+      "Spot the weeks you've been pushing too hard",
+      "Stress is easy to ignore until you can see it",
     ]},
-    { icon: "🩸", name: "Metabolic", line: "Blood Glucose (EST) · BP (EST)", bullets: [
-      "Glucose and BP trends matter long before diagnosis",
-      "EST readings — direction, not clinical readings",
-      "Metabolic disease starts with a trend. aiOn watches it.",
+    { icon: "🩸", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
+      "Follow long-term lifestyle trends, not single numbers",
+      "EST trends show direction — they are not measurements",
+      "Build habits around how your body responds",
     ]},
   ];
   const [open, setOpen] = useState<number | null>(null);
@@ -841,7 +841,9 @@ function PillarsSection() {
           })}
         </div>
         <p className="mt-10 text-center text-[11px] text-white/40 max-w-xl mx-auto">
-          Blood Pressure (EST) and Blood Glucose (EST) are estimates — not for medical diagnosis.
+          aiOn Ring is intended for general wellness purposes only and is not a medical device.
+          Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates and are
+          not intended to diagnose, treat, cure, or prevent any disease or medical condition.
         </p>
       </div>
     </section>
@@ -961,7 +963,7 @@ function TheAppSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 6 — Preventive
+   Section 6 — Trends
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
@@ -982,17 +984,20 @@ function PreventiveSection() {
               style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.9)", color: C.gold }}
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 2.5, duration: 0.6 }}
             >
-              ⚠️ Your HRV dropped 22% this week
+              Your HRV trend is 22% below your usual range
             </motion.div>
           </div>
         </FadeUp>
         <FadeUp delay={0.4} className="mt-14">
           <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
-            aiOn saw it on Day 11.<br />
-            <span className="text-white/60">You felt it on Day 14.</span>
+            The trend showed on Day 11.<br />
+            <span className="text-white/60">You noticed on Day 14.</span>
           </h2>
           <p className="mt-6 text-lg md:text-xl font-light" style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}66` }}>
-            See it before you feel it.
+            Wellness trends, made visible.
+          </p>
+          <p className="mt-4 text-xs text-white/40 max-w-md mx-auto">
+            Trend information is for general wellness and informational purposes only.
           </p>
         </FadeUp>
       </div>
@@ -1058,7 +1063,7 @@ function PlansSection() {
   const plans = [
     { tag: "FREE WITH EVERY RING", name: "aiOn Vitals", tease: "The essentials. Free.", accent: C.blue, features: ["Heart Rate · HRV", "SpO₂ · Temperature", "Sleep · Recovery", "Stress · Vitality Score", "Daily Quest · XP", "aiOn Vitals app"] },
     { tag: "", name: "aiOn Vitals + Insights", tease: "Trends. Coaching. History.", accent: C.purple, highlight: true, features: ["Everything in Vitals", "Insights · Trends", "Sleep Coaching", "Goal Tracking", "Full History"] },
-    { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", tease: "AI. ECG. Everything.", accent: C.gold, features: ["Everything in Insights", "AI Coach", "Preventive Alerts", "BP (EST) · Glucose (EST)", "ECG", "Priority Support"] },
+    { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", tease: "AI coaching. Deeper trends.", accent: C.gold, features: ["Everything in Insights", "AI Wellness Coach", "Wellness Trend Alerts", "BP trend (EST) · Glucose trend (EST)", "Heart Rhythm Insight", "Priority Support"] },
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
@@ -1112,6 +1117,10 @@ function PlansSection() {
           })}
         </div>
         <p className="mt-8 text-center text-xs text-white/40">30-day free trial on paid plans</p>
+        <p className="mt-3 text-center text-[11px] text-white/35 max-w-xl mx-auto">
+          All plans provide general wellness and fitness features only. No plan provides medical
+          advice, diagnosis, or treatment.
+        </p>
       </div>
     </section>
   );
@@ -1159,6 +1168,35 @@ function FinalCTA() {
             <span className="relative">Pre-order Now</span>
           </Link>
         </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Wellness disclaimer
+   ───────────────────────────────────────────── */
+function WellnessDisclaimerSection() {
+  return (
+    <section className="relative py-14 md:py-20" style={{ background: C.navy }}>
+      <div className="container mx-auto px-6">
+        <div
+          className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
+          style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}
+        >
+          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">General wellness product</p>
+          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-white/65 leading-relaxed">
+            <p>aiOn Ring is intended for general wellness purposes only and is not a medical device.</p>
+            <p>
+              The information provided by aiOn Ring is for informational purposes only and is not
+              intended to diagnose, treat, cure, or prevent any disease or medical condition.
+            </p>
+            <p>
+              Always consult a qualified healthcare professional regarding any medical concerns or
+              before making healthcare decisions.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1221,6 +1259,7 @@ export default function Index() {
         <RingSection />
         <PlansSection />
         <FinalCTA />
+        <WellnessDisclaimerSection />
       </main>
       <Footer />
     </div>
