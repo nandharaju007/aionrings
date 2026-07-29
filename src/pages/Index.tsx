@@ -963,7 +963,7 @@ function TheAppSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 6 — Preventive
+   Section 6 — Trends
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
@@ -984,17 +984,20 @@ function PreventiveSection() {
               style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.9)", color: C.gold }}
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 2.5, duration: 0.6 }}
             >
-              ⚠️ Your HRV dropped 22% this week
+              Your HRV trend is 22% below your usual range
             </motion.div>
           </div>
         </FadeUp>
         <FadeUp delay={0.4} className="mt-14">
           <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
-            aiOn saw it on Day 11.<br />
-            <span className="text-white/60">You felt it on Day 14.</span>
+            The trend showed on Day 11.<br />
+            <span className="text-white/60">You noticed on Day 14.</span>
           </h2>
           <p className="mt-6 text-lg md:text-xl font-light" style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}66` }}>
-            See it before you feel it.
+            Wellness trends, made visible.
+          </p>
+          <p className="mt-4 text-xs text-white/40 max-w-md mx-auto">
+            Trend information is for general wellness and informational purposes only.
           </p>
         </FadeUp>
       </div>
