@@ -1104,8 +1104,8 @@ export default function AdminReservationsPage() {
               </button>
               <p className="text-[12px] text-[#5A6B7E] text-center pt-2">
                 Admin access is restricted. Contact{" "}
-                <a href="mailto:support@aionrigs.com" className="underline">
-                  support@aionrigs.com
+                <a href="mailto:contact@aionrings.com" className="underline">
+                  contact@aionrings.com
                 </a>{" "}
                 if you need access.
               </p>

@@ -44,7 +44,7 @@ const TrademarksPage = () => {
                 <p>
                   Components of the aiOn Ring and platform are covered by one or more issued patents and
                   pending patent applications in the United States and abroad. A list is available upon
-                  written request to legal@mazosolutions.com.
+                  written request to contact@aionrings.com.
                 </p>
               </section>
 
@@ -71,7 +71,7 @@ const TrademarksPage = () => {
                 <h2 className="text-xl font-light text-foreground mb-4">Reporting Infringement</h2>
                 <p>
                   To report suspected trademark misuse, counterfeit products, or copyright infringement
-                  (including DMCA notices), contact: <strong>legal@mazosolutions.com</strong>.
+                  (including DMCA notices), contact: <strong>contact@aionrings.com</strong>.
                 </p>
               </section>
 
