@@ -66,8 +66,8 @@ export function IntelligenceSection() {
               <div>
                 <h3 className="text-lg font-light text-foreground mb-2">Multi-Signal Fusion</h3>
                 <p className="text-body">
-                  Heart rate, HRV, sleep quality, stress levels, glucose trends, 
-                  and blood pressure—woven together into unified understanding.
+                  Heart rate, HRV, sleep quality, stress levels, and estimated glucose
+                  and blood pressure trends—woven together into everyday wellness awareness.
                 </p>
               </div>
 
