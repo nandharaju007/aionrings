@@ -154,9 +154,11 @@ const PrivacyPolicyPage = () => {
 
               <div className="card-glass p-6 mt-12">
                 <p className="text-caption text-center">
-                  aiOn provides wellness insights based on physiological signal trends and patterns. 
-                  It is not intended for medical diagnosis or treatment. Always consult a healthcare 
-                  professional for medical advice.
+                  aiOn Ring is intended for general wellness purposes only and is not a medical device.
+                  The information provided by aiOn Ring is for informational purposes only and is not
+                  intended to diagnose, treat, cure, or prevent any disease or medical condition.
+                  Always consult a qualified healthcare professional regarding any medical concerns or
+                  before making healthcare decisions.
                 </p>
               </div>
             </div>
