@@ -58,9 +58,9 @@ export function PrivacySection() {
             </div>
 
             <p className="text-caption text-center max-w-2xl mx-auto">
-              aiOn provides wellness insights based on physiological signal trends and patterns. 
-              It is not intended for medical diagnosis or treatment. Optional cloud sync available 
-              with end-to-end encryption.
+              aiOn Ring is intended for general wellness purposes only and is not a medical device.
+              Its information is not intended to diagnose, treat, cure, or prevent any disease or
+              medical condition. Optional cloud sync available with end-to-end encryption.
             </p>
           </div>
         </motion.div>
