@@ -53,7 +53,7 @@ const AccessibilityPage = () => {
                 <h2 className="text-xl font-light text-foreground mb-4">Feedback</h2>
                 <p>
                   We welcome feedback on the accessibility of aiOn. If you encounter barriers, please
-                  contact us at accessibility@mazosolutions.com. We aim to respond within 5 business days.
+                  contact us at contact@aionrings.com. We aim to respond within 5 business days.
                 </p>
               </section>
             </div>

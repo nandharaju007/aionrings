@@ -139,7 +139,7 @@ const CookiePolicyPage = () => {
                 </p>
                 <p className="mt-2 text-foreground">
                   Mazo Solutions Inc.<br />
-                  Email: <a href="mailto:privacy@mazosolutions.com" className="text-primary hover:underline">privacy@mazosolutions.com</a>
+                  Email: <a href="mailto:contact@aionrings.com" className="text-primary hover:underline">contact@aionrings.com</a>
                 </p>
               </section>
             </div>

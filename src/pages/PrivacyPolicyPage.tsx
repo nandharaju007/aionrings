@@ -149,7 +149,7 @@ const PrivacyPolicyPage = () => {
                 </p>
                 <p className="mt-2 text-foreground">
                   Mazo Solutions Inc.<br />
-                  Email: <a href="mailto:support@aionrings.com" className="text-primary hover:underline">support@aionrings.com</a>
+                  Email: <a href="mailto:contact@aionrings.com" className="text-primary hover:underline">contact@aionrings.com</a>
                 </p>
                 <ContactForm />
               </section>

@@ -41,8 +41,8 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: "aiOn Website <support@aionrings.com>",
-        to: ["support@aionrings.com"],
+        from: "aiOn Website <contact@aionrings.com>",
+        to: ["contact@aionrings.com"],
         reply_to: email,
         subject: subject ? `Privacy inquiry: ${subject}` : `Privacy inquiry from ${name}`,
         html: `<div style="font-family:Inter,sans-serif;padding:20px;color:#0A1628;">

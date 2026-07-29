@@ -22,7 +22,7 @@ export const ContactForm = () => {
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
       console.error('contact form failed:', err);
-      toast.error('Could not send your message. Please email support@aionrings.com directly.');
+      toast.error('Could not send your message. Please email contact@aionrings.com directly.');
     } finally {
       setSending(false);
     }
@@ -74,7 +74,7 @@ export const ContactForm = () => {
       >
         {sending ? 'Sending…' : 'Send message'}
       </button>
-      <p className="text-caption">Messages are sent to support@aionrings.com. We typically reply within 2 business days.</p>
+      <p className="text-caption">Messages are sent to contact@aionrings.com. We typically reply within 2 business days.</p>
     </form>
   );
 };
