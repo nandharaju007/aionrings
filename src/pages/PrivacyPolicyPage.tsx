@@ -142,7 +142,7 @@ const PrivacyPolicyPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground,foreground mb-4">10. Contact Us</h2>
+                <h2 className="text-xl font-light text-foreground mb-4">10. Contact Us</h2>
                 <p>
                   For privacy-related inquiries or to exercise your data rights, please contact us at:
                 </p>
