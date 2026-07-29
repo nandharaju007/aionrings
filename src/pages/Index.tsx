@@ -1063,7 +1063,7 @@ function PlansSection() {
   const plans = [
     { tag: "FREE WITH EVERY RING", name: "aiOn Vitals", tease: "The essentials. Free.", accent: C.blue, features: ["Heart Rate · HRV", "SpO₂ · Temperature", "Sleep · Recovery", "Stress · Vitality Score", "Daily Quest · XP", "aiOn Vitals app"] },
     { tag: "", name: "aiOn Vitals + Insights", tease: "Trends. Coaching. History.", accent: C.purple, highlight: true, features: ["Everything in Vitals", "Insights · Trends", "Sleep Coaching", "Goal Tracking", "Full History"] },
-    { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", tease: "AI. ECG. Everything.", accent: C.gold, features: ["Everything in Insights", "AI Coach", "Preventive Alerts", "BP (EST) · Glucose (EST)", "ECG", "Priority Support"] },
+    { tag: "MOST COMPLETE", name: "aiOn Vitals + Insights + Premium", tease: "AI coaching. Deeper trends.", accent: C.gold, features: ["Everything in Insights", "AI Wellness Coach", "Wellness Trend Alerts", "BP trend (EST) · Glucose trend (EST)", "Heart Rhythm Insight", "Priority Support"] },
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
@@ -1117,6 +1117,10 @@ function PlansSection() {
           })}
         </div>
         <p className="mt-8 text-center text-xs text-white/40">30-day free trial on paid plans</p>
+        <p className="mt-3 text-center text-[11px] text-white/35 max-w-xl mx-auto">
+          All plans provide general wellness and fitness features only. No plan provides medical
+          advice, diagnosis, or treatment.
+        </p>
       </div>
     </section>
   );
