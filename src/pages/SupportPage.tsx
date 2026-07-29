@@ -78,17 +78,23 @@ const SupportPage = () => {
               <section>
                 <h2 className="text-xl font-light text-foreground mb-4">Business & Partnership Inquiries</h2>
                 <p>
-                  For healthcare partnerships, bulk reservations, and B2B opportunities, please visit
+                  For wellness partnerships, bulk reservations, and B2B opportunities, please visit
                   our <a href="/partners" className="text-[#4FB3FF] hover:underline">Partners page</a> or
                   contact <a href="mailto:support@aionrings.com" className="text-[#4FB3FF] hover:underline">support@aionrings.com</a>.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Medical Disclaimer</h2>
+                <h2 className="text-xl font-light text-foreground mb-4">Wellness Disclaimer</h2>
+                <p className="mb-3">
+                  aiOn Ring is intended for general wellness purposes only and is not a medical device.
+                  The information provided by aiOn Ring is for informational purposes only and is not
+                  intended to diagnose, treat, cure, or prevent any disease or medical condition.
+                </p>
                 <p>
-                  aiOn is a consumer wellness device, not a medical device. If you have a health
-                  emergency or need medical advice, please contact a qualified healthcare provider.
+                  Always consult a qualified healthcare professional regarding any medical concerns or
+                  before making healthcare decisions. In an emergency, contact your local emergency
+                  services immediately.
                 </p>
               </section>
             </div>
