@@ -1,0 +1,13 @@
+{
+  "name": "aiOn — The AI-Native Smart Health Ring",
+  "short_name": "aiOn",
+  "description": "aiOn turns your body's signals into one daily Vitality Score and one action built for you.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1628",
+  "theme_color": "#0A1628",
+  "icons": [
+    { "src": "/android-chrome-192x192.png?v=2", "sizes": "192x192", "type": "image/png" },
+    { "src": "/android-chrome-512x512.png?v=2", "sizes": "512x512", "type": "image/png" }
+  ]
+}
