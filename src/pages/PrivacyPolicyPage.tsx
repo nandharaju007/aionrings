@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header';
 import { SEO } from '@/components/SEO';
 import { Footer } from '@/components/Footer';
+import { ContactForm } from '@/components/ContactForm';
 import { motion } from 'framer-motion';
 
 const PrivacyPolicyPage = () => {
@@ -150,6 +151,7 @@ const PrivacyPolicyPage = () => {
                   Mazo Solutions Inc.<br />
                   Email: <a href="mailto:support@aionrings.com" className="text-primary hover:underline">support@aionrings.com</a>
                 </p>
+                <ContactForm />
               </section>
 
               <div className="card-glass p-6 mt-12">
