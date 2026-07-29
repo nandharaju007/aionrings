@@ -98,16 +98,21 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mx-auto mt-4 max-w-xl text-center text-[12px] text-[#5A6B7E]">
-          aiOn is a consumer wellness ring. Not a medical device. Not intended to diagnose, treat,
-          cure, or prevent any disease.
+        <p className="mx-auto mt-4 max-w-2xl text-center text-[12px] text-[#5A6B7E]">
+          aiOn Ring is intended for general wellness purposes only and is not a medical device.
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-center text-[12px] text-[#5A6B7E]">
-          Blood Pressure (EST) and Blood Glucose (EST) are estimated readings — not for
-          medical diagnosis or clinical use. Consult a qualified healthcare provider.
+          The information provided by aiOn Ring is for informational purposes only and is not
+          intended to diagnose, treat, cure, or prevent any disease or medical condition.
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-center text-[12px] text-[#5A6B7E]">
-          Built by a healthcare technology team with a decade of experience in AI and health systems.
+          Always consult a qualified healthcare professional regarding any medical concerns or
+          before making healthcare decisions.
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-[12px] text-[#5A6B7E]">
+          Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates showing
+          general trends only — they are not measurements and must not be used for any health or
+          treatment decision.
         </p>
       </div>
     </footer>
