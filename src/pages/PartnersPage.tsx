@@ -33,7 +33,7 @@ export default function PartnersPage() {
   const [done, setDone] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'aiOn Partner Program — Healthcare & Wellness Partners';
+    document.title = 'aiOn Partner Program — Wellness & Lifestyle Partners';
   }, []);
 
   const update = <K extends keyof BulkForm>(k: K, v: BulkForm[K]) => setForm(p => ({ ...p, [k]: v }));
@@ -75,7 +75,7 @@ export default function PartnersPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white">
-      <SEO title={"aiOn Partner Program — Bring proactive health to your community"} description={"Join the aiOn Partner Program. Referral tools, bulk reservations, and co-branded launches for healthcare providers, clinics, and creators."} path="/partners" image="/og-partners.jpg" />
+      <SEO title={"aiOn Partner Program — Bring everyday wellness to your community"} description={"Join the aiOn Partner Program. Referral tools, bulk reservations, and co-branded launches for wellness studios, gyms, employers, and creators."} path="/partners" image="/og-partners.jpg" />
       <Header />
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
@@ -108,7 +108,7 @@ export default function PartnersPage() {
                   <span className="text-[11px] font-semibold uppercase tracking-[3px] text-[#B8C5D3]">Bulk Reservation</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
-                  For clinics, wellness centers <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: 'text', color: 'transparent' }}>& businesses</span>.
+                  For wellness centers, studios <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: 'text', color: 'transparent' }}>& businesses</span>.
                 </h1>
                 <p className="text-[15px] text-[#8B9DAF] max-w-xl mx-auto">
                   Tell us about your organization. We'll contact you regarding pricing and delivery — no payment today.
@@ -117,7 +117,7 @@ export default function PartnersPage() {
 
               <form onSubmit={onSubmit} className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-10">
                 <div className="grid md:grid-cols-2 gap-4">
-                  <Field label="Business / Clinic name" value={form.business_name} onChange={v => update('business_name', v)} required />
+                  <Field label="Business / Organization name" value={form.business_name} onChange={v => update('business_name', v)} required />
                   <Field label="Contact person" value={form.contact_person} onChange={v => update('contact_person', v)} required />
                   <Field label="Business email" type="email" value={form.email} onChange={v => update('email', v)} required />
                   <Field label="Phone" type="tel" value={form.phone} onChange={v => update('phone', v)} required />
@@ -175,7 +175,7 @@ export default function PartnersPage() {
                   Bring aiOn to <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: 'text', color: 'transparent' }}>your community</span>.
                 </h1>
                 <p className="text-[17px] text-[#8B9DAF] max-w-2xl mx-auto leading-relaxed">
-                  Clinics, wellness centers, healthcare providers and businesses can invite their customers to reserve the aiOn Ring — no inventory, no upfront cost.
+                  Wellness centers, studios, gyms, employers and businesses can invite their customers to reserve the aiOn Ring — no inventory, no upfront cost.
                 </p>
               </div>
 
@@ -195,10 +195,10 @@ export default function PartnersPage() {
 
                 <button onClick={() => setMode('bulk')} className="text-left group relative overflow-hidden rounded-3xl border border-[#4FB3FF]/30 bg-gradient-to-br from-[#4FB3FF]/[0.06] to-transparent p-8 md:p-10 hover:border-[#4FB3FF]/60 transition-all">
                   <Building2 className="w-8 h-8 text-[#4FB3FF] mb-6" />
-                  <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-3">Business / Healthcare Partner</div>
+                  <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-3">Business / Wellness Partner</div>
                   <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-3">We're reserving for our organization</h2>
                   <p className="text-[14px] text-[#8B9DAF] leading-relaxed mb-6">
-                    Bulk reservations for clinics, wellness centers, and enterprises. We'll contact you regarding pricing and delivery.
+                    Bulk reservations for wellness centers, studios, and enterprises. We'll contact you regarding pricing and delivery.
                   </p>
                   <span className="inline-flex items-center gap-2 text-[14px] font-medium text-white group-hover:gap-3 transition-all">
                     Request bulk reservation <ArrowRight className="w-4 h-4" />
