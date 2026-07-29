@@ -1174,6 +1174,35 @@ function FinalCTA() {
 }
 
 /* ─────────────────────────────────────────────
+   Wellness disclaimer
+   ───────────────────────────────────────────── */
+function WellnessDisclaimerSection() {
+  return (
+    <section className="relative py-14 md:py-20" style={{ background: C.navy }}>
+      <div className="container mx-auto px-6">
+        <div
+          className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
+          style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}
+        >
+          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">General wellness product</p>
+          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-white/65 leading-relaxed">
+            <p>aiOn Ring is intended for general wellness purposes only and is not a medical device.</p>
+            <p>
+              The information provided by aiOn Ring is for informational purposes only and is not
+              intended to diagnose, treat, cure, or prevent any disease or medical condition.
+            </p>
+            <p>
+              Always consult a qualified healthcare professional regarding any medical concerns or
+              before making healthcare decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Page load intro
    ───────────────────────────────────────────── */
 function IntroOverlay() {
@@ -1230,6 +1259,7 @@ export default function Index() {
         <RingSection />
         <PlansSection />
         <FinalCTA />
+        <WellnessDisclaimerSection />
       </main>
       <Footer />
     </div>
