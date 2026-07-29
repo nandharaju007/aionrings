@@ -40,13 +40,21 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">3. Medical Disclaimer</h2>
+                <h2 className="text-xl font-light text-foreground mb-4">3. General Wellness Disclaimer</h2>
+                <p className="mb-3">
+                  aiOn Ring is intended for <strong>general wellness purposes only and is not a medical
+                  device</strong>. It supports you in monitoring overall wellness, fitness, recovery,
+                  sleep, and lifestyle habits.
+                </p>
+                <p className="mb-3">
+                  The information provided by aiOn Ring is for informational purposes only and is not
+                  intended to diagnose, treat, cure, or prevent any disease or medical condition.
+                  Scores, trends, and suggestions are lifestyle guidance, not clinical measurements.
+                </p>
                 <p>
-                  aiOn is a wellness and lifestyle product. It is <strong>not a medical device</strong>
-                  {' '}and is not intended to diagnose, treat, cure, or prevent any disease or medical
-                  condition. Insights, scores, and recommendations are based on physiological signal
-                  trends and should not be relied upon for medical decisions. Always consult a qualified
-                  healthcare professional regarding any medical concerns.
+                  Always consult a qualified healthcare professional regarding any medical concerns or
+                  before making healthcare decisions. Never disregard or delay professional advice
+                  because of information shown by aiOn.
                 </p>
               </section>
 
