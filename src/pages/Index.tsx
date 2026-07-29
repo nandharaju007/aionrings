@@ -755,14 +755,14 @@ function BodyTalkingSection() {
    ───────────────────────────────────────────── */
 function PillarsSection() {
   const pillars = [
-    { icon: "❤️", name: "Heart Health", line: "Resting HR · HRV · ECG · BP (EST)", bullets: [
-      "HRV — your stress and resilience in one number",
-      "ECG — detect irregular rhythms on demand",
-      "BP trend (EST) — direction, not just readings",
+    { icon: "❤️", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
+      "HRV — a simple daily read on stress and resilience",
+      "Heart rhythm insight — wellness awareness, on demand",
+      "BP trend (EST) — general direction, not a reading",
     ]},
     { icon: "🌙", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
       "Deep, REM, Light — every stage, every night",
-      "Breathing rate during sleep is an early illness signal",
+      "Breathing rate trends while you sleep",
       "7 hours in bed is not 7 hours of sleep",
     ]},
     { icon: "🌸", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
@@ -772,18 +772,18 @@ function PillarsSection() {
     ]},
     { icon: "💪", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
       "Know when to go hard and when to rest",
-      "Overtraining detection before you feel it",
+      "Training load awareness before you feel drained",
       "The workout doesn't make you stronger. Recovery does.",
     ]},
-    { icon: "🧠", name: "Stress & Mental", line: "Real-time stress · HRV · Burnout risk", bullets: [
-      "See how each meeting affects your nervous system",
-      "Burnout shows up in data weeks before you feel it",
-      "Stress is invisible until aiOn shows it",
+    { icon: "🧠", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
+      "See how a busy day shows up in your body",
+      "Spot the weeks you've been pushing too hard",
+      "Stress is easy to ignore until you can see it",
     ]},
-    { icon: "🩸", name: "Metabolic", line: "Blood Glucose (EST) · BP (EST)", bullets: [
-      "Glucose and BP trends matter long before diagnosis",
-      "EST readings — direction, not clinical readings",
-      "Metabolic disease starts with a trend. aiOn watches it.",
+    { icon: "🩸", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
+      "Follow long-term lifestyle trends, not single numbers",
+      "EST trends show direction — they are not measurements",
+      "Build habits around how your body responds",
     ]},
   ];
   const [open, setOpen] = useState<number | null>(null);
@@ -841,7 +841,9 @@ function PillarsSection() {
           })}
         </div>
         <p className="mt-10 text-center text-[11px] text-white/40 max-w-xl mx-auto">
-          Blood Pressure (EST) and Blood Glucose (EST) are estimates — not for medical diagnosis.
+          aiOn Ring is intended for general wellness purposes only and is not a medical device.
+          Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates and are
+          not intended to diagnose, treat, cure, or prevent any disease or medical condition.
         </p>
       </div>
     </section>
