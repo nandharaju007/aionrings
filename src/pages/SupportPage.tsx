@@ -7,7 +7,7 @@ import { Mail, Package, HelpCircle, MessageCircle } from 'lucide-react';
 const SupportPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SEO title={"aiOn Support — We're here to help"} description={"Contact aiOn support for setup, orders, and shipping. Reach us at support@aionrings.com and orders@aionrings.com."} path="/support" image="/og-support.jpg" />
+      <SEO title={"aiOn Support — We're here to help"} description={"Contact aiOn support for setup, orders, and shipping. Reach us at support@aionrigs.com and orders@aionrings.com."} path="/support" image="/og-support.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
@@ -21,7 +21,7 @@ const SupportPage = () => {
 
             <div className="grid md:grid-cols-2 gap-6 mb-12">
               <a
-                href="mailto:support@aionrings.com"
+                href="mailto:support@aionrigs.com"
                 className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-[#4FB3FF]/40 transition-all"
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -34,7 +34,7 @@ const SupportPage = () => {
                   Questions about setup, features, account access, or troubleshooting.
                 </p>
                 <span className="text-[14px] font-medium text-[#4FB3FF] group-hover:underline">
-                  support@aionrings.com
+                  support@aionrigs.com
                 </span>
               </a>
 
@@ -80,7 +80,7 @@ const SupportPage = () => {
                 <p>
                   For wellness partnerships, bulk reservations, and B2B opportunities, please visit
                   our <a href="/partners" className="text-[#4FB3FF] hover:underline">Partners page</a> or
-                  contact <a href="mailto:support@aionrings.com" className="text-[#4FB3FF] hover:underline">support@aionrings.com</a>.
+                  contact <a href="mailto:support@aionrigs.com" className="text-[#4FB3FF] hover:underline">support@aionrigs.com</a>.
                 </p>
               </section>
 
