@@ -424,7 +424,7 @@ export default function PreOrderPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white">
-      <SEO title={"Pre-order aiOn — Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart health ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026."} path="/preorder" image="/og-preorder.jpg" />
+      <SEO title={"Pre-order aiOn — Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
       <Header />
 
       <main className="pt-32 pb-32">
