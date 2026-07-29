@@ -77,12 +77,12 @@ const MovementIcon = () => (
 const features = [
   {
     title: 'Metabolic Balance',
-    description: 'Blood glucose trends and energy rhythm awareness over time. Understand your metabolic patterns, not just single readings.',
+    description: 'Estimated glucose trends and energy rhythm awareness over time — general wellness direction, not measurements.',
     icon: <MetabolicIcon />,
   },
   {
     title: 'Cardiovascular Awareness',
-    description: 'Heart rate and blood pressure patterns. See the relationship between rest and activity in continuous context.',
+    description: 'Heart rate and estimated blood pressure trends. See the relationship between rest and activity in continuous context.',
     icon: <CardioIcon />,
   },
   {
