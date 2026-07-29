@@ -1176,6 +1176,124 @@ function FinalCTA() {
 /* ─────────────────────────────────────────────
    Wellness disclaimer
    ───────────────────────────────────────────── */
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "Is the aiOn Ring a medical device?",
+    a: "No. aiOn Ring is a general wellness product. It is not a medical device and is not cleared or approved to diagnose, treat, cure, or prevent any disease or medical condition.",
+  },
+  {
+    q: "Can aiOn detect a heart condition, sleep disorder, or diabetes?",
+    a: "No. aiOn shows trends and patterns in your everyday wellness signals. It cannot detect, screen for, or rule out any condition. If something feels off, speak with a qualified healthcare professional.",
+  },
+  {
+    q: "What does “(EST)” mean on Blood Pressure and Glucose?",
+    a: "Those are non-medical wellness estimates that illustrate general directional trends only. They are not measurements and must never be used for any health or treatment decision.",
+  },
+  {
+    q: "Should I change medication or treatment based on aiOn insights?",
+    a: "Never. All insights are informational only. Do not start, stop, or adjust any medication, therapy, or treatment without consulting your healthcare professional.",
+  },
+  {
+    q: "How accurate are the readings?",
+    a: "Signals are captured for wellness and lifestyle awareness, not clinical accuracy. Results can vary with fit, activity, skin, and environment, and should not be compared to medical-grade equipment.",
+  },
+  {
+    q: "Can I share my data with my doctor?",
+    a: "You can export your data and share it if you choose. It is context for a conversation with your healthcare professional — not a diagnostic report, and it does not replace professional evaluation.",
+  },
+  {
+    q: "What should I do in an emergency?",
+    a: "Do not rely on aiOn. Contact your local emergency services or a qualified healthcare professional immediately.",
+  },
+];
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="relative py-16 md:py-24" style={{ background: C.navy }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }),
+        }}
+      />
+      <div className="container mx-auto px-6">
+        <FadeUp className="mx-auto max-w-3xl text-center">
+          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">Questions, answered</p>
+          <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-white">
+            What aiOn is — and what it isn’t
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-white/55">
+            A wellness companion. Informational only. Never a substitute for professional care.
+          </p>
+        </FadeUp>
+
+        <div className="mx-auto mt-10 max-w-3xl space-y-3">
+          {FAQS.map((f, i) => {
+            const isOpen = open === i;
+            return (
+              <FadeUp key={f.q} delay={i * 0.04}>
+                <div
+                  className="rounded-2xl border backdrop-blur-xl overflow-hidden"
+                  style={{
+                    borderColor: isOpen ? "rgba(79,179,255,0.35)" : "rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 md:px-6 md:py-5 text-left"
+                  >
+                    <span className="text-[15px] md:text-base font-light text-white/90">{f.q}</span>
+                    <span
+                      className="shrink-0 text-xl font-extralight text-white/50 transition-transform duration-300"
+                      style={{ transform: isOpen ? "rotate(45deg)" : "none" }}
+                    >
+                      +
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <p className="px-5 pb-5 md:px-6 md:pb-6 text-sm md:text-[15px] font-light leading-relaxed text-white/60">
+                          {f.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </FadeUp>
+            );
+          })}
+        </div>
+
+        <FadeUp delay={0.1}>
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs md:text-[13px] font-light leading-relaxed text-white/45">
+            All aiOn results are informational only and are not intended to diagnose, treat, cure, or
+            prevent any disease or medical condition. Always consult a qualified healthcare
+            professional regarding any medical concerns or before making healthcare decisions.
+          </p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
 function WellnessDisclaimerSection() {
   return (
     <section className="relative py-14 md:py-20" style={{ background: C.navy }}>
@@ -1259,6 +1377,7 @@ export default function Index() {
         <RingSection />
         <PlansSection />
         <FinalCTA />
+        <FAQSection />
         <WellnessDisclaimerSection />
       </main>
       <Footer />
