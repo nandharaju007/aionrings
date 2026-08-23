@@ -540,24 +540,6 @@ export default function PreOrderPage() {
                     </div>
                   </div>
 
-                  {/* Sensor cutaway */}
-                  <div className="mt-6 rounded-3xl border border-white/[0.06] overflow-hidden bg-white/[0.02]">
-                    <img
-                      src={ringSensorInside}
-                      alt="Inside the aiOn Ring — optical LEDs, photodiode and temperature sensor"
-                      width={1024}
-                      height={1024}
-                      loading="lazy"
-                      className="w-full h-56 md:h-64 object-cover"
-                    />
-                    <div className="p-5">
-                      <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Inside the ring</div>
-                      <p className="mt-2 text-[13px] text-[#B8C5D3] leading-relaxed">
-                        Precision optical LEDs, a photodiode and a skin-temperature sensor sit flush against your
-                        finger — sensing continuously, invisibly.
-                      </p>
-                    </div>
-                  </div>
 
                   {/* Trust */}
                   <div className="mt-8 grid grid-cols-3 gap-3">
