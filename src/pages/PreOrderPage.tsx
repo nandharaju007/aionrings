@@ -312,7 +312,7 @@ export default function PreOrderPage() {
   const referral = params.get("ref") || undefined;
   const partnerCode = (params.get("partner") || "").trim().toLowerCase() || undefined;
 
-  const [form, setForm] = useState<FormState>(INITIAL);
+  const [form, setForm] = useState<FormState>(() => ({ ...INITIAL, referral_source: referral ?? "" }));
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
