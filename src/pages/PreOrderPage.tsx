@@ -254,6 +254,7 @@ interface FormState {
   state: string;
   zip_code: string;
   country: string;
+  referral_source: string;
 }
 
 const INITIAL: FormState = {
@@ -268,7 +269,9 @@ const INITIAL: FormState = {
   state: "",
   zip_code: "",
   country: "United States",
+  referral_source: "",
 };
+
 
 type FieldKey = keyof FormState | "ring_size";
 
@@ -309,7 +312,7 @@ export default function PreOrderPage() {
   const referral = params.get("ref") || undefined;
   const partnerCode = (params.get("partner") || "").trim().toLowerCase() || undefined;
 
-  const [form, setForm] = useState<FormState>(INITIAL);
+  const [form, setForm] = useState<FormState>(() => ({ ...INITIAL, referral_source: referral ?? "" }));
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
@@ -342,8 +345,12 @@ export default function PreOrderPage() {
       .eq("status", "active")
       .maybeSingle()
       .then(({ data }) => {
-        if (data) setPartner({ code: data.code, name: data.name });
+        if (data) {
+          setPartner({ code: data.code, name: data.name });
+          setForm((p) => (p.referral_source.trim() ? p : { ...p, referral_source: data.name }));
+        }
       });
+
   }, [partnerCode]);
 
   const founderClaimed = totals.rings;
@@ -370,6 +377,8 @@ export default function PreOrderPage() {
   if (!form.state.trim()) errors.state = "State / region is required";
   if (!form.zip_code.trim()) errors.zip_code = "ZIP / postal code is required";
   if (!form.country.trim()) errors.country = "Country is required";
+  if (!form.referral_source.trim()) errors.referral_source = "Required — enter \"Self\" if no referral";
+
   const ringSizeMissing = items.some((i) => !i.ring_size);
   if (ringSizeMissing) errors.ring_size = "Please select a ring size";
   const canSubmit = Object.keys(errors).length === 0;
@@ -406,7 +415,7 @@ export default function PreOrderPage() {
             ...form,
             phone: normalizePhoneForSubmission(form.phone_code, form.phone),
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
-            referral_source: referral,
+            referral_source: form.referral_source.trim() || referral || "Self",
             partner_code: partner?.code ?? partnerCode,
           }),
         },
@@ -428,7 +437,7 @@ export default function PreOrderPage() {
       <Header />
 
       <main className="pt-32 pb-32">
-        <div className="mx-auto max-w-[1200px] px-6">
+        <div className="mx-auto max-w-[1360px] px-6">
           {confirmed ? (
             <ConfirmationCard name={confirmed.name} partner={confirmed.partner} />
           ) : (
@@ -499,7 +508,7 @@ export default function PreOrderPage() {
                 </div>
               </div>
 
-              <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start">
+              <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
                 <div className="lg:sticky lg:top-28">
                   <div className="relative aspect-square rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent overflow-hidden">
@@ -544,31 +553,40 @@ export default function PreOrderPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={onSubmit} className="space-y-8">
+                <form onSubmit={onSubmit} className="space-y-10 rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-10">
                   <Section title="Your rings">
                     {/* Sizing help — always visible */}
-                    <div className="rounded-xl border border-[#4FB3FF]/20 bg-[#4FB3FF]/[0.04] px-4 py-3">
-                      <div className="flex items-start gap-3">
-                        <Ruler className="w-4 h-4 text-[#4FB3FF] mt-0.5 shrink-0" />
-                        <div className="flex-1 text-[13px] text-[#B8C5D3] leading-relaxed">
-                          <div className="font-medium text-white mb-1">Not sure of your ring size?</div>
-                          <p className="text-[#8B9DAF]">
-                            Measure the inside diameter of a ring you already wear, or wrap a string around the base of
-                            your finger and match the length below.
+                    <div className="rounded-2xl border-2 border-[#4FB3FF]/40 bg-gradient-to-br from-[#4FB3FF]/[0.10] to-transparent p-5 md:p-6 shadow-[0_0_40px_-12px_rgba(79,179,255,0.45)]">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                        <div
+                          className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
+                          style={{ background: GRADIENT }}
+                        >
+                          <Ruler className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-[18px] md:text-[20px] font-medium text-white mb-1.5">
+                            Not sure of your ring size?
+                          </div>
+                          <p className="text-[14px] text-[#B8C5D3] leading-relaxed">
+                            Measure a ring you already wear, or wrap a string around the base of your finger — our guide
+                            matches it to your aiOn size in under a minute.
                           </p>
-                          <button
-                            type="button"
-                            onClick={() => setSizingOpen(true)}
-                            className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-[#4FB3FF] hover:text-white transition-colors underline underline-offset-2"
-                          >
-                            View full sizing guide →
-                          </button>
                           <p className="mt-2 text-[12px] text-[#5A6B7E]">
                             Prefer to measure at home? A free sizing kit ships before your ring.
                           </p>
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => setSizingOpen(true)}
+                          className="shrink-0 h-12 px-6 rounded-full font-semibold text-white text-[14px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
+                          style={{ background: GRADIENT }}
+                        >
+                          <Ruler className="w-4 h-4" /> Find my size
+                        </button>
                       </div>
                     </div>
+
 
                     {items.map((item, idx) => (
                       <div
@@ -711,7 +729,40 @@ export default function PreOrderPage() {
                       error={touched.phone ? errors.phone : undefined}
                       placeholder="(555) 123-4567"
                     />
+
+                    <div>
+                      <Input
+                        label="Who referred you?"
+                        placeholder='Name, partner or code — enter "Self" if none'
+                        value={form.referral_source}
+                        onChange={(v) => update("referral_source", v)}
+                        onBlur={() => markTouched("referral_source")}
+                        error={touched.referral_source ? errors.referral_source : undefined}
+                        required
+                      />
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <span className="text-[12px] text-[#5A6B7E]">Quick select:</span>
+                        {["Self", "Friend / Family", "Social media", "Healthcare professional"].map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
+                              update("referral_source", opt);
+                              markTouched("referral_source");
+                            }}
+                            className={`px-3 h-8 rounded-full border text-[12px] transition-all ${
+                              form.referral_source === opt
+                                ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white"
+                                : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </Section>
+
 
                   <Section title="Shipping address">
                     <Input
