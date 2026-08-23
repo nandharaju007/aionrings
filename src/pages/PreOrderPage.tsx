@@ -720,7 +720,40 @@ export default function PreOrderPage() {
                       error={touched.phone ? errors.phone : undefined}
                       placeholder="(555) 123-4567"
                     />
+
+                    <div>
+                      <Input
+                        label="Who referred you?"
+                        placeholder='Name, partner or code — enter "Self" if none'
+                        value={form.referral_source}
+                        onChange={(v) => update("referral_source", v)}
+                        onBlur={() => markTouched("referral_source")}
+                        error={touched.referral_source ? errors.referral_source : undefined}
+                        required
+                      />
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <span className="text-[12px] text-[#5A6B7E]">Quick select:</span>
+                        {["Self", "Friend / Family", "Social media", "Healthcare professional"].map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
+                              update("referral_source", opt);
+                              markTouched("referral_source");
+                            }}
+                            className={`px-3 h-8 rounded-full border text-[12px] transition-all ${
+                              form.referral_source === opt
+                                ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white"
+                                : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </Section>
+
 
                   <Section title="Shipping address">
                     <Input
