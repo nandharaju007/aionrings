@@ -254,6 +254,7 @@ interface FormState {
   state: string;
   zip_code: string;
   country: string;
+  referral_source: string;
 }
 
 const INITIAL: FormState = {
@@ -268,7 +269,9 @@ const INITIAL: FormState = {
   state: "",
   zip_code: "",
   country: "United States",
+  referral_source: "",
 };
+
 
 type FieldKey = keyof FormState | "ring_size";
 
