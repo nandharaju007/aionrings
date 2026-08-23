@@ -437,7 +437,7 @@ export default function PreOrderPage() {
       <Header />
 
       <main className="pt-32 pb-32">
-        <div className="mx-auto max-w-[1200px] px-6">
+        <div className="mx-auto max-w-[1360px] px-6">
           {confirmed ? (
             <ConfirmationCard name={confirmed.name} partner={confirmed.partner} />
           ) : (
