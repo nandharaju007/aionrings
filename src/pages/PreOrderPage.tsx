@@ -373,6 +373,8 @@ export default function PreOrderPage() {
   if (!form.state.trim()) errors.state = "State / region is required";
   if (!form.zip_code.trim()) errors.zip_code = "ZIP / postal code is required";
   if (!form.country.trim()) errors.country = "Country is required";
+  if (!form.referral_source.trim()) errors.referral_source = "Required — enter \"Self\" if no referral";
+
   const ringSizeMissing = items.some((i) => !i.ring_size);
   if (ringSizeMissing) errors.ring_size = "Please select a ring size";
   const canSubmit = Object.keys(errors).length === 0;
