@@ -553,7 +553,7 @@ export default function PreOrderPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={onSubmit} className="space-y-8">
+                <form onSubmit={onSubmit} className="space-y-10 rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-10">
                   <Section title="Your rings">
                     {/* Sizing help — always visible */}
                     <div className="rounded-2xl border-2 border-[#4FB3FF]/40 bg-gradient-to-br from-[#4FB3FF]/[0.10] to-transparent p-5 md:p-6 shadow-[0_0_40px_-12px_rgba(79,179,255,0.45)]">
