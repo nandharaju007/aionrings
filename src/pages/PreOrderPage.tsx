@@ -5,7 +5,10 @@ import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import ringProduct from "@/assets/ring-product.jpg";
+import ringMidnight from "@/assets/ring-finish-midnight.png";
+import ringSilver from "@/assets/ring-finish-silver.png";
+import ringRose from "@/assets/ring-finish-rose.png";
+import ringSensorInside from "@/assets/ring-sensor-inside.jpg";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
@@ -13,9 +16,9 @@ const FOUNDER_CAP = 2000;
 
 const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
-  { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
-  { id: "silver", name: "Titanium Silver", filter: "grayscale(1) brightness(1.1)" },
-  { id: "rose", name: "Rose Gold", filter: "sepia(0.5) hue-rotate(-15deg) saturate(1.2) brightness(1.05)" },
+  { id: "midnight", name: "Midnight Black", image: ringMidnight, swatch: "linear-gradient(135deg,#2A2F38,#0B0F16)" },
+  { id: "silver", name: "Titanium Silver", image: ringSilver, swatch: "linear-gradient(135deg,#EDEFF2,#9AA3AD)" },
+  { id: "rose", name: "Rose Gold", image: ringRose, swatch: "linear-gradient(135deg,#F3C4AE,#C98D6E)" },
 ];
 
 // US ring size → inner diameter (mm) reference
@@ -514,10 +517,13 @@ export default function PreOrderPage() {
                   <div className="relative aspect-square rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
-                        src={ringProduct}
-                        alt="aiOn Ring"
-                        className="w-4/5 h-4/5 object-contain transition-all duration-500"
-                        style={{ filter: previewColor.filter }}
+                        key={previewColor.id}
+                        src={previewColor.image}
+                        alt={`aiOn Ring — ${previewColor.name}`}
+                        width={1024}
+                        height={1024}
+                        loading="lazy"
+                        className="w-4/5 h-4/5 object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.55)] animate-in fade-in duration-500"
                       />
                     </div>
                     <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
@@ -531,6 +537,25 @@ export default function PreOrderPage() {
                           {totalRings} ring{totalRings === 1 ? "" : "s"}
                         </div>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Sensor cutaway */}
+                  <div className="mt-6 rounded-3xl border border-white/[0.06] overflow-hidden bg-white/[0.02]">
+                    <img
+                      src={ringSensorInside}
+                      alt="Inside the aiOn Ring — optical LEDs, photodiode and temperature sensor"
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      className="w-full h-56 md:h-64 object-cover"
+                    />
+                    <div className="p-5">
+                      <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Inside the ring</div>
+                      <p className="mt-2 text-[13px] text-[#B8C5D3] leading-relaxed">
+                        Precision optical LEDs, a photodiode and a skin-temperature sensor sit flush against your
+                        finger — sensing continuously, invisibly.
+                      </p>
                     </div>
                   </div>
 
@@ -640,10 +665,7 @@ export default function PreOrderPage() {
                               >
                                 <span
                                   className="w-4 h-4 rounded-full border border-white/20"
-                                  style={{
-                                    background:
-                                      c.id === "midnight" ? "#1a1f2e" : c.id === "silver" ? "#c0c5cc" : "#d4a596",
-                                  }}
+                                  style={{ background: c.swatch }}
                                 />
                                 {c.name}
                               </button>
