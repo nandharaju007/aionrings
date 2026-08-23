@@ -556,28 +556,37 @@ export default function PreOrderPage() {
                 <form onSubmit={onSubmit} className="space-y-8">
                   <Section title="Your rings">
                     {/* Sizing help — always visible */}
-                    <div className="rounded-xl border border-[#4FB3FF]/20 bg-[#4FB3FF]/[0.04] px-4 py-3">
-                      <div className="flex items-start gap-3">
-                        <Ruler className="w-4 h-4 text-[#4FB3FF] mt-0.5 shrink-0" />
-                        <div className="flex-1 text-[13px] text-[#B8C5D3] leading-relaxed">
-                          <div className="font-medium text-white mb-1">Not sure of your ring size?</div>
-                          <p className="text-[#8B9DAF]">
-                            Measure the inside diameter of a ring you already wear, or wrap a string around the base of
-                            your finger and match the length below.
+                    <div className="rounded-2xl border-2 border-[#4FB3FF]/40 bg-gradient-to-br from-[#4FB3FF]/[0.10] to-transparent p-5 md:p-6 shadow-[0_0_40px_-12px_rgba(79,179,255,0.45)]">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                        <div
+                          className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
+                          style={{ background: GRADIENT }}
+                        >
+                          <Ruler className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-[18px] md:text-[20px] font-medium text-white mb-1.5">
+                            Not sure of your ring size?
+                          </div>
+                          <p className="text-[14px] text-[#B8C5D3] leading-relaxed">
+                            Measure a ring you already wear, or wrap a string around the base of your finger — our guide
+                            matches it to your aiOn size in under a minute.
                           </p>
-                          <button
-                            type="button"
-                            onClick={() => setSizingOpen(true)}
-                            className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-[#4FB3FF] hover:text-white transition-colors underline underline-offset-2"
-                          >
-                            View full sizing guide →
-                          </button>
                           <p className="mt-2 text-[12px] text-[#5A6B7E]">
                             Prefer to measure at home? A free sizing kit ships before your ring.
                           </p>
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => setSizingOpen(true)}
+                          className="shrink-0 h-12 px-6 rounded-full font-semibold text-white text-[14px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
+                          style={{ background: GRADIENT }}
+                        >
+                          <Ruler className="w-4 h-4" /> Find my size
+                        </button>
                       </div>
                     </div>
+
 
                     {items.map((item, idx) => (
                       <div
