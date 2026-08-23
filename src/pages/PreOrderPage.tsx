@@ -5,7 +5,10 @@ import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import ringProduct from "@/assets/ring-product.jpg";
+import ringMidnight from "@/assets/ring-finish-midnight.png";
+import ringSilver from "@/assets/ring-finish-silver.png";
+import ringRose from "@/assets/ring-finish-rose.png";
+import ringSensorInside from "@/assets/ring-sensor-inside.jpg";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 
 const GRADIENT = "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)";
@@ -13,9 +16,9 @@ const FOUNDER_CAP = 2000;
 
 const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"];
 const RING_COLORS = [
-  { id: "midnight", name: "Midnight Black", filter: "brightness(0.75) contrast(1.15) hue-rotate(200deg)" },
-  { id: "silver", name: "Titanium Silver", filter: "grayscale(1) brightness(1.1)" },
-  { id: "rose", name: "Rose Gold", filter: "sepia(0.5) hue-rotate(-15deg) saturate(1.2) brightness(1.05)" },
+  { id: "midnight", name: "Midnight Black", image: ringMidnight, swatch: "linear-gradient(135deg,#2A2F38,#0B0F16)" },
+  { id: "silver", name: "Titanium Silver", image: ringSilver, swatch: "linear-gradient(135deg,#EDEFF2,#9AA3AD)" },
+  { id: "rose", name: "Rose Gold", image: ringRose, swatch: "linear-gradient(135deg,#F3C4AE,#C98D6E)" },
 ];
 
 // US ring size → inner diameter (mm) reference
