@@ -409,7 +409,7 @@ export default function PreOrderPage() {
             ...form,
             phone: normalizePhoneForSubmission(form.phone_code, form.phone),
             items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
-            referral_source: referral,
+            referral_source: form.referral_source.trim() || referral || "Self",
             partner_code: partner?.code ?? partnerCode,
           }),
         },
