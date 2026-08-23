@@ -665,10 +665,7 @@ export default function PreOrderPage() {
                               >
                                 <span
                                   className="w-4 h-4 rounded-full border border-white/20"
-                                  style={{
-                                    background:
-                                      c.id === "midnight" ? "#1a1f2e" : c.id === "silver" ? "#c0c5cc" : "#d4a596",
-                                  }}
+                                  style={{ background: c.swatch }}
                                 />
                                 {c.name}
                               </button>
