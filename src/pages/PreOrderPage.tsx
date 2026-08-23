@@ -553,7 +553,7 @@ export default function PreOrderPage() {
                     <div className="p-5">
                       <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Inside the ring</div>
                       <p className="mt-2 text-[13px] text-[#B8C5D3] leading-relaxed">
-                        Medical-grade optical LEDs, a photodiode and a skin-temperature sensor sit flush against your
+                        Precision optical LEDs, a photodiode and a skin-temperature sensor sit flush against your
                         finger — sensing continuously, invisibly.
                       </p>
                     </div>
