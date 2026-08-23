@@ -345,8 +345,12 @@ export default function PreOrderPage() {
       .eq("status", "active")
       .maybeSingle()
       .then(({ data }) => {
-        if (data) setPartner({ code: data.code, name: data.name });
+        if (data) {
+          setPartner({ code: data.code, name: data.name });
+          setForm((p) => (p.referral_source.trim() ? p : { ...p, referral_source: data.name }));
+        }
       });
+
   }, [partnerCode]);
 
   const founderClaimed = totals.rings;
