@@ -3,7 +3,6 @@ import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "f
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
 import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
@@ -11,7 +10,6 @@ import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
-import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
 import videoFocus from "@/assets/video-life-focus-silver.mp4.asset.json";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
@@ -139,42 +137,119 @@ function HeroInsightTicker() {
 }
 
 /* ─────────────────────────────────────────────
-   Custom glowing cursor (desktop only)
+   Shared rhythm tokens
    ───────────────────────────────────────────── */
-function GlowCursor() {
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 500, damping: 40 });
-  const sy = useSpring(y, { stiffness: 500, damping: 40 });
-  const [enabled, setEnabled] = useState(false);
+const SECTION = "py-20 md:py-32";
 
+/* Video that only plays while visible — saves CPU and battery */
+function LazyVideo({
+  src,
+  poster,
+  className = "",
+  style,
+  label,
+  autoPlay = false,
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  label?: string;
+  autoPlay?: boolean;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (window.matchMedia("(hover: none)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setEnabled(true);
-    const onMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [x, y]);
-
-  if (!enabled) return null;
+    const v = ref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
   return (
-    <motion.div
-      aria-hidden
-      style={{ x: sx, y: sy }}
-      className="pointer-events-none fixed left-0 top-0 z-[100] -ml-3 -mt-3 h-6 w-6 rounded-full"
+    <video
+      ref={ref}
+      src={src}
+      poster={poster}
+      autoPlay={autoPlay}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={label}
+      className={className}
+      style={style}
+    />
+  );
+}
+
+/* Monoline icon set — one consistent visual language, no emoji */
+const GLYPHS: Record<string, ReactNode> = {
+  heart: <path d="M12 20s-7-4.4-7-9.3A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7 3.3C19 15.6 12 20 12 20z" />,
+  moon: <path d="M20 14.4A8 8 0 1 1 9.6 4 6.5 6.5 0 0 0 20 14.4z" />,
+  cycle: (
+    <>
+      <path d="M20 12a8 8 0 1 1-2.6-5.9" />
+      <path d="M20 4v4h-4" />
+    </>
+  ),
+  bolt: <path d="M13 3 5.8 13.6H11l-.8 7.4 8-10.9h-5.4z" />,
+  waves: <path d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0" />,
+  drop: <path d="M12 3.4s6 6.4 6 9.9a6 6 0 0 1-12 0c0-3.5 6-9.9 6-9.9z" />,
+  hex: <path d="M12 3.2 20 7.6v8.8L12 20.8 4 16.4V7.6z" />,
+  battery: (
+    <>
+      <rect x="3" y="8" width="15" height="8" rx="2" />
+      <path d="M21 11v2" />
+    </>
+  ),
+  signal: (
+    <>
+      <path d="M8.5 15a5 5 0 0 1 7 0" />
+      <path d="M5.5 12a9 9 0 0 1 13 0" />
+      <circle cx="12" cy="18" r="0.8" />
+    </>
+  ),
+  ruler: (
+    <>
+      <path d="M4 14.5 14.5 4 20 9.5 9.5 20z" />
+      <path d="M9 9.5 10.8 11.3M12 6.5l1.8 1.8M6.5 12l1.8 1.8" />
+    </>
+  ),
+  finishes: (
+    <>
+      <circle cx="8" cy="12" r="4" />
+      <circle cx="16" cy="12" r="4" />
+    </>
+  ),
+  water: (
+    <>
+      <path d="M3 15c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 5 -.6" />
+      <path d="M3 19c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 5 -.6" />
+      <path d="M12 3v6" />
+    </>
+  ),
+};
+
+function Glyph({ name, className = "h-6 w-6", color = C.blue }: { name: string; className?: string; color?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke={color}
+      strokeWidth="1.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
     >
-      <div
-        className="h-6 w-6 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${C.blue} 0%, rgba(24,120,224,0.35) 40%, transparent 70%)`,
-          boxShadow: `0 0 20px rgba(24,120,224,0.55), 0 0 44px rgba(24,120,224,0.35)`,
-        }}
-      />
-    </motion.div>
+      {GLYPHS[name]}
+    </svg>
   );
 }
 
@@ -499,220 +574,161 @@ function NatureBand({
    Hero
    ───────────────────────────────────────────── */
 function Hero() {
-  const chips = [
-    { label: "❤️ 72 bpm", angle: -55, delay: 1.0 },
-    { label: "🫁 98% SpO₂", angle: 55, delay: 1.15 },
-    { label: "🧠 HRV 34ms", angle: -100, delay: 1.3 },
-    { label: "🌙 Sleep 7h 42m", angle: 100, delay: 1.45 },
-    { label: "⚡ Recovery 81", angle: -145, delay: 1.6 },
-    { label: "🌡️ 36.8°C", angle: 145, delay: 1.75 },
+  const vitals = [
+    { l: "HR", v: "62 bpm" },
+    { l: "HRV", v: "74 ms" },
+    { l: "SpO₂", v: "98%" },
+    { l: "Temp", v: "36.7°" },
+    { l: "Sleep", v: "87" },
+  ];
+  const finishes = [
+    { src: ringMidnight, name: "Midnight" },
+    { src: ringSilver, name: "Silver" },
+    { src: ringRose, name: "Rose Gold" },
   ];
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden bg-canvas">
+    <section className="relative overflow-hidden bg-canvas">
       {/* Luminous light washes */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 85% 60%, rgba(109,40,217,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,169,224,0.08) 0%, transparent 60%)`,
+          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 55% 40% at 12% 78%, rgba(0,169,224,0.07) 0%, transparent 60%)`,
         }}
       />
       <GridOverlay tone="dark" />
 
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
-        {/* Lifestyle video strip — seamless, no box */}
-        <motion.div
-          className="w-full max-w-5xl mx-auto mb-10 md:mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="grid grid-cols-3 h-[110px] sm:h-[150px] md:h-[200px]">
-            {[
-              { src: videoMorning.url, label: "Morning" },
-              { src: videoWalk.url, label: "Move" },
-              { src: videoEvening.url, label: "Evening" },
-            ].map((v, i) => (
-              <div key={i} className="relative overflow-hidden group">
-                <video
-                  src={v.src}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ filter: "contrast(1.05) saturate(0.92)" }}
-                />
-                {/* Soft organic tint for wellness harmony */}
-                <div
-                  className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-40"
-                  style={{ background: `linear-gradient(135deg, rgba(34,176,125,0.25), rgba(24,120,224,0.18))` }}
-                />
-                {/* Bottom vignette for label legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                <span className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white/95">
-                  {v.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-28 pb-20 md:pt-36 md:pb-28">
         {/* Brand reveal */}
         <BrandReveal />
 
         {/* Headline */}
-        <div className="text-center max-w-5xl mx-auto">
-
+        <div className="mx-auto max-w-4xl text-center">
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.05]"
-            initial="hidden" animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.18 } } }}
+            className="text-4xl font-extralight leading-[1.06] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            initial="hidden"
+            animate="show"
+            variants={{ show: { transition: { staggerChildren: 0.16 } } }}
           >
             <motion.span
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              variants={{ hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="block text-ink"
             >
               Your body has been talking.
             </motion.span>
             <motion.span
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              variants={{ hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block text-transparent bg-clip-text"
+              className="block bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}
             >
               You just couldn't hear it.
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-ink-soft max-w-2xl mx-auto"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
+            className="mx-auto mt-6 max-w-xl text-base font-light text-ink-soft md:text-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.9 }}
           >
-            aiOn changes that.
+            A titanium smart ring that turns sleep, recovery and stress into one clear answer
+            each morning.
           </motion.p>
         </div>
 
-        {/* Cinematic finger-with-ring banner — seamless, no box */}
+        {/* CTA — placed above the fold, before the cinematic proof */}
         <motion.div
-          className="relative mt-10 md:mt-16 w-full max-w-5xl"
+          className="mt-9 flex flex-col items-center"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+        >
+          <Link
+            to="/preorder"
+            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 14px 40px -10px ${C.blue}66` }}
+          >
+            Pre-order Now
+          </Link>
+          <p className="mt-3 text-xs text-ink-muted md:text-sm">Free aiOn app included · No subscription required</p>
+        </motion.div>
+
+        {/* Cinematic proof — one video, edge-blended, no frame */}
+        <motion.div
+          className="relative mt-12 w-full md:mt-16"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative overflow-hidden rounded-2xl md:rounded-[32px] shadow-[0_30px_80px_-30px_rgba(10,22,40,0.18)]">
-            <video
+          <div className="relative overflow-hidden rounded-[28px]">
+            <LazyVideo
+              autoPlay
               src={heroFingerVideo.url}
               poster={heroFingerRing}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
-              className="w-full h-[240px] sm:h-[340px] md:h-[440px] lg:h-[540px] object-cover"
-              style={{ filter: "contrast(1.05) saturate(1.05)" }}
+              label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
+              className="h-[260px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[540px]"
+              style={{
+                filter: "contrast(1.04) saturate(1.03)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
+              }}
             />
 
-            {/* Soft edge blend into the light page */}
+            {/* Soft edge blend into the light page — removes the "box" */}
             <div
               className="pointer-events-none absolute inset-0"
               style={{
                 background: `
-                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 14%, transparent 82%, hsl(var(--canvas)) 100%),
-                  linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 8%, transparent 92%, hsl(var(--canvas)) 100%),
-                  radial-gradient(ellipse at center, transparent 55%, rgba(10,22,40,0.35) 100%)
+                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 80%, hsl(var(--canvas)) 100%),
+                  linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
                 `,
               }}
             />
-            {/* Subtle wellness tint */}
-            <div
-              className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-30"
-              style={{ background: `linear-gradient(120deg, ${C.blue}18, ${C.green}14)` }}
-            />
 
             {/* Live vitals rail */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
-              {[
-                { l: "HR", v: "62 bpm" },
-                { l: "HRV", v: "74 ms" },
-                { l: "SpO₂", v: "98%" },
-                { l: "Temp", v: "36.7°" },
-                { l: "Sleep", v: "87" },
-              ].map((m, i) => (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 px-4 pb-4 sm:gap-x-8 md:pb-6">
+              {vitals.map((m, i) => (
                 <motion.span
                   key={m.l}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
-                  className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
+                  transition={{ delay: 0.7 + i * 0.1, duration: 0.6 }}
+                  className="flex items-baseline gap-1.5 text-[11px] tracking-wide sm:text-sm"
                 >
-                  <span style={{ color: "rgba(255,255,255,0.60)" }}>{m.l}</span>
+                  <span style={{ color: "rgba(255,255,255,0.72)" }}>{m.l}</span>
                   <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
                 </motion.span>
               ))}
             </div>
 
             {/* Rotating insight line */}
-            <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
+            <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-6">
               <HeroInsightTicker />
             </div>
-
-          </div>
-
-
-          {/* Floating vitals chips beneath the video — light variant */}
-          <div className="mt-7 md:mt-9 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
-            {chips.map((c, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 + i * 0.08, duration: 0.5 }}
-              >
-                <Chip variant="light">{c.label}</Chip>
-              </motion.div>
-            ))}
           </div>
         </motion.div>
 
-        {/* CTA */}
+        {/* Three finishes — colour balance right at the top */}
         <motion.div
-          className="mt-10 md:mt-12 flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
+          className="mt-10 flex items-center justify-center gap-8 sm:gap-12"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.9 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
         >
-          <Link
-            to="/preorder"
-            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 12px 40px -8px ${C.blue}66` }}
-          >
-            <motion.span
-              className="absolute inset-0 rounded-full"
-              animate={{ opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2.4, repeat: Infinity }}
-              style={{ boxShadow: `0 0 0 8px ${C.blue}22` }}
-            />
-            <span className="relative">Pre-order Now</span>
-          </Link>
-          <p className="mt-3 text-xs md:text-sm text-ink-muted">Free app included</p>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="mt-auto pt-10 flex justify-center"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="h-10 w-6 rounded-full border border-ink/15 flex justify-center pt-1.5">
-            <motion.div
-              className="h-1.5 w-1 rounded-full bg-ink/40"
-              animate={{ y: [0, 14, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
+          {finishes.map((f) => (
+            <a key={f.name} href="#ring" className="group flex flex-col items-center">
+              <img
+                src={f.src}
+                alt={`aiOn ring, ${f.name} finish`}
+                loading="lazy"
+                className="h-14 w-14 object-contain transition-transform duration-500 group-hover:scale-110 sm:h-16 sm:w-16"
+              />
+              <span className="mt-2 text-[10px] uppercase tracking-[0.24em] text-ink-muted">{f.name}</span>
+            </a>
+          ))}
         </motion.div>
       </div>
     </section>
@@ -727,7 +743,7 @@ function Hero() {
    ───────────────────────────────────────────── */
 function VitalityScoreSection() {
   return (
-    <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
+    <section id="how" className={`relative overflow-hidden bg-white ${SECTION}`}>
       <NatureBackdrop src={natureSunrise} opacity={0.3} position="center 40%" />
       <div className="container mx-auto px-6 relative z-10">
 
@@ -821,7 +837,7 @@ function TrackUnderstandActSection() {
     },
   ];
   return (
-    <section id="app" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+    <section id="approach" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <ParticleField density={45} opacity={0.18} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
@@ -888,7 +904,7 @@ function BodyTalkingSection() {
     { text: "You can't see what it's doing.", strong: false },
   ];
   return (
-    <section className="relative overflow-hidden py-20 md:py-40 bg-white">
+    <section className={`relative overflow-hidden bg-white ${SECTION}`}>
       <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <div className="space-y-4 md:space-y-6">
@@ -956,32 +972,32 @@ function BodyTalkingSection() {
    ───────────────────────────────────────────── */
 function PillarsSection() {
   const pillars = [
-    { icon: "❤️", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
+    { icon: "heart", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
       "HRV — a simple daily read on stress and resilience",
       "Heart rhythm insight — wellness awareness, on demand",
       "BP trend (EST) — general direction, not a reading",
     ]},
-    { icon: "🌙", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
+    { icon: "moon", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
       "Deep, REM, Light — every stage, every night",
       "Breathing rate trends while you sleep",
       "7 hours in bed is not 7 hours of sleep",
     ]},
-    { icon: "🌸", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
+    { icon: "cycle", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
       "Automatic cycle tracking from temperature and HRV",
       "Each phase has different energy and recovery needs",
       "aiOn's quests adapt to where you are",
     ]},
-    { icon: "💪", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
+    { icon: "bolt", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
       "Know when to go hard and when to rest",
       "Training load awareness before you feel drained",
       "The workout doesn't make you stronger. Recovery does.",
     ]},
-    { icon: "🧠", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
+    { icon: "waves", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
       "See how a busy day shows up in your body",
       "Spot the weeks you've been pushing too hard",
       "Stress is easy to ignore until you can see it",
     ]},
-    { icon: "🩸", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
+    { icon: "drop", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
       "Follow long-term lifestyle trends, not single numbers",
       "EST trends show direction — they are not measurements",
       "Build habits around how your body responds",
@@ -989,7 +1005,7 @@ function PillarsSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+    <section id="signals" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureForest} opacity={0.22} position="center 55%" />
       <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
@@ -1005,7 +1021,8 @@ function PillarsSection() {
               <motion.button
                 key={p.name}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="text-left rounded-3xl border p-6 backdrop-blur-xl transition-all"
+                aria-expanded={isOpen}
+                className="text-left rounded-3xl border p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1878E0]"
                 style={{
                   borderColor: isOpen ? C.blue : "#E3E9F2",
                   background: "#FFFFFF",
@@ -1015,9 +1032,9 @@ function PillarsSection() {
                 transition={{ duration: 0.6, delay: i * 0.06 }}
                 whileHover={{ y: -3, boxShadow: `0 20px 50px -20px ${C.blue}44` }}
               >
-                <div className="text-3xl">{p.icon}</div>
-                <h3 className="mt-3 text-xl font-light text-ink">{p.name}</h3>
-                <p className="mt-2 text-sm text-ink-muted font-light">{p.line}</p>
+                <Glyph name={p.icon} className="h-7 w-7" />
+                <h3 className="mt-4 text-xl font-light text-ink">{p.name}</h3>
+                <p className="mt-2 text-sm text-ink-soft font-light">{p.line}</p>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
@@ -1057,12 +1074,12 @@ function PillarsSection() {
    ───────────────────────────────────────────── */
 function QuestSection() {
   const quests = [
-    { title: "Box breathing", tag: "HRV", metric: "🧠 HRV" },
-    { title: "No caffeine after 2pm", tag: "SLEEP", metric: "🌙 Sleep" },
-    { title: "10-min walk", tag: "STRESS", metric: "⚡ Stress" },
+    { title: "Box breathing", tag: "HRV", metric: "HRV", icon: "waves" },
+    { title: "No caffeine after 2pm", tag: "SLEEP", metric: "Sleep", icon: "moon" },
+    { title: "10-min walk", tag: "STRESS", metric: "Stress", icon: "bolt" },
   ];
   return (
-    <section className="relative overflow-hidden py-16 md:py-48 bg-white">
+    <section className={`relative overflow-hidden bg-white ${SECTION}`}>
       <NatureBackdrop src={natureWater} opacity={0.24} position="center 60%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1077,15 +1094,16 @@ function QuestSection() {
         <div className="mt-14 grid md:grid-cols-3 gap-5">
           {quests.map((q, i) => (
             <motion.div key={i}
-              className="rounded-3xl border p-6 backdrop-blur-xl"
+              className="rounded-3xl border p-6"
               style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: "0 20px 50px -25px rgba(10,22,40,0.25)" }}
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.12 }}
             >
               <span className="text-[10px] tracking-[0.25em] text-ink-muted">TODAY'S QUEST · {q.tag}</span>
               <h3 className="mt-4 text-2xl font-light text-ink">{q.title}</h3>
-              <div className="mt-6 flex justify-end">
-                <Chip>{q.metric}</Chip>
+              <div className="mt-6 flex items-center justify-end gap-2 text-sm font-light text-ink-soft">
+                <Glyph name={q.icon} className="h-4 w-4" />
+                {q.metric}
               </div>
             </motion.div>
           ))}
@@ -1111,7 +1129,7 @@ function TheAppSection() {
     { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
   ];
   return (
-    <section id="the-app" className="relative overflow-hidden py-16 md:py-40 bg-canvas">
+    <section id="app" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1175,7 +1193,7 @@ function InLifeSection() {
     { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
   ];
   return (
-    <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
+    <section id="in-life" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureNight} opacity={0.16} position="center 45%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1196,17 +1214,11 @@ function InLifeSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.9, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-2xl md:rounded-3xl"
-              style={{ boxShadow: "0 24px 60px -30px rgba(10,22,40,0.18)" }}
+              className="group relative overflow-hidden rounded-[28px]"
             >
-              <video
+              <LazyVideo
                 src={c.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label={`${c.caption} — person wearing the aiOn ring`}
+                label={`${c.caption} — person wearing the aiOn ring`}
                 className="w-full h-[300px] md:h-[380px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
                 style={{ filter: "contrast(1.03) saturate(0.95)" }}
               />
@@ -1228,7 +1240,7 @@ function InLifeSection() {
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-40" style={{ background: "#FFFFFF" }}>
+    <section className={`relative overflow-hidden ${SECTION}`} style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <FadeUp>
           <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}22`, background: "linear-gradient(180deg,#0A1628,#0E1B34)", boxShadow: "0 30px 70px -35px rgba(10,22,40,0.45)" }}>
@@ -1271,15 +1283,15 @@ function PreventiveSection() {
    ───────────────────────────────────────────── */
 function RingSection() {
   const specs = [
-    { icon: "⬡", label: "Titanium" },
-    { icon: "💧", label: "IP68" },
-    { icon: "🔋", label: "5 days" },
-    { icon: "📡", label: "BLE 5.0" },
-    { icon: "📏", label: "Size 6–13" },
-    { icon: "◍", label: "3 finishes" },
+    { icon: "hex", label: "Titanium" },
+    { icon: "water", label: "IP68" },
+    { icon: "battery", label: "5 days" },
+    { icon: "signal", label: "BLE 5.0" },
+    { icon: "ruler", label: "Size 6–13" },
+    { icon: "finishes", label: "3 finishes" },
   ];
   return (
-    <section id="ring" className="relative overflow-hidden py-16 md:py-24" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
+    <section id="ring" className={`relative overflow-hidden ${SECTION}`} style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center mb-8 md:mb-12">
           <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">The Ring</p>
@@ -1311,7 +1323,7 @@ function RingSection() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: i * 0.08, duration: 0.5 }}
             >
-              <div className="text-3xl md:text-4xl">{s.icon}</div>
+              <div className="flex justify-center"><Glyph name={s.icon} className="h-7 w-7 md:h-8 md:w-8" /></div>
               <div className="mt-2 text-xs md:text-sm text-ink-soft font-light">{s.label}</div>
             </motion.div>
           ))}
@@ -1375,7 +1387,7 @@ function PlansSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
+    <section className={`relative overflow-hidden ${SECTION}`} style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-2xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
@@ -1439,26 +1451,27 @@ function PlansSection() {
    ───────────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-32 min-h-[90svh] flex items-center bg-canvas">
+    <section className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureForest} opacity={0.12} position="center 30%" />
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
-          className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[32px]"
-          initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
-          style={{ boxShadow: "0 30px 90px -40px rgba(10,22,40,0.16)" }}
+          className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-[28px]"
+          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
         >
-          <video
+          <LazyVideo
             src={videoRunTrail.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label="Woman running on a mountain trail wearing the aiOn Ring"
-            className="h-[50vh] md:h-[66vh] w-full object-cover"
+            label="Person running on a mountain trail wearing the aiOn Ring"
+            className="h-[46vh] md:h-[60vh] w-full object-cover"
           />
-          <div className="pointer-events-none absolute inset-0"
-            style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.28) 0%, rgba(10,22,40,0) 40%, rgba(10,22,40,0.45) 100%)" }} />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `
+                linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 18%, transparent 82%, hsl(var(--canvas)) 100%),
+                linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
+              `,
+            }}
+          />
         </motion.div>
 
         <FadeUp delay={0.3} className="mt-10 md:mt-14">
@@ -1523,7 +1536,7 @@ const FAQS: { q: string; a: string }[] = [
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="relative py-16 md:py-24" style={{ background: "#F6F8FC" }}>
+    <section id="faq" className={`relative ${SECTION}`} style={{ background: "#F6F8FC" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -1610,7 +1623,7 @@ function FAQSection() {
 
 function WellnessDisclaimerSection() {
   return (
-    <section className="relative py-14 md:py-20" style={{ background: "#FFFFFF" }}>
+    <section className="relative py-16 md:py-20" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6">
         <div
           className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
@@ -1635,34 +1648,6 @@ function WellnessDisclaimerSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Page load intro
-   ───────────────────────────────────────────── */
-function IntroOverlay() {
-  const [gone, setGone] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setGone(true), 1400);
-    return () => clearTimeout(t);
-  }, []);
-  return (
-    <AnimatePresence>
-      {!gone && (
-        <motion.div
-          className="fixed inset-0 z-[90] flex items-center justify-center"
-          style={{ background: "#F6F8FC" }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl font-extralight tracking-tight text-ink">
-            ai<span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>O</span>n
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-/* ─────────────────────────────────────────────
    Main Index
    ───────────────────────────────────────────── */
 export default function Index() {
@@ -1676,25 +1661,34 @@ export default function Index() {
 
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
-      <IntroOverlay />
-      <GlowCursor />
       <Header />
       <main>
+        {/* 1 — First impression */}
         <Hero />
-        <VitalityScoreSection />
-        <TrackUnderstandActSection />
+        {/* 2 — The problem, in the user's own words */}
         <BodyTalkingSection />
-        <NatureBand
-          src={natureForest}
-          eyebrow="Movement · Activity"
-          title="Health doesn't live in a dashboard."
-          line="It lives in morning trails, fresh air and the steps you actually take."
-          position="center 60%"
-        />
-
+        {/* 3 — The answer: one number */}
+        <VitalityScoreSection />
+        {/* 4 — How aiOn is different */}
+        <TrackUnderstandActSection />
+        {/* 5 — What it reads */}
         <PillarsSection />
+        <NatureBand
+          src={natureSunrise}
+          eyebrow="Wellness · Every morning"
+          title="Wake with the light, and with your number."
+          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
+          position="center 45%"
+        />
+        {/* 6 — What you do with it */}
         <QuestSection />
+        {/* 7 — Trends over time */}
+        <PreventiveSection />
+        {/* 8 — The app */}
         <TheAppSection />
+        {/* 9 — The product */}
+        <RingSection />
+        {/* 10 — Life with it */}
         <InLifeSection />
         <NatureBand
           src={natureNight}
@@ -1703,16 +1697,7 @@ export default function Index() {
           line="aiOn follows your sleep and recovery patterns, gently, all night."
           position="center 50%"
         />
-        <PreventiveSection />
-        <NatureBand
-          src={natureSunrise}
-          eyebrow="Wellness · Every morning"
-          title="Wake with the light, and with your number."
-          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
-          position="center 45%"
-        />
-
-        <RingSection />
+        {/* 11 — Plans, then conversion */}
         <PlansSection />
         <FinalCTA />
         <FAQSection />
