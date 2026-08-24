@@ -488,8 +488,12 @@ function Hero() {
           </div>
         </motion.div>
 
+        {/* Brand reveal */}
+        <BrandReveal />
+
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
+
           <motion.h1
             className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.05]"
             initial="hidden" animate="show"
