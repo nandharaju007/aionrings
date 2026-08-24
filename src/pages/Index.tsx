@@ -1334,18 +1334,25 @@ function FinalCTA() {
       <ParticleField density={70} opacity={0.4} />
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
-          className="mx-auto aspect-square w-[min(70vw,420px)] relative"
-          initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
+          className="mx-auto relative w-full max-w-4xl overflow-hidden rounded-[28px]"
+          initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
+          style={{ boxShadow: `0 40px 120px -40px ${C.blue}66` }}
         >
-          <motion.div className="absolute inset-0 rounded-full"
-            animate={{ boxShadow: [`0 0 80px ${C.blue}66`, `0 0 200px ${C.purple}66`, `0 0 80px ${C.blue}66`] }}
-            transition={{ duration: 4, repeat: Infinity }}
+          <video
+            src={videoRunTrail.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="Woman running on a mountain trail wearing the aiOn Ring"
+            className="h-[46vh] md:h-[60vh] w-full object-cover"
           />
-          <motion.img src={ringHero} alt="aiOn ring" className="h-full w-full rounded-full object-cover"
-            style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 40px rgba(79,179,255,0.7))" }}
-            animate={{ rotateY: [0, 360] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          />
+          <div className="pointer-events-none absolute inset-0"
+            style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.35) 0%, rgba(10,22,40,0) 35%, rgba(10,22,40,0.55) 100%)" }} />
+          <div className="pointer-events-none absolute inset-0 rounded-[28px]" style={{ boxShadow: `inset 0 0 0 1px ${C.blue}33` }} />
         </motion.div>
+
         <FadeUp delay={0.3} className="mt-10">
           <h2 className="text-4xl md:text-7xl font-extralight text-white leading-[1.05]">
             Your body has answers.
