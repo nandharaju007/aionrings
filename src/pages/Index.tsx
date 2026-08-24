@@ -15,10 +15,10 @@ import appScreenSleep from "@/assets/app-screen-sleep.png";
    ───────────────────────────────────────────── */
 const C = {
   navy: "#0A1628",
-  blue: "#4FB3FF",
-  purple: "#7C3AED",
-  green: "#4ADE80",
-  gold: "#FACC15",
+  blue: "#1878E0",
+  purple: "#6D28D9",
+  green: "#22B07D",
+  gold: "#B4870B",
 };
 
 /* ─────────────────────────────────────────────
@@ -53,8 +53,8 @@ function GlowCursor() {
       <div
         className="h-6 w-6 rounded-full"
         style={{
-          background: `radial-gradient(circle, ${C.blue} 0%, rgba(79,179,255,0.4) 40%, transparent 70%)`,
-          boxShadow: `0 0 24px ${C.blue}, 0 0 60px rgba(79,179,255,0.6)`,
+          background: `radial-gradient(circle, ${C.blue} 0%, rgba(24,120,224,0.35) 40%, transparent 70%)`,
+          boxShadow: `0 0 20px rgba(24,120,224,0.55), 0 0 44px rgba(24,120,224,0.35)`,
         }}
       />
     </motion.div>
@@ -64,7 +64,7 @@ function GlowCursor() {
 /* ─────────────────────────────────────────────
    Particle field — slow drifting stars
    ───────────────────────────────────────────── */
-function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opacity?: number }) {
+function ParticleField({ density = 60, opacity = 0.35, tone = "dark" }: { density?: number; opacity?: number; tone?: "dark" | "light" }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
@@ -107,7 +107,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
         if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200, 220, 255, ${p.a * opacity})`;
+        ctx.fillStyle = tone === "light" ? `rgba(230, 240, 255, ${p.a * opacity})` : `rgba(24, 60, 110, ${p.a * opacity})`;
         ctx.fill();
       }
       if (reduced || !visible) { running = false; return; }
@@ -125,7 +125,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
     }, { rootMargin: "50px" });
     io.observe(canvas);
     return () => { cancelAnimationFrame(raf); io.disconnect(); window.removeEventListener("resize", resize); };
-  }, [density, opacity]);
+  }, [density, opacity, tone]);
   return <canvas ref={ref} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden />;
 }
 
@@ -183,14 +183,15 @@ function Aurora({ intensity = 0.5 }: { intensity?: number }) {
 /* ─────────────────────────────────────────────
    Subtle grid overlay
    ───────────────────────────────────────────── */
-function GridOverlay() {
+function GridOverlay({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const line = tone === "light" ? "rgba(255,255,255,0.6)" : "rgba(10,22,40,0.08)";
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-[0.08]"
+      className="pointer-events-none absolute inset-0 opacity-[0.5]"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          `linear-gradient(${line} 1px, transparent 1px), linear-gradient(90deg, ${line} 1px, transparent 1px)`,
         backgroundSize: "60px 60px",
         maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
         WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
@@ -310,55 +311,17 @@ function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden" style={{ background: C.navy }}>
-      <Aurora intensity={0.9} />
-      <GridOverlay />
-      <ParticleField density={80} opacity={0.4} />
-
-      {/* Top atmospheric vignette */}
+    <section className="relative min-h-[100svh] overflow-hidden bg-canvas">
+      {/* Luminous light washes */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${C.blue}08 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, ${C.purple}08 0%, transparent 50%)`,
+          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 85% 60%, rgba(109,40,217,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,169,224,0.08) 0%, transparent 60%)`,
         }}
       />
+      <GridOverlay tone="dark" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
-        {/* Cinematic finger-with-ring banner */}
-        <motion.div
-          className="relative w-full max-w-5xl mx-auto mb-8 md:mb-12"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="relative overflow-hidden rounded-2xl">
-            <img
-              src={heroFingerRing}
-              alt="Human finger wearing the aiOn smart ring"
-              width={1920}
-              height={1024}
-              className="w-full h-[140px] sm:h-[180px] md:h-[240px] object-cover"
-              style={{ filter: "contrast(1.05) saturate(1.05)" }}
-            />
-            {/* Blend into navy background on all edges */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background: `
-                  linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
-                  linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
-                  radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
-                `,
-              }}
-            />
-            {/* Cool tint for color harmony */}
-            <div
-              className="pointer-events-none absolute inset-0 mix-blend-color"
-              style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
-            />
-          </div>
-        </motion.div>
-
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
@@ -369,7 +332,7 @@ function Hero() {
             <motion.span
               variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block text-white"
+              className="block text-ink"
             >
               Your body has been talking.
             </motion.span>
@@ -383,103 +346,152 @@ function Hero() {
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-white/70 max-w-2xl mx-auto"
+            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-ink-soft max-w-2xl mx-auto"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
           >
             aiOn changes that.
           </motion.p>
         </div>
 
-        {/* Cinematic ring stage */}
-        <div className="relative mt-10 md:mt-14 w-full max-w-3xl">
-          {/* Outer orbital ring glow */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
-            style={{
-              background: `conic-gradient(from 0deg, ${C.blue}20, ${C.purple}20, ${C.blue}20)`,
-              filter: "blur(2px)",
-              opacity: 0.6,
-            }}
-          />
+        {/* Dark cinematic spotlight panel — ring stage */}
+        <motion.div
+          className="relative mt-10 md:mt-14 w-full max-w-5xl overflow-hidden rounded-3xl"
+          style={{ background: C.navy, boxShadow: "0 30px 80px -20px rgba(10,22,40,0.35)" }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Aurora intensity={0.9} />
+          <ParticleField density={80} opacity={0.4} tone="light" />
 
-          {/* Dark inner portal */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
-            style={{
-              background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
-              boxShadow: `inset 0 0 80px rgba(79,179,255,0.12), 0 0 60px rgba(79,179,255,0.08)`,
-            }}
-          />
+          <div className="relative z-10 px-4 pt-8 pb-10 sm:px-8 sm:pt-10 md:pt-14 md:pb-14">
+            {/* Cinematic finger-with-ring banner */}
+            <motion.div
+              className="relative w-full max-w-4xl mx-auto mb-8 md:mb-10"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative overflow-hidden rounded-2xl">
+                <img
+                  src={heroFingerRing}
+                  alt="Human finger wearing the aiOn smart ring"
+                  width={1920}
+                  height={1024}
+                  className="w-full h-[120px] sm:h-[160px] md:h-[220px] object-cover"
+                  style={{ filter: "contrast(1.05) saturate(1.05)" }}
+                />
+                {/* Blend into panel background on all edges */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: `
+                      linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
+                      linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
+                      radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
+                    `,
+                  }}
+                />
+                {/* Cool tint for color harmony */}
+                <div
+                  className="pointer-events-none absolute inset-0 mix-blend-color"
+                  style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
+                />
+              </div>
+            </motion.div>
 
-          {/* Ambient radial glow */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
-            style={{ background: `radial-gradient(circle, ${C.blue}18 0%, ${C.purple}10 45%, transparent 70%)` }}
-          />
+            {/* Cinematic ring stage */}
+            <div className="relative mx-auto w-full max-w-2xl">
+              {/* Outer orbital ring glow */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
+                style={{
+                  background: `conic-gradient(from 0deg, ${C.blue}30, ${C.purple}30, ${C.blue}30)`,
+                  filter: "blur(2px)",
+                  opacity: 0.7,
+                }}
+              />
 
-          {/* Floating ring */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
-            transition={{
-              opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-              scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-            }}
-          >
-            <img
-              src={ringHero}
-              alt="aiOn smart ring floating in cinematic light"
-              width={620}
-              height={620}
-              className="h-auto w-full max-w-[280px] sm:max-w-[360px] md:max-w-[460px] object-contain"
-              style={{
-                filter: "drop-shadow(0 30px 80px rgba(79,179,255,0.35))",
-              }}
-            />
-          </motion.div>
+              {/* Dark inner portal */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
+                style={{
+                  background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
+                  boxShadow: `inset 0 0 80px rgba(24,120,224,0.16), 0 0 60px rgba(24,120,224,0.1)`,
+                }}
+              />
 
-          {/* Desktop orbital vitals chips */}
-          <div className="hidden md:block absolute inset-0">
-            {chips.map((c, i) => {
-              const rad = (c.angle * Math.PI) / 180;
-              const radius = 46; // % of container
-              const x = 50 + radius * Math.cos(rad);
-              const y = 50 + radius * Math.sin(rad);
-              return (
+              {/* Ambient radial glow */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
+                style={{ background: `radial-gradient(circle, ${C.blue}22 0%, ${C.purple}16 45%, transparent 70%)` }}
+              />
+
+              {/* Floating ring */}
+              <motion.div
+                className="relative flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
+                transition={{
+                  opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+                  scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+                }}
+              >
+                <img
+                  src={ringHero}
+                  alt="aiOn smart ring floating in cinematic light"
+                  width={620}
+                  height={620}
+                  className="h-auto w-full max-w-[240px] sm:max-w-[320px] md:max-w-[400px] object-contain"
+                  style={{
+                    filter: "drop-shadow(0 30px 80px rgba(24,120,224,0.4))",
+                  }}
+                />
+              </motion.div>
+
+              {/* Desktop orbital vitals chips */}
+              <div className="hidden md:block absolute inset-0">
+                {chips.map((c, i) => {
+                  const rad = (c.angle * Math.PI) / 180;
+                  const radius = 46; // % of container
+                  const x = 50 + radius * Math.cos(rad);
+                  const y = 50 + radius * Math.sin(rad);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
+                      style={{ left: `${x}%`, top: `${y}%` }}
+                      initial={{ opacity: 0, scale: 0.7 }}
+                      animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
+                      transition={{
+                        opacity: { delay: c.delay, duration: 0.6 },
+                        scale: { delay: c.delay, duration: 0.6 },
+                        y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                      }}
+                    >
+                      <Chip>{c.label}</Chip>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Mobile vitals row */}
+            <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
+              {chips.map((c, i) => (
                 <motion.div
                   key={i}
-                  className="absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${x}%`, top: `${y}%` }}
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
-                  transition={{
-                    opacity: { delay: c.delay, duration: 0.6 },
-                    scale: { delay: c.delay, duration: 0.6 },
-                    y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
-                  }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
                 >
                   <Chip>{c.label}</Chip>
                 </motion.div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Mobile vitals row */}
-        <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
-          {chips.map((c, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
-            >
-              <Chip>{c.label}</Chip>
-            </motion.div>
-          ))}
-        </div>
+        </motion.div>
 
         {/* CTA */}
         <motion.div
@@ -490,18 +502,18 @@ function Hero() {
         >
           <Link
             to="/preorder"
-            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-[#0A1628]"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}
+            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 12px 40px -8px ${C.blue}66` }}
           >
             <motion.span
               className="absolute inset-0 rounded-full"
               animate={{ opacity: [0.5, 0, 0.5] }}
               transition={{ duration: 2.4, repeat: Infinity }}
-              style={{ boxShadow: `0 0 0 8px ${C.blue}33` }}
+              style={{ boxShadow: `0 0 0 8px ${C.blue}22` }}
             />
             <span className="relative">Pre-order Now</span>
           </Link>
-          <p className="mt-3 text-xs md:text-sm text-white/50">Free app included</p>
+          <p className="mt-3 text-xs md:text-sm text-ink-muted">Free app included</p>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -510,9 +522,9 @@ function Hero() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="h-10 w-6 rounded-full border border-white/30 flex justify-center pt-1.5">
+          <div className="h-10 w-6 rounded-full border border-ink/15 flex justify-center pt-1.5">
             <motion.div
-              className="h-1.5 w-1 rounded-full bg-white/70"
+              className="h-1.5 w-1 rounded-full bg-ink/40"
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
@@ -524,17 +536,20 @@ function Hero() {
 }
 
 /* ─────────────────────────────────────────────
+   Section 2}
+
+/* ─────────────────────────────────────────────
    Section 2 — One Number
    ───────────────────────────────────────────── */
 function VitalityScoreSection() {
   return (
-    <section id="how" className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <FadeUp>
             <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none" />
+                <circle cx="50" cy="50" r="44" stroke="rgba(10,22,40,0.10)" strokeWidth="3" fill="none" />
                 <motion.circle
                   cx="50" cy="50" r="44" fill="none" strokeWidth="3" strokeLinecap="round"
                   stroke="url(#v2grad)" pathLength={1}
@@ -548,11 +563,11 @@ function VitalityScoreSection() {
                 </defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-6xl md:text-7xl font-extralight text-white"><CountUp to={84} /></div>
-                <div className="mt-1 text-xs md:text-sm text-white/50 tracking-widest">YOUR VITALITY SCORE</div>
+                <div className="text-6xl md:text-7xl font-extralight text-ink"><CountUp to={84} /></div>
+                <div className="mt-1 text-xs md:text-sm text-ink-muted tracking-widest">YOUR VITALITY SCORE</div>
               </div>
             </div>
-            <div className="mt-8 flex items-center justify-center gap-2 text-sm text-white/80">
+            <div className="mt-8 flex items-center justify-center gap-2 text-sm text-ink-soft">
               <motion.span
                 className="h-2 w-2 rounded-full"
                 style={{ background: C.green }}
@@ -564,12 +579,12 @@ function VitalityScoreSection() {
           </FadeUp>
 
           <FadeUp delay={0.15}>
-            <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
               <WordStagger text="Wake up knowing" /><br /><WordStagger text="your number." delay={0.15} />
             </h2>
-            <div className="mt-8 space-y-3 text-white/70 text-lg font-light">
+            <div className="mt-8 space-y-3 text-ink-soft text-lg font-light">
               <p>Heart Rate. HRV. Sleep.<br />Stress. Recovery. SpO₂.</p>
-              <p className="text-white">One score. Every morning.</p>
+              <p className="text-ink font-normal">One score. Every morning.</p>
             </div>
           </FadeUp>
         </div>
@@ -620,12 +635,12 @@ function TrackUnderstandActSection() {
     },
   ];
   return (
-    <section id="app" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
-      <ParticleField density={45} opacity={0.3} />
+    <section id="app" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <ParticleField density={45} opacity={0.18} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
           <div className="mx-auto mb-4 h-3 w-3 rounded-full" style={{ background: C.blue, boxShadow: `0 0 24px ${C.blue}, 0 0 60px ${C.blue}88` }} />
-          <p className="text-xs md:text-sm tracking-[0.35em] text-white/60 uppercase">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">
             Other rings track. aiOn acts.
           </p>
         </FadeUp>
@@ -635,22 +650,22 @@ function TrackUnderstandActSection() {
             <div key={c.title} className="relative flex">
               <motion.div
                 className="w-full rounded-3xl border backdrop-blur-xl p-8 md:p-10 text-center flex flex-col items-center"
-                style={{ borderColor: `${c.color}44`, background: "rgba(10,22,40,0.55)", boxShadow: `0 0 40px ${c.color}22` }}
+                style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: `0 20px 50px -20px ${c.color}33` }}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div style={{ filter: `drop-shadow(0 0 12px ${c.color}88)` }}>{c.icon}</div>
-                <h3 className="mt-6 text-2xl md:text-3xl font-light tracking-[0.35em] text-white">
+                <h3 className="mt-6 text-2xl md:text-3xl font-light tracking-[0.35em] text-ink">
                   {c.title}
                 </h3>
-                <div className="mt-6 space-y-1 text-white/60 text-sm md:text-base font-light">
+                <div className="mt-6 space-y-1 text-ink-muted text-sm md:text-base font-light">
                   {c.lines.map((l, i) => <p key={i}>{l}</p>)}
                 </div>
               </motion.div>
               {idx < cols.length - 1 && (
                 <motion.div
                   aria-hidden
-                  className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 items-center justify-center text-white/40"
+                  className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 items-center justify-center text-ink-muted"
                   initial={{ opacity: 0, x: -6 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                   transition={{ delay: 0.4 + idx * 0.15, duration: 0.6 }}
                 >
@@ -664,9 +679,9 @@ function TrackUnderstandActSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-16 text-center">
-          <p className="text-xl md:text-2xl font-extralight text-white/80 leading-relaxed">
+          <p className="text-xl md:text-2xl font-extralight text-ink-soft leading-relaxed">
             Most wearables stop at the data.<br />
-            <span className="text-white">aiOn starts there.</span>
+            <span className="text-ink font-light">aiOn starts there.</span>
           </p>
         </FadeUp>
       </div>
@@ -687,8 +702,8 @@ function BodyTalkingSection() {
     { text: "You can't see what it's doing.", strong: false },
   ];
   return (
-    <section className="relative overflow-hidden py-20 md:py-40" style={{ background: C.navy }}>
-      <ParticleField density={30} opacity={0.25} />
+    <section className="relative overflow-hidden py-20 md:py-40 bg-white">
+      <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <div className="space-y-4 md:space-y-6">
           {lines.map((l, i) => (
@@ -721,7 +736,7 @@ function BodyTalkingSection() {
                 </svg>
               )}
               <p
-                className={`relative text-3xl md:text-5xl font-extralight leading-tight ${l.strong ? "text-white" : "text-white/45"}`}
+                className={`relative text-3xl md:text-5xl font-extralight leading-tight ${l.strong ? "text-ink" : "text-ink-muted"}`}
               >
                 {l.text}
               </p>
@@ -729,7 +744,7 @@ function BodyTalkingSection() {
           ))}
         </div>
 
-        <FadeUp delay={0.4} className="mt-20 space-y-2 text-white/55 text-sm md:text-base font-light">
+        <FadeUp delay={0.4} className="mt-20 space-y-2 text-ink-muted text-sm md:text-base font-light">
           <p>Your annual physical is once a year.</p>
           <p>Your doctor has 10 minutes.</p>
           <p>Nobody is watching.</p>
@@ -788,11 +803,11 @@ function PillarsSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section id="signals" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
-      <ParticleField density={35} opacity={0.22} />
+    <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="Everything your body" /><br /><WordStagger text="is telling you." delay={0.15} />
           </h2>
         </FadeUp>
@@ -805,21 +820,21 @@ function PillarsSection() {
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="text-left rounded-3xl border p-6 backdrop-blur-xl transition-all"
                 style={{
-                  borderColor: isOpen ? `${C.blue}88` : `${C.blue}33`,
-                  background: "rgba(10,22,40,0.55)",
-                  boxShadow: isOpen ? `0 0 40px ${C.blue}44` : "none",
+                  borderColor: isOpen ? C.blue : "#E3E9F2",
+                  background: "#FFFFFF",
+                  boxShadow: isOpen ? `0 20px 50px -20px ${C.blue}55` : "0 1px 2px rgba(10,22,40,0.04)",
                 }}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.06 }}
-                whileHover={{ y: -3, boxShadow: `0 0 40px ${C.blue}33` }}
+                whileHover={{ y: -3, boxShadow: `0 20px 50px -20px ${C.blue}44` }}
               >
                 <div className="text-3xl">{p.icon}</div>
-                <h3 className="mt-3 text-xl font-light text-white">{p.name}</h3>
-                <p className="mt-2 text-sm text-white/60 font-light">{p.line}</p>
+                <h3 className="mt-3 text-xl font-light text-ink">{p.name}</h3>
+                <p className="mt-2 text-sm text-ink-muted font-light">{p.line}</p>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
-                      className="mt-4 space-y-2 text-sm text-white/70 font-light overflow-hidden"
+                      className="mt-4 space-y-2 text-sm text-ink-soft font-light overflow-hidden"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
@@ -833,14 +848,14 @@ function PillarsSection() {
                     </motion.ul>
                   )}
                 </AnimatePresence>
-                <p className="mt-4 text-[10px] tracking-widest text-white/40">
+                <p className="mt-4 text-[10px] tracking-widest text-ink-muted">
                   {isOpen ? "TAP TO CLOSE" : "TAP TO EXPAND"}
                 </p>
               </motion.button>
             );
           })}
         </div>
-        <p className="mt-10 text-center text-[11px] text-white/40 max-w-xl mx-auto">
+        <p className="mt-10 text-center text-[11px] text-ink-muted max-w-xl mx-auto">
           aiOn Ring is intended for general wellness purposes only and is not a medical device.
           Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates and are
           not intended to diagnose, treat, cure, or prevent any disease or medical condition.
@@ -860,13 +875,13 @@ function QuestSection() {
     { title: "10-min walk", tag: "STRESS", metric: "⚡ Stress" },
   ];
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-48 bg-white">
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="The one thing" /><br /><WordStagger text="you should do today." delay={0.15} />
           </h2>
-          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
             Every morning. Built for your body.<br />Based on your last 7 days.
           </p>
         </FadeUp>
@@ -875,12 +890,12 @@ function QuestSection() {
           {quests.map((q, i) => (
             <motion.div key={i}
               className="rounded-3xl border p-6 backdrop-blur-xl"
-              style={{ borderColor: "rgba(79,179,255,0.25)", background: "rgba(10,22,40,0.55)" }}
+              style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: "0 20px 50px -25px rgba(10,22,40,0.25)" }}
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.12 }}
             >
-              <span className="text-[10px] tracking-[0.25em] text-white/50">TODAY'S QUEST · {q.tag}</span>
-              <h3 className="mt-4 text-2xl font-light text-white">{q.title}</h3>
+              <span className="text-[10px] tracking-[0.25em] text-ink-muted">TODAY'S QUEST · {q.tag}</span>
+              <h3 className="mt-4 text-2xl font-light text-ink">{q.title}</h3>
               <div className="mt-6 flex justify-end">
                 <Chip>{q.metric}</Chip>
               </div>
@@ -889,7 +904,7 @@ function QuestSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-12 text-center">
-          <p className="text-base md:text-lg text-white/70 font-light">
+          <p className="text-base md:text-lg text-ink-soft font-light">
             Complete it. Earn XP. Build your streak.
           </p>
         </FadeUp>
@@ -908,15 +923,15 @@ function TheAppSection() {
     { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
   ];
   return (
-    <section id="the-app" className="relative overflow-hidden py-16 md:py-40" style={{ background: C.navy }}>
-      <ParticleField density={30} opacity={0.25} />
+    <section id="the-app" className="relative overflow-hidden py-16 md:py-40 bg-canvas">
+      <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <p className="text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">The app</p>
-          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">The app</p>
+          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Your body, on screen.
           </h2>
-          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
             Clean. Calm. Built to answer one question — what should I do today?
           </p>
         </FadeUp>
@@ -945,7 +960,7 @@ function TheAppSection() {
                   className="w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
                 />
               </div>
-              <p className="mt-6 text-sm md:text-base text-white/60 font-light tracking-wide">
+              <p className="mt-6 text-sm md:text-base text-ink-muted font-light tracking-wide">
                 {s.caption}
               </p>
             </motion.div>
@@ -953,7 +968,7 @@ function TheAppSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-14 text-center">
-          <p className="text-sm md:text-base text-white/50 font-light">
+          <p className="text-sm md:text-base text-ink-muted font-light">
             Free with every ring. iOS &amp; Android.
           </p>
         </FadeUp>
@@ -967,10 +982,10 @@ function TheAppSection() {
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-56" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-40" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <FadeUp>
-          <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}33`, background: "rgba(10,22,40,0.5)" }}>
+          <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}22`, background: "linear-gradient(180deg,#0A1628,#0E1B34)", boxShadow: "0 30px 70px -35px rgba(10,22,40,0.45)" }}>
             <div className="text-left text-xs tracking-widest text-white/50">HRV · LAST 14 DAYS</div>
             <svg viewBox="0 0 400 120" className="mt-3 w-full h-32">
               <motion.path
@@ -981,7 +996,7 @@ function PreventiveSection() {
             </svg>
             <motion.div
               className="absolute right-4 top-16 rounded-xl border px-3 py-2 text-xs text-left"
-              style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.9)", color: C.gold }}
+              style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.92)", color: C.gold }}
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 2.5, duration: 0.6 }}
             >
               Your HRV trend is 22% below your usual range
@@ -989,14 +1004,14 @@ function PreventiveSection() {
           </div>
         </FadeUp>
         <FadeUp delay={0.4} className="mt-14">
-          <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extralight text-ink leading-tight">
             The trend showed on Day 11.<br />
-            <span className="text-white/60">You noticed on Day 14.</span>
+            <span className="text-ink-muted">You noticed on Day 14.</span>
           </h2>
           <p className="mt-6 text-lg md:text-xl font-light" style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}66` }}>
             Wellness trends, made visible.
           </p>
-          <p className="mt-4 text-xs text-white/40 max-w-md mx-auto">
+          <p className="mt-4 text-xs text-ink-muted max-w-md mx-auto">
             Trend information is for general wellness and informational purposes only.
           </p>
         </FadeUp>
@@ -1018,12 +1033,12 @@ function RingSection() {
     { icon: "🖤", label: "Midnight Black" },
   ];
   return (
-    <section id="ring" className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)" }}>
-      <ParticleField density={30} opacity={0.2} />
+    <section id="ring" className="relative overflow-hidden py-16 md:py-40" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp>
           <motion.div
-            className="mx-auto aspect-square w-[min(70vw,420px)] relative"
+            className="mx-auto aspect-square w-[min(70vw,420px)] relative rounded-[2.5rem] p-6"
+            style={{ background: "radial-gradient(circle at 50% 45%, #12233F 0%, #0A1628 70%)", boxShadow: "0 40px 90px -40px rgba(10,22,40,0.55)" }}
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -1036,7 +1051,7 @@ function RingSection() {
             />
           </motion.div>
         </FadeUp>
-        <div className="mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
+        <div className="relative mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
           {specs.map((s, i) => (
             <motion.div key={i}
               className="text-center"
@@ -1044,11 +1059,11 @@ function RingSection() {
               transition={{ delay: i * 0.08, duration: 0.5 }}
             >
               <div className="text-3xl md:text-4xl">{s.icon}</div>
-              <div className="mt-2 text-xs md:text-sm text-white/80 font-light">{s.label}</div>
+              <div className="mt-2 text-xs md:text-sm text-ink-soft font-light">{s.label}</div>
             </motion.div>
           ))}
         </div>
-        <p className="mt-10 text-center text-sm text-white/50 font-light">
+        <p className="relative mt-10 text-center text-sm text-ink-muted font-light">
           More colors and matte finish coming.
         </p>
       </div>
@@ -1067,10 +1082,10 @@ function PlansSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="Start free." /><br /><WordStagger text="Unlock more when ready." delay={0.15} />
           </h2>
         </FadeUp>
@@ -1080,24 +1095,24 @@ function PlansSection() {
             return (
               <motion.div key={i}
                 className={`relative rounded-3xl border p-8 backdrop-blur-xl flex flex-col ${p.highlight ? "md:scale-105" : ""}`}
-                style={{ borderColor: `${p.accent}66`, background: "rgba(10,22,40,0.6)", boxShadow: p.highlight ? `0 0 60px ${p.accent}44` : `0 0 20px ${p.accent}22` }}
+                style={{ borderColor: p.highlight ? `${p.accent}55` : "#E3E9F2", background: "#FFFFFF", boxShadow: p.highlight ? `0 30px 70px -30px ${p.accent}55` : "0 1px 2px rgba(10,22,40,0.04), 0 18px 40px -28px rgba(10,22,40,0.25)" }}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.7 }}
               >
                 {p.tag && (
                   <span className="self-start rounded-full border px-3 py-1 text-[10px] tracking-widest" style={{ borderColor: `${p.accent}88`, color: p.accent }}>{p.tag}</span>
                 )}
-                <h3 className="mt-4 text-2xl font-light text-white">{p.name}</h3>
-                <p className="mt-3 text-base text-white/70 font-light">{p.tease}</p>
+                <h3 className="mt-4 text-2xl font-light text-ink">{p.name}</h3>
+                <p className="mt-3 text-base text-ink-soft font-light">{p.tease}</p>
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="mt-4 self-start text-[11px] tracking-widest text-white/50 hover:text-white transition"
+                  className="mt-4 self-start text-[11px] tracking-widest text-ink-muted hover:text-ink transition"
                 >
                   {isOpen ? "HIDE FEATURES" : "SEE FEATURES"}
                 </button>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
-                      className="mt-4 space-y-2 text-sm text-white/70 font-light overflow-hidden"
+                      className="mt-4 space-y-2 text-sm text-ink-soft font-light overflow-hidden"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
@@ -1108,16 +1123,16 @@ function PlansSection() {
                   )}
                 </AnimatePresence>
                 <div className="flex-1" />
-                <Link to="/preorder" className="mt-8 inline-flex items-center justify-center rounded-full py-3 text-sm font-medium text-[#0A1628]"
-                  style={{ background: p.highlight ? `linear-gradient(120deg, ${C.blue}, ${C.purple})` : "rgba(255,255,255,0.9)" }}>
+                <Link to="/preorder" className={`mt-8 inline-flex items-center justify-center rounded-full py-3 text-sm font-medium transition ${p.highlight ? "text-white" : "text-ink"}`}
+                  style={{ background: p.highlight ? `linear-gradient(120deg, ${C.blue}, ${C.purple})` : "#F1F5FA", border: p.highlight ? "none" : "1px solid #E3E9F2" }}>
                   Pre-order Now
                 </Link>
               </motion.div>
             );
           })}
         </div>
-        <p className="mt-8 text-center text-xs text-white/40">30-day free trial on paid plans</p>
-        <p className="mt-3 text-center text-[11px] text-white/35 max-w-xl mx-auto">
+        <p className="mt-8 text-center text-xs text-ink-muted">30-day free trial on paid plans</p>
+        <p className="mt-3 text-center text-[11px] text-ink-muted/80 max-w-xl mx-auto">
           All plans provide general wellness and fitness features only. No plan provides medical
           advice, diagnosis, or treatment.
         </p>
@@ -1210,7 +1225,7 @@ const FAQS: { q: string; a: string }[] = [
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="relative py-16 md:py-24" style={{ background: C.navy }}>
+    <section id="faq" className="relative py-16 md:py-24" style={{ background: "#F6F8FC" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -1227,11 +1242,11 @@ function FAQSection() {
       />
       <div className="container mx-auto px-6">
         <FadeUp className="mx-auto max-w-3xl text-center">
-          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">Questions, answered</p>
-          <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-white">
+          <p className="eyebrow">Questions, answered</p>
+          <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-ink">
             What aiOn is — and what it isn’t
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-white/55">
+          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-ink-soft">
             A wellness companion. Informational only. Never a substitute for professional care.
           </p>
         </FadeUp>
@@ -1244,8 +1259,9 @@ function FAQSection() {
                 <div
                   className="rounded-2xl border backdrop-blur-xl overflow-hidden"
                   style={{
-                    borderColor: isOpen ? "rgba(79,179,255,0.35)" : "rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.03)",
+                    borderColor: isOpen ? "rgba(24,120,224,0.35)" : "#E3E9F2",
+                    background: "#FFFFFF",
+                    boxShadow: isOpen ? "0 22px 50px -30px rgba(24,120,224,0.45)" : "0 1px 2px rgba(10,22,40,0.04)",
                   }}
                 >
                   <button
@@ -1254,9 +1270,9 @@ function FAQSection() {
                     aria-expanded={isOpen}
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 md:px-6 md:py-5 text-left"
                   >
-                    <span className="text-[15px] md:text-base font-light text-white/90">{f.q}</span>
+                    <span className="text-[15px] md:text-base font-light text-ink">{f.q}</span>
                     <span
-                      className="shrink-0 text-xl font-extralight text-white/50 transition-transform duration-300"
+                      className="shrink-0 text-xl font-extralight text-ink-muted transition-transform duration-300"
                       style={{ transform: isOpen ? "rotate(45deg)" : "none" }}
                     >
                       +
@@ -1270,7 +1286,7 @@ function FAQSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       >
-                        <p className="px-5 pb-5 md:px-6 md:pb-6 text-sm md:text-[15px] font-light leading-relaxed text-white/60">
+                        <p className="px-5 pb-5 md:px-6 md:pb-6 text-sm md:text-[15px] font-light leading-relaxed text-ink-soft">
                           {f.a}
                         </p>
                       </motion.div>
@@ -1283,7 +1299,7 @@ function FAQSection() {
         </div>
 
         <FadeUp delay={0.1}>
-          <p className="mx-auto mt-8 max-w-2xl text-center text-xs md:text-[13px] font-light leading-relaxed text-white/45">
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs md:text-[13px] font-light leading-relaxed text-ink-muted">
             All aiOn results are informational only and are not intended to diagnose, treat, cure, or
             prevent any disease or medical condition. Always consult a qualified healthcare
             professional regarding any medical concerns or before making healthcare decisions.
@@ -1296,14 +1312,14 @@ function FAQSection() {
 
 function WellnessDisclaimerSection() {
   return (
-    <section className="relative py-14 md:py-20" style={{ background: C.navy }}>
+    <section className="relative py-14 md:py-20" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6">
         <div
           className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
-          style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}
+          style={{ borderColor: "#E3E9F2", background: "#F6F8FC" }}
         >
-          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">General wellness product</p>
-          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-white/65 leading-relaxed">
+          <p className="eyebrow">General wellness product</p>
+          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-ink-soft leading-relaxed">
             <p>aiOn Ring is intended for general wellness purposes only and is not a medical device.</p>
             <p>
               The information provided by aiOn Ring is for informational purposes only and is not
@@ -1334,12 +1350,12 @@ function IntroOverlay() {
       {!gone && (
         <motion.div
           className="fixed inset-0 z-[90] flex items-center justify-center"
-          style={{ background: C.navy }}
+          style={{ background: "#F6F8FC" }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
         >
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl font-extralight tracking-tight text-white">
+            className="text-5xl md:text-7xl font-extralight tracking-tight text-ink">
             ai<span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>O</span>n
           </motion.div>
         </motion.div>
@@ -1361,7 +1377,7 @@ export default function Index() {
   }, [location]);
 
   return (
-    <div className="min-h-screen text-white" style={{ background: C.navy }}>
+    <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <IntroOverlay />
       <GlowCursor />
       <Header />

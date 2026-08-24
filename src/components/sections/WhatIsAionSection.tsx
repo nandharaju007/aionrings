@@ -8,9 +8,9 @@ export function WhatIsAionSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="relative py-32 lg:py-48 overflow-hidden" id="about">
+    <section ref={ref} className="relative py-32 lg:py-48 overflow-hidden bg-canvas" id="about">
       {/* Subtle glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial-glow opacity-50" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial-glow opacity-12" />
 
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -21,19 +21,19 @@ export function WhatIsAionSection() {
             transition={{ duration: 0.8 }}
             className="max-w-xl"
           >
-            <h2 className="text-headline mb-8">
+            <h2 className="text-headline text-ink mb-8">
               Health is not a moment.
               <br />
               <span className="text-gradient-teal">It's a pattern over time.</span>
             </h2>
             
-            <p className="text-body mb-6">
+            <p className="text-body text-ink-soft mb-6">
               aiOn understands your body as a continuous system. Not isolated 
               readings, but connected insights that reveal the rhythm of your 
               wellness over days, weeks, and months.
             </p>
             
-            <p className="text-body">
+            <p className="text-body text-ink-soft">
               Through intelligent pattern recognition, aiOn transforms 
               physiological signals into meaningful awareness—helping you 
               understand not just where you are, but where you're heading.

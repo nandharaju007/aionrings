@@ -5,22 +5,22 @@ import { motion } from 'framer-motion';
 
 const TermsOfServicePage = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-canvas text-ink">
       <SEO title={"Terms of Service — aiOn"} description={"The terms that govern your use of the aiOn platform, ring, and companion services."} path="/terms-of-service" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
-          <motion.div
+          <motion.div className="surface-card p-8 md:p-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Terms of Service</h1>
-            <p className="text-caption mb-12">Last updated: April 30, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: April 30, 2026</p>
 
-            <div className="space-y-10 text-body">
+            <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">1. Agreement to Terms</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">1. Agreement to Terms</h2>
                 <p>
                   These Terms of Service ("Terms") govern your access to and use of the aiOn platform,
                   including the aiOn Ring wearable device, mobile and web applications, and related
@@ -31,7 +31,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">2. Eligibility</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">2. Eligibility</h2>
                 <p>
                   You must be at least 18 years old (or the age of majority in your jurisdiction) to
                   create an account. By using the Services, you represent that the information you
@@ -40,7 +40,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">3. General Wellness Disclaimer</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">3. General Wellness Disclaimer</h2>
                 <p className="mb-3">
                   aiOn Ring is intended for <strong>general wellness purposes only and is not a medical
                   device</strong>. It supports you in monitoring overall wellness, fitness, recovery,
@@ -59,7 +59,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">4. Account & Security</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">4. Account & Security</h2>
                 <p>
                   You are responsible for maintaining the confidentiality of your account credentials
                   and for all activity under your account. Notify us immediately at contact@aionrings.com
@@ -69,7 +69,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">5. Purchases, Shipping & Returns</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">5. Purchases, Shipping & Returns</h2>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>All prices are listed in USD unless otherwise indicated and exclude applicable taxes and shipping fees.</li>
                   <li>Orders are subject to availability and confirmation of the order price.</li>
@@ -79,7 +79,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">6. Limited Hardware Warranty</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">6. Limited Hardware Warranty</h2>
                 <p>
                   The aiOn Ring is covered by a one (1) year limited warranty against manufacturing
                   defects from the date of delivery. The warranty does not cover damage caused by misuse,
@@ -88,7 +88,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">7. Subscription Services</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">7. Subscription Services</h2>
                 <p>
                   Certain features may require a paid subscription. Subscriptions automatically renew
                   until cancelled. You may cancel at any time through your account settings; cancellation
@@ -98,7 +98,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">8. Intellectual Property</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">8. Intellectual Property</h2>
                 <p>
                   All content, software, designs, trademarks, logos, and materials on the Services are
                   owned by Mazo Solutions Inc. or its licensors and are protected by copyright, trademark,
@@ -109,7 +109,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">9. Acceptable Use</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">9. Acceptable Use</h2>
                 <p>You agree not to:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>Reverse engineer, decompile, or disassemble the device, firmware, or software</li>
@@ -121,7 +121,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">10. User Content & Data License</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">10. User Content & Data License</h2>
                 <p>
                   You retain ownership of your health data. By using the Services, you grant Mazo a
                   limited license to process your data solely to operate, improve, and personalize the
@@ -131,7 +131,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">11. Disclaimers</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">11. Disclaimers</h2>
                 <p>
                   THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
                   EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -140,7 +140,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">12. Limitation of Liability</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">12. Limitation of Liability</h2>
                 <p>
                   TO THE MAXIMUM EXTENT PERMITTED BY LAW, MAZO SOLUTIONS INC. SHALL NOT BE LIABLE FOR ANY
                   INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF
@@ -150,7 +150,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">13. Indemnification</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">13. Indemnification</h2>
                 <p>
                   You agree to indemnify and hold harmless Mazo Solutions Inc., its officers, directors,
                   employees, and affiliates from any claims arising out of your violation of these Terms
@@ -159,7 +159,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">14. Governing Law & Dispute Resolution</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">14. Governing Law & Dispute Resolution</h2>
                 <p>
                   These Terms are governed by the laws of the State of Delaware, USA, without regard to
                   conflict-of-laws principles. Any disputes shall be resolved through binding arbitration
@@ -169,7 +169,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">15. Changes to These Terms</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">15. Changes to These Terms</h2>
                 <p>
                   We may update these Terms from time to time. Material changes will be communicated via
                   email or in-app notification at least 30 days before they take effect. Continued use of
@@ -178,7 +178,7 @@ const TermsOfServicePage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">16. Contact</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">16. Contact</h2>
                 <p>
                   Mazo Solutions Inc.<br />
                   Legal Department<br />

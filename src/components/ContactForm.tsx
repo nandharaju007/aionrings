@@ -29,10 +29,10 @@ export const ContactForm = () => {
   };
 
   const field =
-    'w-full bg-background/40 border border-border/60 rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 transition-colors';
+    'w-full bg-canvas/50 border border-border rounded-lg px-4 py-3 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 transition-colors';
 
   return (
-    <form onSubmit={handleSubmit} className="card-glass p-6 md:p-8 space-y-4 mt-6">
+    <form onSubmit={handleSubmit} className="surface-card p-6 md:p-8 space-y-4 mt-6">
       <div className="grid md:grid-cols-2 gap-4">
         <input
           className={field}
@@ -74,7 +74,7 @@ export const ContactForm = () => {
       >
         {sending ? 'Sending…' : 'Send message'}
       </button>
-      <p className="text-caption">Messages are sent to contact@aionrings.com. We typically reply within 2 business days.</p>
+      <p className="text-ink-muted">Messages are sent to contact@aionrings.com. We typically reply within 2 business days.</p>
     </form>
   );
 };

@@ -8,9 +8,9 @@ export function IntelligenceSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} id="intelligence" className="relative py-32 lg:py-48 overflow-hidden">
+    <section ref={ref} id="intelligence" className="relative py-32 lg:py-48 overflow-hidden bg-canvas">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-card/50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent" />
 
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -49,31 +49,31 @@ export function IntelligenceSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h2 className="text-headline mb-8">
+            <h2 className="text-headline text-ink mb-8">
               Patterns, not
               <span className="text-gradient-teal"> predictions</span>
             </h2>
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-lg font-light text-foreground mb-2">Personal Baseline Modeling</h3>
-                <p className="text-body">
+                <h3 className="text-lg font-light text-ink mb-2">Personal Baseline Modeling</h3>
+                <p className="text-body text-ink-soft">
                   aiOn learns your unique physiology—establishing your personal 
                   normal before identifying meaningful changes.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-light text-foreground mb-2">Multi-Signal Fusion</h3>
-                <p className="text-body">
+                <h3 className="text-lg font-light text-ink mb-2">Multi-Signal Fusion</h3>
+                <p className="text-body text-ink-soft">
                   Heart rate, HRV, sleep quality, stress levels, and estimated glucose
                   and blood pressure trends—woven together into everyday wellness awareness.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-light text-foreground mb-2">Longitudinal Recognition</h3>
-                <p className="text-body">
+                <h3 className="text-lg font-light text-ink mb-2">Longitudinal Recognition</h3>
+                <p className="text-body text-ink-soft">
                   See beyond daily fluctuations. Understand how your health 
                   evolves across weeks and months.
                 </p>

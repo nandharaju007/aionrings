@@ -268,10 +268,10 @@ const ORDER_STATUS_ESTIMATE_DAYS: Record<string, number> = {
 
 function orderStatusColor(status: string): string {
   const map: Record<string, string> = {
-    received: "text-[#4FB3FF]",
-    processing: "text-amber-300",
-    shipped: "text-violet-300",
-    delivered: "text-emerald-300",
+    received: "text-primary",
+    processing: "text-amber-600",
+    shipped: "text-violet-600",
+    delivered: "text-emerald-600",
   };
   return map[status] ?? map.received;
 }
@@ -286,13 +286,13 @@ function toLocal(iso?: string | null): string {
 
 function StatusPill({ status }: { status: string }) {
   const map: Record<string, string> = {
-    reserved: "bg-[#4FB3FF]/10 text-[#4FB3FF]",
-    pending: "bg-white/5 text-[#B8C5D3]",
-    confirmed: "bg-sky-500/10 text-sky-300",
-    processing: "bg-amber-500/10 text-amber-300",
-    shipped: "bg-violet-500/10 text-violet-300",
-    delivered: "bg-emerald-500/10 text-emerald-300",
-    cancelled: "bg-red-500/10 text-red-300",
+    reserved: "bg-[#1878E0]/10 text-primary",
+    pending: "bg-white surface-card text-ink-soft",
+    confirmed: "bg-sky-500/10 text-sky-600",
+    processing: "bg-amber-500/10 text-amber-600",
+    shipped: "bg-violet-500/10 text-violet-600",
+    delivered: "bg-emerald-50 border border-emerald-200 text-emerald-600",
+    cancelled: "bg-red-500/10 text-red-600",
   };
   return (
     <span className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${map[status] ?? map.reserved}`}>
@@ -1048,19 +1048,19 @@ export default function AdminReservationsPage() {
   }, [rows]);
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white">
+    <div className="min-h-screen bg-canvas text-ink">
       <Header />
       <main className="pt-32 pb-24">
         <div className="mx-auto max-w-[1200px] px-6">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-1">Admin</div>
-              <h1 className="text-3xl md:text-4xl font-light tracking-tight">Dashboard</h1>
+              <div className="text-[11px] uppercase tracking-[3px] text-primary mb-1">Admin</div>
+              <h1 className="text-3xl md:text-4xl font-light tracking-tight text-ink">Dashboard</h1>
             </div>
             {session && (
               <button
                 onClick={onLogout}
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-[13px] text-ink-soft hover:bg-canvas transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" /> {session.email}
               </button>
@@ -1069,21 +1069,21 @@ export default function AdminReservationsPage() {
 
           {loading ? (
             <div className="flex items-center justify-center py-24">
-              <Loader2 className="w-6 h-6 animate-spin text-[#4FB3FF]" />
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
           ) : !session ? (
             <form
               onSubmit={onLogin}
-              className="max-w-sm mx-auto space-y-4 rounded-2xl border border-white/10 bg-white/[0.02] p-8"
+              className="max-w-sm mx-auto space-y-4 surface-card rounded-2xl p-8"
             >
-              <h2 className="text-xl font-light mb-2">Sign in</h2>
+              <h2 className="text-xl font-light mb-2 text-ink">Sign in</h2>
               <input
                 type="email"
                 required
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] focus:border-[#4FB3FF] focus:outline-none"
+                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-[15px] focus:border-[#1878E0] focus:outline-none"
               />
               <input
                 type="password"
@@ -1091,18 +1091,18 @@ export default function AdminReservationsPage() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.02] px-4 text-[15px] focus:border-[#4FB3FF] focus:outline-none"
+                className="w-full h-12 rounded-xl border border-border bg-white px-4 text-[15px] focus:border-[#1878E0] focus:outline-none"
               />
-              {error && <div className="text-[13px] text-red-300">{error}</div>}
+              {error && <div className="text-[13px] text-red-600">{error}</div>}
               <button
                 type="submit"
                 disabled={busy}
                 className="w-full h-12 rounded-full font-semibold text-white disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
               >
                 {busy ? "Signing in…" : "Sign in"}
               </button>
-              <p className="text-[12px] text-[#5A6B7E] text-center pt-2">
+              <p className="text-[12px] text-ink-muted text-center pt-2">
                 Admin access is restricted. Contact{" "}
                 <a href="mailto:contact@aionrings.com" className="underline">
                   contact@aionrings.com
@@ -1111,18 +1111,18 @@ export default function AdminReservationsPage() {
               </p>
             </form>
           ) : isAdmin === false ? (
-            <div className="max-w-lg mx-auto text-center rounded-2xl border border-white/10 bg-white/[0.02] p-10">
-              <h2 className="text-2xl font-light mb-3">Access denied</h2>
-              <p className="text-[14px] text-[#8B9DAF]">Your account doesn't have admin privileges.</p>
+            <div className="max-w-lg mx-auto text-center surface-card rounded-2xl p-10">
+              <h2 className="text-2xl font-light mb-3 text-ink">Access denied</h2>
+              <p className="text-[14px] text-ink-muted">Your account doesn't have admin privileges.</p>
             </div>
           ) : (
             <>
-              <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-white/10 bg-white/[0.02] p-1 w-fit">
+              <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-border bg-white p-1 w-fit">
                 {(["reservations", "fulfillment", "partners", "bulk", "b2c", "pricing"] as Tab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
-                    className={`px-5 py-2 text-[13px] rounded-full transition-colors ${tab === t ? "bg-white/10 text-white" : "text-[#8B9DAF] hover:text-white"}`}
+                    className={`px-5 py-2 text-[13px] rounded-full transition-colors ${tab === t ? "bg-primary text-white shadow-sm" : "text-ink-muted hover:text-primary"}`}
                   >
                     {t === "reservations"
                       ? "Reservations"
@@ -1146,25 +1146,25 @@ export default function AdminReservationsPage() {
                       <button
                         key={s}
                         onClick={() => setFulfillmentFilter(s)}
-                        className={`rounded-2xl border p-4 text-left transition-colors ${fulfillmentFilter === s ? "border-[#4FB3FF] bg-[#4FB3FF]/5" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+                        className={`rounded-2xl border p-4 text-left transition-colors ${fulfillmentFilter === s ? "border-[#1878E0] bg-[#1878E0]/5" : "border-border bg-white hover:border-border"}`}
                       >
-                        <div className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">{s}</div>
+                        <div className="text-[10px] uppercase tracking-[2px] text-ink-muted">{s}</div>
                         <div className="text-2xl font-light mt-1">{stats[s] ?? 0}</div>
                       </button>
                     ))}
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
-                    <div className="text-[13px] text-[#8B9DAF]">
+                    <div className="text-[13px] text-ink-muted">
                       Filter:{" "}
                       <button
                         onClick={() => setFulfillmentFilter("all")}
-                        className={`ml-1 underline ${fulfillmentFilter === "all" ? "text-white" : "text-[#4FB3FF]"}`}
+                        className={`ml-1 underline ${fulfillmentFilter === "all" ? "text-ink" : "text-primary"}`}
                       >
                         All ({rows?.length ?? 0})
                       </button>
                     </div>
-                    <div className="text-[12px] text-[#5A6B7E]">
+                    <div className="text-[12px] text-ink-muted">
                       Click a status card to filter · edit rows and hit Save
                     </div>
                   </div>
@@ -1175,35 +1175,35 @@ export default function AdminReservationsPage() {
                       const merged = { ...r, ...e };
                       const dirty = !!edit[r.id];
                       return (
-                        <div key={r.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                        <div key={r.id} className="surface-card rounded-2xl p-5">
                           <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
                             <div>
                               <div className="flex items-center gap-3 mb-1">
-                                <span className="font-mono text-[13px] text-[#4FB3FF]">{r.reservation_number}</span>
+                                <span className="font-mono text-[13px] text-primary">{r.reservation_number}</span>
                                 <StatusPill status={merged.status || "reserved"} />
                               </div>
                               <div className="text-[15px] font-medium">
                                 {r.first_name} {r.last_name}{" "}
-                                <span className="text-[#8B9DAF] font-normal">· {r.email}</span>
+                                <span className="text-ink-muted font-normal">· {r.email}</span>
                               </div>
-                              <div className="text-[12px] text-[#8B9DAF]">
+                              <div className="text-[12px] text-ink-muted">
                                 {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country} · {r.phone}
                               </div>
-                              <div className="text-[12px] text-[#B8C5D3] mt-1">
-                                Size <span className="text-white">{r.ring_size}</span> · Color{" "}
-                                <span className="text-white">{r.ring_color ?? "—"}</span> · Qty{" "}
-                                <span className="text-white">{r.quantity}</span> ·{" "}
+                              <div className="text-[12px] text-ink-soft mt-1">
+                                Size <span className="text-ink">{r.ring_size}</span> · Color{" "}
+                                <span className="text-ink">{r.ring_color ?? "—"}</span> · Qty{" "}
+                                <span className="text-ink">{r.quantity}</span> ·{" "}
                                 {new Date(r.created_at).toLocaleDateString()}
                               </div>
                             </div>
                             <button
                               onClick={() => saveFulfillment(r)}
                               disabled={!dirty || savingId === r.id}
-                              className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[12px] font-medium text-white disabled:opacity-40"
+                              className={`inline-flex items-center gap-1 rounded-full px-4 py-2 text-[12px] font-medium ${dirty ? "text-white" : "text-ink-soft"} disabled:opacity-40`}
                               style={{
                                 background: dirty
-                                  ? "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)"
-                                  : "rgba(255,255,255,0.06)",
+                                  ? "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)"
+                                  : "#E3E9F2",
                               }}
                             >
                               {savingId === r.id ? (
@@ -1217,11 +1217,11 @@ export default function AdminReservationsPage() {
 
                           <div className="grid md:grid-cols-4 gap-3">
                             <label className="block">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Status</span>
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">Status</span>
                               <select
                                 value={merged.status || "reserved"}
                                 onChange={(ev) => editField(r.id, "status", ev.target.value)}
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               >
                                 {STATUSES.map((s) => (
                                   <option key={s} value={s}>
@@ -1231,27 +1231,27 @@ export default function AdminReservationsPage() {
                               </select>
                             </label>
                             <label className="block">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Carrier</span>
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">Carrier</span>
                               <input
                                 value={merged.carrier ?? ""}
                                 onChange={(ev) => editField(r.id, "carrier", ev.target.value)}
                                 placeholder="UPS, FedEx, USPS…"
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               />
                             </label>
                             <label className="block md:col-span-2">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">
                                 Tracking number
                               </span>
                               <input
                                 value={merged.tracking_number ?? ""}
                                 onChange={(ev) => editField(r.id, "tracking_number", ev.target.value)}
                                 placeholder="1Z999AA10123456784"
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               />
                             </label>
                             <label className="block">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Shipped at</span>
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">Shipped at</span>
                               <input
                                 type="datetime-local"
                                 value={toLocal(merged.shipped_at)}
@@ -1262,11 +1262,11 @@ export default function AdminReservationsPage() {
                                     ev.target.value ? new Date(ev.target.value).toISOString() : null,
                                   )
                                 }
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               />
                             </label>
                             <label className="block">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">Delivered at</span>
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">Delivered at</span>
                               <input
                                 type="datetime-local"
                                 value={toLocal(merged.delivered_at)}
@@ -1277,57 +1277,57 @@ export default function AdminReservationsPage() {
                                     ev.target.value ? new Date(ev.target.value).toISOString() : null,
                                   )
                                 }
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               />
                             </label>
                             <label className="block md:col-span-2">
-                              <span className="text-[10px] uppercase tracking-[2px] text-[#8B9DAF]">
+                              <span className="text-[10px] uppercase tracking-[2px] text-ink-muted">
                                 Internal notes
                               </span>
                               <input
                                 value={merged.admin_notes ?? ""}
                                 onChange={(ev) => editField(r.id, "admin_notes", ev.target.value)}
                                 placeholder="Anything worth remembering…"
-                                className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                                className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                               />
                             </label>
                           </div>
 
-                          <div className="mt-4 pt-4 border-t border-white/5">
+                          <div className="mt-4 pt-4 border-t border-border">
                             <button
                               onClick={() => toggleTimeline(r.id)}
-                              className="inline-flex items-center gap-2 text-[12px] text-[#8B9DAF] hover:text-white"
+                              className="inline-flex items-center gap-2 text-[12px] text-ink-muted hover:text-ink"
                             >
                               <History className="w-3.5 h-3.5" />
                               {openTimeline[r.id] ? "Hide" : "Show"} audit timeline
-                              {audit[r.id] && <span className="text-[#5A6B7E]">({audit[r.id].length})</span>}
+                              {audit[r.id] && <span className="text-ink-muted">({audit[r.id].length})</span>}
                             </button>
                             {openTimeline[r.id] && (
-                              <div className="mt-3 rounded-xl bg-black/20 border border-white/5 p-4">
+                              <div className="mt-3 rounded-xl bg-canvas border border-border p-4">
                                 {auditLoading[r.id] ? (
-                                  <div className="flex items-center gap-2 text-[12px] text-[#8B9DAF]">
+                                  <div className="flex items-center gap-2 text-[12px] text-ink-muted">
                                     <Loader2 className="w-3 h-3 animate-spin" /> Loading…
                                   </div>
                                 ) : (audit[r.id]?.length ?? 0) === 0 ? (
-                                  <div className="text-[12px] text-[#5A6B7E]">No changes recorded yet.</div>
+                                  <div className="text-[12px] text-ink-muted">No changes recorded yet.</div>
                                 ) : (
                                   <ol className="space-y-3">
                                     {audit[r.id].map((a) => (
                                       <li key={a.id} className="flex gap-3 text-[12px]">
-                                        <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4FB3FF] shrink-0" />
+                                        <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#1878E0] shrink-0" />
                                         <div className="flex-1 min-w-0">
-                                          <div className="text-[#B8C5D3]">
-                                            <span className="text-white font-medium">
+                                          <div className="text-ink-soft">
+                                            <span className="text-ink font-medium">
                                               {a.changed_by_email ?? "system"}
                                             </span>{" "}
-                                            changed <span className="text-[#4FB3FF]">{a.field}</span>
+                                            changed <span className="text-primary">{a.field}</span>
                                           </div>
-                                          <div className="text-[#8B9DAF] font-mono text-[11px] break-all">
-                                            <span className="line-through text-[#5A6B7E]">{a.old_value ?? "∅"}</span>
+                                          <div className="text-ink-muted font-mono text-[11px] break-all">
+                                            <span className="line-through text-ink-muted opacity-50">{a.old_value ?? "∅"}</span>
                                             {" → "}
-                                            <span className="text-emerald-300">{a.new_value ?? "∅"}</span>
+                                            <span className="text-emerald-600">{a.new_value ?? "∅"}</span>
                                           </div>
-                                          <div className="text-[10px] text-[#5A6B7E] mt-0.5">
+                                          <div className="text-[10px] text-ink-muted mt-0.5">
                                             {new Date(a.created_at).toLocaleString()}
                                           </div>
                                         </div>
@@ -1342,7 +1342,7 @@ export default function AdminReservationsPage() {
                       );
                     })}
                     {fulfillmentRows && fulfillmentRows.length === 0 && (
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-10 text-center text-[#5A6B7E]">
+                      <div className="surface-card rounded-2xl p-10 text-center text-ink-muted">
                         No orders in this stage.
                       </div>
                     )}
@@ -1353,14 +1353,14 @@ export default function AdminReservationsPage() {
               {tab === "reservations" && (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                    <div className="text-[14px] text-[#8B9DAF]">
-                      <span className="text-white font-medium">{webOrdersTotal}</span> reservations total
+                    <div className="text-[14px] text-ink-muted">
+                      <span className="text-ink font-medium">{webOrdersTotal}</span> reservations total
                     </div>
                     <div className="flex items-center gap-3">
                       <select
                         value={filterPartner}
                         onChange={(e) => setFilterPartner(e.target.value)}
-                        className="h-10 rounded-full border border-white/15 bg-white/[0.02] px-4 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                        className="h-10 rounded-full border border-border bg-white px-4 text-[13px] focus:outline-none focus:border-[#1878E0]"
                       >
                         <option value="">All partners</option>
                         <option value="__none__">Direct (no partner)</option>
@@ -1372,7 +1372,7 @@ export default function AdminReservationsPage() {
                       </select>
                       <button
                         onClick={exportCSV}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                        className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-[13px] text-ink-soft hover:bg-canvas transition-colors"
                       >
                         <Download className="w-3.5 h-3.5" /> Export CSV
                       </button>
@@ -1380,14 +1380,14 @@ export default function AdminReservationsPage() {
                   </div>
 
                   {webOrdersError && (
-                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-600">
                       Couldn't load reservations: {webOrdersError}
                     </div>
                   )}
 
-                  <div className="overflow-x-auto rounded-2xl border border-white/10">
+                  <div className="overflow-x-auto rounded-2xl border border-border">
                     <table className="w-full text-[13px]">
-                      <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
+                      <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
                         <tr>
                           <th className="px-4 py-3 text-center font-medium">#</th>
                           <th className="px-4 py-3 text-center font-medium">Date</th>
@@ -1410,33 +1410,33 @@ export default function AdminReservationsPage() {
                           const extraItems = r.items.length - 1;
                           const currentStatus = getCurrentStatus(r);
                           return (
-                            <tr key={r.orderId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
-                              <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
+                            <tr key={r.orderId} className="h-14 border-t border-border hover:bg-white">
+                              <td className="px-4 py-3 font-mono text-[12px] text-primary text-center whitespace-nowrap">
                                 {r.orderId.slice(-8)}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {new Date(r.createdAt).toLocaleDateString()}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {r.first_name} {r.last_name}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">{r.email}</td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">{r.phone}</td>
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{r.email}</td>
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{r.phone}</td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {firstItem?.ring_size ?? "—"}
-                                {extraItems > 0 && <span className="text-[#5A6B7E] text-[11px]"> (+{extraItems})</span>}
+                                {extraItems > 0 && <span className="text-ink-muted text-[11px]"> (+{extraItems})</span>}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {firstItem?.ring_color ?? "—"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">{firstItem?.quantity ?? "—"}</td>
                               <td
-                                className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
+                                className="px-4 py-3 text-ink-soft text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
                                 title={`${r.address}, ${r.city}, ${r.state} ${r.zip_code}, ${r.country}`}
                               >
                                 {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country}
                               </td>
-                              <td className="px-4 py-3 text-[#4FB3FF] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-primary text-center whitespace-nowrap">
                                 {r.partner_code ?? r.referral_source ?? "—"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap relative">
@@ -1454,7 +1454,7 @@ export default function AdminReservationsPage() {
                                           !isFinal &&
                                           setOpenStatusMenuFor(openStatusMenuFor === r.orderId ? null : r.orderId)
                                         }
-                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-white/5 opacity-30 cursor-not-allowed" : "border-white/15 hover:border-white/30"}`}
+                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-border opacity-30 cursor-not-allowed" : "border-border hover:border-border"}`}
                                       >
                                         <ChevronDown className="w-3 h-3" />
                                       </button>
@@ -1462,7 +1462,7 @@ export default function AdminReservationsPage() {
                                   })()}
                                 </div>
                                 {openStatusMenuFor === r.orderId && (
-                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1 overflow-hidden">
+                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-border bg-white shadow-lg py-1 overflow-hidden">
                                     {(getShipDeliverValue(r) === "shipped"
                                       ? SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "delivered")
                                       : SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "shipped")
@@ -1473,7 +1473,7 @@ export default function AdminReservationsPage() {
                                           handleStatusChange(r.orderId, opt.value);
                                           setOpenStatusMenuFor(null);
                                         }}
-                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
+                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-ink-soft hover:bg-canvas hover:text-ink transition-colors"
                                       >
                                         {opt.label}
                                       </button>
@@ -1484,7 +1484,7 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-center">
                                 <button
                                   onClick={() => setViewingLogFor(r)}
-                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                  className="inline-flex items-center justify-center rounded-full border border-border w-8 h-8 hover:border-border"
                                 >
                                   <History className="w-3.5 h-3.5" />
                                 </button>
@@ -1492,7 +1492,7 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-center">
                                 <button
                                   onClick={() => setExpandedOrder(r)}
-                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                  className="inline-flex items-center justify-center rounded-full border border-border w-8 h-8 hover:border-border"
                                 >
                                   <Eye className="w-3.5 h-3.5" />
                                 </button>
@@ -1502,14 +1502,14 @@ export default function AdminReservationsPage() {
                         })}
                         {webOrderRows && webOrderRows.length === 0 && (
                           <tr>
-                            <td colSpan={13} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={13} className="px-4 py-16 text-center text-ink-muted">
                               No reservations.
                             </td>
                           </tr>
                         )}
                         {!webOrderRows && !webOrdersError && (
                           <tr>
-                            <td colSpan={13} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={13} className="px-4 py-16 text-center text-ink-muted">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading reservations…
                             </td>
@@ -1520,21 +1520,21 @@ export default function AdminReservationsPage() {
                   </div>
 
                   <div className="flex items-center justify-between mt-4">
-                    <div className="text-[13px] text-[#8B9DAF]">
+                    <div className="text-[13px] text-ink-muted">
                       Page {webOrdersPage} of {Math.max(1, Math.ceil(webOrdersTotal / 10))}
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => loadWebOrders(webOrdersPage - 1)}
                         disabled={webOrdersPage <= 1}
-                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Previous
                       </button>
                       <button
                         onClick={() => loadWebOrders(webOrdersPage + 1)}
                         disabled={!webOrdersHasMore}
-                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Next
                       </button>
@@ -1547,45 +1547,45 @@ export default function AdminReservationsPage() {
 
                   {expandedOrder && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => setExpandedOrder(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        className="bg-white border border-border rounded-2xl p-6 max-w-md w-full"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Reservation Details</div>
-                          <button onClick={() => setExpandedOrder(null)} className="text-[#8B9DAF] hover:text-white">
+                          <div className="text-[12px] uppercase tracking-[3px] text-primary">Reservation Details</div>
+                          <button onClick={() => setExpandedOrder(null)} className="text-ink-muted hover:text-ink">
                             <X className="w-4 h-4" />
                           </button>
                         </div>
                         <div className="text-[16px] font-medium mb-1">
                           {expandedOrder.first_name} {expandedOrder.last_name}
                         </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                        <div className="text-[13px] text-ink-muted mb-4">
                           {expandedOrder.email} · {expandedOrder.phone}
                         </div>
-                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-1">Shipping Address</div>
-                        <div className="text-[13px] text-[#B8C5D3] mb-4">
+                        <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-1">Shipping Address</div>
+                        <div className="text-[13px] text-ink-soft mb-4">
                           {expandedOrder.address}, {expandedOrder.city}, {expandedOrder.state} {expandedOrder.zip_code},{" "}
                           {expandedOrder.country}
                         </div>
-                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-2">Items</div>
+                        <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-2">Items</div>
                         <div className="space-y-2 mb-4">
                           {expandedOrder.items.map((item, i) => (
                             <div
                               key={i}
-                              className="flex justify-between text-[13px] rounded-lg bg-white/[0.02] border border-white/5 px-3 py-2"
+                              className="flex justify-between text-[13px] rounded-lg bg-white border border-border px-3 py-2"
                             >
                               <span>
                                 Size {item.ring_size} · {item.ring_color}
                               </span>
-                              <span className="text-[#B8C5D3]">Qty {item.quantity}</span>
+                              <span className="text-ink-soft">Qty {item.quantity}</span>
                             </div>
                           ))}
                         </div>
-                        <div className="text-[12px] text-[#5A6B7E]">
+                        <div className="text-[12px] text-ink-muted">
                           {new Date(expandedOrder.createdAt).toLocaleString()} ·{" "}
                           {expandedOrder.partner_code ?? expandedOrder.referral_source ?? "Direct"}
                         </div>
@@ -1601,20 +1601,20 @@ export default function AdminReservationsPage() {
 
                   {viewingLogFor && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => setViewingLogFor(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        className="bg-white border border-border rounded-2xl p-6 max-w-md w-full"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking</div>
-                          <button onClick={() => setViewingLogFor(null)} className="text-[#8B9DAF] hover:text-white">
+                          <div className="text-[12px] uppercase tracking-[3px] text-primary">Order Tracking</div>
+                          <button onClick={() => setViewingLogFor(null)} className="text-ink-muted hover:text-ink">
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                        <div className="text-[13px] text-ink-muted mb-4">
                           {viewingLogFor.first_name} {viewingLogFor.last_name} · #{viewingLogFor.orderId.slice(-8)}
                         </div>
                         <ol>
@@ -1622,19 +1622,19 @@ export default function AdminReservationsPage() {
                             <li key={step.value} className="flex gap-3 text-[13px]">
                               <div className="flex flex-col items-center">
                                 <div
-                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-400" : "bg-white/15 border border-white/20"}`}
+                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-600" : "bg-white/15 border border-border"}`}
                                 />
                                 {i < arr.length - 1 && (
                                   <div
-                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-400" : "bg-white/10"}`}
+                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-600" : "bg-canvas-alt"}`}
                                   />
                                 )}
                               </div>
                               <div className="flex-1 pb-4">
-                                <div className={step.completed ? "text-white font-medium" : "text-[#5A6B7E]"}>
+                                <div className={step.completed ? "text-ink font-medium" : "text-ink-muted"}>
                                   {step.label}
                                 </div>
-                                <div className="text-[11px] text-[#5A6B7E]">
+                                <div className="text-[11px] text-ink-muted">
                                   {step.completed
                                     ? new Date(step.date).toLocaleString()
                                     : `Estimated · ${new Date(step.date).toLocaleDateString()}`}
@@ -1653,38 +1653,38 @@ export default function AdminReservationsPage() {
                 <>
                   <form
                     onSubmit={createPartner}
-                    className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 mb-6 grid md:grid-cols-6 gap-2"
+                    className="surface-card rounded-2xl p-5 mb-6 grid md:grid-cols-6 gap-2"
                   >
                     <input
                       required
                       placeholder="code (e.g. abcclinic)"
                       value={newPartner.code}
                       onChange={(e) => setNewPartner({ ...newPartner, code: e.target.value })}
-                      className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                      className="h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                     />
                     <input
                       required
                       placeholder="Business name"
                       value={newPartner.name}
                       onChange={(e) => setNewPartner({ ...newPartner, name: e.target.value })}
-                      className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] md:col-span-2 focus:outline-none focus:border-[#4FB3FF]"
+                      className="h-10 rounded-lg border border-border bg-white px-3 text-[13px] md:col-span-2 focus:outline-none focus:border-[#1878E0]"
                     />
                     <input
                       placeholder="Website"
                       value={newPartner.website}
                       onChange={(e) => setNewPartner({ ...newPartner, website: e.target.value })}
-                      className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                      className="h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                     />
                     <input
                       placeholder="Email"
                       value={newPartner.contact_email}
                       onChange={(e) => setNewPartner({ ...newPartner, contact_email: e.target.value })}
-                      className="h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                      className="h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                     />
                     <button
                       type="submit"
                       className="h-10 rounded-lg font-semibold text-white text-[13px] inline-flex items-center justify-center gap-1"
-                      style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                      style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
                     >
                       <Plus className="w-3.5 h-3.5" /> Add partner
                     </button>
@@ -1694,51 +1694,51 @@ export default function AdminReservationsPage() {
                     {partners?.map((p) => {
                       const url = partnerUrl(p.code);
                       return (
-                        <div key={p.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                        <div key={p.id} className="surface-card rounded-2xl p-5">
                           <div className="flex items-start justify-between mb-3">
                             <div>
                               <div className="text-[15px] font-medium">{p.name}</div>
-                              <div className="text-[12px] text-[#8B9DAF] font-mono">{p.code}</div>
+                              <div className="text-[12px] text-ink-muted font-mono">{p.code}</div>
                             </div>
                             <span
-                              className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${p.status === "active" ? "bg-emerald-500/10 text-emerald-300" : "bg-white/5 text-[#8B9DAF]"}`}
+                              className={`text-[10px] uppercase tracking-[2px] px-2 py-1 rounded-full ${p.status === "active" ? "bg-emerald-50 border border-emerald-200 text-emerald-600" : "bg-slate-50 border border-slate-200 text-slate-600"}`}
                             >
                               {p.status}
                             </span>
                           </div>
                           {(p.website || p.contact_email || p.phone) && (
-                            <div className="text-[12px] text-[#8B9DAF] mb-3">
+                            <div className="text-[12px] text-ink-muted mb-3">
                               {p.contact_email ?? ""}
                               {p.phone ? ` · ${p.phone}` : ""}
                               {p.website ? ` · ${p.website}` : ""}
                             </div>
                           )}
-                          <div className="flex items-center gap-2 text-[12px] text-[#4FB3FF] font-mono break-all mb-3 rounded-lg bg-white/[0.02] px-3 py-2 border border-white/5">
+                          <div className="flex items-center gap-2 text-[12px] text-primary font-mono break-all mb-3 rounded-lg bg-white px-3 py-2 border border-border">
                             {url}
                           </div>
                           <div className="flex flex-wrap gap-2">
                             <button
                               onClick={() => copyText(url, `link-${p.id}`)}
-                              className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-[12px] hover:border-white/30"
+                              className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[12px] hover:border-border"
                             >
                               {copied === `link-${p.id}` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}{" "}
                               Copy link
                             </button>
                             <button
                               onClick={() => setQrPartner(p)}
-                              className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-[12px] hover:border-white/30"
+                              className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[12px] hover:border-border"
                             >
                               <QrCode className="w-3 h-3" /> QR
                             </button>
                             <button
                               onClick={() => togglePartnerStatus(p)}
-                              className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-[12px] hover:border-white/30"
+                              className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-[12px] hover:border-border"
                             >
                               {p.status === "active" ? "Deactivate" : "Activate"}
                             </button>
                             <button
                               onClick={() => deletePartner(p)}
-                              className="inline-flex items-center gap-1 rounded-full border border-red-400/25 text-red-300 px-3 py-1.5 text-[12px] hover:border-red-400/60"
+                              className="inline-flex items-center gap-1 rounded-full border border-red-400/25 text-red-600 px-3 py-1.5 text-[12px] hover:border-red-400/60"
                             >
                               <Trash2 className="w-3 h-3" /> Delete
                             </button>
@@ -1747,7 +1747,7 @@ export default function AdminReservationsPage() {
                       );
                     })}
                     {partners && partners.length === 0 && (
-                      <div className="col-span-2 rounded-2xl border border-white/10 bg-white/[0.02] p-10 text-center text-[#8B9DAF]">
+                      <div className="col-span-2 surface-card rounded-2xl p-10 text-center text-ink-muted">
                         No partners yet. Add one above.
                       </div>
                     )}
@@ -1755,16 +1755,16 @@ export default function AdminReservationsPage() {
 
                   {qrPartner && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => setQrPartner(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-8 max-w-sm w-full text-center"
+                        className="bg-white border border-border rounded-2xl p-8 max-w-sm w-full text-center"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Partner QR</div>
+                        <div className="text-[12px] uppercase tracking-[3px] text-primary mb-2">Partner QR</div>
                         <div className="text-[18px] font-medium mb-1">{qrPartner.name}</div>
-                        <div className="text-[12px] font-mono text-[#8B9DAF] mb-4">{qrPartner.code}</div>
+                        <div className="text-[12px] font-mono text-ink-muted mb-4">{qrPartner.code}</div>
                         <div className="bg-white p-3 rounded-xl inline-block mb-4">
                           <img src={qrSrc(partnerUrl(qrPartner.code))} alt="Partner QR code" className="w-64 h-64" />
                         </div>
@@ -1772,13 +1772,13 @@ export default function AdminReservationsPage() {
                           <a
                             href={qrSrc(partnerUrl(qrPartner.code))}
                             download={`aion-${qrPartner.code}-qr.png`}
-                            className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                            className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border"
                           >
                             Download PNG
                           </a>
                           <button
                             onClick={() => setQrPartner(null)}
-                            className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                            className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border"
                           >
                             Close
                           </button>
@@ -1792,24 +1792,24 @@ export default function AdminReservationsPage() {
               {tab === "bulk" && (
                 <>
                   <div className="flex items-center justify-between mb-6">
-                    <div className="text-[14px] text-[#8B9DAF]">
-                      <span className="text-white font-medium">{bulk?.length ?? 0}</span> inquiries ·{" "}
-                      <span className="text-white font-medium">
+                    <div className="text-[14px] text-ink-muted">
+                      <span className="text-ink font-medium">{bulk?.length ?? 0}</span> inquiries ·{" "}
+                      <span className="text-ink font-medium">
                         {bulk?.reduce((s, r) => s + r.estimated_quantity, 0) ?? 0}
                       </span>{" "}
                       estimated rings
                     </div>
                     <button
                       onClick={exportBulkCSV}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                      className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-[13px] text-ink-soft hover:bg-canvas transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" /> Export CSV
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-white/10">
+                  <div className="overflow-x-auto rounded-2xl border border-border">
                     <table className="w-full text-[13px]">
-                      <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
+                      <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
                         <tr>
                           {["#", "Date", "Business", "Contact", "Email", "Phone", "Est Qty", "Partner", "Status"].map(
                             (h) => (
@@ -1822,21 +1822,21 @@ export default function AdminReservationsPage() {
                       </thead>
                       <tbody>
                         {bulk?.map((r) => (
-                          <tr key={r.id} className="border-t border-white/5 hover:bg-white/[0.02]">
-                            <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF]">{r.reservation_number}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{new Date(r.created_at).toLocaleDateString()}</td>
+                          <tr key={r.id} className="border-t border-border hover:bg-white">
+                            <td className="px-4 py-3 font-mono text-[12px] text-primary">{r.reservation_number}</td>
+                            <td className="px-4 py-3 text-ink-soft">{new Date(r.created_at).toLocaleDateString()}</td>
                             <td className="px-4 py-3">{r.business_name}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.contact_person}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.email}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.phone}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.contact_person}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.email}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.phone}</td>
                             <td className="px-4 py-3">{r.estimated_quantity}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.partner_code ?? "—"}</td>
-                            <td className="px-4 py-3 text-[#B8C5D3]">{r.status}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.partner_code ?? "—"}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.status}</td>
                           </tr>
                         ))}
                         {bulk && bulk.length === 0 && (
                           <tr>
-                            <td colSpan={9} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={9} className="px-4 py-16 text-center text-ink-muted">
                               No bulk inquiries yet.
                             </td>
                           </tr>
@@ -1850,26 +1850,26 @@ export default function AdminReservationsPage() {
               {tab === "b2c" && (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                    <div className="text-[14px] text-[#8B9DAF]">
-                      <span className="text-white font-medium">{b2cOrdersTotal}</span> orders total
+                    <div className="text-[14px] text-ink-muted">
+                      <span className="text-ink font-medium">{b2cOrdersTotal}</span> orders total
                     </div>
                     <button
                       onClick={exportB2CCSV}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30"
+                      className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-[13px] text-ink-soft hover:bg-canvas transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" /> Export CSV
                     </button>
                   </div>
 
                   {b2cOrdersError && (
-                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-600">
                       Couldn't load B2C orders: {b2cOrdersError}
                     </div>
                   )}
 
-                  <div className="overflow-x-auto rounded-2xl border border-white/10">
+                  <div className="overflow-x-auto rounded-2xl border border-border">
                     <table className="w-full text-[13px]">
-                      <thead className="bg-white/[0.03] text-[11px] uppercase tracking-[2px] text-[#8B9DAF]">
+                      <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
                         <tr>
                           <th className="px-4 py-3 text-center font-medium">#</th>
                           <th className="px-4 py-3 text-center font-medium">Date</th>
@@ -1892,35 +1892,35 @@ export default function AdminReservationsPage() {
                           const currentStatus = getB2CCurrentStatus(r);
                           const hasAddress = !!(r.address1 || r.city || r.state || r.zip || r.country);
                           return (
-                            <tr key={r.orderItemId} className="h-14 border-t border-white/5 hover:bg-white/[0.02]">
-                              <td className="px-4 py-3 font-mono text-[12px] text-[#4FB3FF] text-center whitespace-nowrap">
+                            <tr key={r.orderItemId} className="h-14 border-t border-border hover:bg-white">
+                              <td className="px-4 py-3 font-mono text-[12px] text-primary text-center whitespace-nowrap">
                                 {r.orderItemId.slice(-8)}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {new Date(r.createdAt).toLocaleDateString()}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">{r.fullName || "—"}</td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.accountEmail}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.phone || "—"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">{r.size}</td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.materialLabel}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.subscription}
                               </td>
-                              <td className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap">
+                              <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.deliveryMethod}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
                                 {r.total != null ? `$${r.total.toFixed(2)}` : "—"}
                               </td>
                               <td
-                                className="px-4 py-3 text-[#B8C5D3] text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
+                                className="px-4 py-3 text-ink-soft text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
                                 title={hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : ""}
                               >
                                 {hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : "—"}
@@ -1942,7 +1942,7 @@ export default function AdminReservationsPage() {
                                             openB2CStatusMenuFor === r.orderItemId ? null : r.orderItemId,
                                           )
                                         }
-                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-white/5 opacity-30 cursor-not-allowed" : "border-white/15 hover:border-white/30"}`}
+                                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-border opacity-30 cursor-not-allowed" : "border-border hover:border-border"}`}
                                       >
                                         <ChevronDown className="w-3 h-3" />
                                       </button>
@@ -1950,7 +1950,7 @@ export default function AdminReservationsPage() {
                                   })()}
                                 </div>
                                 {openB2CStatusMenuFor === r.orderItemId && (
-                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg py-1 overflow-hidden">
+                                  <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-border bg-white shadow-lg py-1 overflow-hidden">
                                     {(getB2CShipDeliverValue(r) === "shipped"
                                       ? SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "delivered")
                                       : SHIP_DELIVER_OPTIONS.filter((opt) => opt.value === "shipped")
@@ -1962,7 +1962,7 @@ export default function AdminReservationsPage() {
                                           if (opt.value === "shipped") openShippingModal(r);
                                           else if (opt.value === "delivered") submitDelivered(r);
                                         }}
-                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
+                                        className="block w-full text-left px-3 py-2.5 text-[12px] text-ink-soft hover:bg-canvas hover:text-ink transition-colors"
                                       >
                                         {opt.label}
                                       </button>
@@ -1973,7 +1973,7 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-center">
                                 <button
                                   onClick={() => setViewingB2CLogFor(r)}
-                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                  className="inline-flex items-center justify-center rounded-full border border-border w-8 h-8 hover:border-border"
                                 >
                                   <History className="w-3.5 h-3.5" />
                                 </button>
@@ -1981,7 +1981,7 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-center">
                                 <button
                                   onClick={() => setExpandedB2CRow(r)}
-                                  className="inline-flex items-center justify-center rounded-full border border-white/15 w-8 h-8 hover:border-white/30"
+                                  className="inline-flex items-center justify-center rounded-full border border-border w-8 h-8 hover:border-border"
                                 >
                                   <Eye className="w-3.5 h-3.5" />
                                 </button>
@@ -1991,14 +1991,14 @@ export default function AdminReservationsPage() {
                         })}
                         {b2cRows && b2cRows.length === 0 && (
                           <tr>
-                            <td colSpan={14} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={14} className="px-4 py-16 text-center text-ink-muted">
                               No orders.
                             </td>
                           </tr>
                         )}
                         {!b2cRows && !b2cOrdersError && (
                           <tr>
-                            <td colSpan={14} className="px-4 py-16 text-center text-[#5A6B7E]">
+                            <td colSpan={14} className="px-4 py-16 text-center text-ink-muted">
                               <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
                               Loading orders…
                             </td>
@@ -2009,21 +2009,21 @@ export default function AdminReservationsPage() {
                   </div>
 
                   <div className="flex items-center justify-between mt-4">
-                    <div className="text-[13px] text-[#8B9DAF]">
+                    <div className="text-[13px] text-ink-muted">
                       Page {b2cOrdersPage} of {Math.max(1, Math.ceil(b2cOrdersTotal / 10))}
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => loadB2COrders(b2cOrdersPage - 1)}
                         disabled={b2cOrdersPage <= 1}
-                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Previous
                       </button>
                       <button
                         onClick={() => loadB2COrders(b2cOrdersPage + 1)}
                         disabled={!b2cOrdersHasMore}
-                        className="rounded-full border border-white/15 px-4 py-2 text-[13px] hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="rounded-full border border-border px-4 py-2 text-[13px] hover:border-border disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Next
                       </button>
@@ -2036,45 +2036,45 @@ export default function AdminReservationsPage() {
 
                   {expandedB2CRow && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => setExpandedB2CRow(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        className="bg-white border border-border rounded-2xl p-6 max-w-md w-full"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Details</div>
-                          <button onClick={() => setExpandedB2CRow(null)} className="text-[#8B9DAF] hover:text-white">
+                          <div className="text-[12px] uppercase tracking-[3px] text-primary">Order Details</div>
+                          <button onClick={() => setExpandedB2CRow(null)} className="text-ink-muted hover:text-ink">
                             <X className="w-4 h-4" />
                           </button>
                         </div>
                         <div className="text-[16px] font-medium mb-1">
                           {expandedB2CRow.fullName || "No name on file"}
                         </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                        <div className="text-[13px] text-ink-muted mb-4">
                           {expandedB2CRow.accountEmail}
                           {expandedB2CRow.phone ? ` · ${expandedB2CRow.phone}` : ""}
                         </div>
-                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-1">Shipping Address</div>
-                        <div className="text-[13px] text-[#B8C5D3] mb-4">
+                        <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-1">Shipping Address</div>
+                        <div className="text-[13px] text-ink-soft mb-4">
                           {expandedB2CRow.address1 || expandedB2CRow.city
                             ? `${expandedB2CRow.address1}, ${expandedB2CRow.city}, ${expandedB2CRow.state} ${expandedB2CRow.zip}, ${expandedB2CRow.country}`
                             : "Not provided yet"}
                         </div>
-                        <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-2">
+                        <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-2">
                           Ring Configuration
                         </div>
-                        <div className="space-y-2 mb-4 text-[13px] rounded-lg bg-white/[0.02] border border-white/5 px-3 py-2">
+                        <div className="space-y-2 mb-4 text-[13px] rounded-lg bg-white border border-border px-3 py-2">
                           <div>
                             Size {expandedB2CRow.size} · {expandedB2CRow.materialLabel}
                           </div>
                           {expandedB2CRow.engraving && (
-                            <div className="text-[#B8C5D3]">Engraving: "{expandedB2CRow.engraving}"</div>
+                            <div className="text-ink-soft">Engraving: "{expandedB2CRow.engraving}"</div>
                           )}
-                          <div className="text-[#B8C5D3]">Subscription: {expandedB2CRow.subscription}</div>
-                          <div className="text-[#B8C5D3]">Delivery: {expandedB2CRow.deliveryMethod}</div>
-                          <div className="text-[#B8C5D3]">
+                          <div className="text-ink-soft">Subscription: {expandedB2CRow.subscription}</div>
+                          <div className="text-ink-soft">Delivery: {expandedB2CRow.deliveryMethod}</div>
+                          <div className="text-ink-soft">
                             Total:{" "}
                             {expandedB2CRow.total != null ? `$${expandedB2CRow.total.toFixed(2)}` : "Not completed"}
                           </div>
@@ -2091,20 +2091,20 @@ export default function AdminReservationsPage() {
 
                   {viewingB2CLogFor && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => setViewingB2CLogFor(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        className="bg-white border border-border rounded-2xl p-6 max-w-md w-full"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Order Tracking</div>
-                          <button onClick={() => setViewingB2CLogFor(null)} className="text-[#8B9DAF] hover:text-white">
+                          <div className="text-[12px] uppercase tracking-[3px] text-primary">Order Tracking</div>
+                          <button onClick={() => setViewingB2CLogFor(null)} className="text-ink-muted hover:text-ink">
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                        <div className="text-[13px] text-ink-muted mb-4">
                           {viewingB2CLogFor.fullName || viewingB2CLogFor.accountEmail} · #
                           {viewingB2CLogFor.orderItemId.slice(-8)}
                         </div>
@@ -2113,19 +2113,19 @@ export default function AdminReservationsPage() {
                             <li key={step.value} className="flex gap-3 text-[13px]">
                               <div className="flex flex-col items-center">
                                 <div
-                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-400" : "bg-white/15 border border-white/20"}`}
+                                  className={`w-3 h-3 rounded-full shrink-0 ${step.completed ? "bg-emerald-600" : "bg-white/15 border border-border"}`}
                                 />
                                 {i < arr.length - 1 && (
                                   <div
-                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-400" : "bg-white/10"}`}
+                                    className={`w-0.5 flex-1 min-h-[24px] ${step.completed && arr[i + 1].completed ? "bg-emerald-600" : "bg-canvas-alt"}`}
                                   />
                                 )}
                               </div>
                               <div className="flex-1 pb-4">
-                                <div className={step.completed ? "text-white font-medium" : "text-[#5A6B7E]"}>
+                                <div className={step.completed ? "text-ink font-medium" : "text-ink-muted"}>
                                   {step.label}
                                 </div>
-                                <div className="text-[11px] text-[#5A6B7E]">
+                                <div className="text-[11px] text-ink-muted">
                                   {step.completed
                                     ? new Date(step.date).toLocaleString()
                                     : `Estimated · ${new Date(step.date).toLocaleDateString()}`}
@@ -2140,56 +2140,56 @@ export default function AdminReservationsPage() {
 
                   {shippingModalFor && (
                     <div
-                      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6"
+                      className="fixed inset-0 z-50 bg-ink/35 backdrop-blur-sm flex items-center justify-center p-6"
                       onClick={() => !savingB2CStatus && setShippingModalFor(null)}
                     >
                       <div
-                        className="bg-[#0A1628] border border-white/10 rounded-2xl p-6 max-w-md w-full"
+                        className="bg-white border border-border rounded-2xl p-6 max-w-md w-full"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <div className="text-[12px] uppercase tracking-[3px] text-[#4FB3FF]">Mark as Shipped</div>
+                          <div className="text-[12px] uppercase tracking-[3px] text-primary">Mark as Shipped</div>
                           <button
                             onClick={() => !savingB2CStatus && setShippingModalFor(null)}
-                            className="text-[#8B9DAF] hover:text-white"
+                            className="text-ink-muted hover:text-ink"
                           >
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        <div className="text-[13px] text-[#8B9DAF] mb-4">
+                        <div className="text-[13px] text-ink-muted mb-4">
                           {shippingModalFor.fullName || shippingModalFor.accountEmail} · #
                           {shippingModalFor.orderItemId.slice(-8)}
                         </div>
                         <div className="space-y-3">
                           <label className="block">
-                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Carrier</span>
+                            <span className="text-[11px] uppercase tracking-[1px] text-ink-muted">Carrier</span>
                             <input
                               value={shippingForm.carrier}
                               onChange={(e) => setShippingForm((prev) => ({ ...prev, carrier: e.target.value }))}
                               placeholder="UPS, FedEx, USPS…"
-                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                              className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                             />
                           </label>
                           <label className="block">
-                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Tracking Number</span>
+                            <span className="text-[11px] uppercase tracking-[1px] text-ink-muted">Tracking Number</span>
                             <input
                               value={shippingForm.trackingNumber}
                               onChange={(e) => setShippingForm((prev) => ({ ...prev, trackingNumber: e.target.value }))}
                               placeholder="1Z999AA10123456784"
-                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                              className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                             />
                           </label>
                           <label className="block">
-                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">Shipped Date</span>
+                            <span className="text-[11px] uppercase tracking-[1px] text-ink-muted">Shipped Date</span>
                             <input
                               type="date"
                               value={shippingForm.shippedDate}
                               onChange={(e) => setShippingForm((prev) => ({ ...prev, shippedDate: e.target.value }))}
-                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                              className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                             />
                           </label>
                           <label className="block">
-                            <span className="text-[11px] uppercase tracking-[1px] text-[#8B9DAF]">
+                            <span className="text-[11px] uppercase tracking-[1px] text-ink-muted">
                               Estimated Delivery
                             </span>
                             <input
@@ -2198,15 +2198,14 @@ export default function AdminReservationsPage() {
                               onChange={(e) =>
                                 setShippingForm((prev) => ({ ...prev, estimatedDelivery: e.target.value }))
                               }
-                              className="mt-1 w-full h-10 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[13px] focus:outline-none focus:border-[#4FB3FF]"
+                              className="mt-1 w-full h-10 rounded-lg border border-border bg-white px-3 text-[13px] focus:outline-none focus:border-[#1878E0]"
                             />
                           </label>
                         </div>
                         <button
                           onClick={submitShippingModal}
                           disabled={savingB2CStatus}
-                          className="mt-5 w-full h-11 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 disabled:opacity-50"
-                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                          className="mt-5 w-full h-11 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
                         >
                           {savingB2CStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                           {savingB2CStatus ? "Saving…" : "Confirm Shipped"}
@@ -2220,124 +2219,124 @@ export default function AdminReservationsPage() {
               {tab === "pricing" && (
                 <>
                   {pricingError && (
-                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                    <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-600">
                       Couldn't load pricing: {pricingError}
                     </div>
                   )}
 
                   {!pricingConfig && !pricingError && (
-                    <div className="flex items-center gap-2 text-[13px] text-[#8B9DAF] py-10 justify-center">
+                    <div className="flex items-center gap-2 text-[13px] text-ink-muted py-10 justify-center">
                       <Loader2 className="w-4 h-4 animate-spin" /> Loading pricing…
                     </div>
                   )}
 
                   {pricingConfig && (
                     <div className="max-w-2xl">
-                      <div className="text-[13px] text-[#8B9DAF] mb-6">
+                      <div className="text-[13px] text-ink-muted mb-6">
                         These prices are live — the mobile app fetches them directly, so changes here take effect the
                         next time a user opens the app.
                       </div>
 
-                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Ring</div>
+                      <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-3">Ring</div>
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Base Price ($)</span>
+                          <span className="text-[12px] text-ink-soft">Base Price ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.ringBasePrice}
                             onChange={(e) => updatePricingField("ringBasePrice", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Original / Strikethrough Price ($)</span>
+                          <span className="text-[12px] text-ink-soft">Original / Strikethrough Price ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.ringOriginalPrice}
                             onChange={(e) => updatePricingField("ringOriginalPrice", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                       </div>
 
-                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Subscription Plans</div>
+                      <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-3">Subscription Plans</div>
                       <div className="grid grid-cols-3 gap-4 mb-6">
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">3 Months Free ($)</span>
+                          <span className="text-[12px] text-ink-soft">3 Months Free ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.threeMonthsFree}
                             disabled
                             readOnly
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] text-[#5A6B7E] cursor-not-allowed opacity-60"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] text-ink-muted cursor-not-allowed opacity-60"
                           />
-                          <span className="text-[11px] text-[#5A6B7E] mt-1 block">
+                          <span className="text-[11px] text-ink-muted mt-1 block">
                             This field will not update in the mobile app.
                           </span>
                         </label>
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Annual ($)</span>
+                          <span className="text-[12px] text-ink-soft">Annual ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.annual}
                             onChange={(e) => updatePricingField("annual", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Lifetime ($)</span>
+                          <span className="text-[12px] text-ink-soft">Lifetime ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.lifetime}
                             onChange={(e) => updatePricingField("lifetime", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                       </div>
 
-                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Delivery Methods</div>
+                      <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-3">Delivery Methods</div>
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Standard ($)</span>
+                          <span className="text-[12px] text-ink-soft">Standard ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.standard}
                             disabled
                             readOnly
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] text-[#5A6B7E] cursor-not-allowed opacity-60"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] text-ink-muted cursor-not-allowed opacity-60"
                           />
-                          <span className="text-[11px] text-[#5A6B7E] mt-1 block">
+                          <span className="text-[11px] text-ink-muted mt-1 block">
                             This field will not update in the mobile app.
                           </span>
                         </label>
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Express ($)</span>
+                          <span className="text-[12px] text-ink-soft">Express ($)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.express}
                             onChange={(e) => updatePricingField("express", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                       </div>
 
-                      <div className="text-[11px] uppercase tracking-[2px] text-[#8B9DAF] mb-3">Tax</div>
+                      <div className="text-[11px] uppercase tracking-[2px] text-ink-muted mb-3">Tax</div>
                       <div className="grid grid-cols-2 gap-4 mb-8">
                         <label className="block">
-                          <span className="text-[12px] text-[#B8C5D3]">Tax Rate (%)</span>
+                          <span className="text-[12px] text-ink-soft">Tax Rate (%)</span>
                           <input
                             type="number"
                             step="0.01"
                             value={pricingForm.taxRatePercent}
                             onChange={(e) => updatePricingField("taxRatePercent", e.target.value)}
-                            className="mt-1 w-full h-11 rounded-lg border border-white/10 bg-white/[0.02] px-3 text-[14px] focus:outline-none focus:border-[#4FB3FF]"
+                            className="mt-1 w-full h-11 rounded-lg border border-border bg-white px-3 text-[14px] focus:outline-none focus:border-[#1878E0]"
                           />
                         </label>
                       </div>
@@ -2346,8 +2345,7 @@ export default function AdminReservationsPage() {
                         <button
                           onClick={savePricing}
                           disabled={savingPricing}
-                          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white disabled:opacity-50"
-                          style={{ background: "linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)" }}
+                          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white disabled:opacity-50" style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
                         >
                           {savingPricing ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2357,7 +2355,7 @@ export default function AdminReservationsPage() {
                           {savingPricing ? "Saving…" : "Save Pricing"}
                         </button>
                         {pricingSaved && !savingPricing && (
-                          <span className="text-[13px] text-emerald-300 inline-flex items-center gap-1">
+                          <span className="text-[13px] text-emerald-600 inline-flex items-center gap-1">
                             <CheckCircle2 className="w-4 h-4" /> Saved
                           </span>
                         )}
@@ -2370,7 +2368,7 @@ export default function AdminReservationsPage() {
           )}
 
           <div className="text-center mt-10">
-            <Link to="/" className="text-[13px] text-[#5A6B7E] hover:text-white">
+            <Link to="/" className="text-[13px] text-ink-muted hover:text-primary">
               ← Back to site
             </Link>
           </div>

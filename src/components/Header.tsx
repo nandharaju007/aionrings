@@ -43,9 +43,10 @@ export function Header() {
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-[250ms]"
         style={{
-          background: scrolled ? 'rgba(10,22,40,0.9)' : 'transparent',
+          background: scrolled ? 'rgba(255,255,255,0.82)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid hsl(var(--border))' : '1px solid transparent',
         }}
       >
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
@@ -67,7 +68,7 @@ export function Header() {
                 <Link
                   key={i}
                   to={l.href}
-                  className="text-[14px] font-medium text-[#B8C5D3] hover:text-white transition-colors"
+                  className="text-[14px] font-medium text-[#3F5068] hover:text-ink transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -75,7 +76,7 @@ export function Header() {
                 <button
                   key={i}
                   onClick={() => scrollTo(l.href)}
-                  className="text-[14px] font-medium text-[#B8C5D3] hover:text-white transition-colors"
+                  className="text-[14px] font-medium text-[#3F5068] hover:text-ink transition-colors"
                 >
                   {l.label}
                 </button>
@@ -88,12 +89,12 @@ export function Header() {
               to="/preorder"
               aria-label="Pre-order aiOn Ring"
               className="hidden sm:inline-flex items-center rounded-full px-6 py-2.5 text-[14px] font-semibold text-white transition-all duration-150 hover:brightness-110 hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)' }}
+              style={{ background: 'linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)' }}
             >
               Pre-Order →
             </Link>
             <button
-              className="md:hidden text-white p-2"
+              className="md:hidden text-ink p-2"
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
             >
@@ -104,14 +105,14 @@ export function Header() {
       </header>
 
       {open && (
-        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-[#0A1628] md:hidden">
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-white md:hidden">
           {navLinks.map((l, i) => (
             (l as any).route ? (
-              <Link key={i} to={l.href} onClick={() => setOpen(false)} className="text-2xl font-medium text-white">
+              <Link key={i} to={l.href} onClick={() => setOpen(false)} className="text-2xl font-medium text-ink">
                 {l.label}
               </Link>
             ) : (
-              <button key={i} onClick={() => scrollTo(l.href)} className="text-2xl font-medium text-white">
+              <button key={i} onClick={() => scrollTo(l.href)} className="text-2xl font-medium text-ink">
                 {l.label}
               </button>
             )
@@ -120,7 +121,7 @@ export function Header() {
             to="/preorder"
             onClick={() => setOpen(false)}
             className="mt-6 rounded-full px-8 py-4 text-[15px] font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg,#00C6FF,#4FB3FF,#7C3AED)' }}
+            style={{ background: 'linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)' }}
           >
             Pre-Order →
           </Link>

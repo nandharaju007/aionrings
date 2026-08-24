@@ -63,12 +63,22 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         // aiOn Custom Colors
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          soft: "hsl(var(--ink-soft))",
+          muted: "hsl(var(--ink-muted))",
+        },
+        canvas: {
+          DEFAULT: "hsl(var(--canvas))",
+          alt: "hsl(var(--canvas-alt))",
+        },
         aion: {
           midnight: "hsl(var(--aion-midnight))",
           charcoal: "hsl(var(--aion-charcoal))",
           teal: "hsl(var(--aion-teal))",
           "teal-dim": "hsl(var(--aion-teal-dim))",
           cyan: "hsl(var(--aion-cyan))",
+          violet: "hsl(var(--aion-violet))",
           platinum: "hsl(var(--aion-platinum))",
           "platinum-dim": "hsl(var(--aion-platinum-dim))",
           glow: "hsl(var(--aion-glow))",

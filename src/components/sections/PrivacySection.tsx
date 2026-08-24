@@ -34,7 +34,7 @@ export function PrivacySection() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="card-glass p-8 md:p-12">
+          <div className="surface-card p-8 md:p-12">
             <h2 className="text-2xl md:text-3xl font-light mb-6 text-center">
               Privacy & Trust
             </h2>
@@ -48,16 +48,16 @@ export function PrivacySection() {
                   transition={{ delay: 0.2 + i * 0.1 }}
                   className="text-center"
                 >
-                  <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-primary/5 flex items-center justify-center text-primary">
                     {principle.icon}
                   </div>
-                  <h3 className="font-light text-foreground mb-1">{principle.title}</h3>
-                  <p className="text-caption">{principle.description}</p>
+                  <h3 className="font-light text-ink mb-1">{principle.title}</h3>
+                  <p className="text-caption text-ink-muted">{principle.description}</p>
                 </motion.div>
               ))}
             </div>
 
-            <p className="text-caption text-center max-w-2xl mx-auto">
+            <p className="text-caption text-ink-muted text-center max-w-2xl mx-auto">
               aiOn Ring is intended for general wellness purposes only and is not a medical device.
               Its information is not intended to diagnose, treat, cure, or prevent any disease or
               medical condition. Optional cloud sync available with end-to-end encryption.

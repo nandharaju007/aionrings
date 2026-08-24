@@ -23,14 +23,14 @@ function FeatureCard({ title, description, icon, delay = 0 }: FeatureCardProps) 
     >
       {/* Icon */}
       <div className="relative w-16 h-16 mb-6">
-        <div className="absolute inset-0 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-500" />
+        <div className="absolute inset-0 rounded-full bg-primary/5 group-hover:bg-primary/20 transition-colors duration-500" />
         <div className="absolute inset-0 flex items-center justify-center text-primary">
           {icon}
         </div>
       </div>
 
-      <h3 className="text-xl font-light mb-3 text-foreground">{title}</h3>
-      <p className="text-body">{description}</p>
+      <h3 className="text-xl font-light mb-3 text-ink">{title}</h3>
+      <p className="text-body text-ink-soft">{description}</p>
     </motion.div>
   );
 }
@@ -109,7 +109,7 @@ export function FeaturesSection() {
   return (
     <section id="features" className="relative py-32 lg:py-48">
       {/* Background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-1/2 bg-gradient-radial-glow opacity-30" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-1/2 bg-gradient-radial-glow opacity-12" />
 
       <div className="container mx-auto px-6 lg:px-12">
         {/* Header */}
@@ -120,11 +120,11 @@ export function FeaturesSection() {
           transition={{ duration: 0.8 }}
           className="text-center max-w-3xl mx-auto mb-20"
         >
-          <h2 className="text-headline mb-6">
+          <h2 className="text-headline text-ink mb-6">
             Awareness, not
             <span className="text-gradient-teal"> measurements</span>
           </h2>
-          <p className="text-body">
+          <p className="text-body text-ink-soft">
             aiOn transforms raw signals into meaningful wellness insights. 
             Each feature is designed to reveal patterns—helping you 
             understand your health as a continuous journey.
