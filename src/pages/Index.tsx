@@ -328,11 +328,17 @@ function WordStagger({ text, className = "", delay = 0 }: { text: string; classN
 /* ─────────────────────────────────────────────
    Chip
    ───────────────────────────────────────────── */
-function Chip({ children, className = "" }: { children: ReactNode; className?: string }) {
+function Chip({ children, className = "", variant = "dark" }: { children: ReactNode; className?: string; variant?: "dark" | "light" }) {
+  const isDark = variant === "dark";
   return (
     <div
       className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs sm:text-sm font-light backdrop-blur-md ${className}`}
-      style={{ borderColor: "rgba(79,179,255,0.35)", background: "rgba(10,22,40,0.55)", boxShadow: `0 0 24px rgba(79,179,255,0.15)`, color: "#e6f2ff" }}
+      style={{
+        borderColor: isDark ? "rgba(79,179,255,0.35)" : "rgba(24,120,224,0.22)",
+        background: isDark ? "rgba(10,22,40,0.55)" : "rgba(255,255,255,0.72)",
+        boxShadow: isDark ? `0 0 24px rgba(79,179,255,0.15)` : `0 4px 20px rgba(10,22,40,0.06)`,
+        color: isDark ? "#e6f2ff" : "#0A1628",
+      }}
     >
       {children}
     </div>
