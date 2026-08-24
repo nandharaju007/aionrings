@@ -3,7 +3,6 @@ import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "f
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
 import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
@@ -11,7 +10,6 @@ import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
-import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
 import videoFocus from "@/assets/video-life-focus-silver.mp4.asset.json";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
@@ -1532,7 +1530,7 @@ const FAQS: { q: string; a: string }[] = [
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="relative py-16 md:py-24" style={{ background: "#F6F8FC" }}>
+    <section id="faq" className={`relative ${SECTION}`} style={{ background: "#F6F8FC" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -1619,7 +1617,7 @@ function FAQSection() {
 
 function WellnessDisclaimerSection() {
   return (
-    <section className="relative py-14 md:py-20" style={{ background: "#FFFFFF" }}>
+    <section className="relative py-16 md:py-20" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6">
         <div
           className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
@@ -1640,34 +1638,6 @@ function WellnessDisclaimerSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Page load intro
-   ───────────────────────────────────────────── */
-function IntroOverlay() {
-  const [gone, setGone] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setGone(true), 1400);
-    return () => clearTimeout(t);
-  }, []);
-  return (
-    <AnimatePresence>
-      {!gone && (
-        <motion.div
-          className="fixed inset-0 z-[90] flex items-center justify-center"
-          style={{ background: "#F6F8FC" }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl font-extralight tracking-tight text-ink">
-            ai<span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>O</span>n
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 }
 
