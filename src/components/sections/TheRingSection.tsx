@@ -20,7 +20,7 @@ export function TheRingSection() {
             className="relative order-2 lg:order-1"
           >
             <div className="relative aspect-square max-w-lg mx-auto">
-              <div className="absolute inset-0 bg-gradient-radial-glow opacity-60" />
+              <div className="absolute inset-0 bg-gradient-radial-glow opacity-12" />
               <img
                 src={ringProduct}
                 alt="aiOn Ring"
@@ -36,12 +36,12 @@ export function TheRingSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="order-1 lg:order-2"
           >
-            <h2 className="text-headline mb-8">
+            <h2 className="text-headline text-ink mb-8">
               The
               <span className="text-gradient-teal"> Ring</span>
             </h2>
             
-            <p className="text-body mb-6">
+            <p className="text-body text-ink-soft mb-6">
               Crafted from aerospace-grade titanium, the aiOn Ring sits 
               weightlessly on your finger—an invisible companion that 
               never sleeps, never stops learning.
@@ -59,7 +59,7 @@ export function TheRingSection() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.4 + i * 0.1 }}
-                  className="flex items-center gap-3 text-muted-foreground"
+                  className="flex items-center gap-3 text-ink-muted"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                   {feature}

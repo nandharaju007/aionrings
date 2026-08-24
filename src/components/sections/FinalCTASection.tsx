@@ -8,9 +8,9 @@ export function FinalCTASection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="relative py-32 lg:py-48 overflow-hidden">
+    <section ref={ref} className="relative py-32 lg:py-48 overflow-hidden bg-canvas">
       {/* Background glow */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-50" />
+      <div className="absolute inset-0 bg-gradient-hero opacity-12" />
       
       <div className="container mx-auto px-6 lg:px-12">
         <motion.div
@@ -19,12 +19,12 @@ export function FinalCTASection() {
           transition={{ duration: 1 }}
           className="max-w-3xl mx-auto text-center"
         >
-          <h2 className="text-headline mb-6">
+          <h2 className="text-headline text-ink mb-6">
             Join the future of
             <span className="text-gradient-teal"> health awareness</span>
           </h2>
           
-          <p className="text-body mb-10">
+          <p className="text-body text-ink-soft mb-10">
             Experience the full circle of health. Eternal awareness, everyday wellness.
           </p>
 

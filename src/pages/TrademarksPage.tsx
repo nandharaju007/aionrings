@@ -5,22 +5,22 @@ import { motion } from 'framer-motion';
 
 const TrademarksPage = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-canvas text-ink">
       <SEO title={"Trademarks & IP — aiOn"} description={"aiOn, aiOn Ring, and related marks — trademark, patent, and IP notices for Mazo Solutions Inc."} path="/trademarks" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
-          <motion.div
+          <motion.div className="surface-card p-8 md:p-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Trademarks & Intellectual Property</h1>
-            <p className="text-caption mb-12">Last updated: April 30, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: April 30, 2026</p>
 
-            <div className="space-y-10 text-body">
+            <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Ownership</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Ownership</h2>
                 <p>
                   aiOn™, the aiOn Ring™, the aiOn logo, the circular "full circle of health" mark, and
                   related taglines including "The full circle of health" and "Eternal awareness, everyday
@@ -30,7 +30,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Registered & Common-Law Marks</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Registered & Common-Law Marks</h2>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong>aiOn®</strong> — wearable health intelligence platform</li>
                   <li><strong>aiOn Ring™</strong> — smart ring hardware product</li>
@@ -40,7 +40,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Patents</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Patents</h2>
                 <p>
                   Components of the aiOn Ring and platform are covered by one or more issued patents and
                   pending patent applications in the United States and abroad. A list is available upon
@@ -49,7 +49,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Permitted Use</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Permitted Use</h2>
                 <p>
                   Use of any Mazo Solutions trademark requires prior written permission, except for fair
                   descriptive references in editorial, news, or comparative contexts. You may not use our
@@ -59,7 +59,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Third-Party Marks</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Third-Party Marks</h2>
                 <p>
                   All other product and company names referenced on the aiOn platform are the property
                   of their respective owners. Reference to third-party marks is for identification
@@ -68,7 +68,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Reporting Infringement</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Reporting Infringement</h2>
                 <p>
                   To report suspected trademark misuse, counterfeit products, or copyright infringement
                   (including DMCA notices), contact: <strong>contact@aionrings.com</strong>.
@@ -76,7 +76,7 @@ const TrademarksPage = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-light text-foreground mb-4">Copyright Notice</h2>
+                <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Copyright Notice</h2>
                 <p>
                   © {new Date().getFullYear()} Mazo Solutions Inc. All rights reserved. All content,
                   software, designs, and materials on this site are protected by copyright laws and

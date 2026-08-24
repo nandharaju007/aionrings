@@ -8,7 +8,7 @@ export function ConsumerSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="relative py-32 lg:py-48">
+    <section ref={ref} className="relative py-32 lg:py-48 bg-canvas">
       <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -16,16 +16,16 @@ export function ConsumerSection() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <span className="text-caption uppercase tracking-widest text-primary mb-4 block">
+          <span className="text-caption text-ink-muted uppercase tracking-widest text-primary mb-4 block">
             For You
           </span>
           
-          <h2 className="text-headline mb-8">
+          <h2 className="text-headline text-ink mb-8">
             Designed for
             <span className="text-gradient-teal"> everyday wellness</span>
           </h2>
 
-          <p className="text-body max-w-2xl mx-auto mb-12">
+          <p className="text-body text-ink-soft max-w-2xl mx-auto mb-12">
             aiOn integrates seamlessly into your life—providing gentle awareness 
             without constant alerts. Understand your balance, your rhythms, 
             your trends. Health intelligence that respects your time.
@@ -44,8 +44,8 @@ export function ConsumerSection() {
                 transition={{ delay: 0.2 + i * 0.1 }}
                 className="text-center"
               >
-                <p className="text-2xl font-light text-foreground mb-1">{item.label}</p>
-                <p className="text-caption">{item.desc}</p>
+                <p className="text-2xl font-light text-ink mb-1">{item.label}</p>
+                <p className="text-caption text-ink-muted">{item.desc}</p>
               </motion.div>
             ))}
           </div>

@@ -15,10 +15,10 @@ import appScreenSleep from "@/assets/app-screen-sleep.png";
    ───────────────────────────────────────────── */
 const C = {
   navy: "#0A1628",
-  blue: "#4FB3FF",
-  purple: "#7C3AED",
-  green: "#4ADE80",
-  gold: "#FACC15",
+  blue: "#1878E0",
+  purple: "#6D28D9",
+  green: "#22B07D",
+  gold: "#B4870B",
 };
 
 /* ─────────────────────────────────────────────
@@ -53,8 +53,8 @@ function GlowCursor() {
       <div
         className="h-6 w-6 rounded-full"
         style={{
-          background: `radial-gradient(circle, ${C.blue} 0%, rgba(79,179,255,0.4) 40%, transparent 70%)`,
-          boxShadow: `0 0 24px ${C.blue}, 0 0 60px rgba(79,179,255,0.6)`,
+          background: `radial-gradient(circle, ${C.blue} 0%, rgba(24,120,224,0.35) 40%, transparent 70%)`,
+          boxShadow: `0 0 20px rgba(24,120,224,0.55), 0 0 44px rgba(24,120,224,0.35)`,
         }}
       />
     </motion.div>
@@ -64,7 +64,7 @@ function GlowCursor() {
 /* ─────────────────────────────────────────────
    Particle field — slow drifting stars
    ───────────────────────────────────────────── */
-function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opacity?: number }) {
+function ParticleField({ density = 60, opacity = 0.35, tone = "dark" }: { density?: number; opacity?: number; tone?: "dark" | "light" }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
@@ -107,7 +107,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
         if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200, 220, 255, ${p.a * opacity})`;
+        ctx.fillStyle = tone === "light" ? `rgba(230, 240, 255, ${p.a * opacity})` : `rgba(24, 60, 110, ${p.a * opacity})`;
         ctx.fill();
       }
       if (reduced || !visible) { running = false; return; }
@@ -125,7 +125,7 @@ function ParticleField({ density = 60, opacity = 0.35 }: { density?: number; opa
     }, { rootMargin: "50px" });
     io.observe(canvas);
     return () => { cancelAnimationFrame(raf); io.disconnect(); window.removeEventListener("resize", resize); };
-  }, [density, opacity]);
+  }, [density, opacity, tone]);
   return <canvas ref={ref} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden />;
 }
 
@@ -183,14 +183,15 @@ function Aurora({ intensity = 0.5 }: { intensity?: number }) {
 /* ─────────────────────────────────────────────
    Subtle grid overlay
    ───────────────────────────────────────────── */
-function GridOverlay() {
+function GridOverlay({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const line = tone === "light" ? "rgba(255,255,255,0.6)" : "rgba(10,22,40,0.08)";
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-[0.08]"
+      className="pointer-events-none absolute inset-0 opacity-[0.5]"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          `linear-gradient(${line} 1px, transparent 1px), linear-gradient(90deg, ${line} 1px, transparent 1px)`,
         backgroundSize: "60px 60px",
         maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
         WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",

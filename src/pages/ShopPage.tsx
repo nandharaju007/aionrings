@@ -38,7 +38,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       <Header />
       <CartPanel />
 
@@ -50,7 +50,7 @@ export default function ShopPage() {
             alt="aiOn Ring"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-canvas" />
         </section>
 
         {/* Product Details */}
@@ -62,7 +62,7 @@ export default function ShopPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="aspect-square rounded-3xl overflow-hidden bg-card">
+              <div className="aspect-square surface-card overflow-hidden">
                 <img
                   src={ringProduct}
                   alt="aiOn Ring Product"
@@ -75,7 +75,7 @@ export default function ShopPage() {
                 {[ringProduct, ringHero].map((img, i) => (
                   <button
                     key={i}
-                    className="w-20 h-20 rounded-xl overflow-hidden border-2 border-border hover:border-primary transition-colors"
+                    className="w-20 h-20 rounded-xl overflow-hidden border border-border hover:border-primary transition-colors bg-white shadow-sm"
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
@@ -89,91 +89,60 @@ export default function ShopPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <span className="text-caption uppercase tracking-widest text-primary">
+              <span className="eyebrow">
                 The Ring
               </span>
               
-              <h1 className="text-4xl md:text-5xl font-extralight mt-2 mb-4">
+              <h1 className="text-4xl md:text-5xl font-extralight mt-2 mb-4 text-ink">
                 aiOn Ring
               </h1>
 
-              <p className="text-body mb-8">
+              <p className="text-ink-soft mb-8 leading-relaxed">
                 The full circle of everyday wellness. Continuous awareness,
                 effortless comfort, endless insight into your habits.
               </p>
 
               {/* Excitement Block */}
-              <div className="card-glass p-8 rounded-2xl mb-8 text-center">
-                <p className="text-2xl font-extralight text-foreground mb-2">
+              <div className="surface-card p-8 mb-8 text-center bg-white">
+                <p className="text-2xl font-extralight text-ink mb-2">
                   Something extraordinary is coming
                 </p>
-                <p className="text-body mb-6">
+                <p className="text-ink-soft mb-6">
                   The future of everyday wellness — crafted for your finger, designed for your life.
                 </p>
-                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/5">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <span className="text-sm text-primary font-light tracking-wide">Launching Soon</span>
+                  <span className="text-sm text-primary font-medium tracking-wide">Launching Soon</span>
                 </div>
               </div>
 
               {/* Teaser Highlights */}
               <div className="grid grid-cols-3 gap-6 text-center mb-10">
                 <div>
-                  <p className="text-2xl font-light text-foreground">7</p>
-                  <p className="text-caption">Days Battery</p>
+                  <p className="text-2xl font-light text-ink">7</p>
+                  <p className="text-[11px] uppercase tracking-wider text-ink-muted">Days Battery</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-light text-foreground">4g</p>
-                  <p className="text-caption">Featherlight</p>
+                  <p className="text-2xl font-light text-ink">4g</p>
+                  <p className="text-[11px] uppercase tracking-wider text-ink-muted">Featherlight</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-light text-foreground">100m</p>
-                  <p className="text-caption">Water Resistant</p>
+                  <p className="text-2xl font-light text-ink">100m</p>
+                  <p className="text-[11px] uppercase tracking-wider text-ink-muted">Water Resistant</p>
                 </div>
               </div>
 
               {/* What's Included */}
-              <div className="border-t border-border pt-8">
-                <h3 className="font-light mb-4">What's Included</h3>
-                <ul className="space-y-3">
-                  {whatsIncluded.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* What's Included */}
-              <div className="border-t border-border pt-8">
-                <h3 className="font-light mb-4">What's Included</h3>
-                <ul className="space-y-3">
-                  {whatsIncluded.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Highlights */}
               <div className="border-t border-border pt-8 mt-8">
-                <div className="grid grid-cols-3 gap-6 text-center">
-                  <div>
-                    <p className="text-2xl font-light text-foreground">7</p>
-                    <p className="text-caption">Days Battery</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-light text-foreground">4g</p>
-                    <p className="text-caption">Featherlight</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-light text-foreground">100m</p>
-                    <p className="text-caption">Water Resistant</p>
-                  </div>
-                </div>
+                <h3 className="font-light mb-4 text-ink text-lg">What's Included</h3>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {whatsIncluded.map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-ink-soft">
+                      <Check className="w-4 h-4 text-primary" />
+                      <span className="text-[15px]">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </motion.div>
           </div>

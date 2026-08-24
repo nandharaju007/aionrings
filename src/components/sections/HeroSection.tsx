@@ -13,7 +13,7 @@ export function HeroSection() {
           alt="aiOn Ring"
           className="w-full h-full object-cover opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/60 to-canvas" />
       </div>
 
       {/* Radial Glow */}
@@ -28,16 +28,16 @@ export function HeroSection() {
           className="max-w-4xl mx-auto"
         >
           <h1 className="text-hero mb-6">
-            <span className="text-foreground">ai</span>
+            <span className="text-ink">ai</span>
             <span className="text-gradient-teal">O</span>
-            <span className="text-foreground">n</span>
+            <span className="text-ink">n</span>
           </h1>
           
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="text-subheadline mb-12"
+            className="text-subheadline text-ink-soft mb-12"
           >
             The full circle of health
           </motion.p>
@@ -68,7 +68,7 @@ export function HeroSection() {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="text-muted-foreground"
+          className="text-ink-muted"
         >
           <ChevronDown className="w-6 h-6" />
         </motion.div>

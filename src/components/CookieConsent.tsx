@@ -38,18 +38,18 @@ export function CookieConsent() {
           aria-labelledby="cookie-title"
           aria-describedby="cookie-desc"
         >
-          <div className="relative bg-card border border-border rounded-xl shadow-2xl backdrop-blur-md p-6">
+          <div className="relative bg-white border border-border/50 rounded-2xl shadow-soft backdrop-blur-md p-6">
             <button
               onClick={() => handleChoice('essential')}
               aria-label="Close cookie banner"
-              className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute top-3 right-3 text-ink-soft hover:text-ink transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
-            <h3 id="cookie-title" className="text-base font-medium text-foreground mb-2">
+            <h3 id="cookie-title" className="text-base font-medium text-ink mb-2">
               We value your privacy
             </h3>
-            <p id="cookie-desc" className="text-sm text-muted-foreground mb-4">
+            <p id="cookie-desc" className="text-sm text-ink-soft mb-4">
               aiOn uses cookies to provide essential functionality, analyze usage, and improve your
               experience. You can accept all, choose essential-only, or learn more in our{' '}
               <Link to="/cookie-policy" className="text-primary hover:underline">

@@ -513,7 +513,7 @@ export default function PreOrderPage() {
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
                 <div className="lg:sticky lg:top-28">
-                  <div className="relative aspect-square rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent overflow-hidden">
+                  <div className="relative aspect-square rounded-3xl border border-border bg-gradient-to-b from-[#EEF3FA] to-white overflow-hidden shadow-sm">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
                         key={previewColor.id}
@@ -522,17 +522,17 @@ export default function PreOrderPage() {
                         width={1024}
                         height={1024}
                         loading="lazy"
-                        className="w-4/5 h-4/5 object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.55)] animate-in fade-in duration-500"
+                        className="w-4/5 h-4/5 object-contain drop-shadow-[0_30px_60px_rgba(10,22,40,0.25)] animate-in fade-in duration-500"
                       />
                     </div>
                     <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
                       <div>
-                        <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Preview</div>
-                        <div className="text-[15px] font-medium mt-1">{previewColor.name}</div>
+                        <div className="text-[11px] uppercase tracking-[3px] text-ink-muted">Preview</div>
+                        <div className="text-[15px] font-medium mt-1 text-ink">{previewColor.name}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[11px] uppercase tracking-[3px] text-[#8B9DAF]">Total</div>
-                        <div className="text-[15px] font-medium mt-1">
+                        <div className="text-[11px] uppercase tracking-[3px] text-ink-muted">Total</div>
+                        <div className="text-[15px] font-medium mt-1 text-ink">
                           {totalRings} ring{totalRings === 1 ? "" : "s"}
                         </div>
                       </div>
@@ -549,20 +549,20 @@ export default function PreOrderPage() {
                     ].map(({ icon: Icon, label }) => (
                       <div
                         key={label}
-                        className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-center"
+                        className="rounded-xl border border-border bg-white px-3 py-3 text-center shadow-sm"
                       >
-                        <Icon className="w-4 h-4 text-[#4FB3FF] mx-auto mb-1.5" />
-                        <div className="text-[11px] text-[#B8C5D3] leading-tight">{label}</div>
+                        <Icon className="w-4 h-4 text-primary mx-auto mb-1.5" />
+                        <div className="text-[11px] text-ink-soft leading-tight">{label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={onSubmit} className="space-y-10 rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-10">
+                <form onSubmit={onSubmit} className="space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
                   <Section title="Your rings">
                     {/* Sizing help — always visible */}
-                    <div className="rounded-2xl border-2 border-[#4FB3FF]/40 bg-gradient-to-br from-[#4FB3FF]/[0.10] to-transparent p-5 md:p-6 shadow-[0_0_40px_-12px_rgba(79,179,255,0.45)]">
+                    <div className="rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/[0.06] to-white p-5 md:p-6 shadow-sm">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-5">
                         <div
                           className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
@@ -571,14 +571,14 @@ export default function PreOrderPage() {
                           <Ruler className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1">
-                          <div className="text-[18px] md:text-[20px] font-medium text-white mb-1.5">
+                          <div className="text-[18px] md:text-[20px] font-medium text-ink mb-1.5">
                             Not sure of your ring size?
                           </div>
-                          <p className="text-[14px] text-[#B8C5D3] leading-relaxed">
+                          <p className="text-[14px] text-ink-soft leading-relaxed">
                             Measure a ring you already wear, or wrap a string around the base of your finger — our guide
                             matches it to your aiOn size in under a minute.
                           </p>
-                          <p className="mt-2 text-[12px] text-[#5A6B7E]">
+                          <p className="mt-2 text-[12px] text-ink-muted">
                             Prefer to measure at home? A free sizing kit ships before your ring.
                           </p>
                         </div>
@@ -597,15 +597,15 @@ export default function PreOrderPage() {
                     {items.map((item, idx) => (
                       <div
                         key={item.id}
-                        className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4"
+                        className="rounded-2xl border border-border bg-canvas p-4 space-y-4"
                       >
                         <div className="flex items-center justify-between">
-                          <div className="text-[12px] uppercase tracking-[2px] text-[#8B9DAF]">Ring {idx + 1}</div>
+                          <div className="text-[12px] uppercase tracking-[2px] text-ink-muted">Ring {idx + 1}</div>
                           {items.length > 1 && (
                             <button
                               type="button"
                               onClick={() => removeItem(item.id)}
-                              className="text-[#8B9DAF] hover:text-red-400 transition-colors inline-flex items-center gap-1 text-[12px]"
+                              className="text-ink-muted hover:text-red-500 transition-colors inline-flex items-center gap-1 text-[12px]"
                             >
                               <Trash2 className="w-3.5 h-3.5" /> Remove
                             </button>
@@ -623,14 +623,14 @@ export default function PreOrderPage() {
                                   updateItem(item.id, { ring_size: s });
                                   markTouched("ring_size");
                                 }}
-                                className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
+                                className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-primary bg-primary/10 text-ink" : "border-border bg-white text-ink-soft hover:border-primary/40"}`}
                               >
                                 {s}
                               </button>
                             ))}
                           </div>
                           {!item.ring_size && touched.ring_size && (
-                            <p className="mt-2 text-[12px] text-red-400">Please select a ring size</p>
+                            <p className="mt-2 text-[12px] text-red-500">Please select a ring size</p>
                           )}
                         </div>
 
@@ -642,10 +642,10 @@ export default function PreOrderPage() {
                                 key={c.id}
                                 type="button"
                                 onClick={() => updateItem(item.id, { ring_color: c.id })}
-                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white" : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"}`}
+                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? "border-primary bg-primary/10 text-ink" : "border-border bg-white text-ink-soft hover:border-primary/40"}`}
                               >
                                 <span
-                                  className="w-4 h-4 rounded-full border border-white/20"
+                                  className="w-4 h-4 rounded-full border border-border"
                                   style={{ background: c.swatch }}
                                 />
                                 {c.name}
@@ -656,20 +656,20 @@ export default function PreOrderPage() {
 
                         <div>
                           <Label>Quantity</Label>
-                          <div className="mt-2 inline-flex items-center rounded-full border border-white/10 bg-white/[0.02] p-1">
+                          <div className="mt-2 inline-flex items-center rounded-full border border-border bg-white p-1">
                             <button
                               type="button"
                               onClick={() => updateItem(item.id, { quantity: Math.max(1, item.quantity - 1) })}
-                              className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
+                              className="w-10 h-10 rounded-full hover:bg-canvas text-ink flex items-center justify-center"
                               aria-label="Decrease"
                             >
                               <Minus className="w-4 h-4" />
                             </button>
-                            <span className="w-12 text-center text-[16px] font-medium">{item.quantity}</span>
+                            <span className="w-12 text-center text-[16px] font-medium text-ink">{item.quantity}</span>
                             <button
                               type="button"
                               onClick={() => updateItem(item.id, { quantity: Math.min(100, item.quantity + 1) })}
-                              className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center"
+                              className="w-10 h-10 rounded-full hover:bg-canvas text-ink flex items-center justify-center"
                               aria-label="Increase"
                             >
                               <Plus className="w-4 h-4" />
@@ -683,7 +683,7 @@ export default function PreOrderPage() {
                       <button
                         type="button"
                         onClick={addItem}
-                        className="w-full h-12 rounded-xl border border-dashed border-white/15 text-[14px] text-[#B8C5D3] hover:border-[#4FB3FF]/50 hover:text-white transition-all inline-flex items-center justify-center gap-2"
+                        className="w-full h-12 rounded-xl border border-dashed border-border text-[14px] text-ink-soft hover:border-primary/50 hover:text-ink transition-all inline-flex items-center justify-center gap-2"
                       >
                         <Plus className="w-4 h-4" /> Add another ring
                       </button>
@@ -744,7 +744,7 @@ export default function PreOrderPage() {
                         required
                       />
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <span className="text-[12px] text-[#5A6B7E]">Quick select:</span>
+                        <span className="text-[12px] text-ink-muted">Quick select:</span>
                         {["Self", "Friend / Family", "Social media", "Healthcare professional"].map((opt) => (
                           <button
                             key={opt}
@@ -755,8 +755,8 @@ export default function PreOrderPage() {
                             }}
                             className={`px-3 h-8 rounded-full border text-[12px] transition-all ${
                               form.referral_source === opt
-                                ? "border-[#4FB3FF] bg-[#4FB3FF]/10 text-white"
-                                : "border-white/10 bg-white/[0.02] text-[#B8C5D3] hover:border-white/20"
+                                ? "border-primary bg-primary/10 text-ink"
+                                : "border-border bg-white text-ink-soft hover:border-primary/40"
                             }`}
                           >
                             {opt}
@@ -820,7 +820,7 @@ export default function PreOrderPage() {
                   </Section>
 
                   {error && (
-                    <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-[13px] text-red-300">
+                    <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-[13px] text-red-600">
                       {error}
                     </div>
                   )}
@@ -842,13 +842,13 @@ export default function PreOrderPage() {
                     )}
                   </button>
 
-                  <p className="text-center text-[12px] text-[#5A6B7E]">
+                  <p className="text-center text-[12px] text-ink-muted">
                     No charge today. We'll email you before we ship. By reserving, you agree to our{" "}
-                    <Link to="/terms-of-service" className="underline hover:text-white">
+                    <Link to="/terms-of-service" className="underline hover:text-ink">
                       Terms
                     </Link>{" "}
                     and{" "}
-                    <Link to="/privacy-policy" className="underline hover:text-white">
+                    <Link to="/privacy-policy" className="underline hover:text-ink">
                       Privacy Policy
                     </Link>
                     .
@@ -870,14 +870,14 @@ export default function PreOrderPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF]">{title}</h2>
+      <h2 className="text-[11px] font-semibold uppercase tracking-[3px] text-primary">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>
   );
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <label className="text-[13px] text-[#B8C5D3]">{children}</label>;
+  return <label className="text-[13px] text-ink-soft">{children}</label>;
 }
 
 function Input({
@@ -901,7 +901,7 @@ function Input({
 }) {
   return (
     <label className="block">
-      <span className="text-[13px] text-[#B8C5D3]">{label}</span>
+      <span className="text-[13px] text-ink-soft">{label}</span>
       <input
         type={type}
         value={value}
@@ -910,11 +910,11 @@ function Input({
         required={required}
         placeholder={placeholder}
         maxLength={200}
-        className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] px-4 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
-          error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+        className={`mt-1.5 w-full h-12 rounded-xl border bg-white px-4 text-[15px] text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all ${
+          error ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary"
         }`}
       />
-      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
     </label>
   );
 }
@@ -952,10 +952,10 @@ function PhoneInput({
 
   return (
     <label className="block">
-      <span className="text-[13px] text-[#B8C5D3]">{label}</span>
+      <span className="text-[13px] text-ink-soft">{label}</span>
       <div
-        className={`mt-1.5 flex items-stretch rounded-xl border bg-white/[0.02] overflow-hidden transition-all ${
-          error ? "border-red-500/60" : "border-white/10 focus-within:border-[#4FB3FF]"
+        className={`mt-1.5 flex items-stretch rounded-xl border bg-white overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary/30 ${
+          error ? "border-red-400" : "border-border focus-within:border-primary"
         }`}
       >
         <div className="relative flex items-center">
@@ -966,16 +966,16 @@ function PhoneInput({
               onCodeChange(nextCode, nextIso);
             }}
             aria-label="Country dial code"
-            className="h-12 bg-transparent text-[14px] text-white pl-3 pr-8 border-r border-white/10 focus:outline-none appearance-none cursor-pointer"
+            className="h-12 bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer"
             style={{ backgroundImage: "none" }}
           >
             {PHONE_CODE_OPTIONS.map((o) => (
-              <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-[#0F1E33]">
+              <option key={`${o.iso}-${o.code}`} value={`${o.iso}|${o.code}`} className="bg-white text-ink">
                 {o.iso} +{o.code}
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-2 w-4 h-4 text-[#8B9DAF] pointer-events-none" />
+          <ChevronDown className="absolute right-2 w-4 h-4 text-ink-muted pointer-events-none" />
         </div>
         <input
           type="tel"
@@ -984,10 +984,10 @@ function PhoneInput({
           onBlur={onBlur}
           placeholder={placeholder}
           maxLength={30}
-          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-white placeholder-[#5A6B7E] focus:outline-none"
+          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-ink placeholder-ink-muted focus:outline-none"
         />
       </div>
-      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
     </label>
   );
 }
@@ -1035,7 +1035,7 @@ function CountryInput({
   return (
     <div className="relative" ref={wrapperRef}>
       <label className="block">
-        <span className="text-[13px] text-[#B8C5D3]">{label}</span>
+        <span className="text-[13px] text-ink-soft">{label}</span>
         <div className="relative">
           <input
             type="text"
@@ -1050,16 +1050,16 @@ function CountryInput({
             placeholder={placeholder}
             maxLength={200}
             autoComplete="off"
-            className={`mt-1.5 w-full h-12 rounded-xl border bg-white/[0.02] pl-4 pr-10 text-[15px] text-white placeholder-[#5A6B7E] focus:bg-white/[0.04] focus:outline-none transition-all ${
-              error ? "border-red-500/60 focus:border-red-500" : "border-white/10 focus:border-[#4FB3FF]"
+            className={`mt-1.5 w-full h-12 rounded-xl border bg-white pl-4 pr-10 text-[15px] text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all ${
+              error ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary"
             }`}
           />
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B9DAF] pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
         </div>
       </label>
-      {error && <p className="mt-1 text-[12px] text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
       {open && filtered.length > 0 && (
-        <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-white/10 bg-[#0F1E33] shadow-lg">
+        <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-border bg-white shadow-lg">
           {filtered.map((c) => (
             <button
               key={c}
@@ -1068,7 +1068,7 @@ function CountryInput({
                 onChange(c);
                 setOpen(false);
               }}
-              className="w-full text-left px-4 py-2 text-[14px] text-[#B8C5D3] hover:bg-white/[0.06] hover:text-white transition-colors"
+              className="w-full text-left px-4 py-2 text-[14px] text-ink-soft hover:bg-canvas hover:text-ink transition-colors"
             >
               {c}
             </button>
@@ -1088,23 +1088,23 @@ function ConfirmationCard({ name, partner }: { name: string; partner?: string | 
       >
         <Check className="w-10 h-10 text-white" />
       </div>
-      <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">Thank you, {name}.</h1>
-      <p className="text-[16px] text-[#8B9DAF] mb-10 max-w-lg mx-auto">
+      <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4 text-ink">Thank you, {name}.</h1>
+      <p className="text-[16px] text-ink-soft mb-10 max-w-lg mx-auto">
         Your aiOn Ring reservation has been received. A confirmation email is on its way.
       </p>
       {partner && (
-        <div className="inline-block rounded-2xl border border-[#4FB3FF]/25 bg-[#4FB3FF]/[0.06] px-6 py-4 mb-6">
-          <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-1">Referred by</div>
-          <div className="text-[16px] font-medium">{partner}</div>
+        <div className="inline-block rounded-2xl border border-primary/20 bg-primary/[0.06] px-6 py-4 mb-6">
+          <div className="text-[11px] uppercase tracking-[3px] text-primary mb-1">Referred by</div>
+          <div className="text-[16px] font-medium text-ink">{partner}</div>
         </div>
       )}
-      <p className="text-[13px] text-[#8B9DAF] mb-8 max-w-md mx-auto">
+      <p className="text-[13px] text-ink-soft mb-8 max-w-md mx-auto">
         We'll contact you soon regarding pricing, availability and delivery.
       </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <Link
           to="/"
-          className="rounded-full border border-white/15 px-8 py-3 text-[14px] font-medium hover:border-white/30 transition-colors"
+          className="rounded-full border border-border bg-white px-8 py-3 text-[14px] font-medium text-ink hover:border-primary/40 transition-colors shadow-sm"
         >
           Back to home
         </Link>
