@@ -1133,18 +1133,20 @@ function RingSection() {
       </div>
 
       {/* Full-bleed lifestyle ring image — no frame, no border */}
-      <FadeUp className="relative w-screen left-1/2 -translate-x-1/2">
-        <img
-          src={ringProduct}
-          alt="aiOn ring"
-          className="w-full h-[55vh] sm:h-[65vh] md:h-[75vh] object-cover object-center"
-        />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.92) 100%)`,
-          }}
-        />
+      <FadeUp>
+        <div className="relative w-screen left-1/2 -translate-x-1/2">
+          <img
+            src={ringProduct}
+            alt="aiOn ring"
+            className="w-full h-[55vh] sm:h-[65vh] md:h-[75vh] object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.92) 100%)`,
+            }}
+          />
+        </div>
       </FadeUp>
 
       <div className="container mx-auto px-6 relative z-10">
