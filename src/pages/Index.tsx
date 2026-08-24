@@ -9,12 +9,12 @@ import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
-import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
-import videoFocus from "@/assets/video-life-focus-silver.mp4.asset.json";
+import videoMoveBlack from "@/assets/video-life-move-black.mp4.asset.json";
+import videoRestSilver from "@/assets/video-life-rest-silver.mp4.asset.json";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
-import videoEvening from "@/assets/video-life-evening-new.mp4.asset.json";
+import videoMorningRose from "@/assets/video-life-morning-rose.mp4.asset.json";
 import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
 import natureForest from "@/assets/nature-forest-trail.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
@@ -1188,9 +1188,9 @@ function TheAppSection() {
    ───────────────────────────────────────────── */
 function InLifeSection() {
   const clips = [
-    { src: (videoMorning as { url: string }).url, label: "Morning", caption: "Gentle start" },
-    { src: (videoFocus as { url: string }).url, label: "Focus", caption: "Slow mornings" },
-    { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
+    { src: (videoMoveBlack as { url: string }).url, label: "Move", caption: "Midnight" },
+    { src: (videoRestSilver as { url: string }).url, label: "Rest", caption: "Silver" },
+    { src: (videoMorningRose as { url: string }).url, label: "Morning", caption: "Rose Gold" },
   ];
   return (
     <section id="in-life" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
