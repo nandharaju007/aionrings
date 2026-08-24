@@ -325,6 +325,50 @@ function Hero() {
       <GridOverlay tone="dark" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
+        {/* Lifestyle video strip */}
+        <motion.div
+          className="w-full max-w-4xl mx-auto mb-8 md:mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div
+            className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl"
+            style={{ background: C.navy, boxShadow: `0 30px 80px -24px rgba(10,22,40,0.45)` }}
+          >
+            <div className="grid grid-cols-3 h-[100px] sm:h-[130px] md:h-[170px]">
+              {[
+                { src: videoWork.url, label: "Work" },
+                { src: videoRun.url, label: "Move" },
+                { src: videoSleep.url, label: "Rest" },
+              ].map((v, i) => (
+                <div key={i} className="relative overflow-hidden group">
+                  <video
+                    src={v.src}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ filter: "contrast(1.05) saturate(0.9)" }}
+                  />
+                  {/* Cinematic cool tint */}
+                  <div
+                    className="pointer-events-none absolute inset-0 mix-blend-overlay opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${C.blue}33, ${C.purple}33)` }}
+                  />
+                  {/* Bottom vignette for label legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+                  <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white">
+                    {v.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
