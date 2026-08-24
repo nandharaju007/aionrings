@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
 import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
+import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
+import posterLifeEarly from "@/assets/poster-life-early.jpg";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
@@ -737,7 +739,38 @@ function Hero() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 2}
+   Early lifestyle proof — one full-bleed video
+   ───────────────────────────────────────────── */
+function MorningProofSection() {
+  return (
+    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "58vh", minHeight: "420px", maxHeight: "760px" }}>
+      <LazyVideo
+        src={(videoLifeEarly as { url: string }).url}
+        poster={posterLifeEarly}
+        label="Person wearing the aiOn ring during a calm morning wellness routine"
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ filter: "contrast(1.03) saturate(0.96)" }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(var(--canvas)) 0%, rgba(246,248,252,0) 18%, rgba(246,248,252,0) 72%, hsl(var(--canvas)) 100%)",
+        }}
+      />
+      <div className="relative z-10 flex h-full items-center justify-center px-6">
+        <FadeUp className="text-center max-w-2xl">
+          <p className="text-[11px] uppercase tracking-[0.38em] text-ink-muted">A ring for real life</p>
+          <h2 className="mt-4 text-3xl md:text-5xl font-extralight text-ink leading-[1.1]">
+            From morning light
+            <br />
+            to evening wind-down.
+          </h2>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
 
 /* ─────────────────────────────────────────────
    Section 2 — One Number
@@ -1672,6 +1705,8 @@ export default function Index() {
       <main>
         {/* 1 — First impression */}
         <Hero />
+        {/* 1.5 — Lifestyle proof, early */}
+        <MorningProofSection />
         {/* 2 — The problem, in the user's own words */}
         <BodyTalkingSection />
         {/* 3 — The answer: one number */}
