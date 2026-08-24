@@ -446,14 +446,14 @@ function Hero() {
           <ParticleField density={80} opacity={0.4} tone="light" />
 
           <div className="relative z-10 px-4 pt-8 pb-10 sm:px-8 sm:pt-10 md:pt-14 md:pb-14">
-            {/* Cinematic finger-with-ring banner */}
+            {/* Cinematic finger-with-ring banner — enlarged */}
             <motion.div
-              className="relative w-full max-w-4xl mx-auto mb-8 md:mb-10"
+              className="relative w-full max-w-5xl mx-auto"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="relative overflow-hidden rounded-2xl">
+              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
                 <video
                   src={heroFingerVideo.url}
                   poster={heroFingerRing}
@@ -463,7 +463,7 @@ function Hero() {
                   playsInline
                   preload="metadata"
                   aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
-                  className="w-full h-[140px] sm:h-[190px] md:h-[260px] object-cover"
+                  className="w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] object-cover"
                   style={{ filter: "contrast(1.05) saturate(1.05)" }}
                 />
 
@@ -472,9 +472,9 @@ function Hero() {
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background: `
-                      linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
-                      linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
-                      radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
+                      linear-gradient(to bottom, ${C.navy} 0%, transparent 20%, transparent 75%, ${C.navy} 100%),
+                      linear-gradient(to right, ${C.navy} 0%, transparent 12%, transparent 88%, ${C.navy} 100%),
+                      radial-gradient(ellipse at center, transparent 50%, rgba(10,22,40,0.65) 100%)
                     `,
                   }}
                 />
@@ -485,7 +485,7 @@ function Hero() {
                 />
 
                 {/* Live vitals rail */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-3 pb-2 sm:gap-x-5 sm:pb-3">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
                   {[
                     { l: "HR", v: "62 bpm" },
                     { l: "HRV", v: "74 ms" },
@@ -498,7 +498,7 @@ function Hero() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
-                      className="flex items-baseline gap-1.5 text-[10px] sm:text-xs tracking-wide"
+                      className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
                     >
                       <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.l}</span>
                       <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
@@ -507,98 +507,20 @@ function Hero() {
                 </div>
 
                 {/* Rotating insight line */}
-                <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 sm:top-4">
+                <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
                   <HeroInsightTicker />
                 </div>
               </div>
-
             </motion.div>
 
-            {/* Cinematic ring stage */}
-            <div className="relative mx-auto w-full max-w-2xl">
-              {/* Outer orbital ring glow */}
-              <div
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
-                style={{
-                  background: `conic-gradient(from 0deg, ${C.blue}30, ${C.purple}30, ${C.blue}30)`,
-                  filter: "blur(2px)",
-                  opacity: 0.7,
-                }}
-              />
-
-              {/* Dark inner portal */}
-              <div
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
-                style={{
-                  background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
-                  boxShadow: `inset 0 0 80px rgba(24,120,224,0.16), 0 0 60px rgba(24,120,224,0.1)`,
-                }}
-              />
-
-              {/* Ambient radial glow */}
-              <div
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
-                style={{ background: `radial-gradient(circle, ${C.blue}22 0%, ${C.purple}16 45%, transparent 70%)` }}
-              />
-
-              {/* Floating ring */}
-              <motion.div
-                className="relative flex items-center justify-center"
-                initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
-                transition={{
-                  opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-                  scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-                  y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                }}
-              >
-                <img
-                  src={ringHero}
-                  alt="aiOn smart ring floating in cinematic light"
-                  width={620}
-                  height={620}
-                  className="h-auto w-full max-w-[240px] sm:max-w-[320px] md:max-w-[400px] object-contain"
-                  style={{
-                    filter: "drop-shadow(0 30px 80px rgba(24,120,224,0.4))",
-                  }}
-                />
-              </motion.div>
-
-              {/* Desktop orbital vitals chips */}
-              <div className="hidden md:block absolute inset-0">
-                {chips.map((c, i) => {
-                  const rad = (c.angle * Math.PI) / 180;
-                  const radius = 46; // % of container
-                  const x = 50 + radius * Math.cos(rad);
-                  const y = 50 + radius * Math.sin(rad);
-                  return (
-                    <motion.div
-                      key={i}
-                      className="absolute -translate-x-1/2 -translate-y-1/2"
-                      style={{ left: `${x}%`, top: `${y}%` }}
-                      initial={{ opacity: 0, scale: 0.7 }}
-                      animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
-                      transition={{
-                        opacity: { delay: c.delay, duration: 0.6 },
-                        scale: { delay: c.delay, duration: 0.6 },
-                        y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
-                      }}
-                    >
-                      <Chip>{c.label}</Chip>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Mobile vitals row */}
-            <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
+            {/* Floating vitals chips beneath the video */}
+            <div className="mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
               {chips.map((c, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
+                  transition={{ delay: 0.9 + i * 0.08, duration: 0.5 }}
                 >
                   <Chip>{c.label}</Chip>
                 </motion.div>
