@@ -1125,25 +1125,32 @@ function RingSection() {
     { icon: "🖤", label: "Midnight Black" },
   ];
   return (
-    <section id="ring" className="relative overflow-hidden py-16 md:py-40" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
+    <section id="ring" className="relative overflow-hidden py-16 md:py-24" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
-        <FadeUp>
-          <motion.div
-            className="mx-auto aspect-square w-[min(70vw,420px)] relative rounded-[2.5rem] p-6"
-            style={{ background: "radial-gradient(circle at 50% 45%, #12233F 0%, #0A1628 70%)", boxShadow: "0 40px 90px -40px rgba(10,22,40,0.55)" }}
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <div className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 100px ${C.blue}44` }} />
-            <img
-              src={ringProduct}
-              alt="aiOn ring"
-              className="h-full w-full rounded-full object-cover"
-              style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 40px rgba(79,179,255,0.5))" }}
-            />
-          </motion.div>
+        <FadeUp className="text-center mb-8 md:mb-12">
+          <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">The Ring</p>
         </FadeUp>
-        <div className="relative mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
+      </div>
+
+      {/* Full-bleed lifestyle ring image — no frame, no border */}
+      <FadeUp>
+        <div className="relative w-screen left-1/2 -translate-x-1/2">
+          <img
+            src={ringProduct}
+            alt="aiOn ring"
+            className="w-full h-[55vh] sm:h-[65vh] md:h-[75vh] object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.92) 100%)`,
+            }}
+          />
+        </div>
+      </FadeUp>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="relative mt-10 md:mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
           {specs.map((s, i) => (
             <motion.div key={i}
               className="text-center"
