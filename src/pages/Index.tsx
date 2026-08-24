@@ -11,6 +11,7 @@ import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
+import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
 import videoFocus from "@/assets/video-life-focus-new.mp4.asset.json";
 import videoEvening from "@/assets/video-life-evening-new.mp4.asset.json";
 import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
