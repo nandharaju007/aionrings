@@ -11,7 +11,7 @@ import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
-import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
+import videoFocus from "@/assets/video-life-focus-new.mp4.asset.json";
 import videoEvening from "@/assets/video-life-evening-new.mp4.asset.json";
 import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
 import natureForest from "@/assets/nature-forest-trail.jpg";
@@ -1090,7 +1090,7 @@ function TheAppSection() {
 function InLifeSection() {
   const clips = [
     { src: (videoMorning as { url: string }).url, label: "Morning", caption: "Gentle start" },
-    { src: (videoWalk as { url: string }).url, label: "Move", caption: "Active day" },
+    { src: (videoFocus as { url: string }).url, label: "Focus", caption: "Calm clarity" },
     { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
   ];
   return (
