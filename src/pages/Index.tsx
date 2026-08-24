@@ -1094,7 +1094,7 @@ function TheAppSection() {
 function InLifeSection() {
   const clips = [
     { src: (videoMorning as { url: string }).url, label: "Morning", caption: "Gentle start" },
-    { src: (videoFocus as { url: string }).url, label: "Focus", caption: "Calm clarity" },
+    { src: (videoFocus as { url: string }).url, label: "Focus", caption: "Slow mornings" },
     { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
   ];
   return (
