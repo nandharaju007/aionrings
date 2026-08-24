@@ -1126,39 +1126,39 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-ink/35 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg rounded-3xl border border-white/10 bg-[#0F1E33] p-8 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-3xl border border-border bg-white p-8 max-h-[90vh] overflow-y-auto shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full border border-white/10 hover:border-white/30 flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full border border-border text-ink-muted hover:border-primary/40 hover:text-ink flex items-center justify-center transition-colors"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="text-[11px] uppercase tracking-[3px] text-[#4FB3FF] mb-2">Sizing Guide</div>
-        <h3 className="text-2xl font-light tracking-tight mb-4">Find your perfect fit.</h3>
+        <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
+        <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
-        <div className="space-y-4 text-[13px] text-[#B8C5D3] leading-relaxed">
+        <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
           <div>
-            <div className="font-medium text-white mb-1">Method 1 — Existing ring</div>
+            <div className="font-medium text-ink mb-1">Method 1 — Existing ring</div>
             <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
           </div>
           <div>
-            <div className="font-medium text-white mb-1">Method 2 — String</div>
+            <div className="font-medium text-ink mb-1">Method 2 — String</div>
             <p>
               Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
               overlaps and measure the length — that's your circumference.
             </p>
           </div>
           <div>
-            <div className="font-medium text-white mb-1">Tips</div>
+            <div className="font-medium text-ink mb-1">Tips</div>
             <ul className="list-disc pl-5 space-y-1">
               <li>Measure at the end of the day when fingers are warmest.</li>
               <li>Wear it snug — the sensors need skin contact.</li>
@@ -1167,10 +1167,10 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 overflow-hidden">
+        <div className="mt-6 rounded-2xl border border-border overflow-hidden">
           <table className="w-full text-[13px]">
             <thead>
-              <tr className="bg-white/[0.04] text-[#8B9DAF] text-[11px] uppercase tracking-[2px]">
+              <tr className="bg-canvas text-ink-muted text-[11px] uppercase tracking-[2px]">
                 <th className="text-left px-4 py-2 font-medium">US Size</th>
                 <th className="text-left px-4 py-2 font-medium">Inner Diameter</th>
                 <th className="text-left px-4 py-2 font-medium">Circumference</th>
@@ -1178,17 +1178,17 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
             </thead>
             <tbody>
               {SIZE_CHART.map((row) => (
-                <tr key={row.size} className="border-t border-white/5">
-                  <td className="px-4 py-2 font-medium text-white">{row.size}</td>
-                  <td className="px-4 py-2 text-[#B8C5D3]">{row.diameter}</td>
-                  <td className="px-4 py-2 text-[#B8C5D3]">{row.circumference}</td>
+                <tr key={row.size} className="border-t border-border">
+                  <td className="px-4 py-2 font-medium text-ink">{row.size}</td>
+                  <td className="px-4 py-2 text-ink-soft">{row.diameter}</td>
+                  <td className="px-4 py-2 text-ink-soft">{row.circumference}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <p className="mt-6 text-[12px] text-[#5A6B7E]">
+        <p className="mt-6 text-[12px] text-ink-muted">
           Still unsure? Order any size — we'll ship a free sizing kit before your ring, and you can update your final
           size before dispatch.
         </p>
