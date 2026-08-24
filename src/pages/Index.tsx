@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
 import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
+import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
