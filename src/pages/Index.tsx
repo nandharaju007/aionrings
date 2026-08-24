@@ -702,8 +702,8 @@ function BodyTalkingSection() {
     { text: "You can't see what it's doing.", strong: false },
   ];
   return (
-    <section className="relative overflow-hidden py-20 md:py-40" style={{ background: C.navy }}>
-      <ParticleField density={30} opacity={0.25} />
+    <section className="relative overflow-hidden py-20 md:py-40 bg-white">
+      <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <div className="space-y-4 md:space-y-6">
           {lines.map((l, i) => (
@@ -736,7 +736,7 @@ function BodyTalkingSection() {
                 </svg>
               )}
               <p
-                className={`relative text-3xl md:text-5xl font-extralight leading-tight ${l.strong ? "text-white" : "text-white/45"}`}
+                className={`relative text-3xl md:text-5xl font-extralight leading-tight ${l.strong ? "text-ink" : "text-ink-muted"}`}
               >
                 {l.text}
               </p>
@@ -744,7 +744,7 @@ function BodyTalkingSection() {
           ))}
         </div>
 
-        <FadeUp delay={0.4} className="mt-20 space-y-2 text-white/55 text-sm md:text-base font-light">
+        <FadeUp delay={0.4} className="mt-20 space-y-2 text-ink-muted text-sm md:text-base font-light">
           <p>Your annual physical is once a year.</p>
           <p>Your doctor has 10 minutes.</p>
           <p>Nobody is watching.</p>
@@ -803,11 +803,11 @@ function PillarsSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section id="signals" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
-      <ParticleField density={35} opacity={0.22} />
+    <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="Everything your body" /><br /><WordStagger text="is telling you." delay={0.15} />
           </h2>
         </FadeUp>
@@ -820,21 +820,21 @@ function PillarsSection() {
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="text-left rounded-3xl border p-6 backdrop-blur-xl transition-all"
                 style={{
-                  borderColor: isOpen ? `${C.blue}88` : `${C.blue}33`,
-                  background: "rgba(10,22,40,0.55)",
-                  boxShadow: isOpen ? `0 0 40px ${C.blue}44` : "none",
+                  borderColor: isOpen ? C.blue : "#E3E9F2",
+                  background: "#FFFFFF",
+                  boxShadow: isOpen ? `0 20px 50px -20px ${C.blue}55` : "0 1px 2px rgba(10,22,40,0.04)",
                 }}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.06 }}
-                whileHover={{ y: -3, boxShadow: `0 0 40px ${C.blue}33` }}
+                whileHover={{ y: -3, boxShadow: `0 20px 50px -20px ${C.blue}44` }}
               >
                 <div className="text-3xl">{p.icon}</div>
-                <h3 className="mt-3 text-xl font-light text-white">{p.name}</h3>
-                <p className="mt-2 text-sm text-white/60 font-light">{p.line}</p>
+                <h3 className="mt-3 text-xl font-light text-ink">{p.name}</h3>
+                <p className="mt-2 text-sm text-ink-muted font-light">{p.line}</p>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
-                      className="mt-4 space-y-2 text-sm text-white/70 font-light overflow-hidden"
+                      className="mt-4 space-y-2 text-sm text-ink-soft font-light overflow-hidden"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
@@ -848,14 +848,14 @@ function PillarsSection() {
                     </motion.ul>
                   )}
                 </AnimatePresence>
-                <p className="mt-4 text-[10px] tracking-widest text-white/40">
+                <p className="mt-4 text-[10px] tracking-widest text-ink-muted">
                   {isOpen ? "TAP TO CLOSE" : "TAP TO EXPAND"}
                 </p>
               </motion.button>
             );
           })}
         </div>
-        <p className="mt-10 text-center text-[11px] text-white/40 max-w-xl mx-auto">
+        <p className="mt-10 text-center text-[11px] text-ink-muted max-w-xl mx-auto">
           aiOn Ring is intended for general wellness purposes only and is not a medical device.
           Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates and are
           not intended to diagnose, treat, cure, or prevent any disease or medical condition.
@@ -875,13 +875,13 @@ function QuestSection() {
     { title: "10-min walk", tag: "STRESS", metric: "⚡ Stress" },
   ];
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-48 bg-white">
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="The one thing" /><br /><WordStagger text="you should do today." delay={0.15} />
           </h2>
-          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
             Every morning. Built for your body.<br />Based on your last 7 days.
           </p>
         </FadeUp>
@@ -890,12 +890,12 @@ function QuestSection() {
           {quests.map((q, i) => (
             <motion.div key={i}
               className="rounded-3xl border p-6 backdrop-blur-xl"
-              style={{ borderColor: "rgba(79,179,255,0.25)", background: "rgba(10,22,40,0.55)" }}
+              style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: "0 20px 50px -25px rgba(10,22,40,0.25)" }}
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.12 }}
             >
-              <span className="text-[10px] tracking-[0.25em] text-white/50">TODAY'S QUEST · {q.tag}</span>
-              <h3 className="mt-4 text-2xl font-light text-white">{q.title}</h3>
+              <span className="text-[10px] tracking-[0.25em] text-ink-muted">TODAY'S QUEST · {q.tag}</span>
+              <h3 className="mt-4 text-2xl font-light text-ink">{q.title}</h3>
               <div className="mt-6 flex justify-end">
                 <Chip>{q.metric}</Chip>
               </div>
@@ -904,7 +904,7 @@ function QuestSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-12 text-center">
-          <p className="text-base md:text-lg text-white/70 font-light">
+          <p className="text-base md:text-lg text-ink-soft font-light">
             Complete it. Earn XP. Build your streak.
           </p>
         </FadeUp>
@@ -923,15 +923,15 @@ function TheAppSection() {
     { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
   ];
   return (
-    <section id="the-app" className="relative overflow-hidden py-16 md:py-40" style={{ background: C.navy }}>
-      <ParticleField density={30} opacity={0.25} />
+    <section id="the-app" className="relative overflow-hidden py-16 md:py-40 bg-canvas">
+      <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
-          <p className="text-xs md:text-sm tracking-[0.35em] text-white/50 uppercase">The app</p>
-          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">The app</p>
+          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Your body, on screen.
           </h2>
-          <p className="mt-6 text-white/60 text-base md:text-lg font-light">
+          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
             Clean. Calm. Built to answer one question — what should I do today?
           </p>
         </FadeUp>
@@ -960,7 +960,7 @@ function TheAppSection() {
                   className="w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
                 />
               </div>
-              <p className="mt-6 text-sm md:text-base text-white/60 font-light tracking-wide">
+              <p className="mt-6 text-sm md:text-base text-ink-muted font-light tracking-wide">
                 {s.caption}
               </p>
             </motion.div>
@@ -968,7 +968,7 @@ function TheAppSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-14 text-center">
-          <p className="text-sm md:text-base text-white/50 font-light">
+          <p className="text-sm md:text-base text-ink-muted font-light">
             Free with every ring. iOS &amp; Android.
           </p>
         </FadeUp>
@@ -1051,7 +1051,7 @@ function RingSection() {
             />
           </motion.div>
         </FadeUp>
-        <div className="mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
+        <div className="relative mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
           {specs.map((s, i) => (
             <motion.div key={i}
               className="text-center"
@@ -1063,9 +1063,10 @@ function RingSection() {
             </motion.div>
           ))}
         </div>
-        <p className="mt-10 text-center text-sm text-white/50 font-light">
+        <p className="relative mt-10 text-center text-sm text-white/50 font-light">
           More colors and matte finish coming.
         </p>
+        </div>
       </div>
     </section>
   );
