@@ -1125,7 +1125,7 @@ function TheAppSection() {
     { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
   ];
   return (
-    <section id="the-app" className="relative overflow-hidden py-16 md:py-40 bg-canvas">
+    <section id="app" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
