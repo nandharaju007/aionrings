@@ -515,98 +515,84 @@ function Hero() {
           </motion.p>
         </div>
 
-        {/* Dark cinematic spotlight panel — ring stage */}
+        {/* Cinematic finger-with-ring banner — seamless, no box */}
         <motion.div
-          className="relative mt-10 md:mt-14 w-full max-w-5xl overflow-hidden rounded-3xl"
-          style={{ background: C.navy, boxShadow: "0 30px 80px -20px rgba(10,22,40,0.35)" }}
+          className="relative mt-10 md:mt-16 w-full max-w-5xl"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Aurora intensity={0.9} />
-          <ParticleField density={80} opacity={0.4} tone="light" />
+          <div className="relative overflow-hidden rounded-2xl md:rounded-[32px] shadow-[0_30px_80px_-30px_rgba(10,22,40,0.18)]">
+            <video
+              src={heroFingerVideo.url}
+              poster={heroFingerRing}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
+              className="w-full h-[240px] sm:h-[340px] md:h-[440px] lg:h-[540px] object-cover"
+              style={{ filter: "contrast(1.05) saturate(1.05)" }}
+            />
 
-          <div className="relative z-10 px-4 pt-8 pb-10 sm:px-8 sm:pt-10 md:pt-14 md:pb-14">
-            {/* Cinematic finger-with-ring banner — enlarged */}
-            <motion.div
-              className="relative w-full max-w-5xl mx-auto"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
-                <video
-                  src={heroFingerVideo.url}
-                  poster={heroFingerRing}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
-                  className="w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] object-cover"
-                  style={{ filter: "contrast(1.05) saturate(1.05)" }}
-                />
+            {/* Soft edge blend into the light page */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `
+                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 14%, transparent 82%, hsl(var(--canvas)) 100%),
+                  linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 8%, transparent 92%, hsl(var(--canvas)) 100%),
+                  radial-gradient(ellipse at center, transparent 55%, rgba(10,22,40,0.35) 100%)
+                `,
+              }}
+            />
+            {/* Subtle wellness tint */}
+            <div
+              className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-30"
+              style={{ background: `linear-gradient(120deg, ${C.blue}18, ${C.green}14)` }}
+            />
 
-                {/* Blend into panel background on all edges */}
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: `
-                      linear-gradient(to bottom, ${C.navy} 0%, transparent 20%, transparent 75%, ${C.navy} 100%),
-                      linear-gradient(to right, ${C.navy} 0%, transparent 12%, transparent 88%, ${C.navy} 100%),
-                      radial-gradient(ellipse at center, transparent 50%, rgba(10,22,40,0.65) 100%)
-                    `,
-                  }}
-                />
-                {/* Cool tint for color harmony */}
-                <div
-                  className="pointer-events-none absolute inset-0 mix-blend-color"
-                  style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
-                />
-
-                {/* Live vitals rail */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
-                  {[
-                    { l: "HR", v: "62 bpm" },
-                    { l: "HRV", v: "74 ms" },
-                    { l: "SpO₂", v: "98%" },
-                    { l: "Temp", v: "36.7°" },
-                    { l: "Sleep", v: "87" },
-                  ].map((m, i) => (
-                    <motion.span
-                      key={m.l}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
-                      className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
-                    >
-                      <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.l}</span>
-                      <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
-                    </motion.span>
-                  ))}
-                </div>
-
-                {/* Rotating insight line */}
-                <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
-                  <HeroInsightTicker />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Floating vitals chips beneath the video */}
-            <div className="mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
-              {chips.map((c, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
+            {/* Live vitals rail */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
+              {[
+                { l: "HR", v: "62 bpm" },
+                { l: "HRV", v: "74 ms" },
+                { l: "SpO₂", v: "98%" },
+                { l: "Temp", v: "36.7°" },
+                { l: "Sleep", v: "87" },
+              ].map((m, i) => (
+                <motion.span
+                  key={m.l}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 + i * 0.08, duration: 0.5 }}
+                  transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
+                  className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
                 >
-                  <Chip>{c.label}</Chip>
-                </motion.div>
+                  <span style={{ color: "rgba(255,255,255,0.60)" }}>{m.l}</span>
+                  <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
+                </motion.span>
               ))}
             </div>
+
+            {/* Rotating insight line */}
+            <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
+              <HeroInsightTicker />
+            </div>
+          </div>
+
+          {/* Floating vitals chips beneath the video — light variant */}
+          <div className="mt-7 md:mt-9 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
+            {chips.map((c, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 + i * 0.08, duration: 0.5 }}
+              >
+                <Chip variant="light">{c.label}</Chip>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
