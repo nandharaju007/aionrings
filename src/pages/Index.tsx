@@ -332,8 +332,11 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-ink/5 bg-white/50 shadow-xl shadow-ink/5">
-            <div className="grid grid-cols-3 h-[90px] sm:h-[120px] md:h-[160px]">
+          <div
+            className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl"
+            style={{ background: C.navy, boxShadow: `0 30px 80px -24px rgba(10,22,40,0.45)` }}
+          >
+            <div className="grid grid-cols-3 h-[100px] sm:h-[130px] md:h-[170px]">
               {[
                 { src: videoWork.url, label: "Work" },
                 { src: videoRun.url, label: "Move" },
@@ -348,19 +351,21 @@ function Hero() {
                     playsInline
                     preload="metadata"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ filter: "contrast(1.05) saturate(0.9)" }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
-                  <span className="absolute bottom-2 left-3 text-[10px] sm:text-xs font-medium uppercase tracking-widest text-white/90">
+                  {/* Cinematic cool tint */}
+                  <div
+                    className="pointer-events-none absolute inset-0 mix-blend-overlay opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${C.blue}33, ${C.purple}33)` }}
+                  />
+                  {/* Bottom vignette for label legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+                  <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white">
                     {v.label}
                   </span>
                 </div>
               ))}
             </div>
-            {/* Soft edge fade into canvas */}
-            <div
-              className="pointer-events-none absolute inset-x-0 -bottom-px h-8"
-              style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--canvas))" }}
-            />
           </div>
         </motion.div>
 
