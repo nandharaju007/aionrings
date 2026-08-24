@@ -1001,7 +1001,7 @@ function PillarsSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+    <section id="signals" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureForest} opacity={0.22} position="center 55%" />
       <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
