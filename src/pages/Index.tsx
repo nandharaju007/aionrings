@@ -139,42 +139,119 @@ function HeroInsightTicker() {
 }
 
 /* ─────────────────────────────────────────────
-   Custom glowing cursor (desktop only)
+   Shared rhythm tokens
    ───────────────────────────────────────────── */
-function GlowCursor() {
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 500, damping: 40 });
-  const sy = useSpring(y, { stiffness: 500, damping: 40 });
-  const [enabled, setEnabled] = useState(false);
+const SECTION = "py-20 md:py-32";
 
+/* Video that only plays while visible — saves CPU and battery */
+function LazyVideo({
+  src,
+  poster,
+  className = "",
+  style,
+  label,
+  autoPlay = false,
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  label?: string;
+  autoPlay?: boolean;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (window.matchMedia("(hover: none)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setEnabled(true);
-    const onMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [x, y]);
-
-  if (!enabled) return null;
+    const v = ref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
   return (
-    <motion.div
-      aria-hidden
-      style={{ x: sx, y: sy }}
-      className="pointer-events-none fixed left-0 top-0 z-[100] -ml-3 -mt-3 h-6 w-6 rounded-full"
+    <video
+      ref={ref}
+      src={src}
+      poster={poster}
+      autoPlay={autoPlay}
+      muted
+      loop
+      playsInline
+      preload={autoPlay ? "metadata" : "none"}
+      aria-label={label}
+      className={className}
+      style={style}
+    />
+  );
+}
+
+/* Monoline icon set — one consistent visual language, no emoji */
+const GLYPHS: Record<string, ReactNode> = {
+  heart: <path d="M12 20s-7-4.4-7-9.3A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7 3.3C19 15.6 12 20 12 20z" />,
+  moon: <path d="M20 14.4A8 8 0 1 1 9.6 4 6.5 6.5 0 0 0 20 14.4z" />,
+  cycle: (
+    <>
+      <path d="M20 12a8 8 0 1 1-2.6-5.9" />
+      <path d="M20 4v4h-4" />
+    </>
+  ),
+  bolt: <path d="M13 3 5.8 13.6H11l-.8 7.4 8-10.9h-5.4z" />,
+  waves: <path d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0" />,
+  drop: <path d="M12 3.4s6 6.4 6 9.9a6 6 0 0 1-12 0c0-3.5 6-9.9 6-9.9z" />,
+  hex: <path d="M12 3.2 20 7.6v8.8L12 20.8 4 16.4V7.6z" />,
+  battery: (
+    <>
+      <rect x="3" y="8" width="15" height="8" rx="2" />
+      <path d="M21 11v2" />
+    </>
+  ),
+  signal: (
+    <>
+      <path d="M8.5 15a5 5 0 0 1 7 0" />
+      <path d="M5.5 12a9 9 0 0 1 13 0" />
+      <circle cx="12" cy="18" r="0.8" />
+    </>
+  ),
+  ruler: (
+    <>
+      <path d="M4 14.5 14.5 4 20 9.5 9.5 20z" />
+      <path d="M9 9.5 10.8 11.3M12 6.5l1.8 1.8M6.5 12l1.8 1.8" />
+    </>
+  ),
+  finishes: (
+    <>
+      <circle cx="8" cy="12" r="4" />
+      <circle cx="16" cy="12" r="4" />
+    </>
+  ),
+  water: (
+    <>
+      <path d="M3 15c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 5 -.6" />
+      <path d="M3 19c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 5 -.6" />
+      <path d="M12 3v6" />
+    </>
+  ),
+};
+
+function Glyph({ name, className = "h-6 w-6", color = C.blue }: { name: string; className?: string; color?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke={color}
+      strokeWidth="1.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
     >
-      <div
-        className="h-6 w-6 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${C.blue} 0%, rgba(24,120,224,0.35) 40%, transparent 70%)`,
-          boxShadow: `0 0 20px rgba(24,120,224,0.55), 0 0 44px rgba(24,120,224,0.35)`,
-        }}
-      />
-    </motion.div>
+      {GLYPHS[name]}
+    </svg>
   );
 }
 
