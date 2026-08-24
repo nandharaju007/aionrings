@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import ringHero from "@/assets/ring-hero-v2.png";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroFingerRing from "@/assets/hero-finger-ring.png";
+import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
@@ -23,6 +24,39 @@ const C = {
   green: "#22B07D",
   gold: "#B4870B",
 };
+
+/* Rotating insight line over the hero video */
+function HeroInsightTicker() {
+  const lines = [
+    "Recovery is trending up — your body is ready for more today.",
+    "Resting heart rate steady overnight. Nice consistency.",
+    "Sleep quality improved 12% this week.",
+    "Breathing regularity high — a calm night of rest.",
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setI((p) => (p + 1) % lines.length), 3800);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="rounded-full border border-white/10 bg-black/30 px-3 py-1 backdrop-blur-sm sm:px-4 sm:py-1.5">
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={i}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.5 }}
+          className="whitespace-nowrap text-[10px] sm:text-xs"
+          style={{ color: "rgba(255,255,255,0.82)" }}
+        >
+          {lines[i]}
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────────
    Custom glowing cursor (desktop only)
@@ -420,14 +454,19 @@ function Hero() {
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="relative overflow-hidden rounded-2xl">
-                <img
-                  src={heroFingerRing}
-                  alt="Human finger wearing the aiOn smart ring"
-                  width={1920}
-                  height={1024}
-                  className="w-full h-[120px] sm:h-[160px] md:h-[220px] object-cover"
+                <video
+                  src={heroFingerVideo.url}
+                  poster={heroFingerRing}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
+                  className="w-full h-[140px] sm:h-[190px] md:h-[260px] object-cover"
                   style={{ filter: "contrast(1.05) saturate(1.05)" }}
                 />
+
                 {/* Blend into panel background on all edges */}
                 <div
                   className="pointer-events-none absolute inset-0"
@@ -444,7 +483,35 @@ function Hero() {
                   className="pointer-events-none absolute inset-0 mix-blend-color"
                   style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
                 />
+
+                {/* Live vitals rail */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-3 pb-2 sm:gap-x-5 sm:pb-3">
+                  {[
+                    { l: "HR", v: "62 bpm" },
+                    { l: "HRV", v: "74 ms" },
+                    { l: "SpO₂", v: "98%" },
+                    { l: "Temp", v: "36.7°" },
+                    { l: "Sleep", v: "87" },
+                  ].map((m, i) => (
+                    <motion.span
+                      key={m.l}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
+                      className="flex items-baseline gap-1.5 text-[10px] sm:text-xs tracking-wide"
+                    >
+                      <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.l}</span>
+                      <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
+                    </motion.span>
+                  ))}
+                </div>
+
+                {/* Rotating insight line */}
+                <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 sm:top-4">
+                  <HeroInsightTicker />
+                </div>
               </div>
+
             </motion.div>
 
             {/* Cinematic ring stage */}
