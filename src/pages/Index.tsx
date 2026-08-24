@@ -450,7 +450,35 @@ function Hero() {
                   className="pointer-events-none absolute inset-0 mix-blend-color"
                   style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
                 />
+
+                {/* Live vitals rail */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-3 pb-2 sm:gap-x-5 sm:pb-3">
+                  {[
+                    { l: "HR", v: "62 bpm" },
+                    { l: "HRV", v: "74 ms" },
+                    { l: "SpO₂", v: "98%" },
+                    { l: "Temp", v: "36.7°" },
+                    { l: "Sleep", v: "87" },
+                  ].map((m, i) => (
+                    <motion.span
+                      key={m.l}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
+                      className="flex items-baseline gap-1.5 text-[10px] sm:text-xs tracking-wide"
+                    >
+                      <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.l}</span>
+                      <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
+                    </motion.span>
+                  ))}
+                </div>
+
+                {/* Rotating insight line */}
+                <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 sm:top-4">
+                  <HeroInsightTicker />
+                </div>
               </div>
+
             </motion.div>
 
             {/* Cinematic ring stage */}
