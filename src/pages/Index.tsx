@@ -739,7 +739,7 @@ function Hero() {
    ───────────────────────────────────────────── */
 function VitalityScoreSection() {
   return (
-    <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
+    <section id="how" className={`relative overflow-hidden bg-white ${SECTION}`}>
       <NatureBackdrop src={natureSunrise} opacity={0.3} position="center 40%" />
       <div className="container mx-auto px-6 relative z-10">
 
