@@ -1017,7 +1017,8 @@ function PillarsSection() {
               <motion.button
                 key={p.name}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="text-left rounded-3xl border p-6 backdrop-blur-xl transition-all"
+                aria-expanded={isOpen}
+                className="text-left rounded-3xl border p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1878E0]"
                 style={{
                   borderColor: isOpen ? C.blue : "#E3E9F2",
                   background: "#FFFFFF",
@@ -1027,9 +1028,9 @@ function PillarsSection() {
                 transition={{ duration: 0.6, delay: i * 0.06 }}
                 whileHover={{ y: -3, boxShadow: `0 20px 50px -20px ${C.blue}44` }}
               >
-                <div className="text-3xl">{p.icon}</div>
-                <h3 className="mt-3 text-xl font-light text-ink">{p.name}</h3>
-                <p className="mt-2 text-sm text-ink-muted font-light">{p.line}</p>
+                <Glyph name={p.icon} className="h-7 w-7" />
+                <h3 className="mt-4 text-xl font-light text-ink">{p.name}</h3>
+                <p className="mt-2 text-sm text-ink-soft font-light">{p.line}</p>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
