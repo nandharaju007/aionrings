@@ -1569,11 +1569,34 @@ export default function Index() {
         <VitalityScoreSection />
         <TrackUnderstandActSection />
         <BodyTalkingSection />
+        <NatureBand
+          src={natureForest}
+          eyebrow="Movement · Activity"
+          title="Health doesn't live in a dashboard."
+          line="It lives in morning trails, fresh air and the steps you actually take."
+          position="center 60%"
+        />
+
         <PillarsSection />
         <QuestSection />
         <TheAppSection />
         <InLifeSection />
+        <NatureBand
+          src={natureNight}
+          eyebrow="Sleep · Recovery"
+          title="The quietest hours shape the loudest days."
+          line="aiOn follows your sleep and recovery patterns, gently, all night."
+          position="center 50%"
+        />
         <PreventiveSection />
+        <NatureBand
+          src={natureSunrise}
+          eyebrow="Wellness · Every morning"
+          title="Wake with the light, and with your number."
+          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
+          position="center 45%"
+        />
+
         <RingSection />
         <PlansSection />
         <FinalCTA />
