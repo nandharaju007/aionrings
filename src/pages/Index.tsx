@@ -1703,6 +1703,8 @@ export default function Index() {
       <main>
         {/* 1 — First impression */}
         <Hero />
+        {/* 1.5 — Lifestyle proof, early */}
+        <MorningProofSection />
         {/* 2 — The problem, in the user's own words */}
         <BodyTalkingSection />
         {/* 3 — The answer: one number */}
