@@ -576,220 +576,155 @@ function NatureBand({
    Hero
    ───────────────────────────────────────────── */
 function Hero() {
-  const chips = [
-    { label: "❤️ 72 bpm", angle: -55, delay: 1.0 },
-    { label: "🫁 98% SpO₂", angle: 55, delay: 1.15 },
-    { label: "🧠 HRV 34ms", angle: -100, delay: 1.3 },
-    { label: "🌙 Sleep 7h 42m", angle: 100, delay: 1.45 },
-    { label: "⚡ Recovery 81", angle: -145, delay: 1.6 },
-    { label: "🌡️ 36.8°C", angle: 145, delay: 1.75 },
+  const vitals = [
+    { l: "HR", v: "62 bpm" },
+    { l: "HRV", v: "74 ms" },
+    { l: "SpO₂", v: "98%" },
+    { l: "Temp", v: "36.7°" },
+    { l: "Sleep", v: "87" },
+  ];
+  const finishes = [
+    { src: ringMidnight, name: "Midnight" },
+    { src: ringSilver, name: "Silver" },
+    { src: ringRose, name: "Rose Gold" },
   ];
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden bg-canvas">
+    <section className="relative overflow-hidden bg-canvas">
       {/* Luminous light washes */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 85% 60%, rgba(109,40,217,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,169,224,0.08) 0%, transparent 60%)`,
+          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 55% 40% at 12% 78%, rgba(0,169,224,0.07) 0%, transparent 60%)`,
         }}
       />
       <GridOverlay tone="dark" />
 
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
-        {/* Lifestyle video strip — seamless, no box */}
-        <motion.div
-          className="w-full max-w-5xl mx-auto mb-10 md:mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="grid grid-cols-3 h-[110px] sm:h-[150px] md:h-[200px]">
-            {[
-              { src: videoMorning.url, label: "Morning" },
-              { src: videoWalk.url, label: "Move" },
-              { src: videoEvening.url, label: "Evening" },
-            ].map((v, i) => (
-              <div key={i} className="relative overflow-hidden group">
-                <video
-                  src={v.src}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ filter: "contrast(1.05) saturate(0.92)" }}
-                />
-                {/* Soft organic tint for wellness harmony */}
-                <div
-                  className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-40"
-                  style={{ background: `linear-gradient(135deg, rgba(34,176,125,0.25), rgba(24,120,224,0.18))` }}
-                />
-                {/* Bottom vignette for label legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                <span className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white/95">
-                  {v.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-28 pb-20 md:pt-36 md:pb-28">
         {/* Brand reveal */}
         <BrandReveal />
 
         {/* Headline */}
-        <div className="text-center max-w-5xl mx-auto">
-
+        <div className="mx-auto max-w-4xl text-center">
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight leading-[1.05]"
-            initial="hidden" animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.18 } } }}
+            className="text-4xl font-extralight leading-[1.06] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            initial="hidden"
+            animate="show"
+            variants={{ show: { transition: { staggerChildren: 0.16 } } }}
           >
             <motion.span
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              variants={{ hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="block text-ink"
             >
               Your body has been talking.
             </motion.span>
             <motion.span
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              variants={{ hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block text-transparent bg-clip-text"
+              className="block bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}
             >
               You just couldn't hear it.
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-ink-soft max-w-2xl mx-auto"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
+            className="mx-auto mt-6 max-w-xl text-base font-light text-ink-soft md:text-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.9 }}
           >
-            aiOn changes that.
+            A titanium smart ring that turns sleep, recovery and stress into one clear answer
+            each morning.
           </motion.p>
         </div>
 
-        {/* Cinematic finger-with-ring banner — seamless, no box */}
+        {/* CTA — placed above the fold, before the cinematic proof */}
         <motion.div
-          className="relative mt-10 md:mt-16 w-full max-w-5xl"
+          className="mt-9 flex flex-col items-center"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+        >
+          <Link
+            to="/preorder"
+            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 14px 40px -10px ${C.blue}66` }}
+          >
+            Pre-order Now
+          </Link>
+          <p className="mt-3 text-xs text-ink-muted md:text-sm">Free aiOn app included · No subscription required</p>
+        </motion.div>
+
+        {/* Cinematic proof — one video, edge-blended, no frame */}
+        <motion.div
+          className="relative mt-12 w-full md:mt-16"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative overflow-hidden rounded-2xl md:rounded-[32px] shadow-[0_30px_80px_-30px_rgba(10,22,40,0.18)]">
-            <video
+          <div className="relative overflow-hidden rounded-[28px]">
+            <LazyVideo
+              autoPlay
               src={heroFingerVideo.url}
               poster={heroFingerRing}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
-              className="w-full h-[240px] sm:h-[340px] md:h-[440px] lg:h-[540px] object-cover"
-              style={{ filter: "contrast(1.05) saturate(1.05)" }}
+              label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
+              className="h-[260px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[540px]"
+              style={{ filter: "contrast(1.04) saturate(1.03)" }}
             />
 
-            {/* Soft edge blend into the light page */}
+            {/* Soft edge blend into the light page — removes the "box" */}
             <div
               className="pointer-events-none absolute inset-0"
               style={{
                 background: `
-                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 14%, transparent 82%, hsl(var(--canvas)) 100%),
-                  linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 8%, transparent 92%, hsl(var(--canvas)) 100%),
-                  radial-gradient(ellipse at center, transparent 55%, rgba(10,22,40,0.35) 100%)
+                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 80%, hsl(var(--canvas)) 100%),
+                  linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
                 `,
               }}
             />
-            {/* Subtle wellness tint */}
-            <div
-              className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-30"
-              style={{ background: `linear-gradient(120deg, ${C.blue}18, ${C.green}14)` }}
-            />
 
             {/* Live vitals rail */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
-              {[
-                { l: "HR", v: "62 bpm" },
-                { l: "HRV", v: "74 ms" },
-                { l: "SpO₂", v: "98%" },
-                { l: "Temp", v: "36.7°" },
-                { l: "Sleep", v: "87" },
-              ].map((m, i) => (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 px-4 pb-4 sm:gap-x-8 md:pb-6">
+              {vitals.map((m, i) => (
                 <motion.span
                   key={m.l}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
-                  className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
+                  transition={{ delay: 0.7 + i * 0.1, duration: 0.6 }}
+                  className="flex items-baseline gap-1.5 text-[11px] tracking-wide sm:text-sm"
                 >
-                  <span style={{ color: "rgba(255,255,255,0.60)" }}>{m.l}</span>
+                  <span style={{ color: "rgba(255,255,255,0.72)" }}>{m.l}</span>
                   <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
                 </motion.span>
               ))}
             </div>
 
             {/* Rotating insight line */}
-            <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
+            <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-6">
               <HeroInsightTicker />
             </div>
-
-          </div>
-
-
-          {/* Floating vitals chips beneath the video — light variant */}
-          <div className="mt-7 md:mt-9 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
-            {chips.map((c, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 + i * 0.08, duration: 0.5 }}
-              >
-                <Chip variant="light">{c.label}</Chip>
-              </motion.div>
-            ))}
           </div>
         </motion.div>
 
-        {/* CTA */}
+        {/* Three finishes — colour balance right at the top */}
         <motion.div
-          className="mt-10 md:mt-12 flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
+          className="mt-10 flex items-center justify-center gap-8 sm:gap-12"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.9 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
         >
-          <Link
-            to="/preorder"
-            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 12px 40px -8px ${C.blue}66` }}
-          >
-            <motion.span
-              className="absolute inset-0 rounded-full"
-              animate={{ opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2.4, repeat: Infinity }}
-              style={{ boxShadow: `0 0 0 8px ${C.blue}22` }}
-            />
-            <span className="relative">Pre-order Now</span>
-          </Link>
-          <p className="mt-3 text-xs md:text-sm text-ink-muted">Free app included</p>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="mt-auto pt-10 flex justify-center"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="h-10 w-6 rounded-full border border-ink/15 flex justify-center pt-1.5">
-            <motion.div
-              className="h-1.5 w-1 rounded-full bg-ink/40"
-              animate={{ y: [0, 14, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
+          {finishes.map((f) => (
+            <a key={f.name} href="#ring" className="group flex flex-col items-center">
+              <img
+                src={f.src}
+                alt={`aiOn ring, ${f.name} finish`}
+                loading="lazy"
+                className="h-14 w-14 object-contain transition-transform duration-500 group-hover:scale-110 sm:h-16 sm:w-16"
+              />
+              <span className="mt-2 text-[10px] uppercase tracking-[0.24em] text-ink-muted">{f.name}</span>
+            </a>
+          ))}
         </motion.div>
       </div>
     </section>
