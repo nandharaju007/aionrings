@@ -9,9 +9,9 @@ import heroFingerRing from "@/assets/hero-finger-ring.png";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
-import videoWork from "@/assets/video-life-work.mp4.asset.json";
-import videoRun from "@/assets/video-life-run.mp4.asset.json";
-import videoSleep from "@/assets/video-life-sleep.mp4.asset.json";
+import videoMorning from "@/assets/video-life-morning.mp4.asset.json";
+import videoWalk from "@/assets/video-life-walk.mp4.asset.json";
+import videoEvening from "@/assets/video-life-evening.mp4.asset.json";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
@@ -338,9 +338,9 @@ function Hero() {
           >
             <div className="grid grid-cols-3 h-[100px] sm:h-[130px] md:h-[170px]">
               {[
-                { src: videoWork.url, label: "Work" },
-                { src: videoRun.url, label: "Move" },
-                { src: videoSleep.url, label: "Rest" },
+                { src: videoMorning.url, label: "Morning" },
+                { src: videoWalk.url, label: "Move" },
+                { src: videoEvening.url, label: "Evening" },
               ].map((v, i) => (
                 <div key={i} className="relative overflow-hidden group">
                   <video
@@ -1029,9 +1029,9 @@ function TheAppSection() {
    ───────────────────────────────────────────── */
 function InLifeSection() {
   const clips = [
-    { src: (videoRun as { url: string }).url, label: "Move", caption: "Morning run" },
-    { src: (videoWork as { url: string }).url, label: "Work", caption: "Focused hours" },
-    { src: (videoSleep as { url: string }).url, label: "Rest", caption: "Deep sleep" },
+    { src: (videoMorning as { url: string }).url, label: "Morning", caption: "Gentle start" },
+    { src: (videoWalk as { url: string }).url, label: "Move", caption: "Active day" },
+    { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
   ];
   return (
     <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
