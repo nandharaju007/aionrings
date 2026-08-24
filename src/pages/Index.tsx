@@ -1070,12 +1070,12 @@ function PillarsSection() {
    ───────────────────────────────────────────── */
 function QuestSection() {
   const quests = [
-    { title: "Box breathing", tag: "HRV", metric: "🧠 HRV" },
-    { title: "No caffeine after 2pm", tag: "SLEEP", metric: "🌙 Sleep" },
-    { title: "10-min walk", tag: "STRESS", metric: "⚡ Stress" },
+    { title: "Box breathing", tag: "HRV", metric: "HRV", icon: "waves" },
+    { title: "No caffeine after 2pm", tag: "SLEEP", metric: "Sleep", icon: "moon" },
+    { title: "10-min walk", tag: "STRESS", metric: "Stress", icon: "bolt" },
   ];
   return (
-    <section className="relative overflow-hidden py-16 md:py-48 bg-white">
+    <section className={`relative overflow-hidden bg-white ${SECTION}`}>
       <NatureBackdrop src={natureWater} opacity={0.24} position="center 60%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1090,15 +1090,16 @@ function QuestSection() {
         <div className="mt-14 grid md:grid-cols-3 gap-5">
           {quests.map((q, i) => (
             <motion.div key={i}
-              className="rounded-3xl border p-6 backdrop-blur-xl"
+              className="rounded-3xl border p-6"
               style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: "0 20px 50px -25px rgba(10,22,40,0.25)" }}
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.12 }}
             >
               <span className="text-[10px] tracking-[0.25em] text-ink-muted">TODAY'S QUEST · {q.tag}</span>
               <h3 className="mt-4 text-2xl font-light text-ink">{q.title}</h3>
-              <div className="mt-6 flex justify-end">
-                <Chip>{q.metric}</Chip>
+              <div className="mt-6 flex items-center justify-end gap-2 text-sm font-light text-ink-soft">
+                <Glyph name={q.icon} className="h-4 w-4" />
+                {q.metric}
               </div>
             </motion.div>
           ))}
