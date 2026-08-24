@@ -1189,7 +1189,7 @@ function InLifeSection() {
     { src: (videoEvening as { url: string }).url, label: "Rest", caption: "Wind down" },
   ];
   return (
-    <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
+    <section id="in-life" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureNight} opacity={0.16} position="center 45%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1210,17 +1210,11 @@ function InLifeSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.9, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-2xl md:rounded-3xl"
-              style={{ boxShadow: "0 24px 60px -30px rgba(10,22,40,0.18)" }}
+              className="group relative overflow-hidden rounded-[28px]"
             >
-              <video
+              <LazyVideo
                 src={c.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label={`${c.caption} — person wearing the aiOn ring`}
+                label={`${c.caption} — person wearing the aiOn ring`}
                 className="w-full h-[300px] md:h-[380px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
                 style={{ filter: "contrast(1.03) saturate(0.95)" }}
               />
