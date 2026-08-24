@@ -17,6 +17,7 @@ import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
 import natureForest from "@/assets/nature-forest-trail.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
 import natureNight from "@/assets/nature-restful-night.jpg";
+import videoRunTrail from "@/assets/video-run-trail.mp4.asset.json";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
