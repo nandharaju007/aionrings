@@ -13,6 +13,10 @@ import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
 import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
 import videoEvening from "@/assets/video-life-evening-new.mp4.asset.json";
+import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
+import natureForest from "@/assets/nature-forest-trail.jpg";
+import natureWater from "@/assets/nature-calm-water.jpg";
+import natureNight from "@/assets/nature-restful-night.jpg";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
