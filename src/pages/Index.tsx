@@ -900,7 +900,7 @@ function BodyTalkingSection() {
     { text: "You can't see what it's doing.", strong: false },
   ];
   return (
-    <section className="relative overflow-hidden py-20 md:py-40 bg-white">
+    <section className={`relative overflow-hidden bg-white ${SECTION}`}>
       <ParticleField density={30} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <div className="space-y-4 md:space-y-6">
