@@ -968,32 +968,32 @@ function BodyTalkingSection() {
    ───────────────────────────────────────────── */
 function PillarsSection() {
   const pillars = [
-    { icon: "❤️", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
+    { icon: "heart", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
       "HRV — a simple daily read on stress and resilience",
       "Heart rhythm insight — wellness awareness, on demand",
       "BP trend (EST) — general direction, not a reading",
     ]},
-    { icon: "🌙", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
+    { icon: "moon", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
       "Deep, REM, Light — every stage, every night",
       "Breathing rate trends while you sleep",
       "7 hours in bed is not 7 hours of sleep",
     ]},
-    { icon: "🌸", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
+    { icon: "cycle", name: "Women's Health", line: "Cycle · Ovulation · Phase coaching", bullets: [
       "Automatic cycle tracking from temperature and HRV",
       "Each phase has different energy and recovery needs",
       "aiOn's quests adapt to where you are",
     ]},
-    { icon: "💪", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
+    { icon: "bolt", name: "Active & Recovery", line: "Recovery · Strain · VO₂ Max", bullets: [
       "Know when to go hard and when to rest",
       "Training load awareness before you feel drained",
       "The workout doesn't make you stronger. Recovery does.",
     ]},
-    { icon: "🧠", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
+    { icon: "waves", name: "Stress & Balance", line: "Daily stress · HRV · Recovery balance", bullets: [
       "See how a busy day shows up in your body",
       "Spot the weeks you've been pushing too hard",
       "Stress is easy to ignore until you can see it",
     ]},
-    { icon: "🩸", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
+    { icon: "drop", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
       "Follow long-term lifestyle trends, not single numbers",
       "EST trends show direction — they are not measurements",
       "Build habits around how your body responds",
