@@ -1319,7 +1319,7 @@ function RingSection() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: i * 0.08, duration: 0.5 }}
             >
-              <div className="text-3xl md:text-4xl">{s.icon}</div>
+              <div className="flex justify-center"><Glyph name={s.icon} className="h-7 w-7 md:h-8 md:w-8" /></div>
               <div className="mt-2 text-xs md:text-sm text-ink-soft font-light">{s.label}</div>
             </motion.div>
           ))}
