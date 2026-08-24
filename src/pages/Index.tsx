@@ -746,6 +746,7 @@ function MorningProofSection() {
     <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "58vh", minHeight: "420px", maxHeight: "760px" }}>
       <LazyVideo
         src={(videoLifeEarly as { url: string }).url}
+        poster={posterLifeEarly}
         label="Person wearing the aiOn ring during a calm morning wellness routine"
         className="absolute inset-0 h-full w-full object-cover"
         style={{ filter: "contrast(1.03) saturate(0.96)" }}
