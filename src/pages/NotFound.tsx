@@ -2,6 +2,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,6 +13,13 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-canvas flex flex-col">
+      <SEO
+        title="Page not found — aiOn"
+        description="This aiOn page doesn't exist or has moved. Return to the homepage to explore the aiOn smart wellness ring."
+        path="/404"
+        image="/og-image.jpg"
+        noindex
+      />
       <Header />
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="text-center max-w-md">

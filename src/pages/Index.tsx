@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, ReactNode } from "react";
+import { SEO } from "@/components/SEO";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -1661,6 +1662,12 @@ export default function Index() {
 
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
+      <SEO
+        title="aiOn — The AI-Native Smart Wellness Ring"
+        description="aiOn turns everyday signals — heart rate, HRV, SpO₂, sleep, recovery, stress — into one daily Vitality Score and one action. A general wellness product, not a medical device."
+        path="/"
+        image="/og-image.jpg"
+      />
       <Header />
       <main>
         {/* 1 — First impression */}

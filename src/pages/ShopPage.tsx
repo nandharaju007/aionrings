@@ -4,6 +4,7 @@ import { Check } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 import { CartPanel } from '@/components/CartPanel';
 import ringProduct from '@/assets/ring-product.jpg';
 import ringHero from '@/assets/ring-hero.jpg';
@@ -39,6 +40,12 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-canvas">
+      <SEO
+        title="Shop the aiOn Smart Wellness Ring"
+        description="Explore the aiOn smart wellness ring — titanium build, multi-sensor tracking, and a daily Vitality Score. Launching soon."
+        path="/shop"
+        image="/og-image.jpg"
+      />
       <Header />
       <CartPanel />
 
@@ -75,6 +82,8 @@ export default function ShopPage() {
                 {[ringProduct, ringHero].map((img, i) => (
                   <button
                     key={i}
+                    type="button"
+                    aria-label={`View aiOn ring product image ${i + 1}`}
                     className="w-20 h-20 rounded-xl overflow-hidden border border-border hover:border-primary transition-colors bg-white shadow-sm"
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -134,7 +143,7 @@ export default function ShopPage() {
 
               {/* What's Included */}
               <div className="border-t border-border pt-8 mt-8">
-                <h3 className="font-light mb-4 text-ink text-lg">What's Included</h3>
+                <h2 className="font-light mb-4 text-ink text-lg">What's Included</h2>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {whatsIncluded.map((item) => (
                     <li key={item} className="flex items-center gap-3 text-ink-soft">
