@@ -311,55 +311,17 @@ function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden" style={{ background: C.navy }}>
-      <Aurora intensity={0.9} />
-      <GridOverlay />
-      <ParticleField density={80} opacity={0.4} />
-
-      {/* Top atmospheric vignette */}
+    <section className="relative min-h-[100svh] overflow-hidden bg-canvas">
+      {/* Luminous light washes */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${C.blue}08 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, ${C.purple}08 0%, transparent 50%)`,
+          background: `radial-gradient(ellipse 60% 45% at 50% 0%, rgba(24,120,224,0.10) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 85% 60%, rgba(109,40,217,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,169,224,0.08) 0%, transparent 60%)`,
         }}
       />
+      <GridOverlay tone="dark" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
-        {/* Cinematic finger-with-ring banner */}
-        <motion.div
-          className="relative w-full max-w-5xl mx-auto mb-8 md:mb-12"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="relative overflow-hidden rounded-2xl">
-            <img
-              src={heroFingerRing}
-              alt="Human finger wearing the aiOn smart ring"
-              width={1920}
-              height={1024}
-              className="w-full h-[140px] sm:h-[180px] md:h-[240px] object-cover"
-              style={{ filter: "contrast(1.05) saturate(1.05)" }}
-            />
-            {/* Blend into navy background on all edges */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background: `
-                  linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
-                  linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
-                  radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
-                `,
-              }}
-            />
-            {/* Cool tint for color harmony */}
-            <div
-              className="pointer-events-none absolute inset-0 mix-blend-color"
-              style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
-            />
-          </div>
-        </motion.div>
-
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
@@ -370,7 +332,7 @@ function Hero() {
             <motion.span
               variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="block text-white"
+              className="block text-ink"
             >
               Your body has been talking.
             </motion.span>
@@ -384,103 +346,152 @@ function Hero() {
             </motion.span>
           </motion.h1>
           <motion.p
-            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-white/70 max-w-2xl mx-auto"
+            className="mt-5 md:mt-7 text-lg md:text-2xl font-light text-ink-soft max-w-2xl mx-auto"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }}
           >
             aiOn changes that.
           </motion.p>
         </div>
 
-        {/* Cinematic ring stage */}
-        <div className="relative mt-10 md:mt-14 w-full max-w-3xl">
-          {/* Outer orbital ring glow */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
-            style={{
-              background: `conic-gradient(from 0deg, ${C.blue}20, ${C.purple}20, ${C.blue}20)`,
-              filter: "blur(2px)",
-              opacity: 0.6,
-            }}
-          />
+        {/* Dark cinematic spotlight panel — ring stage */}
+        <motion.div
+          className="relative mt-10 md:mt-14 w-full max-w-5xl overflow-hidden rounded-3xl"
+          style={{ background: C.navy, boxShadow: "0 30px 80px -20px rgba(10,22,40,0.35)" }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Aurora intensity={0.9} />
+          <ParticleField density={80} opacity={0.4} tone="light" />
 
-          {/* Dark inner portal */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
-            style={{
-              background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
-              boxShadow: `inset 0 0 80px rgba(79,179,255,0.12), 0 0 60px rgba(79,179,255,0.08)`,
-            }}
-          />
+          <div className="relative z-10 px-4 pt-8 pb-10 sm:px-8 sm:pt-10 md:pt-14 md:pb-14">
+            {/* Cinematic finger-with-ring banner */}
+            <motion.div
+              className="relative w-full max-w-4xl mx-auto mb-8 md:mb-10"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative overflow-hidden rounded-2xl">
+                <img
+                  src={heroFingerRing}
+                  alt="Human finger wearing the aiOn smart ring"
+                  width={1920}
+                  height={1024}
+                  className="w-full h-[120px] sm:h-[160px] md:h-[220px] object-cover"
+                  style={{ filter: "contrast(1.05) saturate(1.05)" }}
+                />
+                {/* Blend into panel background on all edges */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: `
+                      linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
+                      linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
+                      radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
+                    `,
+                  }}
+                />
+                {/* Cool tint for color harmony */}
+                <div
+                  className="pointer-events-none absolute inset-0 mix-blend-color"
+                  style={{ background: `linear-gradient(120deg, ${C.blue}22, ${C.purple}22)` }}
+                />
+              </div>
+            </motion.div>
 
-          {/* Ambient radial glow */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
-            style={{ background: `radial-gradient(circle, ${C.blue}18 0%, ${C.purple}10 45%, transparent 70%)` }}
-          />
+            {/* Cinematic ring stage */}
+            <div className="relative mx-auto w-full max-w-2xl">
+              {/* Outer orbital ring glow */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] md:w-[72%] aspect-square rounded-full"
+                style={{
+                  background: `conic-gradient(from 0deg, ${C.blue}30, ${C.purple}30, ${C.blue}30)`,
+                  filter: "blur(2px)",
+                  opacity: 0.7,
+                }}
+              />
 
-          {/* Floating ring */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
-            transition={{
-              opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-              scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-            }}
-          >
-            <img
-              src={ringHero}
-              alt="aiOn smart ring floating in cinematic light"
-              width={620}
-              height={620}
-              className="h-auto w-full max-w-[280px] sm:max-w-[360px] md:max-w-[460px] object-contain"
-              style={{
-                filter: "drop-shadow(0 30px 80px rgba(79,179,255,0.35))",
-              }}
-            />
-          </motion.div>
+              {/* Dark inner portal */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[64%] aspect-square rounded-full"
+                style={{
+                  background: `radial-gradient(circle at 50% 45%, rgba(10,22,40,0.2) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.95) 100%)`,
+                  boxShadow: `inset 0 0 80px rgba(24,120,224,0.16), 0 0 60px rgba(24,120,224,0.1)`,
+                }}
+              />
 
-          {/* Desktop orbital vitals chips */}
-          <div className="hidden md:block absolute inset-0">
-            {chips.map((c, i) => {
-              const rad = (c.angle * Math.PI) / 180;
-              const radius = 46; // % of container
-              const x = 50 + radius * Math.cos(rad);
-              const y = 50 + radius * Math.sin(rad);
-              return (
+              {/* Ambient radial glow */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-square rounded-full blur-3xl"
+                style={{ background: `radial-gradient(circle, ${C.blue}22 0%, ${C.purple}16 45%, transparent 70%)` }}
+              />
+
+              {/* Floating ring */}
+              <motion.div
+                className="relative flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
+                transition={{
+                  opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+                  scale: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+                }}
+              >
+                <img
+                  src={ringHero}
+                  alt="aiOn smart ring floating in cinematic light"
+                  width={620}
+                  height={620}
+                  className="h-auto w-full max-w-[240px] sm:max-w-[320px] md:max-w-[400px] object-contain"
+                  style={{
+                    filter: "drop-shadow(0 30px 80px rgba(24,120,224,0.4))",
+                  }}
+                />
+              </motion.div>
+
+              {/* Desktop orbital vitals chips */}
+              <div className="hidden md:block absolute inset-0">
+                {chips.map((c, i) => {
+                  const rad = (c.angle * Math.PI) / 180;
+                  const radius = 46; // % of container
+                  const x = 50 + radius * Math.cos(rad);
+                  const y = 50 + radius * Math.sin(rad);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
+                      style={{ left: `${x}%`, top: `${y}%` }}
+                      initial={{ opacity: 0, scale: 0.7 }}
+                      animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
+                      transition={{
+                        opacity: { delay: c.delay, duration: 0.6 },
+                        scale: { delay: c.delay, duration: 0.6 },
+                        y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
+                      }}
+                    >
+                      <Chip>{c.label}</Chip>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Mobile vitals row */}
+            <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
+              {chips.map((c, i) => (
                 <motion.div
                   key={i}
-                  className="absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${x}%`, top: `${y}%` }}
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
-                  transition={{
-                    opacity: { delay: c.delay, duration: 0.6 },
-                    scale: { delay: c.delay, duration: 0.6 },
-                    y: { duration: 4 + i * 0.4, repeat: Infinity, ease: "easeInOut" },
-                  }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
                 >
                   <Chip>{c.label}</Chip>
                 </motion.div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Mobile vitals row */}
-        <div className="mt-6 flex flex-wrap justify-center gap-2 md:hidden max-w-md mx-auto">
-          {chips.map((c, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + i * 0.08, duration: 0.5 }}
-            >
-              <Chip>{c.label}</Chip>
-            </motion.div>
-          ))}
-        </div>
+        </motion.div>
 
         {/* CTA */}
         <motion.div
@@ -491,18 +502,18 @@ function Hero() {
         >
           <Link
             to="/preorder"
-            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-[#0A1628]"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 40px ${C.blue}66` }}
+            className="group relative inline-flex items-center justify-center rounded-full px-10 py-4 text-base font-medium text-white"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 12px 40px -8px ${C.blue}66` }}
           >
             <motion.span
               className="absolute inset-0 rounded-full"
               animate={{ opacity: [0.5, 0, 0.5] }}
               transition={{ duration: 2.4, repeat: Infinity }}
-              style={{ boxShadow: `0 0 0 8px ${C.blue}33` }}
+              style={{ boxShadow: `0 0 0 8px ${C.blue}22` }}
             />
             <span className="relative">Pre-order Now</span>
           </Link>
-          <p className="mt-3 text-xs md:text-sm text-white/50">Free app included</p>
+          <p className="mt-3 text-xs md:text-sm text-ink-muted">Free app included</p>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -511,9 +522,9 @@ function Hero() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="h-10 w-6 rounded-full border border-white/30 flex justify-center pt-1.5">
+          <div className="h-10 w-6 rounded-full border border-ink/15 flex justify-center pt-1.5">
             <motion.div
-              className="h-1.5 w-1 rounded-full bg-white/70"
+              className="h-1.5 w-1 rounded-full bg-ink/40"
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
@@ -525,17 +536,20 @@ function Hero() {
 }
 
 /* ─────────────────────────────────────────────
+   Section 2}
+
+/* ─────────────────────────────────────────────
    Section 2 — One Number
    ───────────────────────────────────────────── */
 function VitalityScoreSection() {
   return (
-    <section id="how" className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <FadeUp>
             <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none" />
+                <circle cx="50" cy="50" r="44" stroke="rgba(10,22,40,0.10)" strokeWidth="3" fill="none" />
                 <motion.circle
                   cx="50" cy="50" r="44" fill="none" strokeWidth="3" strokeLinecap="round"
                   stroke="url(#v2grad)" pathLength={1}
@@ -549,11 +563,11 @@ function VitalityScoreSection() {
                 </defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-6xl md:text-7xl font-extralight text-white"><CountUp to={84} /></div>
-                <div className="mt-1 text-xs md:text-sm text-white/50 tracking-widest">YOUR VITALITY SCORE</div>
+                <div className="text-6xl md:text-7xl font-extralight text-ink"><CountUp to={84} /></div>
+                <div className="mt-1 text-xs md:text-sm text-ink-muted tracking-widest">YOUR VITALITY SCORE</div>
               </div>
             </div>
-            <div className="mt-8 flex items-center justify-center gap-2 text-sm text-white/80">
+            <div className="mt-8 flex items-center justify-center gap-2 text-sm text-ink-soft">
               <motion.span
                 className="h-2 w-2 rounded-full"
                 style={{ background: C.green }}
@@ -565,12 +579,12 @@ function VitalityScoreSection() {
           </FadeUp>
 
           <FadeUp delay={0.15}>
-            <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+            <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
               <WordStagger text="Wake up knowing" /><br /><WordStagger text="your number." delay={0.15} />
             </h2>
-            <div className="mt-8 space-y-3 text-white/70 text-lg font-light">
+            <div className="mt-8 space-y-3 text-ink-soft text-lg font-light">
               <p>Heart Rate. HRV. Sleep.<br />Stress. Recovery. SpO₂.</p>
-              <p className="text-white">One score. Every morning.</p>
+              <p className="text-ink font-normal">One score. Every morning.</p>
             </div>
           </FadeUp>
         </div>
