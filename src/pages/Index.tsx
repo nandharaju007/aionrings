@@ -668,7 +668,13 @@ function Hero() {
               poster={heroFingerRing}
               label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
               className="h-[260px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[540px]"
-              style={{ filter: "contrast(1.04) saturate(1.03)" }}
+              style={{
+                filter: "contrast(1.04) saturate(1.03)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
+              }}
             />
 
             {/* Soft edge blend into the light page — removes the "box" */}
