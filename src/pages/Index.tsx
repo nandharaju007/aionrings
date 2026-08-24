@@ -1318,14 +1318,13 @@ function PlansSection() {
    ───────────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-56 min-h-[90svh] flex items-center" style={{ background: C.navy }}>
-      <Aurora intensity={1.2} />
-      <ParticleField density={70} opacity={0.4} />
+    <section className="relative overflow-hidden py-16 md:py-32 min-h-[90svh] flex items-center bg-canvas">
+      <NatureBackdrop src={natureForest} opacity={0.12} position="center 30%" />
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
-          className="mx-auto relative w-full max-w-4xl overflow-hidden rounded-[28px]"
+          className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[32px]"
           initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
-          style={{ boxShadow: `0 40px 120px -40px ${C.blue}66` }}
+          style={{ boxShadow: "0 30px 90px -40px rgba(10,22,40,0.16)" }}
         >
           <video
             src={videoRunTrail.url}
@@ -1335,15 +1334,14 @@ function FinalCTA() {
             playsInline
             preload="metadata"
             aria-label="Woman running on a mountain trail wearing the aiOn Ring"
-            className="h-[46vh] md:h-[60vh] w-full object-cover"
+            className="h-[50vh] md:h-[66vh] w-full object-cover"
           />
           <div className="pointer-events-none absolute inset-0"
-            style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.35) 0%, rgba(10,22,40,0) 35%, rgba(10,22,40,0.55) 100%)" }} />
-          <div className="pointer-events-none absolute inset-0 rounded-[28px]" style={{ boxShadow: `inset 0 0 0 1px ${C.blue}33` }} />
+            style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.28) 0%, rgba(10,22,40,0) 40%, rgba(10,22,40,0.45) 100%)" }} />
         </motion.div>
 
-        <FadeUp delay={0.3} className="mt-10">
-          <h2 className="text-4xl md:text-7xl font-extralight text-white leading-[1.05]">
+        <FadeUp delay={0.3} className="mt-10 md:mt-14">
+          <h2 className="text-4xl md:text-7xl font-extralight text-ink leading-[1.05]">
             Your body has answers.
           </h2>
           <p className="mt-4 text-2xl md:text-4xl font-extralight bg-clip-text text-transparent"
@@ -1353,10 +1351,10 @@ function FinalCTA() {
         </FadeUp>
         <FadeUp delay={0.5} className="mt-10">
           <Link to="/preorder"
-            className="relative inline-flex items-center justify-center rounded-full px-10 py-5 text-lg font-medium text-[#0A1628]"
-            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 0 60px ${C.blue}88` }}>
+            className="relative inline-flex items-center justify-center rounded-full px-10 py-5 text-lg font-medium text-white"
+            style={{ background: `linear-gradient(120deg, ${C.blue}, ${C.purple})`, boxShadow: `0 20px 50px -15px ${C.blue}55` }}>
             <motion.span className="absolute inset-0 rounded-full"
-              animate={{ boxShadow: [`0 0 0 0 ${C.blue}66`, `0 0 0 20px transparent`] }}
+              animate={{ boxShadow: [`0 0 0 0 ${C.blue}44`, `0 0 0 20px transparent`] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
             <span className="relative">Pre-order Now</span>
