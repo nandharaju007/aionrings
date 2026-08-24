@@ -583,7 +583,29 @@ function Hero() {
             <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
               <HeroInsightTicker />
             </div>
+
+            {/* Engraving proof — macro close-up of the aiOn mark */}
+            <motion.figure
+              className="absolute bottom-14 right-4 z-10 hidden items-center gap-3 sm:flex md:bottom-16 md:right-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 2.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <img
+                src={engravingMacro}
+                alt="Macro close-up of the aiOn wordmark engraved into the titanium ring"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="h-16 w-16 rounded-full object-cover ring-1 ring-white/25 md:h-20 md:w-20"
+              />
+              <figcaption className="text-left leading-tight">
+                <span className="block text-[10px] uppercase tracking-[0.28em] text-white/60">Engraved</span>
+                <span className="block text-xs text-white/90 md:text-sm">not printed.</span>
+              </figcaption>
+            </motion.figure>
           </div>
+
 
           {/* Floating vitals chips beneath the video — light variant */}
           <div className="mt-7 md:mt-9 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto">
