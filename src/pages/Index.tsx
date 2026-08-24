@@ -421,14 +421,19 @@ function Hero() {
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="relative overflow-hidden rounded-2xl">
-                <img
-                  src={heroFingerRing}
-                  alt="Human finger wearing the aiOn smart ring"
-                  width={1920}
-                  height={1024}
-                  className="w-full h-[120px] sm:h-[160px] md:h-[220px] object-cover"
+                <video
+                  src={heroFingerVideo.url}
+                  poster={heroFingerRing}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
+                  className="w-full h-[140px] sm:h-[190px] md:h-[260px] object-cover"
                   style={{ filter: "contrast(1.05) saturate(1.05)" }}
                 />
+
                 {/* Blend into panel background on all edges */}
                 <div
                   className="pointer-events-none absolute inset-0"
