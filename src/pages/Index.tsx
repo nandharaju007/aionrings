@@ -659,7 +659,9 @@ function Hero() {
 function VitalityScoreSection() {
   return (
     <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
-      <div className="container mx-auto px-6">
+      <NatureBackdrop src={natureSunrise} opacity={0.3} position="center 40%" />
+      <div className="container mx-auto px-6 relative z-10">
+
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <FadeUp>
             <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
@@ -919,6 +921,7 @@ function PillarsSection() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <NatureBackdrop src={natureForest} opacity={0.22} position="center 55%" />
       <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -991,6 +994,7 @@ function QuestSection() {
   ];
   return (
     <section className="relative overflow-hidden py-16 md:py-48 bg-white">
+      <NatureBackdrop src={natureWater} opacity={0.24} position="center 60%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
@@ -1103,6 +1107,7 @@ function InLifeSection() {
   ];
   return (
     <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
+      <NatureBackdrop src={natureNight} opacity={0.16} position="center 45%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
           <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">In life</p>
