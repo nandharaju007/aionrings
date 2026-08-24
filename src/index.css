@@ -8,92 +8,97 @@
 
 @layer base {
   :root {
-    /* Core palette - Midnight/Teal/Platinum */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
+    /* Core palette - Light luxury: porcelain canvas, ink navy, electric blue */
+    --background: 216 44% 98%;
+    --foreground: 215 60% 10%;
 
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 60% 10%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 60% 10%;
 
-    /* Teal/Cyan brand accent */
-    --primary: 187 85% 53%;
-    --primary-foreground: 222 47% 5%;
+    /* Electric blue brand accent (legible on light) */
+    --primary: 211 81% 47%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 30% 12%;
-    --secondary-foreground: 210 40% 90%;
+    --secondary: 214 40% 96%;
+    --secondary-foreground: 215 45% 20%;
 
-    --muted: 222 30% 15%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 214 36% 95%;
+    --muted-foreground: 214 16% 44%;
 
-    --accent: 187 70% 45%;
-    --accent-foreground: 222 47% 5%;
+    --accent: 262 72% 52%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 15%;
-    --ring: 187 85% 53%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 211 81% 47%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    /* Custom tokens */
-    --aion-midnight: 222 47% 5%;
-    --aion-charcoal: 222 35% 8%;
-    --aion-teal: 187 85% 53%;
-    --aion-teal-dim: 187 60% 35%;
-    --aion-cyan: 187 100% 70%;
-    --aion-platinum: 210 40% 90%;
-    --aion-platinum-dim: 215 20% 65%;
-    --aion-glow: 187 85% 53%;
+    /* Brand tokens */
+    --ink: 215 60% 10%;
+    --ink-soft: 214 22% 32%;
+    --ink-muted: 214 16% 48%;
+    --canvas: 216 44% 98%;
+    --canvas-alt: 214 40% 96%;
+    --aion-midnight: 215 60% 10%;
+    --aion-charcoal: 215 30% 20%;
+    --aion-teal: 197 100% 42%;
+    --aion-teal-dim: 211 81% 47%;
+    --aion-cyan: 197 100% 50%;
+    --aion-violet: 262 72% 52%;
+    --aion-platinum: 214 22% 32%;
+    --aion-platinum-dim: 214 16% 48%;
+    --aion-glow: 211 81% 47%;
 
     /* Gradients */
-    --gradient-teal: linear-gradient(135deg, hsl(187 85% 53%), hsl(200 80% 45%));
-    --gradient-ring: linear-gradient(180deg, hsl(187 100% 70%), hsl(200 85% 50%), hsl(220 70% 45%));
-    --gradient-dark: linear-gradient(180deg, hsl(222 47% 5%), hsl(222 35% 8%));
-    --gradient-radial-glow: radial-gradient(ellipse at center, hsl(187 85% 53% / 0.15), transparent 70%);
-    --gradient-hero: radial-gradient(ellipse at 50% 50%, hsl(187 60% 25% / 0.3), transparent 60%);
+    --gradient-teal: linear-gradient(135deg, hsl(197 100% 45%), hsl(211 81% 47%));
+    --gradient-brand: linear-gradient(135deg, #00A9E0, #1878E0, #6D28D9);
+    --gradient-ring: linear-gradient(180deg, hsl(197 100% 50%), hsl(211 81% 47%), hsl(262 72% 52%));
+    --gradient-dark: linear-gradient(180deg, hsl(var(--canvas)), hsl(0 0% 100%));
+    --gradient-radial-glow: radial-gradient(ellipse at center, hsl(211 81% 47% / 0.10), transparent 70%);
+    --gradient-hero: radial-gradient(ellipse at 50% 40%, hsl(211 81% 60% / 0.14), transparent 62%);
 
-    /* Shadows */
-    --shadow-glow: 0 0 60px -10px hsl(187 85% 53% / 0.4);
-    --shadow-soft: 0 25px 50px -12px hsl(222 47% 3% / 0.5);
-    --shadow-card: 0 4px 30px hsl(222 47% 3% / 0.3);
+    /* Shadows - soft, elevated, premium */
+    --shadow-glow: 0 24px 60px -24px hsl(211 81% 47% / 0.35);
+    --shadow-soft: 0 24px 60px -30px hsl(215 60% 20% / 0.28);
+    --shadow-card: 0 1px 2px hsl(215 30% 30% / 0.04), 0 12px 32px -18px hsl(215 40% 30% / 0.18);
 
-    /* Sidebar - keeping for compatibility */
-    --sidebar-background: 222 47% 5%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 187 85% 53%;
-    --sidebar-primary-foreground: 222 47% 5%;
-    --sidebar-accent: 222 30% 12%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 187 85% 53%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 60% 10%;
+    --sidebar-primary: 211 81% 47%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 40% 96%;
+    --sidebar-accent-foreground: 215 60% 10%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 211 81% 47%;
   }
 
   .dark {
-    /* Same as root - this is a dark-first design */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 187 85% 53%;
-    --primary-foreground: 222 47% 5%;
-    --secondary: 222 30% 12%;
-    --secondary-foreground: 210 40% 90%;
-    --muted: 222 30% 15%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 187 70% 45%;
-    --accent-foreground: 222 47% 5%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 222 30% 18%;
-    --input: 222 30% 15%;
-    --ring: 187 85% 53%;
+    --background: 216 44% 98%;
+    --foreground: 215 60% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 60% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 60% 10%;
+    --primary: 211 81% 47%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 40% 96%;
+    --secondary-foreground: 215 45% 20%;
+    --muted: 214 36% 95%;
+    --muted-foreground: 214 16% 44%;
+    --accent: 262 72% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 211 81% 47%;
   }
 }
 
@@ -109,13 +114,14 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 200;
-    letter-spacing: -0.02em;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+    color: hsl(var(--ink));
   }
 }
 
@@ -198,7 +204,7 @@
 
   /* Cards */
   .card-glass {
-    @apply bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl;
+    @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
     box-shadow: var(--shadow-card);
   }
 
@@ -361,4 +367,41 @@
 ::selection {
   background: hsl(var(--aion-teal) / 0.3);
   color: hsl(var(--foreground));
+}
+
+
+/* Light-theme premium primitives */
+@layer components {
+  .surface-card {
+    @apply rounded-2xl border border-border bg-white;
+    box-shadow: var(--shadow-card);
+  }
+
+  .surface-card-hover {
+    @apply surface-card transition-all duration-300;
+  }
+  .surface-card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px hsl(215 30% 30% / 0.05), 0 26px 56px -26px hsl(211 60% 35% / 0.28);
+    border-color: hsl(211 81% 47% / 0.35);
+  }
+
+  .btn-brand {
+    @apply inline-flex items-center justify-center rounded-full px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200;
+    background: var(--gradient-brand);
+    box-shadow: 0 10px 30px -12px hsl(211 81% 47% / 0.65);
+  }
+  .btn-brand:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-brand);
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-primary;
+  }
 }
