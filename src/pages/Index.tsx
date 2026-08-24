@@ -1383,7 +1383,7 @@ function PlansSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
+    <section className={`relative overflow-hidden ${SECTION}`} style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-2xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
