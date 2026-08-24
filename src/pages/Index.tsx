@@ -1236,7 +1236,7 @@ function InLifeSection() {
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-40" style={{ background: "#FFFFFF" }}>
+    <section className={`relative overflow-hidden ${SECTION}`} style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <FadeUp>
           <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}22`, background: "linear-gradient(180deg,#0A1628,#0E1B34)", boxShadow: "0 30px 70px -35px rgba(10,22,40,0.45)" }}>
