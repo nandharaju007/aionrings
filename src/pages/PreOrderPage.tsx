@@ -434,7 +434,7 @@ export default function PreOrderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white">
+    <div className="min-h-screen bg-canvas text-ink">
       <SEO title={"Pre-order aiOn — Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
       <Header />
 
@@ -445,7 +445,7 @@ export default function PreOrderPage() {
           ) : (
             <>
               {partner && (
-                <div className="mb-10 max-w-3xl mx-auto rounded-2xl border border-[#4FB3FF]/25 bg-gradient-to-br from-[#4FB3FF]/[0.06] to-transparent p-6 md:p-8">
+                <div className="mb-10 max-w-3xl mx-auto rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.05] to-white p-6 md:p-8">
                   <div className="flex items-start gap-4">
                     <div
                       className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
@@ -454,14 +454,14 @@ export default function PreOrderPage() {
                       <Handshake className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-semibold uppercase tracking-[3px] text-[#4FB3FF] mb-2">
+                      <div className="text-[11px] font-semibold uppercase tracking-[3px] text-primary mb-2">
                         Welcome
                       </div>
-                      <h2 className="text-xl md:text-2xl font-light tracking-tight text-white">
+                      <h2 className="text-xl md:text-2xl font-light tracking-tight text-ink">
                         You've been invited by <span className="font-medium">{partner.name}</span> to reserve your aiOn
                         Ring.
                       </h2>
-                      <p className="mt-2 text-[14px] text-[#B8C5D3] leading-relaxed">
+                      <p className="mt-2 text-[14px] text-ink-soft leading-relaxed">
                         {partner.name} is an official aiOn Partner helping customers gain early access to AI-powered
                         wellness technology. Complete your reservation below — we'll take care of everything else.
                       </p>
@@ -472,41 +472,41 @@ export default function PreOrderPage() {
 
               {/* Header */}
               <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 mb-6">
-                  <Sparkles className="w-3.5 h-3.5 text-[#4FB3FF]" />
-                  <span className="text-[11px] font-semibold uppercase tracking-[3px] text-[#B8C5D3]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-1.5 mb-6 shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[3px] text-ink-muted">
                     Founder Edition · Limited to {FOUNDER_CAP}
                   </span>
                 </div>
-                <h1 className="text-4xl md:text-6xl font-light tracking-tight mb-4">
+                <h1 className="text-4xl md:text-6xl font-light tracking-tight mb-4 text-ink">
                   Reserve your{" "}
                   <span style={{ backgroundImage: GRADIENT, WebkitBackgroundClip: "text", color: "transparent" }}>
                     aiOn Ring
                   </span>
                   .
                 </h1>
-                <p className="text-[16px] text-[#8B9DAF] max-w-xl mx-auto">
+                <p className="text-[16px] text-ink-soft max-w-xl mx-auto">
                   Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of everyday wellness. No payment today — your place is held.
                 </p>
-                <p className="text-[12px] text-[#5A6B7E] max-w-xl mx-auto mt-4">
+                <p className="text-[12px] text-ink-muted max-w-xl mx-auto mt-4">
                   aiOn Ring is intended for general wellness purposes only and is not a medical device.
                 </p>
 
                 {/* Founder counter */}
                 <div className="mt-10 max-w-md mx-auto">
                   <div className="flex items-baseline justify-between text-[13px] mb-2">
-                    <span className="text-[#B8C5D3]">Founder Edition claimed</span>
-                    <span className="font-medium text-white">
+                    <span className="text-ink-soft">Founder Edition claimed</span>
+                    <span className="font-medium text-ink">
                       {founderClaimed} / {FOUNDER_CAP}
                     </span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-border overflow-hidden">
                     <div
                       className="h-full transition-all duration-700"
                       style={{ width: `${founderPct}%`, background: GRADIENT }}
                     />
                   </div>
-                  <p className="mt-3 text-[12px] text-[#5A6B7E]">Only {founderLeft} founder rings remain.</p>
+                  <p className="mt-3 text-[12px] text-ink-muted">Only {founderLeft} founder rings remain.</p>
                 </div>
               </div>
 
