@@ -833,7 +833,7 @@ function TrackUnderstandActSection() {
     },
   ];
   return (
-    <section id="app" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+    <section id="approach" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <ParticleField density={45} opacity={0.18} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
