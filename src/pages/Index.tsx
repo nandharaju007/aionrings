@@ -339,6 +339,81 @@ function Chip({ children, className = "" }: { children: ReactNode; className?: s
 }
 
 /* ─────────────────────────────────────────────
+   Nature layer — organic backdrops & bands
+   ───────────────────────────────────────────── */
+function NatureBackdrop({
+  src,
+  opacity = 0.18,
+  position = "center",
+  tone = "light",
+}: { src: string; opacity?: number; position?: string; tone?: "light" | "dark" }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <img
+        src={src}
+        alt=""
+        loading="lazy"
+        className="h-full w-full object-cover"
+        style={{ objectPosition: position, opacity, filter: "saturate(0.85)" }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            tone === "light"
+              ? "linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 40%, rgba(255,255,255,0.94) 100%)"
+              : "linear-gradient(180deg, rgba(10,22,40,0.86) 0%, rgba(10,22,40,0.72) 45%, rgba(10,22,40,0.92) 100%)",
+        }}
+      />
+    </div>
+  );
+}
+
+function NatureBand({
+  src,
+  eyebrow,
+  title,
+  line,
+  position = "center",
+}: { src: string; eyebrow: string; title: string; line: string; position?: string }) {
+  return (
+    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+      <div className="relative h-[62vh] md:h-[78vh]">
+        <motion.img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: position }}
+          initial={{ scale: 1.08 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2.4, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(10,22,40,0.18) 26%, rgba(10,22,40,0.42) 70%, rgba(255,255,255,0.96) 100%)",
+          }}
+        />
+        <div className="relative z-10 flex h-full items-center justify-center px-6">
+          <FadeUp className="text-center max-w-2xl">
+            <p className="text-[11px] tracking-[0.38em] uppercase text-white/70">{eyebrow}</p>
+            <h2 className="mt-4 text-3xl md:text-5xl font-extralight text-white leading-[1.1]" style={{ textShadow: "0 4px 40px rgba(10,22,40,0.55)" }}>
+              {title}
+            </h2>
+            <p className="mt-5 text-base md:text-lg font-light text-white/80">{line}</p>
+          </FadeUp>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+/* ─────────────────────────────────────────────
    Hero
    ───────────────────────────────────────────── */
 function Hero() {
