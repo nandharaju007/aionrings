@@ -635,12 +635,12 @@ function TrackUnderstandActSection() {
     },
   ];
   return (
-    <section id="app" className="relative overflow-hidden py-16 md:py-48" style={{ background: C.navy }}>
-      <ParticleField density={45} opacity={0.3} />
+    <section id="app" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <ParticleField density={45} opacity={0.18} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center">
           <div className="mx-auto mb-4 h-3 w-3 rounded-full" style={{ background: C.blue, boxShadow: `0 0 24px ${C.blue}, 0 0 60px ${C.blue}88` }} />
-          <p className="text-xs md:text-sm tracking-[0.35em] text-white/60 uppercase">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">
             Other rings track. aiOn acts.
           </p>
         </FadeUp>
@@ -650,22 +650,22 @@ function TrackUnderstandActSection() {
             <div key={c.title} className="relative flex">
               <motion.div
                 className="w-full rounded-3xl border backdrop-blur-xl p-8 md:p-10 text-center flex flex-col items-center"
-                style={{ borderColor: `${c.color}44`, background: "rgba(10,22,40,0.55)", boxShadow: `0 0 40px ${c.color}22` }}
+                style={{ borderColor: "#E3E9F2", background: "#FFFFFF", boxShadow: `0 20px 50px -20px ${c.color}33` }}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div style={{ filter: `drop-shadow(0 0 12px ${c.color}88)` }}>{c.icon}</div>
-                <h3 className="mt-6 text-2xl md:text-3xl font-light tracking-[0.35em] text-white">
+                <h3 className="mt-6 text-2xl md:text-3xl font-light tracking-[0.35em] text-ink">
                   {c.title}
                 </h3>
-                <div className="mt-6 space-y-1 text-white/60 text-sm md:text-base font-light">
+                <div className="mt-6 space-y-1 text-ink-muted text-sm md:text-base font-light">
                   {c.lines.map((l, i) => <p key={i}>{l}</p>)}
                 </div>
               </motion.div>
               {idx < cols.length - 1 && (
                 <motion.div
                   aria-hidden
-                  className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 items-center justify-center text-white/40"
+                  className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 items-center justify-center text-ink-muted"
                   initial={{ opacity: 0, x: -6 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                   transition={{ delay: 0.4 + idx * 0.15, duration: 0.6 }}
                 >
@@ -679,9 +679,9 @@ function TrackUnderstandActSection() {
         </div>
 
         <FadeUp delay={0.3} className="mt-16 text-center">
-          <p className="text-xl md:text-2xl font-extralight text-white/80 leading-relaxed">
+          <p className="text-xl md:text-2xl font-extralight text-ink-soft leading-relaxed">
             Most wearables stop at the data.<br />
-            <span className="text-white">aiOn starts there.</span>
+            <span className="text-ink font-light">aiOn starts there.</span>
           </p>
         </FadeUp>
       </div>
