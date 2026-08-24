@@ -25,6 +25,39 @@ const C = {
   gold: "#B4870B",
 };
 
+/* Rotating insight line over the hero video */
+function HeroInsightTicker() {
+  const lines = [
+    "Recovery is trending up — your body is ready for more today.",
+    "Resting heart rate steady overnight. Nice consistency.",
+    "Sleep quality improved 12% this week.",
+    "Breathing regularity high — a calm night of rest.",
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setI((p) => (p + 1) % lines.length), 3800);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="rounded-full border border-white/10 bg-black/30 px-3 py-1 backdrop-blur-sm sm:px-4 sm:py-1.5">
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={i}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.5 }}
+          className="whitespace-nowrap text-[10px] sm:text-xs"
+          style={{ color: "rgba(255,255,255,0.82)" }}
+        >
+          {lines[i]}
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────
    Custom glowing cursor (desktop only)
    ───────────────────────────────────────────── */
