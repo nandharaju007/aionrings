@@ -446,14 +446,14 @@ function Hero() {
           <ParticleField density={80} opacity={0.4} tone="light" />
 
           <div className="relative z-10 px-4 pt-8 pb-10 sm:px-8 sm:pt-10 md:pt-14 md:pb-14">
-            {/* Cinematic finger-with-ring banner */}
+            {/* Cinematic finger-with-ring banner — enlarged */}
             <motion.div
-              className="relative w-full max-w-4xl mx-auto mb-8 md:mb-10"
+              className="relative w-full max-w-5xl mx-auto"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="relative overflow-hidden rounded-2xl">
+              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
                 <video
                   src={heroFingerVideo.url}
                   poster={heroFingerRing}
@@ -463,7 +463,7 @@ function Hero() {
                   playsInline
                   preload="metadata"
                   aria-label="Human finger wearing the aiOn smart ring, sensors glowing"
-                  className="w-full h-[140px] sm:h-[190px] md:h-[260px] object-cover"
+                  className="w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] object-cover"
                   style={{ filter: "contrast(1.05) saturate(1.05)" }}
                 />
 
@@ -472,9 +472,9 @@ function Hero() {
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background: `
-                      linear-gradient(to bottom, ${C.navy} 0%, transparent 25%, transparent 60%, ${C.navy} 100%),
-                      linear-gradient(to right, ${C.navy} 0%, transparent 18%, transparent 82%, ${C.navy} 100%),
-                      radial-gradient(ellipse at center, transparent 40%, rgba(10,22,40,0.55) 100%)
+                      linear-gradient(to bottom, ${C.navy} 0%, transparent 20%, transparent 75%, ${C.navy} 100%),
+                      linear-gradient(to right, ${C.navy} 0%, transparent 12%, transparent 88%, ${C.navy} 100%),
+                      radial-gradient(ellipse at center, transparent 50%, rgba(10,22,40,0.65) 100%)
                     `,
                   }}
                 />
@@ -485,7 +485,7 @@ function Hero() {
                 />
 
                 {/* Live vitals rail */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-3 pb-2 sm:gap-x-5 sm:pb-3">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 pb-3 sm:gap-x-6 sm:pb-4 md:pb-5">
                   {[
                     { l: "HR", v: "62 bpm" },
                     { l: "HRV", v: "74 ms" },
@@ -498,7 +498,7 @@ function Hero() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 + i * 0.12, duration: 0.6 }}
-                      className="flex items-baseline gap-1.5 text-[10px] sm:text-xs tracking-wide"
+                      className="flex items-baseline gap-1.5 text-[11px] sm:text-sm tracking-wide"
                     >
                       <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.l}</span>
                       <span style={{ color: "#fff", fontVariantNumeric: "tabular-nums" }}>{m.v}</span>
@@ -507,11 +507,10 @@ function Hero() {
                 </div>
 
                 {/* Rotating insight line */}
-                <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 sm:top-4">
+                <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 sm:top-5">
                   <HeroInsightTicker />
                 </div>
               </div>
-
             </motion.div>
 
             {/* Cinematic ring stage */}
