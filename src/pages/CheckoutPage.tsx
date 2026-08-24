@@ -6,6 +6,7 @@ import { useCart } from '@/contexts/CartContext';
 import { Header } from '@/components/Header';
 import { CartPanel } from '@/components/CartPanel';
 import { AionLogo } from '@/components/AionLogo';
+import { SEO } from '@/components/SEO';
 
 type CheckoutStep = 'shipping' | 'payment' | 'confirmation';
 
@@ -42,6 +43,13 @@ export default function CheckoutPage() {
   if (items.length === 0 && step !== 'confirmation') {
     return (
       <div className="min-h-screen bg-canvas">
+  <SEO
+        title="Checkout — aiOn Smart Wellness Ring"
+        description="Complete your aiOn smart wellness ring order securely."
+        path="/checkout"
+        image="/og-image.jpg"
+        noindex
+      />
         <Header />
         <CartPanel />
         <main className="pt-32 container mx-auto px-6 text-center">
@@ -56,6 +64,13 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-canvas">
+      <SEO
+        title="Checkout — aiOn Smart Wellness Ring"
+        description="Complete your aiOn smart wellness ring order securely."
+        path="/checkout"
+        image="/og-image.jpg"
+        noindex
+      />
       <Header />
       <CartPanel />
 
