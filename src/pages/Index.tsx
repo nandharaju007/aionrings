@@ -325,6 +325,45 @@ function Hero() {
       <GridOverlay tone="dark" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
+        {/* Lifestyle video strip */}
+        <motion.div
+          className="w-full max-w-4xl mx-auto mb-8 md:mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-ink/5 bg-white/50 shadow-xl shadow-ink/5">
+            <div className="grid grid-cols-3 h-[90px] sm:h-[120px] md:h-[160px]">
+              {[
+                { src: videoWork.url, label: "Work" },
+                { src: videoRun.url, label: "Move" },
+                { src: videoSleep.url, label: "Rest" },
+              ].map((v, i) => (
+                <div key={i} className="relative overflow-hidden group">
+                  <video
+                    src={v.src}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
+                  <span className="absolute bottom-2 left-3 text-[10px] sm:text-xs font-medium uppercase tracking-widest text-white/90">
+                    {v.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {/* Soft edge fade into canvas */}
+            <div
+              className="pointer-events-none absolute inset-x-0 -bottom-px h-8"
+              style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--canvas))" }}
+            />
+          </div>
+        </motion.div>
+
         {/* Headline */}
         <div className="text-center max-w-5xl mx-auto">
           <motion.h1
