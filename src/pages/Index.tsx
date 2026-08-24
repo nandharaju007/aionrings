@@ -982,10 +982,10 @@ function TheAppSection() {
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-56" style={{ background: C.navy }}>
+    <section className="relative overflow-hidden py-16 md:py-40" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
         <FadeUp>
-          <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}33`, background: "rgba(10,22,40,0.5)" }}>
+          <div className="relative rounded-3xl border p-6 backdrop-blur-xl mx-auto max-w-2xl" style={{ borderColor: `${C.blue}22`, background: "linear-gradient(180deg,#0A1628,#0E1B34)", boxShadow: "0 30px 70px -35px rgba(10,22,40,0.45)" }}>
             <div className="text-left text-xs tracking-widest text-white/50">HRV · LAST 14 DAYS</div>
             <svg viewBox="0 0 400 120" className="mt-3 w-full h-32">
               <motion.path
@@ -996,7 +996,7 @@ function PreventiveSection() {
             </svg>
             <motion.div
               className="absolute right-4 top-16 rounded-xl border px-3 py-2 text-xs text-left"
-              style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.9)", color: C.gold }}
+              style={{ borderColor: `${C.gold}66`, background: "rgba(10,22,40,0.92)", color: C.gold }}
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 2.5, duration: 0.6 }}
             >
               Your HRV trend is 22% below your usual range
@@ -1004,14 +1004,14 @@ function PreventiveSection() {
           </div>
         </FadeUp>
         <FadeUp delay={0.4} className="mt-14">
-          <h2 className="text-3xl md:text-5xl font-extralight text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extralight text-ink leading-tight">
             The trend showed on Day 11.<br />
-            <span className="text-white/60">You noticed on Day 14.</span>
+            <span className="text-ink-muted">You noticed on Day 14.</span>
           </h2>
           <p className="mt-6 text-lg md:text-xl font-light" style={{ color: C.blue, textShadow: `0 0 24px ${C.blue}66` }}>
             Wellness trends, made visible.
           </p>
-          <p className="mt-4 text-xs text-white/40 max-w-md mx-auto">
+          <p className="mt-4 text-xs text-ink-muted max-w-md mx-auto">
             Trend information is for general wellness and informational purposes only.
           </p>
         </FadeUp>
@@ -1033,12 +1033,12 @@ function RingSection() {
     { icon: "🖤", label: "Midnight Black" },
   ];
   return (
-    <section id="ring" className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0E1B34 100%)" }}>
-      <ParticleField density={30} opacity={0.2} />
+    <section id="ring" className="relative overflow-hidden py-16 md:py-40" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp>
           <motion.div
-            className="mx-auto aspect-square w-[min(70vw,420px)] relative"
+            className="mx-auto aspect-square w-[min(70vw,420px)] relative rounded-[2.5rem] p-6"
+            style={{ background: "radial-gradient(circle at 50% 45%, #12233F 0%, #0A1628 70%)", boxShadow: "0 40px 90px -40px rgba(10,22,40,0.55)" }}
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -1059,11 +1059,11 @@ function RingSection() {
               transition={{ delay: i * 0.08, duration: 0.5 }}
             >
               <div className="text-3xl md:text-4xl">{s.icon}</div>
-              <div className="mt-2 text-xs md:text-sm text-white/80 font-light">{s.label}</div>
+              <div className="mt-2 text-xs md:text-sm text-ink-soft font-light">{s.label}</div>
             </motion.div>
           ))}
         </div>
-        <p className="relative mt-10 text-center text-sm text-white/50 font-light">
+        <p className="relative mt-10 text-center text-sm text-ink-muted font-light">
           More colors and matte finish coming.
         </p>
       </div>
@@ -1082,10 +1082,10 @@ function PlansSection() {
   ];
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg, #0A1628 0%, #0F1F3A 50%, #0A1628 100%)" }}>
+    <section className="relative overflow-hidden py-16 md:py-48" style={{ background: "linear-gradient(180deg,#F6F8FC 0%, #FFFFFF 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-extralight text-white leading-[1.05]">
+          <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="Start free." /><br /><WordStagger text="Unlock more when ready." delay={0.15} />
           </h2>
         </FadeUp>
@@ -1095,24 +1095,24 @@ function PlansSection() {
             return (
               <motion.div key={i}
                 className={`relative rounded-3xl border p-8 backdrop-blur-xl flex flex-col ${p.highlight ? "md:scale-105" : ""}`}
-                style={{ borderColor: `${p.accent}66`, background: "rgba(10,22,40,0.6)", boxShadow: p.highlight ? `0 0 60px ${p.accent}44` : `0 0 20px ${p.accent}22` }}
+                style={{ borderColor: p.highlight ? `${p.accent}55` : "#E3E9F2", background: "#FFFFFF", boxShadow: p.highlight ? `0 30px 70px -30px ${p.accent}55` : "0 1px 2px rgba(10,22,40,0.04), 0 18px 40px -28px rgba(10,22,40,0.25)" }}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.7 }}
               >
                 {p.tag && (
                   <span className="self-start rounded-full border px-3 py-1 text-[10px] tracking-widest" style={{ borderColor: `${p.accent}88`, color: p.accent }}>{p.tag}</span>
                 )}
-                <h3 className="mt-4 text-2xl font-light text-white">{p.name}</h3>
-                <p className="mt-3 text-base text-white/70 font-light">{p.tease}</p>
+                <h3 className="mt-4 text-2xl font-light text-ink">{p.name}</h3>
+                <p className="mt-3 text-base text-ink-soft font-light">{p.tease}</p>
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="mt-4 self-start text-[11px] tracking-widest text-white/50 hover:text-white transition"
+                  className="mt-4 self-start text-[11px] tracking-widest text-ink-muted hover:text-ink transition"
                 >
                   {isOpen ? "HIDE FEATURES" : "SEE FEATURES"}
                 </button>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
-                      className="mt-4 space-y-2 text-sm text-white/70 font-light overflow-hidden"
+                      className="mt-4 space-y-2 text-sm text-ink-soft font-light overflow-hidden"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
@@ -1123,16 +1123,16 @@ function PlansSection() {
                   )}
                 </AnimatePresence>
                 <div className="flex-1" />
-                <Link to="/preorder" className="mt-8 inline-flex items-center justify-center rounded-full py-3 text-sm font-medium text-[#0A1628]"
-                  style={{ background: p.highlight ? `linear-gradient(120deg, ${C.blue}, ${C.purple})` : "rgba(255,255,255,0.9)" }}>
+                <Link to="/preorder" className={`mt-8 inline-flex items-center justify-center rounded-full py-3 text-sm font-medium transition ${p.highlight ? "text-white" : "text-ink"}`}
+                  style={{ background: p.highlight ? `linear-gradient(120deg, ${C.blue}, ${C.purple})` : "#F1F5FA", border: p.highlight ? "none" : "1px solid #E3E9F2" }}>
                   Pre-order Now
                 </Link>
               </motion.div>
             );
           })}
         </div>
-        <p className="mt-8 text-center text-xs text-white/40">30-day free trial on paid plans</p>
-        <p className="mt-3 text-center text-[11px] text-white/35 max-w-xl mx-auto">
+        <p className="mt-8 text-center text-xs text-ink-muted">30-day free trial on paid plans</p>
+        <p className="mt-3 text-center text-[11px] text-ink-muted/80 max-w-xl mx-auto">
           All plans provide general wellness and fitness features only. No plan provides medical
           advice, diagnosis, or treatment.
         </p>
@@ -1225,7 +1225,7 @@ const FAQS: { q: string; a: string }[] = [
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="relative py-16 md:py-24" style={{ background: C.navy }}>
+    <section id="faq" className="relative py-16 md:py-24" style={{ background: "#F6F8FC" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -1242,11 +1242,11 @@ function FAQSection() {
       />
       <div className="container mx-auto px-6">
         <FadeUp className="mx-auto max-w-3xl text-center">
-          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">Questions, answered</p>
-          <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-white">
+          <p className="eyebrow">Questions, answered</p>
+          <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-ink">
             What aiOn is — and what it isn’t
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-white/55">
+          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-ink-soft">
             A wellness companion. Informational only. Never a substitute for professional care.
           </p>
         </FadeUp>
@@ -1259,8 +1259,9 @@ function FAQSection() {
                 <div
                   className="rounded-2xl border backdrop-blur-xl overflow-hidden"
                   style={{
-                    borderColor: isOpen ? "rgba(79,179,255,0.35)" : "rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.03)",
+                    borderColor: isOpen ? "rgba(24,120,224,0.35)" : "#E3E9F2",
+                    background: "#FFFFFF",
+                    boxShadow: isOpen ? "0 22px 50px -30px rgba(24,120,224,0.45)" : "0 1px 2px rgba(10,22,40,0.04)",
                   }}
                 >
                   <button
@@ -1269,9 +1270,9 @@ function FAQSection() {
                     aria-expanded={isOpen}
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 md:px-6 md:py-5 text-left"
                   >
-                    <span className="text-[15px] md:text-base font-light text-white/90">{f.q}</span>
+                    <span className="text-[15px] md:text-base font-light text-ink">{f.q}</span>
                     <span
-                      className="shrink-0 text-xl font-extralight text-white/50 transition-transform duration-300"
+                      className="shrink-0 text-xl font-extralight text-ink-muted transition-transform duration-300"
                       style={{ transform: isOpen ? "rotate(45deg)" : "none" }}
                     >
                       +
@@ -1285,7 +1286,7 @@ function FAQSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       >
-                        <p className="px-5 pb-5 md:px-6 md:pb-6 text-sm md:text-[15px] font-light leading-relaxed text-white/60">
+                        <p className="px-5 pb-5 md:px-6 md:pb-6 text-sm md:text-[15px] font-light leading-relaxed text-ink-soft">
                           {f.a}
                         </p>
                       </motion.div>
@@ -1298,7 +1299,7 @@ function FAQSection() {
         </div>
 
         <FadeUp delay={0.1}>
-          <p className="mx-auto mt-8 max-w-2xl text-center text-xs md:text-[13px] font-light leading-relaxed text-white/45">
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs md:text-[13px] font-light leading-relaxed text-ink-muted">
             All aiOn results are informational only and are not intended to diagnose, treat, cure, or
             prevent any disease or medical condition. Always consult a qualified healthcare
             professional regarding any medical concerns or before making healthcare decisions.
@@ -1311,14 +1312,14 @@ function FAQSection() {
 
 function WellnessDisclaimerSection() {
   return (
-    <section className="relative py-14 md:py-20" style={{ background: C.navy }}>
+    <section className="relative py-14 md:py-20" style={{ background: "#FFFFFF" }}>
       <div className="container mx-auto px-6">
         <div
           className="mx-auto max-w-3xl rounded-3xl border p-7 md:p-9 text-center backdrop-blur-xl"
-          style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}
+          style={{ borderColor: "#E3E9F2", background: "#F6F8FC" }}
         >
-          <p className="text-[11px] tracking-[0.3em] text-white/45 uppercase">General wellness product</p>
-          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-white/65 leading-relaxed">
+          <p className="eyebrow">General wellness product</p>
+          <div className="mt-4 space-y-3 text-sm md:text-[15px] font-light text-ink-soft leading-relaxed">
             <p>aiOn Ring is intended for general wellness purposes only and is not a medical device.</p>
             <p>
               The information provided by aiOn Ring is for informational purposes only and is not
@@ -1349,12 +1350,12 @@ function IntroOverlay() {
       {!gone && (
         <motion.div
           className="fixed inset-0 z-[90] flex items-center justify-center"
-          style={{ background: C.navy }}
+          style={{ background: "#F6F8FC" }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
         >
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl font-extralight tracking-tight text-white">
+            className="text-5xl md:text-7xl font-extralight tracking-tight text-ink">
             ai<span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(120deg, ${C.blue}, ${C.purple})` }}>O</span>n
           </motion.div>
         </motion.div>
@@ -1376,7 +1377,7 @@ export default function Index() {
   }, [location]);
 
   return (
-    <div className="min-h-screen text-white" style={{ background: C.navy }}>
+    <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <IntroOverlay />
       <GlowCursor />
       <Header />
