@@ -445,47 +445,42 @@ function Hero() {
       <GridOverlay tone="dark" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-12">
-        {/* Lifestyle video strip */}
+        {/* Lifestyle video strip — seamless, no box */}
         <motion.div
-          className="w-full max-w-4xl mx-auto mb-8 md:mb-10"
+          className="w-full max-w-5xl mx-auto mb-10 md:mb-14"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div
-            className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl"
-            style={{ background: C.navy, boxShadow: `0 30px 80px -24px rgba(10,22,40,0.45)` }}
-          >
-            <div className="grid grid-cols-3 h-[100px] sm:h-[130px] md:h-[170px]">
-              {[
-                { src: videoMorning.url, label: "Morning" },
-                { src: videoWalk.url, label: "Move" },
-                { src: videoEvening.url, label: "Evening" },
-              ].map((v, i) => (
-                <div key={i} className="relative overflow-hidden group">
-                  <video
-                    src={v.src}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ filter: "contrast(1.05) saturate(0.9)" }}
-                  />
-                  {/* Cinematic cool tint */}
-                  <div
-                    className="pointer-events-none absolute inset-0 mix-blend-overlay opacity-60"
-                    style={{ background: `linear-gradient(135deg, ${C.blue}33, ${C.purple}33)` }}
-                  />
-                  {/* Bottom vignette for label legibility */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
-                  <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white">
-                    {v.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-3 h-[110px] sm:h-[150px] md:h-[200px]">
+            {[
+              { src: videoMorning.url, label: "Morning" },
+              { src: videoWalk.url, label: "Move" },
+              { src: videoEvening.url, label: "Evening" },
+            ].map((v, i) => (
+              <div key={i} className="relative overflow-hidden group">
+                <video
+                  src={v.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ filter: "contrast(1.05) saturate(0.92)" }}
+                />
+                {/* Soft organic tint for wellness harmony */}
+                <div
+                  className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-40"
+                  style={{ background: `linear-gradient(135deg, rgba(34,176,125,0.25), rgba(24,120,224,0.18))` }}
+                />
+                {/* Bottom vignette for label legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                <span className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-white/95">
+                  {v.label}
+                </span>
+              </div>
+            ))}
           </div>
         </motion.div>
 
