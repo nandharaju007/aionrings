@@ -1199,7 +1199,7 @@ function RingSection() {
     { icon: "🔋", label: "5 days" },
     { icon: "📡", label: "BLE 5.0" },
     { icon: "📏", label: "Size 6–13" },
-    { icon: "🖤", label: "Midnight Black" },
+    { icon: "◍", label: "3 finishes" },
   ];
   return (
     <section id="ring" className="relative overflow-hidden py-16 md:py-24" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
