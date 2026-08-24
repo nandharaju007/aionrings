@@ -22,6 +22,77 @@ import natureForest from "@/assets/nature-forest-trail.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
 import natureNight from "@/assets/nature-restful-night.jpg";
 import videoRunTrail from "@/assets/video-run-trail.mp4.asset.json";
+import engravingMacro from "@/assets/engraving-macro.jpg";
+
+/* ─────────────────────────────────────────────
+   Brand reveal — "ai · O(ring) · n" draws itself in
+   ───────────────────────────────────────────── */
+function BrandReveal() {
+  const letter = {
+    hidden: { opacity: 0, y: 14, filter: "blur(6px)" },
+    show: { opacity: 1, y: 0, filter: "blur(0px)" },
+  };
+  return (
+    <motion.div
+      className="mb-8 flex flex-col items-center md:mb-10"
+      initial="hidden"
+      animate="show"
+      variants={{ show: { transition: { staggerChildren: 0.18, delayChildren: 0.15 } } }}
+    >
+      <div className="flex items-center gap-[0.06em] text-5xl font-extralight tracking-[-0.02em] text-ink sm:text-6xl md:text-7xl">
+        <motion.span variants={letter} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          ai
+        </motion.span>
+
+        {/* The O is the ring — drawn stroke + soft pulse */}
+        <span className="relative inline-block" style={{ width: "0.86em", height: "0.86em" }}>
+          <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
+            <defs>
+              <linearGradient id="brandRevealRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00A9E0" />
+                <stop offset="55%" stopColor="#1878E0" />
+                <stop offset="100%" stopColor="#6D28D9" />
+              </linearGradient>
+            </defs>
+            <motion.circle
+              cx="50"
+              cy="50"
+              r="38"
+              fill="none"
+              stroke="url(#brandRevealRing)"
+              strokeWidth="8"
+              strokeLinecap="round"
+              transform="rotate(-90 50 50)"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </svg>
+          <motion.span
+            className="absolute inset-0 rounded-full"
+            animate={{ opacity: [0.35, 0, 0.35], scale: [1, 1.12, 1] }}
+            transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+            style={{ boxShadow: "0 0 32px 6px rgba(24,120,224,0.28)" }}
+          />
+        </span>
+
+        <motion.span variants={letter} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          n
+        </motion.span>
+      </div>
+
+      <motion.span
+        className="mt-3 text-[10px] uppercase tracking-[0.42em] text-ink-muted sm:text-xs"
+        initial={{ opacity: 0, letterSpacing: "0.9em" }}
+        animate={{ opacity: 1, letterSpacing: "0.42em" }}
+        transition={{ duration: 1.4, delay: 1.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        Vital · Life · Force
+      </motion.span>
+    </motion.div>
+  );
+}
+
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
