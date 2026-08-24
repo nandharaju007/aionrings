@@ -1066,7 +1066,6 @@ function RingSection() {
         <p className="relative mt-10 text-center text-sm text-white/50 font-light">
           More colors and matte finish coming.
         </p>
-        </div>
       </div>
     </section>
   );
