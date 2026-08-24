@@ -180,7 +180,7 @@ function LazyVideo({
       muted
       loop
       playsInline
-      preload={autoPlay ? "metadata" : "none"}
+      preload="metadata"
       aria-label={label}
       className={className}
       style={style}
