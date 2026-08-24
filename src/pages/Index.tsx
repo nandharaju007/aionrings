@@ -13,6 +13,10 @@ import appScreenSleep from "@/assets/app-screen-sleep.png";
 import videoMorning from "@/assets/video-life-morning-new.mp4.asset.json";
 import videoWalk from "@/assets/video-life-walk-new.mp4.asset.json";
 import videoEvening from "@/assets/video-life-evening-new.mp4.asset.json";
+import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
+import natureForest from "@/assets/nature-forest-trail.jpg";
+import natureWater from "@/assets/nature-calm-water.jpg";
+import natureNight from "@/assets/nature-restful-night.jpg";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
@@ -335,6 +339,81 @@ function Chip({ children, className = "" }: { children: ReactNode; className?: s
 }
 
 /* ─────────────────────────────────────────────
+   Nature layer — organic backdrops & bands
+   ───────────────────────────────────────────── */
+function NatureBackdrop({
+  src,
+  opacity = 0.18,
+  position = "center",
+  tone = "light",
+}: { src: string; opacity?: number; position?: string; tone?: "light" | "dark" }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <img
+        src={src}
+        alt=""
+        loading="lazy"
+        className="h-full w-full object-cover"
+        style={{ objectPosition: position, opacity, filter: "saturate(0.85)" }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            tone === "light"
+              ? "linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 40%, rgba(255,255,255,0.94) 100%)"
+              : "linear-gradient(180deg, rgba(10,22,40,0.86) 0%, rgba(10,22,40,0.72) 45%, rgba(10,22,40,0.92) 100%)",
+        }}
+      />
+    </div>
+  );
+}
+
+function NatureBand({
+  src,
+  eyebrow,
+  title,
+  line,
+  position = "center",
+}: { src: string; eyebrow: string; title: string; line: string; position?: string }) {
+  return (
+    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+      <div className="relative h-[62vh] md:h-[78vh]">
+        <motion.img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: position }}
+          initial={{ scale: 1.08 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2.4, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 50%, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.10) 60%, rgba(10,22,40,0) 75%), linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(10,22,40,0.20) 26%, rgba(10,22,40,0.45) 70%, rgba(255,255,255,0.96) 100%)",
+          }}
+        />
+        <div className="relative z-10 flex h-full items-center justify-center px-6">
+          <FadeUp className="text-center max-w-2xl">
+            <p className="text-[11px] tracking-[0.38em] uppercase text-white/70">{eyebrow}</p>
+            <h2 className="mt-4 text-3xl md:text-5xl font-extralight text-white leading-[1.1]" style={{ textShadow: "0 4px 40px rgba(10,22,40,0.55)" }}>
+              {title}
+            </h2>
+            <p className="mt-5 text-base md:text-lg font-light text-white/80">{line}</p>
+          </FadeUp>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+/* ─────────────────────────────────────────────
    Hero
    ───────────────────────────────────────────── */
 function Hero() {
@@ -580,7 +659,9 @@ function Hero() {
 function VitalityScoreSection() {
   return (
     <section id="how" className="relative overflow-hidden py-16 md:py-48 bg-white">
-      <div className="container mx-auto px-6">
+      <NatureBackdrop src={natureSunrise} opacity={0.3} position="center 40%" />
+      <div className="container mx-auto px-6 relative z-10">
+
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <FadeUp>
             <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
@@ -840,6 +921,7 @@ function PillarsSection() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <section id="signals" className="relative overflow-hidden py-16 md:py-48 bg-canvas">
+      <NatureBackdrop src={natureForest} opacity={0.22} position="center 55%" />
       <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -912,6 +994,7 @@ function QuestSection() {
   ];
   return (
     <section className="relative overflow-hidden py-16 md:py-48 bg-white">
+      <NatureBackdrop src={natureWater} opacity={0.24} position="center 60%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
@@ -1024,6 +1107,7 @@ function InLifeSection() {
   ];
   return (
     <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
+      <NatureBackdrop src={natureNight} opacity={0.16} position="center 45%" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
           <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">In life</p>
@@ -1485,11 +1569,34 @@ export default function Index() {
         <VitalityScoreSection />
         <TrackUnderstandActSection />
         <BodyTalkingSection />
+        <NatureBand
+          src={natureForest}
+          eyebrow="Movement · Activity"
+          title="Health doesn't live in a dashboard."
+          line="It lives in morning trails, fresh air and the steps you actually take."
+          position="center 60%"
+        />
+
         <PillarsSection />
         <QuestSection />
         <TheAppSection />
         <InLifeSection />
+        <NatureBand
+          src={natureNight}
+          eyebrow="Sleep · Recovery"
+          title="The quietest hours shape the loudest days."
+          line="aiOn follows your sleep and recovery patterns, gently, all night."
+          position="center 50%"
+        />
         <PreventiveSection />
+        <NatureBand
+          src={natureSunrise}
+          eyebrow="Wellness · Every morning"
+          title="Wake with the light, and with your number."
+          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
+          position="center 45%"
+        />
+
         <RingSection />
         <PlansSection />
         <FinalCTA />
