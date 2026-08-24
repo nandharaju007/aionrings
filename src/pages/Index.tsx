@@ -981,6 +981,62 @@ function TheAppSection() {
 }
 
 /* ─────────────────────────────────────────────
+   In life — lifestyle video strip
+   ───────────────────────────────────────────── */
+function InLifeSection() {
+  const clips = [
+    { src: (videoRun as { url: string }).url, label: "Move", caption: "Morning run" },
+    { src: (videoWork as { url: string }).url, label: "Work", caption: "Focused hours" },
+    { src: (videoSleep as { url: string }).url, label: "Rest", caption: "Deep sleep" },
+  ];
+  return (
+    <section id="in-life" className="relative overflow-hidden py-16 md:py-32 bg-canvas">
+      <div className="container mx-auto px-6 relative z-10">
+        <FadeUp className="text-center max-w-3xl mx-auto">
+          <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">In life</p>
+          <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
+            Worn, not watched.
+          </h2>
+          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+            From the first run to the last hour of sleep — aiOn simply stays with you.
+          </p>
+        </FadeUp>
+
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {clips.map((c, i) => (
+            <motion.figure
+              key={c.label}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.9, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative overflow-hidden rounded-3xl border bg-white"
+              style={{ borderColor: `${C.blue}1F`, boxShadow: "0 30px 70px -40px rgba(10,22,40,0.35)" }}
+            >
+              <video
+                src={c.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={`${c.caption} — person wearing the aiOn ring`}
+                className="w-full h-[300px] md:h-[360px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
+              />
+              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.72) 100%)" }} />
+              <figcaption className="absolute bottom-5 left-5 right-5 flex items-baseline justify-between">
+                <span className="text-white text-lg font-light tracking-wide">{c.label}</span>
+                <span className="text-white/70 text-xs tracking-[0.2em] uppercase">{c.caption}</span>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Section 6 — Trends
    ───────────────────────────────────────────── */
 function PreventiveSection() {
