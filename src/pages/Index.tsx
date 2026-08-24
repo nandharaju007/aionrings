@@ -1279,15 +1279,15 @@ function PreventiveSection() {
    ───────────────────────────────────────────── */
 function RingSection() {
   const specs = [
-    { icon: "⬡", label: "Titanium" },
-    { icon: "💧", label: "IP68" },
-    { icon: "🔋", label: "5 days" },
-    { icon: "📡", label: "BLE 5.0" },
-    { icon: "📏", label: "Size 6–13" },
-    { icon: "◍", label: "3 finishes" },
+    { icon: "hex", label: "Titanium" },
+    { icon: "water", label: "IP68" },
+    { icon: "battery", label: "5 days" },
+    { icon: "signal", label: "BLE 5.0" },
+    { icon: "ruler", label: "Size 6–13" },
+    { icon: "finishes", label: "3 finishes" },
   ];
   return (
-    <section id="ring" className="relative overflow-hidden py-16 md:py-24" style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
+    <section id="ring" className={`relative overflow-hidden ${SECTION}`} style={{ background: "linear-gradient(180deg,#FFFFFF 0%, #F6F8FC 100%)" }}>
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center mb-8 md:mb-12">
           <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">The Ring</p>
