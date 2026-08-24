@@ -1447,26 +1447,27 @@ function PlansSection() {
    ───────────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="relative overflow-hidden py-16 md:py-32 min-h-[90svh] flex items-center bg-canvas">
+    <section className={`relative overflow-hidden bg-canvas ${SECTION}`}>
       <NatureBackdrop src={natureForest} opacity={0.12} position="center 30%" />
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
-          className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-2xl md:rounded-[32px]"
-          initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }}
-          style={{ boxShadow: "0 30px 90px -40px rgba(10,22,40,0.16)" }}
+          className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-[28px]"
+          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
         >
-          <video
+          <LazyVideo
             src={videoRunTrail.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label="Woman running on a mountain trail wearing the aiOn Ring"
-            className="h-[50vh] md:h-[66vh] w-full object-cover"
+            label="Person running on a mountain trail wearing the aiOn Ring"
+            className="h-[46vh] md:h-[60vh] w-full object-cover"
           />
-          <div className="pointer-events-none absolute inset-0"
-            style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.28) 0%, rgba(10,22,40,0) 40%, rgba(10,22,40,0.45) 100%)" }} />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `
+                linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 18%, transparent 82%, hsl(var(--canvas)) 100%),
+                linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
+              `,
+            }}
+          />
         </motion.div>
 
         <FadeUp delay={0.3} className="mt-10 md:mt-14">
