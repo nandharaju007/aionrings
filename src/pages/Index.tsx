@@ -1448,6 +1448,7 @@ export default function Index() {
         <PillarsSection />
         <QuestSection />
         <TheAppSection />
+        <InLifeSection />
         <PreventiveSection />
         <RingSection />
         <PlansSection />
