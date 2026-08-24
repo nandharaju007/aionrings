@@ -1685,25 +1685,34 @@ export default function Index() {
 
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
-      <IntroOverlay />
-      <GlowCursor />
       <Header />
       <main>
+        {/* 1 — First impression */}
         <Hero />
-        <VitalityScoreSection />
-        <TrackUnderstandActSection />
+        {/* 2 — The problem, in the user's own words */}
         <BodyTalkingSection />
-        <NatureBand
-          src={natureForest}
-          eyebrow="Movement · Activity"
-          title="Health doesn't live in a dashboard."
-          line="It lives in morning trails, fresh air and the steps you actually take."
-          position="center 60%"
-        />
-
+        {/* 3 — The answer: one number */}
+        <VitalityScoreSection />
+        {/* 4 — How aiOn is different */}
+        <TrackUnderstandActSection />
+        {/* 5 — What it reads */}
         <PillarsSection />
+        <NatureBand
+          src={natureSunrise}
+          eyebrow="Wellness · Every morning"
+          title="Wake with the light, and with your number."
+          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
+          position="center 45%"
+        />
+        {/* 6 — What you do with it */}
         <QuestSection />
+        {/* 7 — Trends over time */}
+        <PreventiveSection />
+        {/* 8 — The app */}
         <TheAppSection />
+        {/* 9 — The product */}
+        <RingSection />
+        {/* 10 — Life with it */}
         <InLifeSection />
         <NatureBand
           src={natureNight}
@@ -1712,16 +1721,7 @@ export default function Index() {
           line="aiOn follows your sleep and recovery patterns, gently, all night."
           position="center 50%"
         />
-        <PreventiveSection />
-        <NatureBand
-          src={natureSunrise}
-          eyebrow="Wellness · Every morning"
-          title="Wake with the light, and with your number."
-          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
-          position="center 45%"
-        />
-
-        <RingSection />
+        {/* 11 — Plans, then conversion */}
         <PlansSection />
         <FinalCTA />
         <FAQSection />
