@@ -1107,7 +1107,7 @@ function InLifeSection() {
           </p>
         </FadeUp>
 
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {clips.map((c, i) => (
             <motion.figure
               key={c.label}
@@ -1115,8 +1115,8 @@ function InLifeSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.9, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-3xl border bg-white"
-              style={{ borderColor: `${C.blue}1F`, boxShadow: "0 30px 70px -40px rgba(10,22,40,0.35)" }}
+              className="group relative overflow-hidden rounded-2xl md:rounded-3xl"
+              style={{ boxShadow: "0 24px 60px -30px rgba(10,22,40,0.18)" }}
             >
               <video
                 src={c.src}
@@ -1126,12 +1126,13 @@ function InLifeSection() {
                 playsInline
                 preload="metadata"
                 aria-label={`${c.caption} — person wearing the aiOn ring`}
-                className="w-full h-[300px] md:h-[360px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.04]"
+                className="w-full h-[300px] md:h-[380px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
+                style={{ filter: "contrast(1.03) saturate(0.95)" }}
               />
-              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,22,40,0) 45%, rgba(10,22,40,0.72) 100%)" }} />
+              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.55) 100%)" }} />
               <figcaption className="absolute bottom-5 left-5 right-5 flex items-baseline justify-between">
                 <span className="text-white text-lg font-light tracking-wide">{c.label}</span>
-                <span className="text-white/70 text-xs tracking-[0.2em] uppercase">{c.caption}</span>
+                <span className="text-white/75 text-xs tracking-[0.2em] uppercase">{c.caption}</span>
               </figcaption>
             </motion.figure>
           ))}
