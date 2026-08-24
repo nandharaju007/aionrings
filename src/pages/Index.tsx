@@ -9,9 +9,9 @@ import heroFingerRing from "@/assets/hero-finger-ring.png";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
-import videoWork from "@/assets/video-life-work.mp4.asset.json";
-import videoRun from "@/assets/video-life-run.mp4.asset.json";
-import videoSleep from "@/assets/video-life-sleep.mp4.asset.json";
+import videoMorning from "@/assets/video-life-morning.mp4.asset.json";
+import videoWalk from "@/assets/video-life-walk.mp4.asset.json";
+import videoEvening from "@/assets/video-life-evening.mp4.asset.json";
 
 /* ─────────────────────────────────────────────
    Brand tokens (inline, no CSS var changes)
