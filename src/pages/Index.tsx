@@ -395,7 +395,7 @@ function NatureBand({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(10,22,40,0.18) 26%, rgba(10,22,40,0.42) 70%, rgba(255,255,255,0.96) 100%)",
+              "radial-gradient(ellipse at 50% 50%, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.10) 60%, rgba(10,22,40,0) 75%), linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(10,22,40,0.20) 26%, rgba(10,22,40,0.45) 70%, rgba(255,255,255,0.96) 100%)",
           }}
         />
         <div className="relative z-10 flex h-full items-center justify-center px-6">
