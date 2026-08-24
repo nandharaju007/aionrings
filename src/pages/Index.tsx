@@ -22,7 +22,7 @@ import natureForest from "@/assets/nature-forest-trail.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
 import natureNight from "@/assets/nature-restful-night.jpg";
 import videoRunTrail from "@/assets/video-run-trail.mp4.asset.json";
-import engravingMacro from "@/assets/engraving-macro.jpg";
+
 
 /* ─────────────────────────────────────────────
    Brand reveal — "ai · O(ring) · n" draws itself in
@@ -659,26 +659,6 @@ function Hero() {
               <HeroInsightTicker />
             </div>
 
-            {/* Engraving proof — macro close-up of the aiOn mark */}
-            <motion.figure
-              className="absolute bottom-14 right-4 z-10 hidden items-center gap-3 sm:flex md:bottom-16 md:right-8"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, delay: 2.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <img
-                src={engravingMacro}
-                alt="Macro close-up of the aiOn wordmark engraved into the titanium ring"
-                width={1024}
-                height={1024}
-                loading="lazy"
-                className="h-16 w-16 rounded-full object-cover ring-1 ring-white/25 md:h-20 md:w-20"
-              />
-              <figcaption className="rounded-full bg-black/35 px-3 py-1.5 text-left leading-tight backdrop-blur-sm">
-                <span className="block text-[10px] uppercase tracking-[0.28em] text-white/60">Engraved</span>
-                <span className="block text-xs text-white/90 md:text-sm">not printed.</span>
-              </figcaption>
-            </motion.figure>
           </div>
 
 
