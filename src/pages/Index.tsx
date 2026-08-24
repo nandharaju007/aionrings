@@ -674,7 +674,7 @@ function Hero() {
                 loading="lazy"
                 className="h-16 w-16 rounded-full object-cover ring-1 ring-white/25 md:h-20 md:w-20"
               />
-              <figcaption className="text-left leading-tight">
+              <figcaption className="rounded-full bg-black/35 px-3 py-1.5 text-left leading-tight backdrop-blur-sm">
                 <span className="block text-[10px] uppercase tracking-[0.28em] text-white/60">Engraved</span>
                 <span className="block text-xs text-white/90 md:text-sm">not printed.</span>
               </figcaption>
