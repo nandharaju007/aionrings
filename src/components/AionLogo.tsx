@@ -16,7 +16,7 @@ export function AionLogo({
   const viewBox = showTagline ? '0 0 120 78' : '0 0 120 60';
   return (
     <svg
-      className={className}
+      className={`text-ink ${className}`}
       width={width}
       height={height}
       viewBox={viewBox}
@@ -26,16 +26,16 @@ export function AionLogo({
     >
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00C6FF" />
-          <stop offset="50%" stopColor="#4FB3FF" />
-          <stop offset="100%" stopColor="#7C3AED" />
+          <stop offset="0%" stopColor="#00A9E0" />
+          <stop offset="50%" stopColor="#1878E0" />
+          <stop offset="100%" stopColor="#6D28D9" />
         </linearGradient>
       </defs>
       <text
         x="8"
         y="42"
         textAnchor="start"
-        fill="#FFFFFF"
+        fill="currentColor"
         fontFamily="'Arial Black', 'Inter', sans-serif"
         fontWeight={800}
         fontSize="34"
@@ -55,7 +55,7 @@ export function AionLogo({
         x="76"
         y="42"
         textAnchor="start"
-        fill="#FFFFFF"
+        fill="currentColor"
         fontFamily="'Arial Black', 'Inter', sans-serif"
         fontWeight={800}
         fontSize="34"
@@ -68,7 +68,7 @@ export function AionLogo({
           x="60"
           y="66"
           textAnchor="middle"
-          fill="#5A6B7E"
+          fill="#6B7A8C"
           fontFamily="'Inter', sans-serif"
           fontWeight={500}
           fontSize="7"
