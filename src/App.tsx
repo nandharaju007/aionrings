@@ -4,6 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SmartRingGuidePage from "./pages/SmartRingGuidePage";
+import SleepTrackingRingPage from "./pages/guide/SleepTrackingRingPage";
+import RecoveryRingPage from "./pages/guide/RecoveryRingPage";
+import StressTrackingRingPage from "./pages/guide/StressTrackingRingPage";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
@@ -40,6 +43,9 @@ const App = () => (
             <Route path="/partners" element={<PartnersPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/smart-ring-guide" element={<SmartRingGuidePage />} />
+            <Route path="/smart-ring-guide/sleep-tracking-ring" element={<SleepTrackingRingPage />} />
+            <Route path="/smart-ring-guide/recovery-ring" element={<RecoveryRingPage />} />
+            <Route path="/smart-ring-guide/stress-tracking-ring" element={<StressTrackingRingPage />} />
             <Route path="/app" element={<AppDownloadPage />} />
             <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
