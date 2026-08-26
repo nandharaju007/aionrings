@@ -1536,7 +1536,31 @@ function FinalCTA() {
 /* ─────────────────────────────────────────────
    Wellness disclaimer
    ───────────────────────────────────────────── */
-const FAQS: { q: string; a: string }[] = [
+export const FAQS: { q: string; a: string }[] = [
+  {
+    q: "What is the aiOn smart ring?",
+    a: "aiOn is an AI-native smart wellness ring in aircraft-grade titanium. Worn day and night, it reads sleep, resting heart rate, heart-rate variability, SpO₂, skin temperature, stress and activity, then reduces all of it to one daily Vitality Score and one clear action in the aiOn app.",
+  },
+  {
+    q: "What does the aiOn ring track?",
+    a: "Sleep duration and stages, resting heart rate, HRV, blood-oxygen saturation, skin-temperature deviation, daytime stress balance, steps, workouts and active calories, plus cycle-phase awareness for women's health — all compared to your own baseline rather than a population average.",
+  },
+  {
+    q: "Is a smart ring better than a smartwatch for sleep and recovery?",
+    a: "Many people wear a ring more consistently because it is lightweight, screenless and does not press against the wrist overnight. Finger sensors also sit where blood-flow signals are strong, and multi-day battery life means fewer gaps in your data.",
+  },
+  {
+    q: "How long does the aiOn ring battery last?",
+    a: "aiOn is designed for multi-day battery life, so a short daily top-up is enough and the ring can stay on through the night when the most useful recovery signals are captured.",
+  },
+  {
+    q: "Does the aiOn ring require a subscription?",
+    a: "The aiOn app is included with the ring. Reservation details are listed on the pre-order page.",
+  },
+  {
+    q: "Which finishes and sizes are available?",
+    a: "aiOn comes in Midnight, Silver and Rose Gold titanium, each with the aiOn wordmark laser-etched into the surface. Sizing guidance is shown during pre-order so you can confirm fit before reserving.",
+  },
   {
     q: "Is the aiOn Ring a medical device?",
     a: "No. aiOn Ring is a general wellness product. It is not a medical device and is not cleared or approved to diagnose, treat, cure, or prevent any disease or medical condition.",
