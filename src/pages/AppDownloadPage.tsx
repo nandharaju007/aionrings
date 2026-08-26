@@ -115,6 +115,8 @@ export default function AppDownloadPage() {
 
   useEffect(() => {
     const detected = detectDevice();
+    // eslint-disable-next-line no-console
+    console.log("[aiOn /app] detected device:", detected, "UA:", window.navigator.userAgent);
     setDevice(detected);
 
     if (detected === "ios" || detected === "android") {
@@ -122,6 +124,8 @@ export default function AppDownloadPage() {
       if (storeUrl) {
         setRedirecting(true);
         const finalUrl = appendQueryParams(storeUrl, window.location.search);
+        // eslint-disable-next-line no-console
+        console.log("[aiOn /app] redirecting to:", finalUrl);
         window.location.href = finalUrl;
       }
     }
