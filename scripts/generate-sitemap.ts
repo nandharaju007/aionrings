@@ -19,6 +19,7 @@ const entries: SitemapEntry[] = [
   { path: "/shop", changefreq: "weekly", priority: "0.9" },
   { path: "/preorder", changefreq: "weekly", priority: "0.9" },
   { path: "/partners", changefreq: "monthly", priority: "0.8" },
+  { path: "/smart-ring-guide", changefreq: "monthly", priority: "0.8" },
   { path: "/support", changefreq: "monthly", priority: "0.6" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/cookie-policy", changefreq: "yearly", priority: "0.3" },
