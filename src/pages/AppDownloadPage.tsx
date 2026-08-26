@@ -464,7 +464,14 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
   {
     kicker: "Move more",
     copy: "Track activities, workouts, steps, distance and calories.",
-    alt: "aiOn app — Activities & Workouts",
+    src: appScreenActivity.url,
+    alt: "aiOn app — Activity",
+  },
+  {
+    kicker: "Women's health",
+    copy: "Follow your cycle phases and how they shape your day.",
+    src: appScreenWomens.url,
+    alt: "aiOn app — Women's Health",
   },
   {
     kicker: "Recover smarter",
