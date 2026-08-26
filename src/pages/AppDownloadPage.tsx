@@ -300,15 +300,15 @@ function AppHero() {
 
 const SCREENS: { src?: string; alt: string; label: string }[] = [
   { src: appScreenVitality, alt: "aiOn app — Today / Vitality Score", label: "Today" },
+  { src: appScreenInsights.url, alt: "aiOn app — Insights", label: "Insights" },
+  { src: appScreenActivity.url, alt: "aiOn app — Activity", label: "Activity" },
+  { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
+  { src: appScreenWomens.url, alt: "aiOn app — Women's Health", label: "Women's Health" },
+  { src: appScreenQuest, alt: "aiOn app — Today's Quest", label: "Quest" },
   { alt: "aiOn app — Health Age", label: "Health Age" },
   { alt: "aiOn app — Vitals", label: "Vitals" },
-  { src: appScreenQuest, alt: "aiOn app — Insights", label: "Insights" },
-  { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
-  { alt: "aiOn app — Stress", label: "Stress" },
   { alt: "aiOn app — Recovery", label: "Recovery" },
-  { alt: "aiOn app — Activities & Workouts", label: "Activities" },
   { alt: "aiOn app — Nutrition", label: "Nutrition" },
-  { alt: "aiOn app — Women's Health", label: "Women's Health" },
 ];
 
 function ExperienceSection() {
