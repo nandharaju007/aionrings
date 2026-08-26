@@ -11,6 +11,10 @@ import appScreenSleep from "@/assets/app-screen-sleep.png";
 import appScreenWomens from "@/assets/app-screen-womens-health.png.asset.json";
 import appScreenActivity from "@/assets/app-screen-activity.png.asset.json";
 import appScreenInsights from "@/assets/app-screen-insights.png.asset.json";
+import appScreenVitals from "@/assets/app-screen-vitals.png.asset.json";
+import appScreenHealthAge from "@/assets/app-screen-health-age.png.asset.json";
+import appScreenRecovery from "@/assets/app-screen-recovery.png.asset.json";
+import appScreenNutrition from "@/assets/app-screen-nutrition.png.asset.json";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
 import videoRestSilver from "@/assets/video-life-rest-silver.mp4.asset.json";
@@ -305,10 +309,10 @@ const SCREENS: { src?: string; alt: string; label: string }[] = [
   { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
   { src: appScreenWomens.url, alt: "aiOn app — Women's Health", label: "Women's Health" },
   { src: appScreenQuest, alt: "aiOn app — Today's Quest", label: "Quest" },
-  { alt: "aiOn app — Health Age", label: "Health Age" },
-  { alt: "aiOn app — Vitals", label: "Vitals" },
-  { alt: "aiOn app — Recovery", label: "Recovery" },
-  { alt: "aiOn app — Nutrition", label: "Nutrition" },
+  { src: appScreenHealthAge.url, alt: "aiOn app — Health Age", label: "Health Age" },
+  { src: appScreenVitals.url, alt: "aiOn app — Vitals", label: "Vitals" },
+  { src: appScreenRecovery.url, alt: "aiOn app — Recovery", label: "Recovery" },
+  { src: appScreenNutrition.url, alt: "aiOn app — Nutrition", label: "Nutrition" },
 ];
 
 function ExperienceSection() {
@@ -476,13 +480,13 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
   {
     kicker: "Recover smarter",
     copy: "Understand stress, recovery and daily wellness patterns.",
-    src: appScreenQuest,
-    alt: "aiOn app — Recovery & Stress",
+    src: appScreenRecovery.url,
+    alt: "aiOn app — Recovery",
   },
   {
     kicker: "Know your vitals",
     copy: "See supported wellness measurements and trends.",
-    src: appScreenVitality,
+    src: appScreenVitals.url,
     alt: "aiOn app — Vitals",
   },
 ];
