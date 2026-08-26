@@ -4,7 +4,7 @@ import { AionLogo } from './AionLogo';
 
 const productLinks: { label: string; href: string }[] = [
   { label: 'How It Works', href: '/#how' },
-  { label: 'The App', href: '/#app' },
+  { label: 'The App', href: '/app' },
   { label: 'The Ring', href: '/#ring' },
   { label: 'Pre-Order', href: '/preorder' },
   { label: 'Size Guide', href: '/preorder' },

@@ -15,6 +15,7 @@ interface SitemapEntry {
 // Public, indexable routes. Admin, checkout, and 404 are intentionally omitted.
 const entries: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
+  { path: "/app", changefreq: "monthly", priority: "0.9" },
   { path: "/shop", changefreq: "weekly", priority: "0.9" },
   { path: "/preorder", changefreq: "weekly", priority: "0.9" },
   { path: "/partners", changefreq: "monthly", priority: "0.8" },

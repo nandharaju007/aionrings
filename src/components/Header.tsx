@@ -6,7 +6,7 @@ import { AionLogo } from './AionLogo';
 const navLinks = [
   { href: '#how', label: 'How It Works' },
   { href: '#signals', label: 'Signals' },
-  { href: '#app', label: 'The App' },
+  { href: '/app', label: 'The App', route: true },
   { href: '#ring', label: 'The Ring' },
   { href: '/partners', label: 'Partners', route: true },
   { href: '/preorder', label: 'Pre-Order', route: true },
