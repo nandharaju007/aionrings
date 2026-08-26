@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SmartRingGuidePage from "./pages/SmartRingGuidePage";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/preorder" element={<PreOrderPage />} />
             <Route path="/partners" element={<PartnersPage />} />
             <Route path="/support" element={<SupportPage />} />
+            <Route path="/smart-ring-guide" element={<SmartRingGuidePage />} />
             <Route path="/app" element={<AppDownloadPage />} />
             <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />

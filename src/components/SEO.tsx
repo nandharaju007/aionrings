@@ -9,11 +9,14 @@ interface SEOProps {
   image: string; // absolute or site-relative (starts with /)
   type?: "website" | "article";
   noindex?: boolean;
+  /** Optional route-level structured data (Product, BreadcrumbList, Article…). */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-export function SEO({ title, description, path, image, type = "website", noindex }: SEOProps) {
+export function SEO({ title, description, path, image, type = "website", noindex, jsonLd }: SEOProps) {
   const url = `${SITE}${path.startsWith("/") ? path : `/${path}`}`;
   const imageUrl = image.startsWith("http") ? image : `${SITE}${image}`;
+  const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   return (
     <Helmet>
       <title>{title}</title>
@@ -41,6 +44,12 @@ export function SEO({ title, description, path, image, type = "website", noindex
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:image:alt" content={title} />
+
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
     </Helmet>
   );
 }

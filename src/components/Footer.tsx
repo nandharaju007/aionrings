@@ -8,6 +8,7 @@ const productLinks: { label: string; href: string }[] = [
   { label: 'The Ring', href: '/#ring' },
   { label: 'Pre-Order', href: '/preorder' },
   { label: 'Size Guide', href: '/preorder' },
+  { label: 'Smart Ring Guide', href: '/smart-ring-guide' },
 ];
 const companyLinks: { label: string; href: string }[] = [
   { label: 'About', href: '/' },
