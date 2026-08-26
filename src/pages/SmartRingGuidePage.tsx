@@ -102,8 +102,8 @@ export default function SmartRingGuidePage() {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <SEO
-        title="Smart Ring Guide — Sleep, Recovery, Stress & Activity | aiOn"
-        description="A practical guide to smart wellness rings: how ring-based sleep, recovery, HRV, stress, activity and cycle tracking work, and how to choose the right one."
+        title="Smart Ring Guide: Sleep, Recovery, HRV & Stress Tracking | aiOn"
+        description="How wellness rings track sleep, recovery, HRV, stress, activity and cycle signals — what each reading means, how accurate it is, and how to choose a smart ring you'll actually wear."
         path="/smart-ring-guide"
         image="/og-image.jpg"
         type="article"
