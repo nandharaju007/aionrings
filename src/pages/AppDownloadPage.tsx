@@ -309,10 +309,10 @@ const SCREENS: { src?: string; alt: string; label: string }[] = [
   { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
   { src: appScreenWomens.url, alt: "aiOn app — Women's Health", label: "Women's Health" },
   { src: appScreenQuest, alt: "aiOn app — Today's Quest", label: "Quest" },
-  { alt: "aiOn app — Health Age", label: "Health Age" },
-  { alt: "aiOn app — Vitals", label: "Vitals" },
-  { alt: "aiOn app — Recovery", label: "Recovery" },
-  { alt: "aiOn app — Nutrition", label: "Nutrition" },
+  { src: appScreenHealthAge.url, alt: "aiOn app — Health Age", label: "Health Age" },
+  { src: appScreenVitals.url, alt: "aiOn app — Vitals", label: "Vitals" },
+  { src: appScreenRecovery.url, alt: "aiOn app — Recovery", label: "Recovery" },
+  { src: appScreenNutrition.url, alt: "aiOn app — Nutrition", label: "Nutrition" },
 ];
 
 function ExperienceSection() {
