@@ -1599,10 +1599,10 @@ function FAQSection() {
         <FadeUp className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Questions, answered</p>
           <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-ink">
-            What aiOn is — and what it isn’t
+            Smart ring questions — and what aiOn isn’t
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-ink-soft">
-            A wellness companion. Informational only. Never a substitute for professional care.
+            Sleep, recovery, battery, fit and finishes — plus the limits of a wellness companion.
           </p>
         </FadeUp>
 
