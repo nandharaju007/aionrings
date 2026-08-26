@@ -1696,10 +1696,37 @@ export default function Index() {
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <SEO
-        title="aiOn — The AI-Native Smart Wellness Ring"
-        description="aiOn turns everyday signals — heart rate, HRV, SpO₂, sleep, recovery, stress — into one daily Vitality Score and one action. A general wellness product, not a medical device."
+        title="aiOn Smart Ring — Sleep, Recovery & Wellness Tracking Ring"
+        description="aiOn is an AI-native smart ring for sleep, recovery, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product, not a medical device."
         path="/"
         image="/og-image.jpg"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: "aiOn Smart Ring",
+            alternateName: ["aiOn Ring", "aiOn wellness ring", "aiOn smart wellness ring"],
+            description:
+              "AI-native smart ring for sleep, recovery, stress, activity and everyday wellness tracking, with a daily Vitality Score in the aiOn app.",
+            brand: { "@type": "Brand", name: "aiOn" },
+            category: "Smart wellness ring",
+            material: "Titanium",
+            image: "https://www.aionrings.com/og-image.jpg",
+            url: "https://www.aionrings.com/",
+            additionalProperty: [
+              { "@type": "PropertyValue", name: "Finishes", value: "Midnight, Silver, Rose Gold" },
+              { "@type": "PropertyValue", name: "Tracked signals", value: "Sleep, recovery, HRV, resting heart rate, SpO₂, skin temperature, stress, activity" },
+              { "@type": "PropertyValue", name: "Companion app", value: "aiOn app for iOS and Android" },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "aiOn",
+            url: "https://www.aionrings.com/",
+            publisher: { "@type": "Organization", name: "aiOn Health Science LLC" },
+          },
+        ]}
       />
       <Header />
       <main>
