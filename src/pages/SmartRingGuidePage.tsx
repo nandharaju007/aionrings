@@ -135,6 +135,16 @@ export default function SmartRingGuidePage() {
               acceptedAnswer: { "@type": "Answer", text: f.a },
             })),
           },
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "Smart ring deep dives",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Sleep tracking ring", url: `${SITE}/smart-ring-guide/sleep-tracking-ring` },
+              { "@type": "ListItem", position: 2, name: "Recovery ring", url: `${SITE}/smart-ring-guide/recovery-ring` },
+              { "@type": "ListItem", position: 3, name: "Stress tracking ring", url: `${SITE}/smart-ring-guide/stress-tracking-ring` },
+            ],
+          },
         ]}
       />
       <Header />
