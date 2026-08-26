@@ -480,13 +480,13 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
   {
     kicker: "Recover smarter",
     copy: "Understand stress, recovery and daily wellness patterns.",
-    src: appScreenQuest,
-    alt: "aiOn app — Recovery & Stress",
+    src: appScreenRecovery.url,
+    alt: "aiOn app — Recovery",
   },
   {
     kicker: "Know your vitals",
     copy: "See supported wellness measurements and trends.",
-    src: appScreenVitality,
+    src: appScreenVitals.url,
     alt: "aiOn app — Vitals",
   },
 ];
