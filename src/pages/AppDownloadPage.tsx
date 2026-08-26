@@ -84,15 +84,15 @@ function StoreBadge({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className={`group flex items-center gap-3 rounded-2xl px-5 py-3.5 transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#00D4FF]/60 ${
+      className={`group flex items-center gap-3 rounded-2xl px-5 py-3.5 transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#1878E0]/40 ${
         isLight
-          ? "bg-white text-[#0A1628] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.5)]"
-          : "bg-white/10 text-white border border-white/15 backdrop-blur-md hover:bg-white/15"
+          ? "bg-ink text-white shadow-[0_14px_34px_-16px_rgba(10,22,40,0.6)] hover:bg-[#132139]"
+          : "bg-white text-ink border border-ink/10 shadow-[0_10px_28px_-18px_rgba(10,22,40,0.5)] hover:border-ink/20"
       }`}
     >
       <Icon className="h-7 w-7 shrink-0" />
       <span className="flex flex-col items-start leading-tight">
-        <span className={`text-[10px] font-medium tracking-wide ${isLight ? "text-[#5A6B80]" : "text-white/60"}`}>
+        <span className={`text-[10px] font-medium tracking-wide ${isLight ? "text-white/70" : "text-ink-muted"}`}>
           {sublabel}
         </span>
         <span className="text-[15px] font-semibold">{label === "Download on the App Store" ? "App Store" : "Google Play"}</span>
@@ -165,8 +165,8 @@ function PhoneMock({
       <div
         className="relative rounded-[2.4rem] p-[3px]"
         style={{
-          background: "linear-gradient(160deg,rgba(255,255,255,0.35),rgba(255,255,255,0.05) 40%,rgba(0,212,255,0.25))",
-          boxShadow: "0 40px 80px -30px rgba(0,0,0,0.75)",
+          background: "linear-gradient(160deg,rgba(10,22,40,0.16),rgba(10,22,40,0.06) 40%,rgba(0,169,224,0.28))",
+          boxShadow: "0 34px 70px -34px rgba(10,22,40,0.45)",
         }}
       >
         <div className="relative overflow-hidden rounded-[2.25rem] bg-[#050A14]" style={{ aspectRatio: "9 / 19.5" }}>
@@ -192,7 +192,7 @@ function PhoneMock({
         </div>
       </div>
       {label && (
-        <p className="mt-4 text-center text-[12px] uppercase tracking-[0.22em] text-white/55">{label}</p>
+        <p className="mt-4 text-center text-[12px] uppercase tracking-[0.22em] text-ink-muted">{label}</p>
       )}
     </div>
   );
@@ -251,33 +251,33 @@ function LazyVideo({
 
 function AppHero() {
   return (
-    <section className="relative overflow-hidden bg-[#050A14] px-6 pt-28 pb-20 md:pt-36 md:pb-28">
+    <section className="relative overflow-hidden bg-canvas px-6 pt-28 pb-20 md:pt-36 md:pb-28">
       <div
-        className="pointer-events-none absolute -top-40 left-1/2 h-[720px] w-[720px] -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[720px] w-[720px] -translate-x-1/2 rounded-full opacity-[0.13] blur-3xl"
         style={{ background: GRADIENT }}
       />
       <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
         <FadeUp>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-[#00D4FF]">aiOn Smart Ring</p>
-          <h1 className="mt-5 text-[40px] font-extralight leading-[1.05] tracking-[-0.02em] text-white sm:text-[56px]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-[#1878E0]">aiOn Smart Ring</p>
+          <h1 className="mt-5 text-[40px] font-extralight leading-[1.05] tracking-[-0.02em] text-ink sm:text-[56px]">
             Your Health.
             <br />
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRADIENT }}>
               One App.
             </span>
           </h1>
-          <p className="mt-6 max-w-md text-lg font-light leading-relaxed text-white/65">
+          <p className="mt-6 max-w-md text-lg font-light leading-relaxed text-ink-soft">
             Turn your aiOn Ring data into meaningful daily wellness insights.
           </p>
           <div className="mt-10">
             <StoreBadges />
           </div>
-          <p className="mt-6 text-[13px] text-white/45">Available on iOS &amp; Android</p>
+          <p className="mt-6 text-[13px] text-ink-muted">Available on iOS &amp; Android</p>
         </FadeUp>
 
         <FadeUp delay={0.15} className="relative flex justify-center">
           <div
-            className="pointer-events-none absolute inset-0 rounded-full opacity-40 blur-3xl"
+            className="pointer-events-none absolute inset-0 rounded-full opacity-[0.14] blur-3xl"
             style={{ background: GRADIENT }}
           />
           <div className="relative flex items-end gap-6">
@@ -286,7 +286,7 @@ function AppHero() {
               src={ringMidnight}
               alt="aiOn Smart Ring in Midnight finish"
               loading="lazy"
-              className="relative -mb-2 w-24 drop-shadow-[0_20px_40px_rgba(0,212,255,0.35)] sm:w-32"
+              className="relative -mb-2 w-24 drop-shadow-[0_20px_40px_rgba(10,22,40,0.25)] sm:w-32"
             />
           </div>
         </FadeUp>
@@ -310,11 +310,11 @@ const SCREENS: { src?: string; alt: string; label: string }[] = [
 
 function ExperienceSection() {
   return (
-    <section className="relative overflow-hidden bg-[#070D1A] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-canvas-alt py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <FadeUp className="max-w-xl">
-          <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">The experience</p>
-          <h2 className="mt-4 text-3xl font-extralight text-white md:text-5xl">Every screen, one story.</h2>
+          <p className="text-[11px] uppercase tracking-[0.34em] text-ink-muted">The experience</p>
+          <h2 className="mt-4 text-3xl font-extralight text-ink md:text-5xl">Every screen, one story.</h2>
         </FadeUp>
       </div>
 
@@ -330,7 +330,7 @@ function ExperienceSection() {
           ))}
         </div>
       </FadeUp>
-      <p className="mt-2 px-6 text-center text-[12px] text-white/35">Swipe to explore the app</p>
+      <p className="mt-2 px-6 text-center text-[12px] text-ink-muted">Swipe to explore the app</p>
     </section>
   );
 }
@@ -361,17 +361,17 @@ const DEMOS = [
 
 function DemoSection() {
   return (
-    <section className="bg-[#050A14] py-20 md:py-28">
+    <section className="bg-canvas py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <FadeUp className="max-w-xl">
-          <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">In motion</p>
-          <h2 className="mt-4 text-3xl font-extralight text-white md:text-5xl">See it work.</h2>
+          <p className="text-[11px] uppercase tracking-[0.34em] text-ink-muted">In motion</p>
+          <h2 className="mt-4 text-3xl font-extralight text-ink md:text-5xl">See it work.</h2>
         </FadeUp>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {DEMOS.map((d, i) => (
             <FadeUp key={d.title} delay={i * 0.05}>
-              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]">
+              <div className="group relative overflow-hidden rounded-3xl border border-ink/[0.07] bg-white shadow-[0_20px_50px_-32px_rgba(10,22,40,0.45)]">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <LazyVideo
                     src={d.src}
@@ -379,17 +379,17 @@ function DemoSection() {
                     label={d.title}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050A14] via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-transparent" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-light text-white">{d.title}</h3>
-                  <p className="mt-1.5 text-sm text-white/55">{d.copy}</p>
+                  <h3 className="text-lg font-light text-ink">{d.title}</h3>
+                  <p className="mt-1.5 text-sm text-ink-muted">{d.copy}</p>
                 </div>
               </div>
             </FadeUp>
           ))}
         </div>
-        <p className="mt-6 text-[12px] text-white/35">
+        <p className="mt-6 text-[12px] text-ink-muted">
           Placeholder footage — in-app screen recordings can replace these clips at any time.
         </p>
       </div>
@@ -406,11 +406,11 @@ const STORY = [
 
 function StorySection() {
   return (
-    <section className="relative overflow-hidden bg-[#070D1A] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-canvas-alt py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <FadeUp className="max-w-xl">
-          <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">Ring + App</p>
-          <h2 className="mt-4 text-3xl font-extralight text-white md:text-5xl">How it comes together.</h2>
+          <p className="text-[11px] uppercase tracking-[0.34em] text-ink-muted">Ring + App</p>
+          <h2 className="mt-4 text-3xl font-extralight text-ink md:text-5xl">How it comes together.</h2>
         </FadeUp>
 
         <div className="mt-14 grid items-center gap-12 lg:grid-cols-[1fr_auto]">
@@ -428,8 +428,8 @@ function StorySection() {
                   >
                     {i + 1}
                   </span>
-                  <h3 className="text-xl font-light text-white">{s.title}</h3>
-                  <p className="mt-1 text-sm text-white/55">{s.copy}</p>
+                  <h3 className="text-xl font-light text-ink">{s.title}</h3>
+                  <p className="mt-1 text-sm text-ink-muted">{s.copy}</p>
                 </li>
               </FadeUp>
             ))}
@@ -437,7 +437,7 @@ function StorySection() {
 
           <FadeUp delay={0.1} className="relative flex justify-center">
             <div
-              className="pointer-events-none absolute inset-0 rounded-full opacity-30 blur-3xl"
+              className="pointer-events-none absolute inset-0 rounded-full opacity-[0.12] blur-3xl"
               style={{ background: GRADIENT }}
             />
             <div className="relative flex items-end gap-5">
@@ -479,7 +479,7 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
 
 function DiscoverySection() {
   return (
-    <section className="bg-[#050A14] py-20 md:py-28">
+    <section className="bg-canvas py-20 md:py-28">
       <div className="mx-auto max-w-5xl space-y-24 px-6 md:space-y-32">
         {DISCOVERY.map((d, i) => (
           <FadeUp key={d.kicker}>
@@ -493,7 +493,7 @@ function DiscoverySection() {
                 >
                   {d.kicker}
                 </p>
-                <h3 className="mt-4 text-2xl font-extralight leading-snug text-white md:text-4xl">{d.copy}</h3>
+                <h3 className="mt-4 text-2xl font-extralight leading-snug text-ink md:text-4xl">{d.copy}</h3>
               </div>
               <div className="flex justify-center">
                 <PhoneMock src={d.src} alt={d.alt} width={230} />
@@ -508,31 +508,31 @@ function DiscoverySection() {
 
 function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios" | "android" | "desktop" }) {
   return (
-    <section className="relative overflow-hidden bg-[#050A14] px-6 py-24 md:py-32">
+    <section className="relative overflow-hidden bg-canvas-alt px-6 py-24 md:py-32">
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.12] blur-3xl"
         style={{ background: GRADIENT }}
       />
       <FadeUp className="relative mx-auto max-w-2xl text-center">
-        <AionLogo width={120} className="mx-auto opacity-90 !text-white" />
-        <h2 className="mt-8 text-3xl font-extralight leading-tight text-white md:text-5xl">
+        <AionLogo width={120} className="mx-auto" />
+        <h2 className="mt-8 text-3xl font-extralight leading-tight text-ink md:text-5xl">
           Your aiOn experience starts here.
         </h2>
         <div className="mt-10">
           <StoreBadges />
         </div>
-        <p className="mt-6 text-[13px] text-white/45">Available on iOS &amp; Android</p>
+        <p className="mt-6 text-[13px] text-ink-muted">Available on iOS &amp; Android</p>
 
         {redirecting && device !== "desktop" && (
-          <div className="mx-auto mt-8 max-w-md rounded-2xl border border-white/15 bg-white/5 px-5 py-4">
-            <p className="text-sm text-white/70">
+          <div className="mx-auto mt-8 max-w-md rounded-2xl border border-ink/10 bg-white px-5 py-4">
+            <p className="text-sm text-ink-soft">
               Redirecting you to the {device === "ios" ? "App Store" : "Google Play"}…
             </p>
-            <p className="mt-2 text-[13px] text-white/50">
+            <p className="mt-2 text-[13px] text-ink-muted">
               If nothing happens,{" "}
               <a
                 href={device === "ios" ? APP_STORE_URL : GOOGLE_PLAY_URL}
-                className="font-medium text-[#00D4FF] underline underline-offset-2"
+                className="font-medium text-[#1878E0] underline underline-offset-2"
               >
                 tap here to continue
               </a>
@@ -541,7 +541,7 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
           </div>
         )}
 
-        <p className="mt-10 text-[13px] font-medium tracking-wide text-white/60">aionrings.com</p>
+        <p className="mt-10 text-[13px] font-medium tracking-wide text-ink-muted">aionrings.com</p>
       </FadeUp>
     </section>
   );
@@ -577,16 +577,16 @@ export default function AppDownloadPage() {
 
   if (device === null) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#050A14]">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-canvas">
         {seo}
-        <AionLogo width={120} className="!text-white" />
-        <p className="mt-4 text-sm text-white/50">Detecting your device…</p>
+        <AionLogo width={120} />
+        <p className="mt-4 text-sm text-ink-muted">Detecting your device…</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#050A14]">
+    <div className="flex min-h-screen flex-col bg-canvas">
       {seo}
       <Header />
       <main className="flex-1">
