@@ -1706,8 +1706,8 @@ export default function Index() {
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <SEO
-        title="aiOn Smart Ring — Sleep, Recovery & Wellness Tracking Ring"
-        description="aiOn is an AI-native smart ring for sleep, recovery, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product, not a medical device."
+        title="aiOn Smart Ring — Sleep, Recovery & Stress Tracking Ring"
+        description="aiOn is an AI-native titanium smart ring for sleep, recovery, HRV, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product."
         path="/"
         image="/og-image.jpg"
         jsonLd={[
