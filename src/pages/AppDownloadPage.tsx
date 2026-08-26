@@ -515,7 +515,7 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
         style={{ background: GRADIENT }}
       />
       <FadeUp className="relative mx-auto max-w-2xl text-center">
-        <AionLogo width={120} className="mx-auto opacity-90" />
+        <AionLogo width={120} className="mx-auto opacity-90 !text-white" />
         <h2 className="mt-8 text-3xl font-extralight leading-tight text-white md:text-5xl">
           Your aiOn experience starts here.
         </h2>
@@ -580,7 +580,7 @@ export default function AppDownloadPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#050A14]">
         {seo}
-        <AionLogo width={120} />
+        <AionLogo width={120} className="!text-white" />
         <p className="mt-4 text-sm text-white/50">Detecting your device…</p>
       </div>
     );
