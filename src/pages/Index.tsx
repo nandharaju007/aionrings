@@ -1736,6 +1736,25 @@ export default function Index() {
             url: "https://www.aionrings.com/",
             publisher: { "@type": "Organization", name: "aiOn Health Science LLC" },
           },
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "aiOn",
+            legalName: "aiOn Health Science LLC",
+            url: "https://www.aionrings.com/",
+            logo: "https://www.aionrings.com/favicon-512.png",
+            email: "contact@aionrings.com",
+            sameAs: ["https://www.aionrings.com/app"],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          },
         ]}
       />
       <Header />
