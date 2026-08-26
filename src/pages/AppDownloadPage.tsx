@@ -95,7 +95,7 @@ function StoreBadge({
         <span className={`text-[10px] font-medium tracking-wide ${isLight ? "text-[#5A6B80]" : "text-white/60"}`}>
           {sublabel}
         </span>
-        <span className="text-[15px] font-semibold">{label}</span>
+        <span className="text-[15px] font-semibold">{label === "Download on the App Store" ? "App Store" : "Google Play"}</span>
       </span>
     </a>
   );
@@ -170,8 +170,7 @@ function PhoneMock({
         }}
       >
         <div className="relative overflow-hidden rounded-[2.25rem] bg-[#050A14]" style={{ aspectRatio: "9 / 19.5" }}>
-          {/* notch */}
-          <div className="absolute left-1/2 top-2 z-20 h-[18px] w-[34%] -translate-x-1/2 rounded-full bg-black/90" />
+          {!src && <div className="absolute left-1/2 top-2 z-20 h-[18px] w-[34%] -translate-x-1/2 rounded-full bg-black/90" />}
           {src ? (
             <img
               src={src}
