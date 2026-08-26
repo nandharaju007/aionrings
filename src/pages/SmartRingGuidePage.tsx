@@ -157,6 +157,38 @@ export default function SmartRingGuidePage() {
             ))}
           </div>
 
+          <section className="mt-16 scroll-mt-28" id="deep-dives">
+            <h2 className="text-2xl font-light text-ink md:text-3xl">Deep dives</h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              {[
+                {
+                  to: "/smart-ring-guide/sleep-tracking-ring",
+                  t: "Sleep tracking ring",
+                  d: "How overnight signals are measured, how accurate they are, and what to change.",
+                },
+                {
+                  to: "/smart-ring-guide/recovery-ring",
+                  t: "Recovery ring",
+                  d: "What a readiness score is made of and how to train around a low day.",
+                },
+                {
+                  to: "/smart-ring-guide/stress-tracking-ring",
+                  t: "Stress tracking ring",
+                  d: "Reading calm versus activated time — and the patterns worth fixing.",
+                },
+              ].map((c) => (
+                <Link
+                  key={c.to}
+                  to={c.to}
+                  className="rounded-2xl border border-ink/10 bg-canvas-alt p-6 transition hover:border-ink/25"
+                >
+                  <p className="text-[16px] font-medium text-ink">{c.t}</p>
+                  <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{c.d}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+
           <section className="mt-16 scroll-mt-28" id="faq">
             <h2 className="text-2xl font-light text-ink md:text-3xl">Smart ring FAQ</h2>
             <dl className="mt-6 space-y-6">
