@@ -1595,20 +1595,6 @@ function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className={`relative ${SECTION}`} style={{ background: "#F6F8FC" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: FAQS.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
-          }),
-        }}
-      />
       <div className="container mx-auto px-6">
         <FadeUp className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Questions, answered</p>
