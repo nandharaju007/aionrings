@@ -76,14 +76,34 @@ const FAQS: { q: string; a: string }[] = [
     q: "Which finishes does the aiOn ring come in?",
     a: "Midnight, Silver and Rose Gold, each with the aiOn wordmark laser-etched into the titanium surface.",
   },
+  {
+    q: "What is a wellness ring, and how is it different from a fitness tracker?",
+    a: "A wellness ring focuses on recovery and everyday balance rather than workout counting. It reads sleep, HRV, resting heart rate, temperature and stress continuously, and interprets them against your own baseline so the output is guidance rather than raw activity totals.",
+  },
+  {
+    q: "How long does a smart ring battery last?",
+    a: "Most smart rings run for several days on a charge, which is why they stay on overnight more consistently than smartwatches. aiOn is designed for multi-day battery life with a short daily top-up.",
+  },
+  {
+    q: "How accurate is smart ring HRV and sleep data?",
+    a: "Consumer wearables are reliable at total sleep time, resting heart rate and HRV trends, and less precise at exact sleep stages. Read stage percentages as weekly trends and rely on your own baseline rather than comparing values with other people.",
+  },
+  {
+    q: "How do I find my smart ring size?",
+    a: "Fit matters more than any spec, because a ring only helps if it is worn every night. aiOn shows sizing guidance during pre-order, and you should size for the finger you plan to wear it on, at a normal time of day.",
+  },
+  {
+    q: "Can I wear a smart ring in the shower or while training?",
+    a: "aiOn titanium is built for daily wear, including washing hands and workouts. For heavy lifting, many people move the ring to another finger or remove it to avoid surface marks.",
+  },
 ];
 
 export default function SmartRingGuidePage() {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <SEO
-        title="Smart Ring Guide — Sleep, Recovery, Stress & Activity | aiOn"
-        description="A practical guide to smart wellness rings: how ring-based sleep, recovery, HRV, stress, activity and cycle tracking work, and how to choose the right one."
+        title="Smart Ring Guide: Sleep, Recovery, HRV & Stress Tracking | aiOn"
+        description="How wellness rings track sleep, recovery, HRV, stress, activity and cycle signals — what each reading means, how accurate it is, and how to choose a smart ring you'll actually wear."
         path="/smart-ring-guide"
         image="/og-image.jpg"
         type="article"
@@ -114,6 +134,16 @@ export default function SmartRingGuidePage() {
               name: f.q,
               acceptedAnswer: { "@type": "Answer", text: f.a },
             })),
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "Smart ring deep dives",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Sleep tracking ring", url: `${SITE}/smart-ring-guide/sleep-tracking-ring` },
+              { "@type": "ListItem", position: 2, name: "Recovery ring", url: `${SITE}/smart-ring-guide/recovery-ring` },
+              { "@type": "ListItem", position: 3, name: "Stress tracking ring", url: `${SITE}/smart-ring-guide/stress-tracking-ring` },
+            ],
           },
         ]}
       />

@@ -1536,7 +1536,31 @@ function FinalCTA() {
 /* ─────────────────────────────────────────────
    Wellness disclaimer
    ───────────────────────────────────────────── */
-const FAQS: { q: string; a: string }[] = [
+export const FAQS: { q: string; a: string }[] = [
+  {
+    q: "What is the aiOn smart ring?",
+    a: "aiOn is an AI-native smart wellness ring in aircraft-grade titanium. Worn day and night, it reads sleep, resting heart rate, heart-rate variability, SpO₂, skin temperature, stress and activity, then reduces all of it to one daily Vitality Score and one clear action in the aiOn app.",
+  },
+  {
+    q: "What does the aiOn ring track?",
+    a: "Sleep duration and stages, resting heart rate, HRV, blood-oxygen saturation, skin-temperature deviation, daytime stress balance, steps, workouts and active calories, plus cycle-phase awareness for women's health — all compared to your own baseline rather than a population average.",
+  },
+  {
+    q: "Is a smart ring better than a smartwatch for sleep and recovery?",
+    a: "Many people wear a ring more consistently because it is lightweight, screenless and does not press against the wrist overnight. Finger sensors also sit where blood-flow signals are strong, and multi-day battery life means fewer gaps in your data.",
+  },
+  {
+    q: "How long does the aiOn ring battery last?",
+    a: "aiOn is designed for multi-day battery life, so a short daily top-up is enough and the ring can stay on through the night when the most useful recovery signals are captured.",
+  },
+  {
+    q: "Does the aiOn ring require a subscription?",
+    a: "The aiOn app is included with the ring. Reservation details are listed on the pre-order page.",
+  },
+  {
+    q: "Which finishes and sizes are available?",
+    a: "aiOn comes in Midnight, Silver and Rose Gold titanium, each with the aiOn wordmark laser-etched into the surface. Sizing guidance is shown during pre-order so you can confirm fit before reserving.",
+  },
   {
     q: "Is the aiOn Ring a medical device?",
     a: "No. aiOn Ring is a general wellness product. It is not a medical device and is not cleared or approved to diagnose, treat, cure, or prevent any disease or medical condition.",
@@ -1571,28 +1595,14 @@ function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className={`relative ${SECTION}`} style={{ background: "#F6F8FC" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: FAQS.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
-          }),
-        }}
-      />
       <div className="container mx-auto px-6">
         <FadeUp className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Questions, answered</p>
           <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-ink">
-            What aiOn is — and what it isn’t
+            Smart ring questions — and what aiOn isn’t
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-ink-soft">
-            A wellness companion. Informational only. Never a substitute for professional care.
+            Sleep, recovery, battery, fit and finishes — plus the limits of a wellness companion.
           </p>
         </FadeUp>
 
@@ -1696,8 +1706,8 @@ export default function Index() {
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <SEO
-        title="aiOn Smart Ring — Sleep, Recovery & Wellness Tracking Ring"
-        description="aiOn is an AI-native smart ring for sleep, recovery, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product, not a medical device."
+        title="aiOn Smart Ring — Sleep, Recovery & Stress Tracking Ring"
+        description="aiOn is an AI-native titanium smart ring for sleep, recovery, HRV, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product."
         path="/"
         image="/og-image.jpg"
         jsonLd={[
@@ -1725,6 +1735,25 @@ export default function Index() {
             name: "aiOn",
             url: "https://www.aionrings.com/",
             publisher: { "@type": "Organization", name: "aiOn Health Science LLC" },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "aiOn",
+            legalName: "aiOn Health Science LLC",
+            url: "https://www.aionrings.com/",
+            logo: "https://www.aionrings.com/android-chrome-512x512.png",
+            email: "contact@aionrings.com",
+            sameAs: ["https://www.aionrings.com/app"],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
           },
         ]}
       />
