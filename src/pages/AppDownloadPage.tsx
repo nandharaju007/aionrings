@@ -8,6 +8,9 @@ import { motion } from "framer-motion";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
 import appScreenQuest from "@/assets/app-screen-quest.png";
 import appScreenSleep from "@/assets/app-screen-sleep.png";
+import appScreenWomens from "@/assets/app-screen-womens-health.png.asset.json";
+import appScreenActivity from "@/assets/app-screen-activity.png.asset.json";
+import appScreenInsights from "@/assets/app-screen-insights.png.asset.json";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
 import videoRestSilver from "@/assets/video-life-rest-silver.mp4.asset.json";
@@ -297,15 +300,15 @@ function AppHero() {
 
 const SCREENS: { src?: string; alt: string; label: string }[] = [
   { src: appScreenVitality, alt: "aiOn app — Today / Vitality Score", label: "Today" },
+  { src: appScreenInsights.url, alt: "aiOn app — Insights", label: "Insights" },
+  { src: appScreenActivity.url, alt: "aiOn app — Activity", label: "Activity" },
+  { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
+  { src: appScreenWomens.url, alt: "aiOn app — Women's Health", label: "Women's Health" },
+  { src: appScreenQuest, alt: "aiOn app — Today's Quest", label: "Quest" },
   { alt: "aiOn app — Health Age", label: "Health Age" },
   { alt: "aiOn app — Vitals", label: "Vitals" },
-  { src: appScreenQuest, alt: "aiOn app — Insights", label: "Insights" },
-  { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
-  { alt: "aiOn app — Stress", label: "Stress" },
   { alt: "aiOn app — Recovery", label: "Recovery" },
-  { alt: "aiOn app — Activities & Workouts", label: "Activities" },
   { alt: "aiOn app — Nutrition", label: "Nutrition" },
-  { alt: "aiOn app — Women's Health", label: "Women's Health" },
 ];
 
 function ExperienceSection() {
@@ -461,7 +464,14 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
   {
     kicker: "Move more",
     copy: "Track activities, workouts, steps, distance and calories.",
-    alt: "aiOn app — Activities & Workouts",
+    src: appScreenActivity.url,
+    alt: "aiOn app — Activity",
+  },
+  {
+    kicker: "Women's health",
+    copy: "Follow your cycle phases and how they shape your day.",
+    src: appScreenWomens.url,
+    alt: "aiOn app — Women's Health",
   },
   {
     kicker: "Recover smarter",
