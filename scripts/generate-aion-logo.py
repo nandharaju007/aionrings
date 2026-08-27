@@ -123,6 +123,40 @@ def make_png():
 
 
 def make_svg():
+    # Use PIL to measure text positions so the SVG matches the PNG layout
+    img = Image.new("RGB", (WIDTH, HEIGHT), BG)
+    draw = ImageDraw.Draw(img)
+    font_main = ImageFont.truetype(FONT_BOLD, 280)
+    font_tag = ImageFont.truetype(FONT_BOLD, 72)
+    font_sub = ImageFont.truetype(FONT_REG, 56)
+
+    ai_bbox = draw.textbbox((0, 0), "ai", font=font_main)
+    n_bbox = draw.textbbox((0, 0), "n", font=font_main)
+    ai_w = ai_bbox[2] - ai_bbox[0]
+    n_w = n_bbox[2] - n_bbox[0]
+    ring_r = 90
+    ring_thickness = 28
+    gap = 18
+    total = ai_w + gap + ring_r * 2 + gap + n_w
+    start_x = (WIDTH - total) / 2
+    ring_cx = start_x + ai_w + gap + ring_r
+    ring_cy = HEIGHT // 2 - 60
+    n_x = ring_cx + ring_r + gap
+    ai_top = ring_cy - (ai_bbox[3] - ai_bbox[1]) / 2 - ai_bbox[1]
+    n_top = ring_cy - (n_bbox[3] - n_bbox[1]) / 2 - n_bbox[1]
+
+    tag1 = "VITAL · LIFE · FORCE"
+    tag1_bbox = draw.textbbox((0, 0), tag1, font=font_tag)
+    tag1_w = tag1_bbox[2] - tag1_bbox[0]
+    tag1_x = (WIDTH - tag1_w) / 2
+    tag1_y = ring_cy + 180
+
+    tag2 = "The Full Circle of Health"
+    tag2_bbox = draw.textbbox((0, 0), tag2, font=font_sub)
+    tag2_w = tag2_bbox[2] - tag2_bbox[0]
+    tag2_x = (WIDTH - tag2_w) / 2
+    tag2_y = tag1_y + 110
+
     svg = f'''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="3000" height="2000" viewBox="0 0 3000 2000" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -138,16 +172,17 @@ def make_svg():
     </style>
   </defs>
   <rect width="3000" height="2000" fill="{BG}" />
-  <text x="1060" y="1030" text-anchor="end" class="main">ai</text>
-  <circle cx="1500" cy="1000" r="90" fill="none" stroke="url(#ringGradient)" stroke-width="28" />
-  <text x="1550" y="1030" text-anchor="start" class="main">n</text>
-  <text x="1500" y="1180" text-anchor="middle" class="tag1">VITAL · LIFE · FORCE</text>
-  <text x="1500" y="1290" text-anchor="middle" class="tag2">The Full Circle of Health</text>
+  <text x="{start_x:.1f}" y="{ai_top:.1f}" class="main">ai</text>
+  <circle cx="{ring_cx:.1f}" cy="{ring_cy:.1f}" r="{ring_r}" fill="none" stroke="url(#ringGradient)" stroke-width="{ring_thickness}" />
+  <text x="{n_x:.1f}" y="{n_top:.1f}" class="main">n</text>
+  <text x="{tag1_x:.1f}" y="{tag1_y:.1f}" class="tag1">{tag1}</text>
+  <text x="{tag2_x:.1f}" y="{tag2_y:.1f}" class="tag2">{tag2}</text>
 </svg>'''
     out_path = OUT_DIR / "aion-logo.svg"
     out_path.write_text(svg)
     print(f"Created {out_path}")
     return out_path
+
 
 
 def make_pdf():
