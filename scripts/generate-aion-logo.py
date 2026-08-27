@@ -150,62 +150,24 @@ def make_svg():
 
 
 def make_pdf():
+    png_path = OUT_DIR / "aion-logo.png"
     pdf_path = OUT_DIR / "aion-logo.pdf"
+
     c = canvas.Canvas(str(pdf_path), pagesize=letter)
     width, height = letter  # 612 x 792 points
-
-    # Register fonts
-    pdfmetrics.registerFont(TTFont("LiberationSans-Bold", FONT_BOLD))
-    pdfmetrics.registerFont(TTFont("LiberationSans-Regular", FONT_REG))
 
     # Background
     c.setFillColor(HexColor(BG))
     c.rect(0, 0, width, height, fill=1, stroke=0)
 
-    # Main text "ai"
-    c.setFont("LiberationSans-Bold", 72)
-    c.setFillColor(white)
-    ai_w = c.stringWidth("ai", "LiberationSans-Bold", 72)
-    n_w = c.stringWidth("n", "LiberationSans-Bold", 72)
-    ring_r = 24
-    gap = 5
-    total = ai_w + gap + ring_r * 2 + gap + n_w
-    start_x = (width - total) / 2
-    baseline_y = height / 2 + 10
-    c.drawString(start_x, baseline_y, "ai")
-
-    # Gradient ring using reportlab linear gradient (best-effort along a diagonal)
-    ring_cx = start_x + ai_w + gap + ring_r
-    ring_cy = baseline_y + ring_r - 6  # visually center with cap height
-    c.saveState()
-    p = c.beginPath()
-    p.circle(ring_cx, ring_cy, ring_r)
-    g = c.linearGradient(
-        ring_cx - ring_r, ring_cy + ring_r,
-        ring_cx + ring_r, ring_cy - ring_r,
-        [HexColor(GRADIENT[0]), HexColor(GRADIENT[1]), HexColor(GRADIENT[2])],
-        [0, 0.5, 1]
-    )
-    c.setStrokeColor(g)
-    c.setLineWidth(7)
-    c.strokePath(p)
-    c.restoreState()
-
-    # "n"
-    c.drawString(ring_cx + ring_r + gap, baseline_y, "n")
-
-    # Taglines
-    c.setFont("LiberationSans-Bold", 18)
-    c.setFillColor(HexColor(GRAY_MID))
-    tag1 = "VITAL · LIFE · FORCE"
-    tag1_w = c.stringWidth(tag1, "LiberationSans-Bold", 18)
-    c.drawString((width - tag1_w) / 2, baseline_y - 55, tag1)
-
-    c.setFont("LiberationSans-Regular", 14)
-    c.setFillColor(HexColor(GRAY_LIGHT))
-    tag2 = "The Full Circle of Health"
-    tag2_w = c.stringWidth(tag2, "LiberationSans-Regular", 14)
-    c.drawString((width - tag2_w) / 2, baseline_y - 82, tag2)
+    # Embed the high-res PNG, scaled to fit the page with margins
+    img_w, img_h = 3000, 2000
+    target_w = width - 72  # 0.5 inch margin each side
+    scale = target_w / img_w
+    target_h = img_h * scale
+    x = 36
+    y = (height - target_h) / 2
+    c.drawImage(str(png_path), x, y, width=target_w, height=target_h)
 
     c.save()
     print(f"Created {pdf_path}")
