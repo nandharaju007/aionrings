@@ -86,18 +86,19 @@ def make_png():
     baseline_y = HEIGHT // 2 - 60
 
     # Draw ai
-    draw.text((start_x, baseline_y - (ai_bbox[3] - ai_bbox[1]) // 2), "ai", font=font_main, fill=WHITE, anchor="lm")
-    # Letter "a" baseline adjustment: anchor lm needs bbox offset; simpler draw at baseline with textbbox top
     ai_top = baseline_y - (ai_bbox[3] - ai_bbox[1]) / 2 - ai_bbox[1]
     n_top = baseline_y - (n_bbox[3] - n_bbox[1]) / 2 - n_bbox[1]
     draw.text((start_x, ai_top), "ai", font=font_main, fill=WHITE)
+
     # Ring center
     ring_cx = start_x + ai_w + gap + ring_r
     ring_cy = baseline_y
     draw_gradient_ring(draw, ring_cx, ring_cy, ring_r, ring_thickness)
+
     # n
     n_x = ring_cx + ring_r + gap
     draw.text((n_x, n_top), "n", font=font_main, fill=WHITE)
+
 
     # Tagline 1: VITAL · LIFE · FORCE
     tag1 = "VITAL · LIFE · FORCE"
