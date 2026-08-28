@@ -15,7 +15,7 @@ const companyLinks: { label: string; href: string }[] = [
   { label: 'Support', href: '/support' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms-of-service' },
-  { label: 'Contact', href: 'mailto:contact@aionrings.com' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export function Footer() {

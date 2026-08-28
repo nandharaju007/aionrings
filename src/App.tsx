@@ -21,6 +21,7 @@ import PreOrderPage from "./pages/PreOrderPage";
 import AdminReservationsPage from "./pages/AdminReservationsPage";
 import PartnersPage from "./pages/PartnersPage";
 import SupportPage from "./pages/SupportPage";
+import ContactPage from "./pages/ContactPage";
 import AppDownloadPage from "./pages/AppDownloadPage";
 import { CookieConsent } from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/preorder" element={<PreOrderPage />} />
             <Route path="/partners" element={<PartnersPage />} />
             <Route path="/support" element={<SupportPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/smart-ring-guide" element={<SmartRingGuidePage />} />
             <Route path="/smart-ring-guide/sleep-tracking-ring" element={<SleepTrackingRingPage />} />
             <Route path="/smart-ring-guide/recovery-ring" element={<RecoveryRingPage />} />
