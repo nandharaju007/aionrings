@@ -21,6 +21,7 @@ import PreOrderPage from "./pages/PreOrderPage";
 import AdminReservationsPage from "./pages/AdminReservationsPage";
 import PartnersPage from "./pages/PartnersPage";
 import SupportPage from "./pages/SupportPage";
+import ContactPage from "./pages/ContactPage";
 import AppDownloadPage from "./pages/AppDownloadPage";
 import { CookieConsent } from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
