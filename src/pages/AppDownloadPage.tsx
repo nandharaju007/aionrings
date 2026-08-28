@@ -537,22 +537,16 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
         </div>
         <p className="mt-6 text-[13px] text-ink-muted">Available on iOS &amp; Android</p>
 
-        {redirecting && device !== "desktop" && (
-          <div className="mx-auto mt-8 max-w-md rounded-2xl border border-ink/10 bg-white px-5 py-4">
-            <p className="text-sm text-ink-soft">
-              Redirecting you to the {device === "ios" ? "App Store" : "Google Play"}…
-            </p>
-            <p className="mt-2 text-[13px] text-ink-muted">
-              If nothing happens,{" "}
-              <a
-                href={device === "ios" ? APP_STORE_URL : GOOGLE_PLAY_URL}
-                className="font-medium text-[#1878E0] underline underline-offset-2"
-              >
-                tap here to continue
-              </a>
-              .
-            </p>
-          </div>
+        {device !== "desktop" && (
+          <p className="mt-6 text-[13px] text-ink-muted">
+            On your {device === "ios" ? "iPhone" : "Android device"}?{" "}
+            <a
+              href={device === "ios" ? APP_STORE_URL : GOOGLE_PLAY_URL}
+              className="font-medium text-[#1878E0] underline underline-offset-2"
+            >
+              Open the {device === "ios" ? "App Store" : "Google Play"} listing
+            </a>
+          </p>
         )}
 
         <p className="mt-10 text-[13px] font-medium tracking-wide text-ink-muted">aionrings.com</p>
