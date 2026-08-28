@@ -27,13 +27,7 @@ const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=com.aion.
 
 const GRADIENT = "linear-gradient(135deg,#00D4FF,#1878E0 45%,#8B5CF6)";
 
-/* ---------------- device detection (unchanged behaviour) ---------------- */
-
-function getStoreUrl(device: "ios" | "android" | "desktop") {
-  if (device === "ios") return APP_STORE_URL;
-  if (device === "android") return GOOGLE_PLAY_URL;
-  return null;
-}
+/* ---------------- device detection ---------------- */
 
 function detectDevice(): "ios" | "android" | "desktop" {
   if (typeof window === "undefined" || !window.navigator) return "desktop";
@@ -45,12 +39,6 @@ function detectDevice(): "ios" | "android" | "desktop" {
   if (/MacIntel|Mac OS X/i.test(ua) && maxTouchPoints > 1) return "ios";
   if (/Android/i.test(ua)) return "android";
   return "desktop";
-}
-
-function appendQueryParams(baseUrl: string, search: string) {
-  if (!search) return baseUrl;
-  const separator = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${separator}${search.slice(1)}`;
 }
 
 /* ---------------- icons + badges ---------------- */
@@ -520,7 +508,7 @@ function DiscoverySection() {
   );
 }
 
-function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios" | "android" | "desktop" }) {
+function FinalCTA({ device }: { device: "ios" | "android" | "desktop" }) {
   return (
     <section className="relative overflow-hidden bg-canvas-alt px-6 py-24 md:py-32">
       <div
@@ -537,22 +525,16 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
         </div>
         <p className="mt-6 text-[13px] text-ink-muted">Available on iOS &amp; Android</p>
 
-        {redirecting && device !== "desktop" && (
-          <div className="mx-auto mt-8 max-w-md rounded-2xl border border-ink/10 bg-white px-5 py-4">
-            <p className="text-sm text-ink-soft">
-              Redirecting you to the {device === "ios" ? "App Store" : "Google Play"}…
-            </p>
-            <p className="mt-2 text-[13px] text-ink-muted">
-              If nothing happens,{" "}
-              <a
-                href={device === "ios" ? APP_STORE_URL : GOOGLE_PLAY_URL}
-                className="font-medium text-[#1878E0] underline underline-offset-2"
-              >
-                tap here to continue
-              </a>
-              .
-            </p>
-          </div>
+        {device !== "desktop" && (
+          <p className="mt-6 text-[13px] text-ink-muted">
+            On your {device === "ios" ? "iPhone" : "Android device"}?{" "}
+            <a
+              href={device === "ios" ? APP_STORE_URL : GOOGLE_PLAY_URL}
+              className="font-medium text-[#1878E0] underline underline-offset-2"
+            >
+              Open the {device === "ios" ? "App Store" : "Google Play"} listing
+            </a>
+          </p>
         )}
 
         <p className="mt-10 text-[13px] font-medium tracking-wide text-ink-muted">aionrings.com</p>
@@ -565,19 +547,9 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
 
 export default function AppDownloadPage() {
   const [device, setDevice] = useState<"ios" | "android" | "desktop" | null>(null);
-  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    const detected = detectDevice();
-    setDevice(detected);
-
-    if (detected === "ios" || detected === "android") {
-      const storeUrl = getStoreUrl(detected);
-      if (storeUrl) {
-        setRedirecting(true);
-        window.location.replace(appendQueryParams(storeUrl, window.location.search));
-      }
-    }
+    setDevice(detectDevice());
   }, []);
 
   const seo = (
@@ -609,7 +581,7 @@ export default function AppDownloadPage() {
         <DemoSection />
         <StorySection />
         <DiscoverySection />
-        <FinalCTA redirecting={redirecting} device={device} />
+        <FinalCTA device={device} />
       </main>
       <Footer />
     </div>
