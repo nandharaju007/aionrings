@@ -13,6 +13,7 @@ const ContactPage = () => {
         title="Contact aiOn — We're here to help"
         description="Reach the aiOn team for support, orders, and partnership inquiries. Send us a message and we'll reply within 1–2 business days."
         path="/contact"
+        image="/og-support.jpg"
       />
       <Header />
       <main className="pt-32 pb-24">
