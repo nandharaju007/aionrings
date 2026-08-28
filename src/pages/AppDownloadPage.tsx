@@ -593,7 +593,7 @@ export default function AppDownloadPage() {
         <DemoSection />
         <StorySection />
         <DiscoverySection />
-        <FinalCTA redirecting={redirecting} device={device} />
+        <FinalCTA device={device} />
       </main>
       <Footer />
     </div>
