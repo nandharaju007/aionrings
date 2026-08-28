@@ -520,7 +520,7 @@ function DiscoverySection() {
   );
 }
 
-function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios" | "android" | "desktop" }) {
+function FinalCTA({ device }: { device: "ios" | "android" | "desktop" }) {
   return (
     <section className="relative overflow-hidden bg-canvas-alt px-6 py-24 md:py-32">
       <div
@@ -559,19 +559,9 @@ function FinalCTA({ redirecting, device }: { redirecting: boolean; device: "ios"
 
 export default function AppDownloadPage() {
   const [device, setDevice] = useState<"ios" | "android" | "desktop" | null>(null);
-  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    const detected = detectDevice();
-    setDevice(detected);
-
-    if (detected === "ios" || detected === "android") {
-      const storeUrl = getStoreUrl(detected);
-      if (storeUrl) {
-        setRedirecting(true);
-        window.location.replace(appendQueryParams(storeUrl, window.location.search));
-      }
-    }
+    setDevice(detectDevice());
   }, []);
 
   const seo = (
