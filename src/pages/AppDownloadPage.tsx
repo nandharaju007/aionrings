@@ -27,13 +27,7 @@ const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=com.aion.
 
 const GRADIENT = "linear-gradient(135deg,#00D4FF,#1878E0 45%,#8B5CF6)";
 
-/* ---------------- device detection (unchanged behaviour) ---------------- */
-
-function getStoreUrl(device: "ios" | "android" | "desktop") {
-  if (device === "ios") return APP_STORE_URL;
-  if (device === "android") return GOOGLE_PLAY_URL;
-  return null;
-}
+/* ---------------- device detection ---------------- */
 
 function detectDevice(): "ios" | "android" | "desktop" {
   if (typeof window === "undefined" || !window.navigator) return "desktop";
@@ -45,12 +39,6 @@ function detectDevice(): "ios" | "android" | "desktop" {
   if (/MacIntel|Mac OS X/i.test(ua) && maxTouchPoints > 1) return "ios";
   if (/Android/i.test(ua)) return "android";
   return "desktop";
-}
-
-function appendQueryParams(baseUrl: string, search: string) {
-  if (!search) return baseUrl;
-  const separator = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${separator}${search.slice(1)}`;
 }
 
 /* ---------------- icons + badges ---------------- */
