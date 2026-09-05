@@ -23,6 +23,7 @@ import PartnersPage from "./pages/PartnersPage";
 import SupportPage from "./pages/SupportPage";
 import ContactPage from "./pages/ContactPage";
 import AppDownloadPage from "./pages/AppDownloadPage";
+import SocialEmbedsPage from "./pages/SocialEmbedsPage";
 import { CookieConsent } from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/smart-ring-guide/recovery-ring" element={<RecoveryRingPage />} />
             <Route path="/smart-ring-guide/stress-tracking-ring" element={<StressTrackingRingPage />} />
             <Route path="/app" element={<AppDownloadPage />} />
+            <Route path="/social-embeds" element={<SocialEmbedsPage />} />
             <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
