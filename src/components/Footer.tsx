@@ -87,14 +87,50 @@ export function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 md:flex-row">
           <p className="text-[13px] text-[#6B7A8C]">© 2026 aiOn Health Science LLC</p>
           <div className="flex gap-5 text-[#6B7A8C]">
-            <a href="#" aria-label="LinkedIn" className="transition-colors hover:text-[#1878E0]">
+            <a
+              href="https://www.youtube.com/@aionrings"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+              className="transition-colors hover:text-[#1878E0]"
+            >
+              <Youtube className="h-5 w-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/aionrings/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="transition-colors hover:text-[#1878E0]"
+            >
               <Linkedin className="h-5 w-5" />
             </a>
-            <a href="#" aria-label="Twitter" className="transition-colors hover:text-[#1878E0]">
-              <Twitter className="h-5 w-5" />
+            <a
+              href="https://www.facebook.com/aionrings"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="transition-colors hover:text-[#1878E0]"
+            >
+              <Facebook className="h-5 w-5" />
             </a>
-            <a href="#" aria-label="Instagram" className="transition-colors hover:text-[#1878E0]">
+            <a
+              href="https://www.instagram.com/aionrings"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="transition-colors hover:text-[#1878E0]"
+            >
               <Instagram className="h-5 w-5" />
+            </a>
+            <a
+              href="https://x.com/aionrings"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X / Twitter"
+              className="transition-colors hover:text-[#1878E0]"
+            >
+              <Twitter className="h-5 w-5" />
             </a>
           </div>
         </div>
