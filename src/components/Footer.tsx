@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Linkedin, Twitter, Instagram, Youtube, Facebook } from 'lucide-react';
 import { AionLogo } from './AionLogo';
 
 const productLinks: { label: string; href: string }[] = [
