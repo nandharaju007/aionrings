@@ -17,6 +17,8 @@ export default function SocialEmbedsPage() {
       <SEO
         title="Social Media Embeds | aiOn"
         description="Preview of embedded aiOn social media content across YouTube, Instagram and Facebook."
+        path="/social-embeds"
+        image="/og-image.jpg"
         noindex
       />
       <h1 className="mb-8 text-3xl font-semibold tracking-tight">Social media embeds</h1>
