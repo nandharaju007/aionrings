@@ -91,8 +91,13 @@ export function Footer() {
               href="https://www.youtube.com/@aionrings"
               target="_blank"
               rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
               aria-label="YouTube"
               className="transition-colors hover:text-[#1878E0]"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer');
+              }}
             >
               <Youtube className="h-5 w-5" />
             </a>
@@ -100,8 +105,13 @@ export function Footer() {
               href="https://www.linkedin.com/company/aionrings/"
               target="_blank"
               rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
               aria-label="LinkedIn"
               className="transition-colors hover:text-[#1878E0]"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer');
+              }}
             >
               <Linkedin className="h-5 w-5" />
             </a>
@@ -109,8 +119,13 @@ export function Footer() {
               href="https://www.facebook.com/aionrings"
               target="_blank"
               rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
               aria-label="Facebook"
               className="transition-colors hover:text-[#1878E0]"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer');
+              }}
             >
               <Facebook className="h-5 w-5" />
             </a>
@@ -118,8 +133,13 @@ export function Footer() {
               href="https://www.instagram.com/aionrings"
               target="_blank"
               rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
               aria-label="Instagram"
               className="transition-colors hover:text-[#1878E0]"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer');
+              }}
             >
               <Instagram className="h-5 w-5" />
             </a>
@@ -127,8 +147,13 @@ export function Footer() {
               href="https://x.com/aionrings"
               target="_blank"
               rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
               aria-label="X / Twitter"
               className="transition-colors hover:text-[#1878E0]"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer');
+              }}
             >
               <Twitter className="h-5 w-5" />
             </a>
