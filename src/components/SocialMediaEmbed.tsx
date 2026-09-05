@@ -218,6 +218,7 @@ export function SocialMediaEmbed({ url, title, className }: SocialMediaEmbedProp
     );
   }
 
+  const portrait = parsed.aspect < 1;
   const frameStyle = parsed.fixedHeight
     ? { height: `${parsed.fixedHeight}px` }
     : { aspectRatio: `${parsed.aspect}` };
@@ -225,7 +226,9 @@ export function SocialMediaEmbed({ url, title, className }: SocialMediaEmbedProp
   return (
     <div className={className}>
       <div
-        className="relative w-full max-w-full overflow-hidden rounded-2xl border border-border bg-muted"
+        className={`relative mx-auto w-full max-w-full overflow-hidden rounded-2xl border border-border bg-muted${
+          portrait ? " max-w-[420px]" : ""
+        }`}
         style={frameStyle}
       >
         {!loaded && (
