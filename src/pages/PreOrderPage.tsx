@@ -4,6 +4,7 @@ import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck,
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
+import { RingTryOn } from "@/components/RingTryOn";
 import { supabase } from "@/integrations/supabase/client";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
@@ -510,9 +511,13 @@ export default function PreOrderPage() {
                 </div>
               </div>
 
+              <div className="mx-auto mb-16 max-w-[1120px]">
+                <RingTryOn />
+              </div>
+
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
-                <div className="lg:sticky lg:top-28">
+                <div className="min-w-0 lg:sticky lg:top-28">
                   <div className="relative aspect-square rounded-3xl border border-border bg-gradient-to-b from-[#EEF3FA] to-white overflow-hidden shadow-sm">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
@@ -559,7 +564,7 @@ export default function PreOrderPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={onSubmit} className="space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
+                <form onSubmit={onSubmit} className="min-w-0 space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
                   <Section title="Your rings">
                     {/* Sizing help — always visible */}
                     <div className="rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/[0.06] to-white p-5 md:p-6 shadow-sm">
