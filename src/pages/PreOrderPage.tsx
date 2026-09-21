@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Camera, Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Camera, Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
