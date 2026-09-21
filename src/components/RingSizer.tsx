@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Upload, Ruler, RotateCcw, CreditCard } from 'lucide-react';
+import handCardSample from '@/assets/hand-card-sample.jpg';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -92,6 +93,18 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
         </li>
         <li>Fingers slightly apart, good light, camera straight above the hand.</li>
       </ul>
+
+      <figure className="mt-4 flex items-center gap-4">
+        <img
+          src={handCardSample}
+          alt="Example: open hand flat with a bank card lying flat beside it, photographed straight from above"
+          className="h-24 w-24 shrink-0 rounded-xl border border-border object-cover"
+          loading="lazy"
+        />
+        <figcaption className="text-xs leading-relaxed text-ink-muted">
+          Take it like this: hand flat, card flat beside it, camera directly above.
+        </figcaption>
+      </figure>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>
