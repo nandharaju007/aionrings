@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
 import { RingTryOn } from "@/components/RingTryOn";
+import { RingSizer } from "@/components/RingSizer";
 import { supabase } from "@/integrations/supabase/client";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
