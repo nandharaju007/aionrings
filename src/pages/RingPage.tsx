@@ -133,6 +133,21 @@ export default function RingPage() {
             </div>
           </section>
 
+          {/* Ring experience */}
+          <section className="mt-16 border-y border-border py-12 md:mt-20 md:py-16" id="ring-experience">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow">Experience the Ring</span>
+              <h2 className="mt-2 text-3xl font-light text-ink md:text-4xl">See the fit before you reserve.</h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
+                Preview your preferred finish on your own hand, then estimate your ring size from a photo.
+              </p>
+            </div>
+            <div className="mt-8 grid items-start gap-5 md:grid-cols-2">
+              <RingTryOn />
+              <RingSizer collapsible />
+            </div>
+          </section>
+
           {/* Materials */}
           <section className="mt-16 md:mt-20">
             <h2 className="text-2xl font-light text-ink md:text-3xl">Materials & build</h2>
@@ -232,15 +247,12 @@ export default function RingPage() {
               </ol>
             </div>
 
-            <div className="mt-8">
-              <RingSizer />
-            </div>
-          </section>
-
-          {/* Try-on */}
-          <section className="mt-16 md:mt-20">
-            <h2 className="mb-6 text-2xl font-light text-ink md:text-3xl">See it on your hand</h2>
-            <RingTryOn />
+            <a
+              href="#ring-experience"
+              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              Estimate my size from a photo
+            </a>
           </section>
 
           <p className="mt-14 text-[13px] leading-relaxed text-ink-muted">

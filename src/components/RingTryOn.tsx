@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Upload, Sparkles, RotateCcw, Download, X } from 'lucide-react';
 import { streamImage } from '@/lib/stream-image';
+import { Button } from '@/components/ui/button';
 
 const FINISHES = ['Midnight Black', 'Titanium Silver', 'Rose Gold'];
 
@@ -82,16 +83,24 @@ export function RingTryOn() {
 
   if (!isOpen) {
     return (
-      <div className="flex justify-center">
-        <button
+      <article className="flex h-full flex-col border-t-2 border-primary bg-card p-6 shadow-card sm:p-8">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Sparkles className="h-5 w-5" />
+        </span>
+        <span className="eyebrow mt-6">Virtual Try-On</span>
+        <h3 className="mt-2 text-2xl font-light text-ink">See it on your hand</h3>
+        <p className="mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
+          Upload a clear hand photo and preview the aiOn Ring on your index finger in your chosen finish.
+        </p>
+        <Button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="mt-6 min-h-12 w-full rounded-full"
         >
           <Sparkles className="h-4 w-4" />
-          See it on your hand
-        </button>
-      </div>
+          Start virtual try-on
+        </Button>
+      </article>
     );
   }
 

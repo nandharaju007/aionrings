@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { Upload, Ruler, RotateCcw, CreditCard } from 'lucide-react';
+import { Upload, Ruler, RotateCcw, CreditCard, X } from 'lucide-react';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
+import { Button } from '@/components/ui/button';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -15,8 +16,9 @@ type SizeResult = {
   error?: string;
 };
 
-export function RingSizer({ compact = false }: { compact?: boolean }) {
+export function RingSizer({ compact = false, collapsible = false }: { compact?: boolean; collapsible?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(!collapsible);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [finger, setFinger] = useState<(typeof FINGERS)[number]>('index');
@@ -75,10 +77,47 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
     if (inputRef.current) inputRef.current.value = '';
   };
 
+  const close = () => {
+    reset();
+    setIsOpen(false);
+  };
+
+  if (!isOpen) {
+    return (
+      <article className="flex h-full flex-col border-t-2 border-primary bg-card p-6 shadow-card sm:p-8">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Ruler className="h-5 w-5" />
+        </span>
+        <span className="eyebrow mt-6">Photo Sizing</span>
+        <h3 className="mt-2 text-2xl font-light text-ink">Find my size with a photo</h3>
+        <p className="mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
+          Use one photo of your open hand and a bank card to get an estimated US ring size.
+        </p>
+        <Button type="button" onClick={() => setIsOpen(true)} className="mt-6 min-h-12 w-full rounded-full">
+          <Ruler className="h-4 w-4" />
+          Estimate my size
+        </Button>
+      </article>
+    );
+  }
+
   return (
-    <div className={compact ? '' : 'surface-card bg-white p-6 sm:p-8'}>
+    <div className={`${compact ? '' : 'surface-card bg-white p-6 sm:p-8'} relative`}>
+      {collapsible && (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={close}
+          aria-label="Close photo sizing"
+          title="Close photo sizing"
+          className="absolute right-4 top-4 z-10 rounded-full sm:right-6 sm:top-6"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
       {!compact && <span className="eyebrow">Photo Sizing</span>}
-      <h3 className={`${compact ? 'text-[15px] font-medium' : 'mt-2 text-2xl font-extralight sm:text-3xl'} text-ink`}>
+      <h3 className={`${compact ? 'text-[15px] font-medium' : 'mt-2 pr-12 text-2xl font-extralight sm:text-3xl'} text-ink`}>
         Measure your size from a photo
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
