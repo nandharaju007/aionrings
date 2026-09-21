@@ -6,7 +6,7 @@ import { SEO } from '@/components/SEO';
 import { RingTryOn } from '@/components/RingTryOn';
 import { RingSizer } from '@/components/RingSizer';
 import ringProduct from '@/assets/ring-product.jpg';
-import handCardSample from '@/assets/hand-card-sample.jpg.asset.json';
+import handCardSample from '@/assets/hand-card-sample.jpg';
 
 const specs: { label: string; value: string }[] = [
   { label: 'Material', value: 'Aerospace-grade titanium (Grade 5)' },
@@ -203,7 +203,7 @@ export default function RingPage() {
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <figure className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
                 <img
-                  src={handCardSample.url}
+                  src={handCardSample}
                   alt="Example photo: an open hand held flat with a bank card resting flat on the palm, fingers fully visible, photographed straight from above"
                   className="h-full w-full object-cover"
                   loading="lazy"
