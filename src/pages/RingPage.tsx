@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Camera, CreditCard, Hand, Ruler } from 'lucide-react';
+import { Check, Camera, CreditCard, Hand, Ruler, X } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
@@ -71,6 +72,8 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
 ];
 
 export default function RingPage() {
+  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-canvas">
       <SEO
