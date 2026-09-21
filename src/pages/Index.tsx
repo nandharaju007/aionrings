@@ -744,7 +744,7 @@ function Hero() {
    ───────────────────────────────────────────── */
 function MorningProofSection() {
   return (
-    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "58vh", minHeight: "420px", maxHeight: "760px" }}>
+    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "46vh", minHeight: "340px", maxHeight: "620px" }}>
       <LazyVideo
         src={(videoLifeEarly as { url: string }).url}
         poster={posterLifeEarly}
@@ -1121,7 +1121,7 @@ function QuestSection() {
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="The one thing" /><br /><WordStagger text="you should do today." delay={0.15} />
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             Every morning. Built for your body.<br />Based on your last 7 days.
           </p>
         </FadeUp>
@@ -1172,12 +1172,12 @@ function TheAppSection() {
           <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Your body, on screen.
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             Clean. Calm. Built to answer one question — what should I do today?
           </p>
         </FadeUp>
 
-        <div className="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-end">
+        <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 items-end">
           {screens.map((s, i) => (
             <motion.div
               key={s.alt}
@@ -1198,10 +1198,10 @@ function TheAppSection() {
                   loading="lazy"
                   width={768}
                   height={1536}
-                  className="w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
+                  className="w-[180px] sm:w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
                 />
               </div>
-              <p className="mt-6 text-sm md:text-base text-ink-muted font-light tracking-wide">
+              <p className="mt-4 text-sm md:text-base text-ink-muted font-light tracking-wide">
                 {s.caption}
               </p>
             </motion.div>
@@ -1236,7 +1236,7 @@ function InLifeSection() {
           <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Worn, not watched.
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             From the first run to the last hour of sleep — aiOn simply stays with you.
           </p>
         </FadeUp>
@@ -1369,7 +1369,7 @@ function RingSection() {
             <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">Finishes</p>
             <h3 className="mt-3 text-3xl md:text-4xl font-extralight text-ink">Three ways to wear it.</h3>
           </FadeUp>
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-5 md:gap-10">
             {[
               { src: ringMidnight, name: "Midnight", note: "Matte titanium" },
               { src: ringSilver, name: "Silver", note: "Brushed titanium" },
@@ -1383,7 +1383,7 @@ function RingSection() {
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
-                <div className="relative mx-auto w-full aspect-square flex items-center justify-center">
+                <div className="relative mx-auto w-full aspect-[4/3] sm:aspect-square flex items-center justify-center">
                   <div
                     className="pointer-events-none absolute inset-6 rounded-full"
                     style={{ background: "radial-gradient(circle, rgba(10,22,40,0.07) 0%, rgba(10,22,40,0) 70%)" }}
@@ -1402,7 +1402,7 @@ function RingSection() {
               </motion.figure>
             ))}
           </div>
-          <p className="mt-10 text-center text-sm text-ink-muted font-light">
+          <p className="mt-8 text-center text-sm text-ink-muted font-light">
             Same ring. Same sensors. Your finish.
           </p>
         </div>
