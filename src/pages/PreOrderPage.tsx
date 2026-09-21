@@ -1145,9 +1145,7 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
-        <div className="mb-6 rounded-2xl border border-border bg-white p-4">
-          <RingSizer compact />
-        </div>
+
 
 
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
