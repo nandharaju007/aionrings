@@ -6,6 +6,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
 import { CartPanel } from '@/components/CartPanel';
+import { RingTryOn } from '@/components/RingTryOn';
 import ringProduct from '@/assets/ring-product.jpg';
 import ringHero from '@/assets/ring-hero.jpg';
 
@@ -154,6 +155,10 @@ export default function ShopPage() {
                 </ul>
               </div>
             </motion.div>
+          </div>
+
+          <div className="mt-16">
+            <RingTryOn />
           </div>
         </section>
       </main>
