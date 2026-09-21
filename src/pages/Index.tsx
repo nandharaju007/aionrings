@@ -1369,7 +1369,7 @@ function RingSection() {
             <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">Finishes</p>
             <h3 className="mt-3 text-3xl md:text-4xl font-extralight text-ink">Three ways to wear it.</h3>
           </FadeUp>
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-5 md:gap-10">
+          <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-6 md:gap-10">
             {[
               { src: ringMidnight, name: "Midnight", note: "Matte titanium" },
               { src: ringSilver, name: "Silver", note: "Brushed titanium" },
@@ -1383,7 +1383,7 @@ function RingSection() {
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
-                <div className="relative mx-auto w-full aspect-[4/3] sm:aspect-square flex items-center justify-center">
+                <div className="relative mx-auto w-full aspect-square flex items-center justify-center">
                   <div
                     className="pointer-events-none absolute inset-6 rounded-full"
                     style={{ background: "radial-gradient(circle, rgba(10,22,40,0.07) 0%, rgba(10,22,40,0) 70%)" }}
@@ -1396,8 +1396,8 @@ function RingSection() {
                   />
                 </div>
                 <figcaption className="mt-2">
-                  <div className="text-lg font-light text-ink">{f.name}</div>
-                  <div className="text-xs tracking-[0.2em] uppercase text-ink-muted mt-1">{f.note}</div>
+                  <div className="text-sm sm:text-base md:text-lg font-light text-ink">{f.name}</div>
+                  <div className="text-[10px] sm:text-xs tracking-[0.18em] uppercase text-ink-muted mt-1">{f.note}</div>
                 </figcaption>
               </motion.figure>
             ))}
