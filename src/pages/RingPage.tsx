@@ -55,8 +55,8 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   },
   {
     icon: CreditCard,
-    title: 'Hold a bank card on your palm',
-    body: 'Any standard bank or credit card works — its exact width (85.6 mm) gives the camera a scale. Rest it flat on your open palm (or lay it flat beside your hand) without covering your fingers. Card details can be hidden.',
+    title: 'Place a bank card beside your hand',
+    body: 'Any standard bank or credit card works — its exact width (85.6 mm) gives the camera a scale. Lay it flat on the surface next to your open hand, roughly level with your fingers. Card details can be hidden.',
   },
   {
     icon: Camera,
@@ -204,14 +204,14 @@ export default function RingPage() {
               <figure className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
                 <img
                   src={handCardSample}
-                  alt="Example photo: an open hand held flat with a bank card resting flat on the palm, fingers fully visible, photographed straight from above"
+                  alt="Example photo: an open hand held flat with a bank card lying flat on the surface beside it, fingers fully visible, photographed straight from above"
                   className="h-full w-full object-cover"
                   loading="lazy"
                   width={1024}
                   height={1024}
                 />
                 <figcaption className="px-4 py-3 text-[13px] text-ink-muted">
-                  A good photo: open hand flat, card resting flat on the palm without covering the fingers, camera directly above.
+                  A good photo: open hand flat, card lying flat on the surface beside it, fingers and their bases fully visible, camera directly above.
                 </figcaption>
               </figure>
 

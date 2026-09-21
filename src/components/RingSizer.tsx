@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Upload, Ruler, RotateCcw, CreditCard } from 'lucide-react';
+import handCardSample from '@/assets/hand-card-sample.jpg';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -81,17 +82,29 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
         Measure your size from a photo
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-        Hold your open hand flat with any bank card resting flat on your palm (or beside your hand), then take a
+        Hold your open hand flat with any bank card lying flat on the surface beside it, then take a
         straight-on photo from above. The card&apos;s exact width lets us measure your finger and match it to a ring
         size.
       </p>
       <ul className="mt-3 space-y-1 text-xs text-ink-muted">
         <li className="flex items-start gap-2">
           <CreditCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Card flat on your palm or beside your hand, not covering your fingers — card details can be hidden.
+          Card flat beside your hand (not on your palm or covering your fingers) — card details can be hidden.
         </li>
         <li>Fingers slightly apart, good light, camera straight above the hand.</li>
       </ul>
+
+      <figure className="mt-4 flex items-center gap-4">
+        <img
+          src={handCardSample}
+          alt="Example: open hand flat with a bank card lying flat beside it, photographed straight from above"
+          className="h-24 w-24 shrink-0 rounded-xl border border-border object-cover"
+          loading="lazy"
+        />
+        <figcaption className="text-xs leading-relaxed text-ink-muted">
+          Take it like this: hand flat, card flat beside it, camera directly above.
+        </figcaption>
+      </figure>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>
