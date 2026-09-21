@@ -81,15 +81,15 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
         Measure your size from a photo
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-        Hold any bank card flat against your fingers and take a straight-on photo of your open hand. The card&apos;s
-        exact width lets us measure your finger and match it to a ring size.
+        Lay your open hand flat with any bank card flat beside it, then take a straight-on photo from above. The
+        card&apos;s exact width lets us measure your finger and match it to a ring size.
       </p>
       <ul className="mt-3 space-y-1 text-xs text-ink-muted">
         <li className="flex items-start gap-2">
           <CreditCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Card flat against the fingers, numbers can be blurred or covered.
+          Card flat next to your hand, not covering your fingers — card details can be hidden.
         </li>
-        <li>Open hand, fingers slightly apart, good light, camera straight above.</li>
+        <li>Fingers slightly apart, good light, camera straight above the hand.</li>
       </ul>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
