@@ -19,6 +19,7 @@ import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import videoMorningRose from "@/assets/video-life-morning-rose.mp4.asset.json";
 import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
+import natureWalkRing from "@/assets/nature-walk-ring.jpg";
 import natureForest from "@/assets/nature-forest-trail.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
 import natureNight from "@/assets/nature-restful-night.jpg";
@@ -1772,11 +1773,11 @@ export default function Index() {
         {/* 5 — What it reads */}
         <PillarsSection />
         <NatureBand
-          src={natureSunrise}
-          eyebrow="Wellness · Every morning"
-          title="Wake with the light, and with your number."
-          line="Heart rate, HRV, SpO₂, stress and rest — understood, not just recorded."
-          position="center 45%"
+          src={natureWalkRing}
+          eyebrow="Movement · Activity"
+          title="Health doesn't live in a dashboard."
+          line="It lives in morning trails, fresh air and the steps you actually take."
+          position="center 40%"
         />
         {/* 6 — What you do with it */}
         <QuestSection />
