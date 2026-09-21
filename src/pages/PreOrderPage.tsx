@@ -4,6 +4,7 @@ import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck,
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
+import { RingTryOn } from "@/components/RingTryOn";
 import { supabase } from "@/integrations/supabase/client";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
@@ -508,6 +509,10 @@ export default function PreOrderPage() {
                   </div>
                   <p className="mt-3 text-[12px] text-ink-muted">Only {founderLeft} founder rings remain.</p>
                 </div>
+              </div>
+
+              <div className="mx-auto mb-16 max-w-[1120px]">
+                <RingTryOn />
               </div>
 
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
