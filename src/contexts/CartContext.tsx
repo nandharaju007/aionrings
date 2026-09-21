@@ -16,14 +16,19 @@ interface CartContextType {
   openCart: () => void;
   closeCart: () => void;
   addItem: (item: Omit<CartItem, 'quantity'>) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (lineKey: string) => void;
+  updateQuantity: (lineKey: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+/** Unique key for a cart line: same product in a different size/finish is a different line. */
+export function cartLineKey(item: Pick<CartItem, 'id' | 'size' | 'finish'>): string {
+  return `${item.id}|${item.size}|${item.finish}`;
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -49,17 +54,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setIsOpen(true);
   }, []);
 
-  const removeItem = useCallback((id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const removeItem = useCallback((lineKey: string) => {
+    setItems((prev) => prev.filter((item) => cartLineKey(item) !== lineKey));
   }, []);
 
-  const updateQuantity = useCallback((id: string, quantity: number) => {
+  const updateQuantity = useCallback((lineKey: string, quantity: number) => {
     if (quantity < 1) {
-      removeItem(id);
+      removeItem(lineKey);
       return;
     }
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prev.map((item) => (cartLineKey(item) === lineKey ? { ...item, quantity } : item))
     );
   }, [removeItem]);
 
