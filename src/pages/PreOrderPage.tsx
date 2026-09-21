@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Ruler, Trash2, X } from "lucide-react";
+import { Camera, Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
@@ -9,6 +9,7 @@ import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
+import { RingSizer } from "@/components/RingSizer";
 
 const GRADIENT = "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)";
 const FOUNDER_CAP = 2000;
@@ -318,6 +319,7 @@ export default function PreOrderPage() {
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
+  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
@@ -561,42 +563,79 @@ export default function PreOrderPage() {
                 {/* Form */}
                 <form onSubmit={onSubmit} className="min-w-0 space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
                   <Section title="Your rings">
-                    {/* Sizing help — always visible */}
                     <div className="rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/[0.06] to-white p-5 md:p-6 shadow-sm">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-                        <div
-                          className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
-                          style={{ background: GRADIENT }}
-                        >
-                          <Ruler className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-[18px] md:text-[20px] font-medium text-ink mb-1.5">
-                            Not sure of your ring size?
+                      <div className="text-[18px] md:text-[20px] font-medium text-ink mb-1.5">
+                        Not sure of your ring size?
+                      </div>
+                      <p className="text-[14px] text-ink-soft leading-relaxed">
+                        Find your size in the way that suits you best — most people start with a quick photo.
+                      </p>
+
+                      {/* Option 1 — Photo size estimation (primary) */}
+                      <div className="mt-4 rounded-xl border-2 border-primary bg-white p-4 md:p-5 shadow-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                          <div className="flex-1">
+                            <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
+                              Option 1 · Recommended
+                            </span>
+                            <div className="mt-1 text-[16px] md:text-[17px] font-medium text-ink">
+                              Try photo size estimation
+                            </div>
+                            <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
+                              Take a photo of your open palm with a bank card — our AI reads it and estimates your
+                              US ring size in seconds.
+                            </p>
                           </div>
-                          <p className="text-[14px] text-ink-soft leading-relaxed">
-                            Measure a ring you already wear, or wrap a string around the base of your finger — our guide
-                            matches it to your aiOn size in under a minute.
-                          </p>
-                          <p className="mt-2 text-[12px] text-ink-muted">
-                            Prefer to measure at home? A free sizing kit ships before your ring.
-                          </p>
-                          <Link
-                            to="/ring#photo-sizing"
-                            className="mt-3 inline-flex text-[13px] font-medium text-primary underline-offset-4 hover:underline"
+                          <button
+                            type="button"
+                            onClick={() => setPhotoSizerOpen((v) => !v)}
+                            className="shrink-0 h-12 px-6 rounded-full font-semibold text-white text-[14px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
+                            style={{ background: GRADIENT }}
                           >
-                            Try the photo size estimate on The Ring page
-                          </Link>
+                            <Camera className="w-4 h-4" />
+                            {photoSizerOpen ? "Hide photo estimation" : "Try photo size estimation"}
+                          </button>
                         </div>
+                        {photoSizerOpen && (
+                          <div className="mt-4">
+                            <RingSizer />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Options 2 & 3 — alternative methods */}
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         <button
                           type="button"
                           onClick={() => setSizingOpen(true)}
-                          className="shrink-0 h-12 px-6 rounded-full font-semibold text-white text-[14px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
-                          style={{ background: GRADIENT }}
+                          className="rounded-xl border border-border bg-white p-4 text-left transition-colors hover:border-primary/40"
                         >
-                          <Ruler className="w-4 h-4" /> Find my size
+                          <span className="text-[11px] uppercase tracking-[2px] text-ink-muted">Option 2</span>
+                          <div className="mt-0.5 text-[14px] font-medium text-ink">
+                            Measure a ring you already wear
+                          </div>
+                          <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
+                            Use its inner diameter with our size chart.
+                          </p>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSizingOpen(true)}
+                          className="rounded-xl border border-border bg-white p-4 text-left transition-colors hover:border-primary/40"
+                        >
+                          <span className="text-[11px] uppercase tracking-[2px] text-ink-muted">Option 3</span>
+                          <div className="mt-0.5 text-[14px] font-medium text-ink">
+                            Wrap a string around your finger
+                          </div>
+                          <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
+                            Measure the length and match it to the chart.
+                          </p>
                         </button>
                       </div>
+
+                      <p className="mt-3 text-[12px] text-ink-muted">
+                        Prefer to measure at home? A free sizing kit ships before your ring.
+                      </p>
                     </div>
 
 
@@ -1151,13 +1190,25 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
+        {/* Option 1 — Photo size estimation (primary) */}
+        <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
+          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
+            Option 1 · Recommended
+          </span>
+          <div className="mt-1 text-[16px] font-medium text-ink">Try photo size estimation</div>
+          <p className="mt-1 mb-3 text-[13px] text-ink-soft leading-relaxed">
+            Take a photo of your open palm with a bank card — our AI estimates your US ring size in seconds.
+          </p>
+          <RingSizer compact />
+        </div>
+
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
           <div>
-            <div className="font-medium text-ink mb-1">Method 1 — Existing ring</div>
+            <div className="font-medium text-ink mb-1">Option 2 — Existing ring</div>
             <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
           </div>
           <div>
-            <div className="font-medium text-ink mb-1">Method 2 — String</div>
+            <div className="font-medium text-ink mb-1">Option 3 — String</div>
             <p>
               Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
               overlaps and measure the length — that's your circumference.
