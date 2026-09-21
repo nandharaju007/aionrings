@@ -665,13 +665,14 @@ function Hero() {
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="relative overflow-hidden rounded-[28px]">
-            <LazyVideo
-              autoPlay
-              src={heroFingerVideo.url}
-              poster={heroFingerRing}
-              label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
-              className="h-[220px] w-full object-cover sm:h-[320px] md:h-[400px] lg:h-[460px]"
+            <img
+              src={heroStudio}
+              width={1920}
+              height={1080}
+              alt="Hand wearing the aiOn smart ring, engraved and sensors glowing, in a luxury studio setting"
+              className="h-[240px] w-full object-cover sm:h-[340px] md:h-[420px] lg:h-[480px]"
               style={{
+                objectPosition: "50% 42%",
                 filter: "contrast(1.04) saturate(1.03)",
                 WebkitMaskImage:
                   "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
