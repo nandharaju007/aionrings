@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Upload, Ruler, RotateCcw, CreditCard } from 'lucide-react';
-import handCardSample from '@/assets/hand-card-sample.jpg';
+import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -82,14 +82,14 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
         Measure your size from a photo
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-        Hold your open hand flat with any bank card lying flat on the surface beside it, then take a
+        Hold your open hand palm-up with any bank card resting flat in the center of your palm, then take a
         straight-on photo from above. The card&apos;s exact width lets us measure your finger and match it to a ring
         size.
       </p>
       <ul className="mt-3 space-y-1 text-xs text-ink-muted">
         <li className="flex items-start gap-2">
           <CreditCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Card flat beside your hand (not on your palm or covering your fingers) — card details can be hidden.
+          Keep the entire card visible, with your fingers slightly open and relaxed around it — card details can be hidden.
         </li>
         <li>Fingers slightly apart, good light, camera straight above the hand.</li>
       </ul>
@@ -97,12 +97,12 @@ export function RingSizer({ compact = false }: { compact?: boolean }) {
       <figure className="mt-4 flex items-center gap-4">
         <img
           src={handCardSample}
-          alt="Example: open hand flat with a bank card lying flat beside it, photographed straight from above"
+          alt="Example: open hand with the palm facing upward and a bank card resting flat in its center, photographed straight from above"
           className="h-24 w-24 shrink-0 rounded-xl border border-border object-cover"
           loading="lazy"
         />
         <figcaption className="text-xs leading-relaxed text-ink-muted">
-          Take it like this: hand flat, card flat beside it, camera directly above.
+          Take it like this: palm fully visible, card flat in the center, camera directly above.
         </figcaption>
       </figure>
 
