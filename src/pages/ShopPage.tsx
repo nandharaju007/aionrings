@@ -107,10 +107,17 @@ export default function ShopPage() {
                 aiOn Ring
               </h1>
 
-              <p className="text-ink-soft mb-8 leading-relaxed">
+              <p className="text-ink-soft mb-4 leading-relaxed">
                 The full circle of everyday wellness. Continuous awareness,
                 effortless comfort, endless insight into your habits.
               </p>
+
+              <Link
+                to="/ring"
+                className="mb-8 inline-flex items-center gap-1 text-[14px] font-medium text-primary underline-offset-4 hover:underline"
+              >
+                View full specs, materials &amp; size chart →
+              </Link>
 
               {/* Excitement Block */}
               <div className="surface-card p-8 mb-8 text-center bg-white">
