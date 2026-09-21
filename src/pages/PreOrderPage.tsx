@@ -1190,13 +1190,25 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
+        {/* Option 1 — Photo size estimation (primary) */}
+        <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
+          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
+            Option 1 · Recommended
+          </span>
+          <div className="mt-1 text-[16px] font-medium text-ink">Try photo size estimation</div>
+          <p className="mt-1 mb-3 text-[13px] text-ink-soft leading-relaxed">
+            Take a photo of your open palm with a bank card — our AI estimates your US ring size in seconds.
+          </p>
+          <RingSizer compact />
+        </div>
+
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
           <div>
-            <div className="font-medium text-ink mb-1">Method 1 — Existing ring</div>
+            <div className="font-medium text-ink mb-1">Option 2 — Existing ring</div>
             <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
           </div>
           <div>
-            <div className="font-medium text-ink mb-1">Method 2 — String</div>
+            <div className="font-medium text-ink mb-1">Option 3 — String</div>
             <p>
               Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
               overlaps and measure the length — that's your circumference.
