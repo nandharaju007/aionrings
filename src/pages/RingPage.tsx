@@ -6,7 +6,7 @@ import { SEO } from '@/components/SEO';
 import { RingTryOn } from '@/components/RingTryOn';
 import { RingSizer } from '@/components/RingSizer';
 import ringProduct from '@/assets/ring-product.jpg';
-import sizingSample from '@/assets/ring-sizing-sample-photo.jpg';
+import handCardSample from '@/assets/hand-card-sample.jpg';
 
 const specs: { label: string; value: string }[] = [
   { label: 'Material', value: 'Aerospace-grade titanium (Grade 5)' },
@@ -55,8 +55,8 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   },
   {
     icon: CreditCard,
-    title: 'Place a bank card beside it',
-    body: 'Any standard bank or credit card works — its exact width (85.6 mm) gives the camera a scale. Lay it flat next to your hand, not covering your fingers. Card details can be hidden.',
+    title: 'Hold a bank card on your palm',
+    body: 'Any standard bank or credit card works — its exact width (85.6 mm) gives the camera a scale. Rest it flat on your open palm (or lay it flat beside your hand) without covering your fingers. Card details can be hidden.',
   },
   {
     icon: Camera,
@@ -203,15 +203,15 @@ export default function RingPage() {
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <figure className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
                 <img
-                  src={sizingSample}
-                  alt="Sample photo: an open hand lying flat on a light surface with a bank card placed flat beside it, photographed straight from above"
+                  src={handCardSample}
+                  alt="Example photo: an open hand held flat with a bank card resting flat on the palm, fingers fully visible, photographed straight from above"
                   className="h-full w-full object-cover"
                   loading="lazy"
                   width={1024}
-                  height={768}
+                  height={1024}
                 />
                 <figcaption className="px-4 py-3 text-[13px] text-ink-muted">
-                  A good photo: hand flat, fingers slightly apart, card flat beside the hand, camera directly above.
+                  A good photo: open hand flat, card resting flat on the palm without covering the fingers, camera directly above.
                 </figcaption>
               </figure>
 
