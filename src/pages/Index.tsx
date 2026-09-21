@@ -5,8 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringProduct from "@/assets/ring-product.jpg";
-import heroFingerRing from "@/assets/hero-finger-ring.png";
-import heroFingerVideo from "@/assets/hero-finger-ring-video.mp4.asset.json";
+import heroStudio from "@/assets/hero-concept-studio.jpg";
 import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
 import posterLifeEarly from "@/assets/poster-life-early.jpg";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
@@ -666,13 +665,14 @@ function Hero() {
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="relative overflow-hidden rounded-[28px]">
-            <LazyVideo
-              autoPlay
-              src={heroFingerVideo.url}
-              poster={heroFingerRing}
-              label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
-              className="h-[220px] w-full object-cover sm:h-[320px] md:h-[400px] lg:h-[460px]"
+            <img
+              src={heroStudio}
+              width={1920}
+              height={1080}
+              alt="Hand wearing the aiOn smart ring, engraved and sensors glowing, in a luxury studio setting"
+              className="h-[240px] w-full object-cover sm:h-[340px] md:h-[420px] lg:h-[480px]"
               style={{
+                objectPosition: "50% 42%",
                 filter: "contrast(1.04) saturate(1.03)",
                 WebkitMaskImage:
                   "radial-gradient(ellipse 82% 84% at 50% 50%, #000 46%, rgba(0,0,0,0.55) 74%, transparent 100%)",
@@ -686,7 +686,7 @@ function Hero() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background: `
-                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 80%, hsl(var(--canvas)) 100%),
+                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 72%, rgba(10,22,40,0.42) 100%),
                   linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
                 `,
               }}
