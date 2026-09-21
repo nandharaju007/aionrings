@@ -686,7 +686,7 @@ function Hero() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background: `
-                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 80%, hsl(var(--canvas)) 100%),
+                  linear-gradient(to bottom, hsl(var(--canvas)) 0%, transparent 16%, transparent 72%, rgba(10,22,40,0.42) 100%),
                   linear-gradient(to right, hsl(var(--canvas)) 0%, transparent 10%, transparent 90%, hsl(var(--canvas)) 100%)
                 `,
               }}
