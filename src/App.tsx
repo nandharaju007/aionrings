@@ -10,6 +10,7 @@ import StressTrackingRingPage from "./pages/guide/StressTrackingRingPage";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
+import RingPage from "./pages/RingPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
@@ -41,6 +42,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/ring" element={<RingPage />} />
             <Route path="/preorder" element={<PreOrderPage />} />
             <Route path="/partners" element={<PartnersPage />} />
             <Route path="/support" element={<SupportPage />} />
