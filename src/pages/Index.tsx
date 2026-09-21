@@ -36,7 +36,7 @@ function BrandReveal() {
   };
   return (
     <motion.div
-      className="mb-8 flex flex-col items-center md:mb-10"
+      className="mb-6 flex flex-col items-center md:mb-8"
       initial="hidden"
       animate="show"
       variants={{ show: { transition: { staggerChildren: 0.18, delayChildren: 0.15 } } }}
@@ -143,7 +143,7 @@ function HeroInsightTicker() {
 /* ─────────────────────────────────────────────
    Shared rhythm tokens
    ───────────────────────────────────────────── */
-const SECTION = "py-20 md:py-32";
+const SECTION = "py-14 sm:py-16 md:py-24";
 
 /* Video that only plays while visible — saves CPU and battery */
 function LazyVideo({
@@ -539,7 +539,7 @@ function NatureBand({
 }: { src: string; eyebrow: string; title: string; line: string; position?: string }) {
   return (
     <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
-      <div className="relative h-[62vh] md:h-[78vh]">
+      <div className="relative h-[46vh] md:h-[62vh]">
         <motion.img
           src={src}
           alt=""
@@ -602,7 +602,7 @@ function Hero() {
       />
       <GridOverlay tone="dark" />
 
-      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-28 pb-20 md:pt-36 md:pb-28">
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-20 pb-12 md:pt-28 md:pb-16">
         {/* Brand reveal */}
         <BrandReveal />
 
@@ -643,7 +643,7 @@ function Hero() {
 
         {/* CTA — placed above the fold, before the cinematic proof */}
         <motion.div
-          className="mt-9 flex flex-col items-center"
+          className="mt-7 flex flex-col items-center"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.1 }}
@@ -660,7 +660,7 @@ function Hero() {
 
         {/* Cinematic proof — one video, edge-blended, no frame */}
         <motion.div
-          className="relative mt-12 w-full md:mt-16"
+          className="relative mt-8 w-full md:mt-12"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -671,7 +671,7 @@ function Hero() {
               src={heroFingerVideo.url}
               poster={heroFingerRing}
               label="Close-up of a hand wearing the aiOn smart ring, sensors glowing"
-              className="h-[260px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[540px]"
+              className="h-[220px] w-full object-cover sm:h-[320px] md:h-[400px] lg:h-[460px]"
               style={{
                 filter: "contrast(1.04) saturate(1.03)",
                 WebkitMaskImage:
@@ -717,7 +717,7 @@ function Hero() {
 
         {/* Three finishes — colour balance right at the top */}
         <motion.div
-          className="mt-10 flex items-center justify-center gap-8 sm:gap-12"
+          className="mt-8 flex items-center justify-center gap-8 sm:gap-12"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.4 }}
@@ -744,7 +744,7 @@ function Hero() {
    ───────────────────────────────────────────── */
 function MorningProofSection() {
   return (
-    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "58vh", minHeight: "420px", maxHeight: "760px" }}>
+    <section className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden" style={{ height: "46vh", minHeight: "340px", maxHeight: "620px" }}>
       <LazyVideo
         src={(videoLifeEarly as { url: string }).url}
         poster={posterLifeEarly}
@@ -782,7 +782,7 @@ function VitalityScoreSection() {
       <NatureBackdrop src={natureSunrise} opacity={0.3} position="center 40%" />
       <div className="container mx-auto px-6 relative z-10">
 
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <FadeUp>
             <div className="relative mx-auto h-72 w-72 md:h-96 md:w-96">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
@@ -882,7 +882,7 @@ function TrackUnderstandActSection() {
           </p>
         </FadeUp>
 
-        <div className="mt-14 grid md:grid-cols-3 gap-6 md:gap-4 items-stretch relative">
+        <div className="mt-9 md:mt-12 grid md:grid-cols-3 gap-6 md:gap-4 items-stretch relative">
           {cols.map((c, idx) => (
             <div key={c.title} className="relative flex">
               <motion.div
@@ -915,7 +915,7 @@ function TrackUnderstandActSection() {
           ))}
         </div>
 
-        <FadeUp delay={0.3} className="mt-16 text-center">
+        <FadeUp delay={0.3} className="mt-10 md:mt-12 text-center">
           <p className="text-xl md:text-2xl font-extralight text-ink-soft leading-relaxed">
             Most wearables stop at the data.<br />
             <span className="text-ink font-light">aiOn starts there.</span>
@@ -981,14 +981,14 @@ function BodyTalkingSection() {
           ))}
         </div>
 
-        <FadeUp delay={0.4} className="mt-20 space-y-2 text-ink-muted text-sm md:text-base font-light">
+        <FadeUp delay={0.4} className="mt-12 md:mt-16 space-y-2 text-ink-muted text-sm md:text-base font-light">
           <p>Your annual physical is once a year.</p>
           <p>Your doctor has 10 minutes.</p>
           <p>Nobody is watching.</p>
         </FadeUp>
 
         <motion.p
-          className="mt-14 text-4xl md:text-6xl font-extralight"
+          className="mt-10 text-4xl md:text-6xl font-extralight"
           style={{ color: C.blue, textShadow: `0 0 40px ${C.blue}88` }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1049,7 +1049,7 @@ function PillarsSection() {
             <WordStagger text="Everything your body" /><br /><WordStagger text="is telling you." delay={0.15} />
           </h2>
         </FadeUp>
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="mt-9 md:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {pillars.map((p, i) => {
             const isOpen = open === i;
             return (
@@ -1057,7 +1057,7 @@ function PillarsSection() {
                 key={p.name}
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
-                className="text-left rounded-3xl border p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1878E0]"
+                className="text-left rounded-3xl border p-5 md:p-6 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1878E0]"
                 style={{
                   borderColor: isOpen ? C.blue : "#E3E9F2",
                   background: "#FFFFFF",
@@ -1068,8 +1068,8 @@ function PillarsSection() {
                 whileHover={{ y: -3, boxShadow: `0 20px 50px -20px ${C.blue}44` }}
               >
                 <Glyph name={p.icon} className="h-7 w-7" />
-                <h3 className="mt-4 text-xl font-light text-ink">{p.name}</h3>
-                <p className="mt-2 text-sm text-ink-soft font-light">{p.line}</p>
+                <h3 className="mt-3 text-xl font-light text-ink">{p.name}</h3>
+                <p className="mt-1.5 text-sm text-ink-soft font-light">{p.line}</p>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.ul
@@ -1087,7 +1087,7 @@ function PillarsSection() {
                     </motion.ul>
                   )}
                 </AnimatePresence>
-                <p className="mt-4 text-[10px] tracking-widest text-ink-muted">
+                <p className="mt-3 text-[10px] tracking-widest text-ink-muted">
                   {isOpen ? "TAP TO CLOSE" : "TAP TO EXPAND"}
                 </p>
               </motion.button>
@@ -1121,12 +1121,12 @@ function QuestSection() {
           <h2 className="text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             <WordStagger text="The one thing" /><br /><WordStagger text="you should do today." delay={0.15} />
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             Every morning. Built for your body.<br />Based on your last 7 days.
           </p>
         </FadeUp>
 
-        <div className="mt-14 grid md:grid-cols-3 gap-5">
+        <div className="mt-9 md:mt-12 grid md:grid-cols-3 gap-5">
           {quests.map((q, i) => (
             <motion.div key={i}
               className="rounded-3xl border p-6"
@@ -1144,7 +1144,7 @@ function QuestSection() {
           ))}
         </div>
 
-        <FadeUp delay={0.3} className="mt-12 text-center">
+        <FadeUp delay={0.3} className="mt-9 text-center">
           <p className="text-base md:text-lg text-ink-soft font-light">
             Complete it. Earn XP. Build your streak.
           </p>
@@ -1172,12 +1172,12 @@ function TheAppSection() {
           <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Your body, on screen.
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             Clean. Calm. Built to answer one question — what should I do today?
           </p>
         </FadeUp>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-end">
+        <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 items-end">
           {screens.map((s, i) => (
             <motion.div
               key={s.alt}
@@ -1198,17 +1198,17 @@ function TheAppSection() {
                   loading="lazy"
                   width={768}
                   height={1536}
-                  className="w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
+                  className="w-[180px] sm:w-[220px] md:w-[260px] h-auto select-none pointer-events-none"
                 />
               </div>
-              <p className="mt-6 text-sm md:text-base text-ink-muted font-light tracking-wide">
+              <p className="mt-4 text-sm md:text-base text-ink-muted font-light tracking-wide">
                 {s.caption}
               </p>
             </motion.div>
           ))}
         </div>
 
-        <FadeUp delay={0.3} className="mt-14 text-center">
+        <FadeUp delay={0.3} className="mt-10 text-center">
           <p className="text-sm md:text-base text-ink-muted font-light">
             Free with every ring. iOS &amp; Android.
           </p>
@@ -1236,12 +1236,12 @@ function InLifeSection() {
           <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">
             Worn, not watched.
           </h2>
-          <p className="mt-6 text-ink-soft text-base md:text-lg font-light">
+          <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
             From the first run to the last hour of sleep — aiOn simply stays with you.
           </p>
         </FadeUp>
 
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        <div className="mt-9 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {clips.map((c, i) => (
             <motion.figure
               key={c.label}
@@ -1254,7 +1254,7 @@ function InLifeSection() {
               <LazyVideo
                 src={c.src}
                 label={`${c.caption} — person wearing the aiOn ring`}
-                className="w-full h-[300px] md:h-[380px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
+                className="w-full h-[240px] md:h-[320px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
                 style={{ filter: "contrast(1.03) saturate(0.95)" }}
               />
               <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,22,40,0) 50%, rgba(10,22,40,0.55) 100%)" }} />
@@ -1296,7 +1296,7 @@ function PreventiveSection() {
             </motion.div>
           </div>
         </FadeUp>
-        <FadeUp delay={0.4} className="mt-14">
+        <FadeUp delay={0.4} className="mt-10">
           <h2 className="text-3xl md:text-5xl font-extralight text-ink leading-tight">
             The trend showed on Day 11.<br />
             <span className="text-ink-muted">You noticed on Day 14.</span>
@@ -1339,7 +1339,7 @@ function RingSection() {
           <img
             src={ringProduct}
             alt="aiOn ring"
-            className="w-full h-[55vh] sm:h-[65vh] md:h-[75vh] object-cover object-center"
+            className="w-full h-[40vh] sm:h-[50vh] md:h-[62vh] object-cover object-center"
           />
           <div
             className="pointer-events-none absolute inset-0"
@@ -1351,7 +1351,7 @@ function RingSection() {
       </FadeUp>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="relative mt-10 md:mt-14 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
+        <div className="relative mt-8 md:mt-10 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
           {specs.map((s, i) => (
             <motion.div key={i}
               className="text-center"
@@ -1364,12 +1364,12 @@ function RingSection() {
           ))}
         </div>
         {/* Three finishes */}
-        <div className="relative mt-16 md:mt-24 max-w-5xl mx-auto">
+        <div className="relative mt-12 md:mt-16 max-w-5xl mx-auto">
           <FadeUp className="text-center">
             <p className="text-xs tracking-[0.3em] text-ink-muted uppercase">Finishes</p>
             <h3 className="mt-3 text-3xl md:text-4xl font-extralight text-ink">Three ways to wear it.</h3>
           </FadeUp>
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+          <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-6 md:gap-10">
             {[
               { src: ringMidnight, name: "Midnight", note: "Matte titanium" },
               { src: ringSilver, name: "Silver", note: "Brushed titanium" },
@@ -1383,7 +1383,7 @@ function RingSection() {
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
-                <div className="relative mx-auto w-full aspect-square flex items-center justify-center">
+                <div className="relative mx-auto w-full max-w-[240px] aspect-square flex items-center justify-center">
                   <div
                     className="pointer-events-none absolute inset-6 rounded-full"
                     style={{ background: "radial-gradient(circle, rgba(10,22,40,0.07) 0%, rgba(10,22,40,0) 70%)" }}
@@ -1396,13 +1396,13 @@ function RingSection() {
                   />
                 </div>
                 <figcaption className="mt-2">
-                  <div className="text-lg font-light text-ink">{f.name}</div>
-                  <div className="text-xs tracking-[0.2em] uppercase text-ink-muted mt-1">{f.note}</div>
+                  <div className="text-sm sm:text-base md:text-lg font-light text-ink">{f.name}</div>
+                  <div className="text-[10px] sm:text-xs tracking-[0.18em] uppercase text-ink-muted mt-1">{f.note}</div>
                 </figcaption>
               </motion.figure>
             ))}
           </div>
-          <p className="mt-10 text-center text-sm text-ink-muted font-light">
+          <p className="mt-8 text-center text-sm text-ink-muted font-light">
             Same ring. Same sensors. Your finish.
           </p>
         </div>
@@ -1429,7 +1429,7 @@ function PlansSection() {
             <WordStagger text="Start free." /><br /><WordStagger text="Unlock more when ready." delay={0.15} />
           </h2>
         </FadeUp>
-        <div className="mt-16 grid md:grid-cols-3 gap-6 items-stretch">
+        <div className="mt-10 md:mt-12 grid md:grid-cols-3 gap-6 items-stretch">
           {plans.map((p, i) => {
             const isOpen = open === i;
             return (
@@ -1496,7 +1496,7 @@ function FinalCTA() {
           <LazyVideo
             src={videoRunTrail.url}
             label="Person running on a mountain trail wearing the aiOn Ring"
-            className="h-[46vh] md:h-[60vh] w-full object-cover"
+            className="h-[34vh] md:h-[48vh] w-full object-cover"
           />
           <div
             className="pointer-events-none absolute inset-0"
