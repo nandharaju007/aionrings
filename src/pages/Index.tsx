@@ -1383,7 +1383,7 @@ function RingSection() {
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
-                <div className="relative mx-auto w-full aspect-square flex items-center justify-center">
+                <div className="relative mx-auto w-full max-w-[240px] aspect-square flex items-center justify-center">
                   <div
                     className="pointer-events-none absolute inset-6 rounded-full"
                     style={{ background: "radial-gradient(circle, rgba(10,22,40,0.07) 0%, rgba(10,22,40,0) 70%)" }}
