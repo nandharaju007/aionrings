@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useCart } from '@/contexts/CartContext';
+import { useCart, cartLineKey } from '@/contexts/CartContext';
 
 export function CartPanel() {
   const { items, isOpen, closeCart, updateQuantity, removeItem, totalPrice, totalItems } = useCart();
@@ -57,7 +57,7 @@ export function CartPanel() {
                 ) : (
                   items.map((item) => (
                     <motion.div
-                      key={`${item.id}-${item.size}-${item.finish}`}
+                      key={cartLineKey(item)}
                       layout
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ export function CartPanel() {
                         {/* Quantity Controls */}
                         <div className="flex items-center gap-3 mt-3">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(cartLineKey(item), item.quantity - 1)}
                             className="p-1.5 rounded-lg bg-canvas hover:bg-muted transition-colors"
                             aria-label="Decrease quantity"
                           >
@@ -92,14 +92,14 @@ export function CartPanel() {
                           </button>
                           <span className="text-sm w-6 text-center">{item.quantity}</span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(cartLineKey(item), item.quantity + 1)}
                             className="p-1.5 rounded-lg bg-canvas hover:bg-muted transition-colors"
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(cartLineKey(item))}
                             className="ml-auto p-1.5 text-ink-soft hover:text-destructive transition-colors"
                             aria-label="Remove item"
                           >
