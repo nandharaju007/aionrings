@@ -285,7 +285,7 @@ export default function CheckoutPage() {
 
                   <div className="space-y-4 mb-6">
                     {items.map((item) => (
-                      <div key={`${item.id}-${item.size}`} className="flex gap-4">
+                      <div key={`${item.id}-${item.size}-${item.finish}`} className="flex gap-4">
                         <div className="w-16 h-16 rounded-lg overflow-hidden bg-canvas-alt">
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         </div>
