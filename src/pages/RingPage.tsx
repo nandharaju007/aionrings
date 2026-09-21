@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Camera, CreditCard, Hand, Ruler, X } from 'lucide-react';
+import { Check, Camera, CreditCard, Hand, Ruler } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
@@ -72,8 +71,6 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
 ];
 
 export default function RingPage() {
-  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-canvas">
       <SEO
@@ -235,33 +232,15 @@ export default function RingPage() {
               </ol>
             </div>
 
-            <div className="mx-auto mt-10 max-w-3xl space-y-4">
-              <RingTryOn />
-              {!photoSizerOpen ? (
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setPhotoSizerOpen(true)}
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-medium text-ink shadow-sm transition-transform hover:scale-[1.02]"
-                  >
-                    <Ruler className="h-4 w-4 text-primary" />
-                    Find my size with a photo
-                  </button>
-                </div>
-              ) : (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setPhotoSizerOpen(false)}
-                    aria-label="Close photo sizing"
-                    className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-ink-muted transition-colors hover:text-ink sm:right-6 sm:top-6"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                  <RingSizer />
-                </div>
-              )}
+            <div className="mt-8">
+              <RingSizer />
             </div>
+          </section>
+
+          {/* Try-on */}
+          <section className="mt-16 md:mt-20">
+            <h2 className="mb-6 text-2xl font-light text-ink md:text-3xl">See it on your hand</h2>
+            <RingTryOn />
           </section>
 
           <p className="mt-14 text-[13px] leading-relaxed text-ink-muted">
