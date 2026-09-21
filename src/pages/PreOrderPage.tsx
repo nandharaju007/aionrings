@@ -1159,6 +1159,8 @@ function ConfirmationCard({ name, partner }: { name: string; partner?: string | 
 }
 
 function SizingGuide({ onClose }: { onClose: () => void }) {
+  const [photoOpen, setPhotoOpen] = useState(false);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -1190,16 +1192,30 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
-        {/* Option 1 — Photo size estimation (primary) */}
+        {/* Option 1 — Photo size estimation (primary, collapsed until chosen) */}
         <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
           <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
             Option 1 · Recommended
           </span>
           <div className="mt-1 text-[16px] font-medium text-ink">Try photo size estimation</div>
-          <p className="mt-1 mb-3 text-[13px] text-ink-soft leading-relaxed">
+          <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
             Take a photo of your open palm with a bank card — our AI estimates your US ring size in seconds.
           </p>
-          <RingSizer compact />
+          {photoOpen ? (
+            <div className="mt-3">
+              <RingSizer compact />
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setPhotoOpen(true)}
+              className="mt-3 h-11 px-6 rounded-full font-semibold text-white text-[13px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
+              style={{ background: GRADIENT }}
+            >
+              <Camera className="w-4 h-4" />
+              Try photo size estimation
+            </button>
+          )}
         </div>
 
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
