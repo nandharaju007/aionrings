@@ -4,8 +4,6 @@ import { Check, ChevronDown, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck,
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
-import { RingTryOn } from "@/components/RingTryOn";
-import { RingSizer } from "@/components/RingSizer";
 import { supabase } from "@/integrations/supabase/client";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
@@ -320,7 +318,6 @@ export default function PreOrderPage() {
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
-  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
@@ -513,34 +510,6 @@ export default function PreOrderPage() {
                 </div>
               </div>
 
-              <div className="mx-auto mb-16 max-w-[1120px] space-y-4">
-                <RingTryOn />
-                {!photoSizerOpen ? (
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setPhotoSizerOpen(true)}
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-medium text-ink shadow-sm transition-transform hover:scale-[1.02]"
-                    >
-                      <Ruler className="h-4 w-4 text-primary" />
-                      Find my size with a photo
-                    </button>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setPhotoSizerOpen(false)}
-                      aria-label="Close photo sizing"
-                      className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-ink-muted transition-colors hover:text-ink sm:right-6 sm:top-6"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                    <RingSizer />
-                  </div>
-                )}
-              </div>
-
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
                 <div className="min-w-0 lg:sticky lg:top-28">
@@ -612,6 +581,12 @@ export default function PreOrderPage() {
                           <p className="mt-2 text-[12px] text-ink-muted">
                             Prefer to measure at home? A free sizing kit ships before your ring.
                           </p>
+                          <Link
+                            to="/ring#photo-sizing"
+                            className="mt-3 inline-flex text-[13px] font-medium text-primary underline-offset-4 hover:underline"
+                          >
+                            Try the photo size estimate on The Ring page
+                          </Link>
                         </div>
                         <button
                           type="button"
@@ -1175,11 +1150,6 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
 
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
-
-        <div className="mb-6 rounded-2xl border border-border bg-white p-4">
-          <RingSizer compact />
-        </div>
-
 
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
           <div>
