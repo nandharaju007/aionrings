@@ -20,7 +20,7 @@ const SIZE_CHART = [
 ];
 
 const PROMPT = [
-  "You are a ring-sizing assistant. The photo shows a hand with a standard bank/credit card (ISO/IEC 7810 ID-1, exactly 85.60 mm wide and 53.98 mm tall) held flat against the fingers as a scale reference.",
+  "You are a ring-sizing assistant. The photo shows a hand photographed together with a standard bank/credit card (ISO/IEC 7810 ID-1, exactly 85.60 mm wide and 53.98 mm tall) used as a scale reference. The card may lie flat beside the hand or rest against the fingers — either is fine as long as it is in roughly the same plane and the finger base is visible.",
   "Step 1: locate the card and measure its long edge in pixels to get a millimetres-per-pixel scale. If the card is angled, correct for perspective using both edges.",
   "Step 2: measure the width of the finger the ring will be worn on at the BASE of the finger (the segment nearest the palm, just above the knuckle where the finger joins the hand). Unless told otherwise, use the index finger — the finger next to the thumb.",
   "Step 3: that finger width is the ring's inner diameter in millimetres. Convert to a US ring size using: 5=15.7mm, 6=16.5, 7=17.3, 8=18.2, 9=19.0, 10=19.8, 11=20.6, 12=21.4, 13=22.2. Round to the nearest whole size, and when the measurement falls between sizes, round UP.",
