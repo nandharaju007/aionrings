@@ -510,34 +510,6 @@ export default function PreOrderPage() {
                 </div>
               </div>
 
-              <div className="mx-auto mb-16 max-w-[1120px] space-y-4">
-                <RingTryOn />
-                {!photoSizerOpen ? (
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setPhotoSizerOpen(true)}
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-medium text-ink shadow-sm transition-transform hover:scale-[1.02]"
-                    >
-                      <Ruler className="h-4 w-4 text-primary" />
-                      Find my size with a photo
-                    </button>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setPhotoSizerOpen(false)}
-                      aria-label="Close photo sizing"
-                      className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-ink-muted transition-colors hover:text-ink sm:right-6 sm:top-6"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                    <RingSizer />
-                  </div>
-                )}
-              </div>
-
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
                 <div className="min-w-0 lg:sticky lg:top-28">
