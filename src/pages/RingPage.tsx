@@ -6,7 +6,7 @@ import { SEO } from '@/components/SEO';
 import { RingTryOn } from '@/components/RingTryOn';
 import { RingSizer } from '@/components/RingSizer';
 import ringProduct from '@/assets/ring-product.jpg';
-import handCardSample from '@/assets/hand-card-sample.jpg';
+import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 
 const specs: { label: string; value: string }[] = [
   { label: 'Material', value: 'Aerospace-grade titanium (Grade 5)' },
@@ -50,13 +50,13 @@ const sizeChart: { us: string; mm: string; circumference: string }[] = [
 const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   {
     icon: Hand,
-    title: 'Lay your hand flat',
-    body: 'Place your open hand flat on a plain surface, fingers slightly separated, with the finger you’ll wear the ring on fully visible.',
+    title: 'Open your hand palm-up',
+    body: 'Hold your palm fully visible, with your fingers slightly open and relaxed.',
   },
   {
     icon: CreditCard,
-    title: 'Place a bank card beside your hand',
-    body: 'Any standard bank or credit card works — its exact width (85.6 mm) gives the camera a scale. Lay it flat on the surface next to your open hand, roughly level with your fingers. Card details can be hidden.',
+    title: 'Rest a bank card on your palm',
+    body: 'Place a standard bank or credit card flat in the center of your palm. Keep the entire card visible and do not cover it with your fingers. Card details can be hidden.',
   },
   {
     icon: Camera,
@@ -196,7 +196,7 @@ export default function RingPage() {
           <section className="mt-16 md:mt-20" id="photo-sizing">
             <h2 className="text-2xl font-light text-ink md:text-3xl">Find your size with a photo</h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-              No measuring tape? Take one photo of your hand next to a bank card and our sizing
+              No measuring tape? Take one photo of your open palm holding a bank card and our sizing
               assistant estimates your ring size. Here’s exactly how to take it:
             </p>
 
@@ -204,14 +204,14 @@ export default function RingPage() {
               <figure className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
                 <img
                   src={handCardSample}
-                  alt="Example photo: an open hand held flat with a bank card lying flat on the surface beside it, fingers fully visible, photographed straight from above"
+                  alt="Example photo: an open hand with the palm facing upward and a bank card resting flat in its center, with the entire card and all fingers visible"
                   className="h-full w-full object-cover"
                   loading="lazy"
                   width={1024}
                   height={1024}
                 />
                 <figcaption className="px-4 py-3 text-[13px] text-ink-muted">
-                  A good photo: open hand flat, card lying flat on the surface beside it, fingers and their bases fully visible, camera directly above.
+                  A good photo: palm facing upward, card flat in the center and fully visible, fingers relaxed, camera directly above.
                 </figcaption>
               </figure>
 
