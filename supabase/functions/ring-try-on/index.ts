@@ -16,11 +16,15 @@ const FINISH_DESCRIPTIONS: Record<string, string> = {
 function buildPrompt(finish: string) {
   const finishText = FINISH_DESCRIPTIONS[finish] ?? FINISH_DESCRIPTIONS["Midnight Black"];
   return [
-    "Photorealistically place a slim, smooth smart ring on the INDEX FINGER of the hand in this photo.",
-    `The ring is a seamless rounded band about 8mm wide with ${finishText}, no stones and no logo.`,
-    "Wrap the band correctly around the finger with accurate perspective, curvature and thickness,",
+    "Edit this photo by adding exactly ONE slim smart ring to the correct anatomical wearing position on the INDEX FINGER.",
+    "First identify the thumb. The index finger is the finger immediately beside the thumb.",
+    "Place the ring around the PROXIMAL PHALANX: the lower segment of that index finger nearest the palm, between the knuckle where the finger joins the hand (MCP) and the first middle knuckle (PIP).",
+    "Center the ring in that lower finger segment, close to the palm as a real ring is worn.",
+    "Do NOT place it near the fingernail, fingertip, middle knuckle, or on any other finger.",
+    `The ring must be a seamless rounded band about 8mm wide with ${finishText}, no stones and no logo.`,
+    "It must encircle the finger naturally, with the rear of the band hidden behind the finger and accurate perspective, curvature, contact shadow and thickness,",
     "matching the photo's existing lighting, shadows, skin tone, focus and grain.",
-    "Do not change the hand, pose, fingers, nails, background, colours or framing in any other way.",
+    "Preserve the hand anatomy, pose, finger lengths, nails, skin, background, colours, orientation and framing exactly.",
     "Return the same photo with only the ring added.",
   ].join(" ");
 }
