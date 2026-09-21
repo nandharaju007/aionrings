@@ -320,6 +320,7 @@ export default function PreOrderPage() {
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
+  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
