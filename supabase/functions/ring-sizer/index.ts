@@ -87,7 +87,28 @@ Deno.serve(async (req) => {
 
     const form = await req.formData();
     const image = form.get("image");
-    const finger = String(form.get("finger") ?? "index");
+    const finger = String(form.get("finger") ?? "index").replace(/[^a-z]/gi, "").slice(0, 10) || "index";
+
+    let cardHint = "";
+    try {
+      const raw = form.get("card_corners");
+      if (typeof raw === "string" && raw) {
+        const c = JSON.parse(raw);
+        const W = Number(c.width), H = Number(c.height);
+        const pts = (c.corners as number[][]).map(([x, y]) => [Number(x) * W, Number(y) * H]);
+        if (W > 0 && H > 0 && pts.length === 4 && pts.every((p) => p.every(Number.isFinite))) {
+          const d = (a: number[], b: number[]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+          const s = [d(pts[0], pts[1]), d(pts[1], pts[2]), d(pts[2], pts[3]), d(pts[3], pts[0])];
+          const pairA = (s[0] + s[2]) / 2, pairB = (s[1] + s[3]) / 2;
+          const longPx = Math.max(pairA, pairB), shortPx = Math.min(pairA, pairB);
+          const mmPerPx = (85.6 / longPx + 53.98 / shortPx) / 2;
+          const fmt = (p: number[]) => `(${(p[0] / W * 100).toFixed(1)}% , ${(p[1] / H * 100).toFixed(1)}%)`;
+          cardHint = ` The user has manually marked the four card corners at ${pts.map(fmt).join(", ")} of the image width/height (image is ${W}x${H} px). From these marks the card's long edge is ${longPx.toFixed(0)} px and short edge ${shortPx.toFixed(0)} px in the original image, giving a scale of about ${mmPerPx.toFixed(4)} mm per original-image pixel, i.e. the card long edge spans ${(pairA >= pairB ? 1 : 1) * (longPx / W * 100).toFixed(1)}% of the image width-equivalent. Treat these user marks as the authoritative card location and scale; measure the finger width relative to the card's marked long edge (85.60 mm). Only ignore the marks if they clearly do not surround a card.`;
+        }
+      }
+    } catch {
+      cardHint = "";
+    }
 
     if (!(image instanceof File) || image.size === 0) {
       return json({ error: "Please upload a photo of your hand with a bank card." }, 400);
@@ -115,7 +136,7 @@ Deno.serve(async (req) => {
           {
             role: "user",
             content: [
-              { type: "input_text", text: `${PROMPT} The ring will be worn on the ${finger} finger.` },
+              { type: "input_text", text: `${PROMPT} The ring will be worn on the ${finger} finger.${cardHint}` },
               { type: "input_image", image_url: dataUrl },
             ],
           },
