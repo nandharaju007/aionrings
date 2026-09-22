@@ -101,9 +101,11 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       const v = videoRef.current;
       const lm = landmarkerRef.current;
       const box = boxRef.current?.parentElement;
-      if (!v || !lm || !box || !v.videoWidth || doneRef.current) return;
+      if (!v || !box || !v.videoWidth || doneRef.current) return;
+      if (!lm) { setStatus({ ok: false, msg: 'Getting auto-capture ready…' }); return; }
       const s = check(v, box, small, lm);
-      streak = s.ok ? streak + 1 : 0;
+      // Forgive a single shaky frame instead of restarting the countdown.
+      streak = s.ok ? streak + 1 : Math.max(0, streak - 2);
       setStatus(s.ok ? { ok: true, msg: 'Perfect, hold still…' } : s);
       setProgress(Math.min(1, streak / HOLD_FRAMES));
       if (streak >= HOLD_FRAMES) {
