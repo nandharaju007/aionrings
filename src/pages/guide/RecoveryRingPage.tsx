@@ -47,7 +47,7 @@ export default function RecoveryRingPage() {
           h: "Common misreads",
           body: [
             "A single low score is not a verdict. Alcohol, a late heavy meal, a hot room, travel, or a late workout can all suppress overnight HRV without meaning you are overtrained.",
-            "Equally, a high score after a poor night can happen, the score is an estimate, not a truth. Sustained multi-day trends are what should change your plans.",
+            "Equally, a high score after a poor night can happen, since the score is an estimate, not a truth. Sustained multi-day trends are what should change your plans.",
           ],
         },
         {

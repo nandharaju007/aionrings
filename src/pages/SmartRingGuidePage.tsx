@@ -11,7 +11,7 @@ const TOPICS: { id: string; h: string; body: string[] }[] = [
     h: "Sleep tracking with a smart ring",
     body: [
       "A ring sits on the finger, where blood-flow signals are strong and movement artefacts are low, so it can stay on all night without being noticed. Overnight, aiOn follows sleep duration and timing, sleep stages, resting heart rate, heart-rate variability (HRV), blood-oxygen saturation (SpO₂) and skin-temperature deviation from your own baseline.",
-      "What matters for wellness is the pattern, not a single night. aiOn shows how your last night compares to your rolling baseline and turns that into one plain-language takeaway, for example, whether a later bedtime is what pulled your HRV down this week.",
+      "What matters for wellness is the pattern, not a single night. aiOn shows how your last night compares to your rolling baseline and turns that into one plain-language takeaway, for example whether a later bedtime is what pulled your HRV down this week.",
     ],
   },
   {

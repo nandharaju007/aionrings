@@ -109,7 +109,7 @@ const C = {
 /* Rotating insight line over the hero video */
 function HeroInsightTicker() {
   const lines = [
-    "Recovery is trending up, your body is ready for more today.",
+    "Recovery is trending up, so your body is ready for more today.",
     "Resting heart rate steady overnight. Nice consistency.",
     "Sleep quality improved 12% this week.",
     "Breathing regularity high, a calm night of rest.",
@@ -1034,7 +1034,7 @@ function PillarsSection() {
     ]},
     { icon: "drop", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
       "Follow long-term lifestyle trends, not single numbers",
-      "EST trends show direction, they are not measurements",
+      "EST trends show direction and are not measurements",
       "Build habits around how your body responds",
     ]},
   ];
