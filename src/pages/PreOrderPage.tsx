@@ -319,7 +319,7 @@ export default function PreOrderPage() {
   const [form, setForm] = useState<FormState>(() => ({ ...INITIAL, referral_source: referral ?? "" }));
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [sizingOpen, setSizingOpen] = useState(false);
+  const [sizingOpen, setSizingOpen] = useState<false | "all" | "ring" | "string">(false);
   const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -616,7 +616,7 @@ export default function PreOrderPage() {
                         <div className="grid gap-2 sm:grid-cols-2">
                           <button
                             type="button"
-                            onClick={() => setSizingOpen(true)}
+                            onClick={() => setSizingOpen("ring")}
                             className="flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
                           >
                             <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
@@ -628,7 +628,7 @@ export default function PreOrderPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => setSizingOpen(true)}
+                            onClick={() => setSizingOpen("string")}
                             className="flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
                           >
                             <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
@@ -923,7 +923,7 @@ export default function PreOrderPage() {
         </div>
       </main>
 
-      {sizingOpen && <SizingGuide onClose={() => setSizingOpen(false)} />}
+      {sizingOpen && <SizingGuide method={sizingOpen} onClose={() => setSizingOpen(false)} />}
 
       <Footer />
     </div>
@@ -1194,7 +1194,9 @@ function StringMethodIcon() {
   );
 }
 
-function SizingGuide({ onClose }: { onClose: () => void }) {
+function SizingGuide({ onClose, method = "all" }: { onClose: () => void; method?: "all" | "ring" | "string" }) {
+  const showRing = method !== "string";
+  const showString = method !== "ring";
   const [photoOpen, setPhotoOpen] = useState(false);
 
   useEffect(() => {
@@ -1229,7 +1231,7 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
         {/* Option 1, Photo size estimation (primary, collapsed until chosen) */}
-        <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
+        {method === "all" && (<div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
           <div className="flex items-center gap-3">
             <img
               src={handCardSample}
@@ -1261,14 +1263,14 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
               Try photo size estimation
             </button>
           )}
-        </div>
+        </div>)}
 
         {/* Other sizing options, grouped and visual */}
-        <div className="text-[11px] font-semibold uppercase tracking-[2px] text-ink-muted mb-2">
+        {method === "all" && (<div className="text-[11px] font-semibold uppercase tracking-[2px] text-ink-muted mb-2">
           Other sizing options
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2 mb-5">
-          <div className="rounded-xl border border-border bg-white p-4">
+        </div>)}
+        <div className={`grid gap-2 mb-5 ${method === "all" ? "sm:grid-cols-2" : ""}`}>
+          {showRing && <div className="rounded-xl border border-border bg-white p-4">
             <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center">
               <RingMethodIcon />
             </span>
@@ -1277,8 +1279,8 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
               Pick a ring that fits the same finger, measure straight across its inside edge in mm, then find the
               closest "Inner Diameter" in the chart below.
             </p>
-          </div>
-          <div className="rounded-xl border border-border bg-white p-4">
+          </div>}
+          {showString && <div className="rounded-xl border border-border bg-white p-4">
             <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center">
               <StringMethodIcon />
             </span>
@@ -1287,7 +1289,7 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
               Wrap a thin strip of paper snugly around the base of your finger, mark where it overlaps, lay it flat and
               measure its length in mm, then find the closest "Circumference" in the chart below.
             </p>
-          </div>
+          </div>}
         </div>
 
         {/* Quick tips, one line each with an icon */}
