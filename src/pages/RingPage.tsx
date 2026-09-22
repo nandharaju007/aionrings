@@ -205,6 +205,9 @@ export default function RingPage() {
                 </tbody>
               </table>
             </div>
+            <Link to="/size-chart" className="mt-4 inline-block text-[14px] font-medium text-primary underline-offset-4 hover:underline">
+              Compare US, UK and EU sizes →
+            </Link>
           </section>
 
           {/* Photo sizing instructions */}
