@@ -161,10 +161,15 @@ Deno.serve(async (req) => {
     }
     if (!parsed) return json({ error: "Could not read a measurement from that photo. Please try another." }, 422);
 
-    if (parsed.ok && typeof parsed.inner_diameter_mm === "number" && !parsed.us_size) {
+    if (parsed.ok && typeof parsed.inner_diameter_mm === "number") {
+      // Always derive the size from the measured diameter so the chart is applied consistently.
       const mm = parsed.inner_diameter_mm;
-      const match = SIZE_CHART.find((r) => r.diameter >= mm) ?? SIZE_CHART[SIZE_CHART.length - 1];
+      const match = SIZE_CHART.find((r) => r.diameter >= mm - 0.1) ?? SIZE_CHART[SIZE_CHART.length - 1];
       parsed.us_size = match.size;
+      if (mm > 22.2 || mm < 16.5) {
+        parsed.note = `${parsed.note ?? ""} This is outside our US 6 to 13 range, so please retake the photo or use the free sizing kit.`.trim();
+        parsed.confidence = "low";
+      }
     }
 
     return json(parsed);
