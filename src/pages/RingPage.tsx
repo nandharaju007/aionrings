@@ -256,7 +256,7 @@ export default function RingPage() {
           </section>
 
           <p className="mt-14 text-[13px] leading-relaxed text-ink-muted">
-            Photo-based sizing and the virtual try-on are AI-generated estimates for guidance only —
+            Photo-based sizing and the virtual try-on are digital estimates for guidance only —
             confirm your size before purchasing. aiOn is a general wellness product and is not a
             medical device; it is not intended to diagnose, treat, cure or prevent any disease.
           </p>

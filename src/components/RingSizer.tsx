@@ -245,8 +245,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <p className="mt-4 text-xs leading-relaxed text-ink-muted">
-            This is an AI estimate for guidance only — it can be off by a size. A free sizing kit ships before your
-            ring, and you can change your size before dispatch.
+            Photo-based sizing is a helpful estimate, not an exact measurement — it can be off by a size. A
+            free sizing kit ships before your ring, and you can change your size before dispatch.
           </p>
         </div>
       </div>
