@@ -582,8 +582,8 @@ export default function PreOrderPage() {
                               Try photo size estimation
                             </div>
                             <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-                              Take a photo of your open palm with a bank card — our AI reads it and estimates your
-                              US ring size in seconds.
+                              Take a photo of your open palm with a bank card — we'll match your US ring size
+                              in seconds.
                             </p>
                           </div>
                           <button
