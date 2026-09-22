@@ -1274,7 +1274,8 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
             </span>
             <div className="mt-2 text-[13px] font-medium text-ink">Measure a ring you already wear</div>
             <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
-              Match its inner diameter to the chart below.
+              Pick a ring that fits the same finger, measure straight across its inside edge in mm, then find the
+              closest "Inner Diameter" in the chart below.
             </p>
           </div>
           <div className="rounded-xl border border-border bg-white p-4">
@@ -1283,7 +1284,8 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
             </span>
             <div className="mt-2 text-[13px] font-medium text-ink">Wrap a string around your finger</div>
             <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
-              Measure its length and match it to the chart.
+              Wrap a thin strip of paper snugly around the base of your finger, mark where it overlaps, lay it flat and
+              measure its length in mm, then find the closest "Circumference" in the chart below.
             </p>
           </div>
         </div>
