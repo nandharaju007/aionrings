@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Upload, Ruler, RotateCcw, CreditCard, X, Camera } from 'lucide-react';
+import { Upload, Ruler, RotateCcw, X, Camera } from 'lucide-react';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
 import { CardAligner, defaultCorners, type Point } from '@/components/CardAligner';
