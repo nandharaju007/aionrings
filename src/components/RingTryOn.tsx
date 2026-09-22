@@ -222,7 +222,7 @@ export function RingTryOn() {
           {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
 
           <p className="mt-4 text-xs text-ink-muted leading-relaxed">
-            This is an AI-generated visualisation for illustration only — actual fit, size and finish may differ.
+            This preview is created digitally for illustration only — actual fit, size and finish may differ.
             Use the sizing guide before ordering.
           </p>
         </div>
