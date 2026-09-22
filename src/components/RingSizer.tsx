@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
-import { Upload, Ruler, RotateCcw, CreditCard, X } from 'lucide-react';
+import { Upload, Ruler, RotateCcw, CreditCard, X, Camera } from 'lucide-react';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
 import { CardAligner, defaultCorners, type Point } from '@/components/CardAligner';
+import { CameraCapture } from '@/components/CameraCapture';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -28,6 +29,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [error, setError] = useState<string | null>(null);
   const [corners, setCorners] = useState<Point[] | null>(null);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
+  const [cameraOn, setCameraOn] = useState(false);
 
   const pickFile = (selected: File | undefined) => {
     if (!selected) return;
@@ -87,6 +89,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     setError(null);
     setCorners(null);
     setImgSize(null);
+    setCameraOn(false);
     if (inputRef.current) inputRef.current.value = '';
   };
 
@@ -190,18 +193,36 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
                 Use a different photo
               </button>
             </div>
+          ) : cameraOn ? (
+            <CameraCapture
+              onCapture={(f) => {
+                setCameraOn(false);
+                pickFile(f);
+              }}
+              onClose={() => setCameraOn(false)}
+            />
           ) : (
-            <button
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-canvas transition-colors hover:border-primary"
-            >
-              <span className="flex flex-col items-center gap-2 text-ink-muted">
-                <Upload className="h-5 w-5" />
-                <span className="text-sm">Upload hand + card photo</span>
-                <span className="text-xs">JPG or PNG, up to 12 MB</span>
-              </span>
-            </button>
+            <div className="grid gap-3">
+              <button
+                type="button"
+                onClick={() => setCameraOn(true)}
+                className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-primary/50 bg-canvas transition-colors hover:border-primary"
+              >
+                <span className="flex flex-col items-center gap-2 text-ink-muted">
+                  <Camera className="h-5 w-5 text-primary" />
+                  <span className="text-sm text-ink">Use my camera</span>
+                  <span className="text-xs">Frame your palm and card with a live guide</span>
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm text-ink-soft hover:border-primary/40"
+              >
+                <Upload className="h-4 w-4" />
+                Upload a photo instead (JPG or PNG, up to 12 MB)
+              </button>
+            </div>
           )}
 
           <div className="mt-4">
