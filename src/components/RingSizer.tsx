@@ -30,6 +30,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [corners, setCorners] = useState<Point[] | null>(null);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
+  const [cornersTouched, setCornersTouched] = useState(false);
 
   const pickFile = (selected: File | undefined) => {
     if (!selected) return;
@@ -58,7 +59,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     const form = new FormData();
     form.append('image', file, file.name || 'hand.jpg');
     form.append('finger', finger);
-    if (corners && imgSize) {
+    if (corners && imgSize && cornersTouched) {
       form.append(
         'card_corners',
         JSON.stringify({ width: imgSize.w, height: imgSize.h, corners: corners.map((p) => [p.x, p.y]) }),
@@ -175,10 +176,14 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
               <CardAligner
                 src={preview}
                 corners={corners}
-                onChange={setCorners}
+                onChange={(c) => {
+                  setCorners(c);
+                  setCornersTouched(true);
+                }}
                 onImageLoad={(w, h) => {
                   setImgSize({ w, h });
                   setCorners(defaultCorners(w / h));
+                  setCornersTouched(false);
                 }}
               />
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
