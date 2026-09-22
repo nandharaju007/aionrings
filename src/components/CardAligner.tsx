@@ -46,7 +46,7 @@ export function CardAligner({
       className="relative w-full touch-none select-none overflow-hidden rounded-2xl border border-border bg-canvas"
       onPointerMove={move}
       onPointerUp={() => setDrag(null)}
-      onPointerLeave={() => setDrag(null)}
+      onPointerCancel={() => setDrag(null)}
     >
       <img
         src={src}
@@ -76,7 +76,7 @@ export function CardAligner({
                 (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
                 setDrag(i);
               }}
-              className="absolute h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary bg-background/90 shadow-card"
+              className="absolute h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary bg-background/70 shadow-card after:absolute after:left-1/2 after:top-1/2 after:h-2 after:w-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-primary"
               style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%` }}
             />
           ))}
