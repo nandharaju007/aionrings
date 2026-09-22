@@ -681,21 +681,30 @@ export default function PreOrderPage() {
 
                         <div>
                           <Label>Finish</Label>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {RING_COLORS.map((c) => (
-                              <button
-                                key={c.id}
-                                type="button"
-                                onClick={() => updateItem(item.id, { ring_color: c.id })}
-                                className={`flex items-center gap-2 px-3 h-10 rounded-full border text-[13px] transition-all ${item.ring_color === c.id ? "border-primary bg-primary/10 text-ink" : "border-border bg-white text-ink-soft hover:border-primary/40"}`}
-                              >
-                                <span
-                                  className="w-4 h-4 rounded-full border border-border"
-                                  style={{ background: c.swatch }}
-                                />
-                                {c.name}
-                              </button>
-                            ))}
+                          <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-2">
+                            {RING_COLORS.map((c) => {
+                              const selected = item.ring_color === c.id;
+                              return (
+                                <button
+                                  key={c.id}
+                                  type="button"
+                                  aria-pressed={selected}
+                                  onClick={() => updateItem(item.id, { ring_color: c.id })}
+                                  className={`relative flex flex-col items-center rounded-xl border p-2 sm:p-3 transition-all ${selected ? "border-primary ring-2 ring-primary/30 bg-primary/5" : "border-border bg-white hover:border-primary/40"}`}
+                                >
+                                  {selected && (
+                                    <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                      <Check className="h-3 w-3" />
+                                    </span>
+                                  )}
+                                  <img src={c.image} alt={`aiOn Ring, ${c.name}`} loading="lazy" className="h-16 w-16 sm:h-20 sm:w-20 object-contain" />
+                                  <span className="mt-1.5 flex items-center gap-1.5 text-[12px] sm:text-[13px] text-ink text-center leading-tight">
+                                    <span className="hidden sm:inline-block w-3 h-3 shrink-0 rounded-full border border-border" style={{ background: c.swatch }} />
+                                    {c.name}
+                                  </span>
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
 
