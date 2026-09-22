@@ -31,6 +31,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
   const [cornersTouched, setCornersTouched] = useState(false);
+  const [adjusting, setAdjusting] = useState(false);
 
   const pickFile = (selected: File | undefined) => {
     if (!selected) return;
@@ -46,6 +47,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     setResult(null);
     setCorners(null);
     setImgSize(null);
+    setAdjusting(false);
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
   };
@@ -175,7 +177,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             <div>
               <CardAligner
                 src={preview}
-                corners={corners}
+                corners={adjusting ? corners : null}
                 onChange={(c) => {
                   setCorners(c);
                   setCornersTouched(true);
@@ -187,16 +189,29 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
                 }}
               />
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
-                Drag the four dots onto the corners of your card. This tells us the card&apos;s exact size in your
-                photo, so your ring size is more accurate.
+                {adjusting
+                  ? 'Drag the dots onto the card corners. Close enough is fine.'
+                  : 'We find the card in your photo automatically. Just tap "Estimate my size".'}
               </p>
-              <button
-                type="button"
-                onClick={() => inputRef.current?.click()}
-                className="mt-1 text-xs text-primary underline-offset-2 hover:underline"
-              >
-                Use a different photo
-              </button>
+              <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                <button
+                  type="button"
+                  onClick={() => inputRef.current?.click()}
+                  className="text-xs text-primary underline-offset-2 hover:underline"
+                >
+                  Use a different photo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (adjusting) setCornersTouched(false);
+                    setAdjusting(!adjusting);
+                  }}
+                  className="text-xs text-ink-muted underline-offset-2 hover:underline"
+                >
+                  {adjusting ? 'Skip, detect the card for me' : 'Optional: mark the card myself'}
+                </button>
+              </div>
             </div>
           ) : cameraOn ? (
             <CameraCapture
