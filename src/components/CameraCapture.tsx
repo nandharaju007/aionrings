@@ -28,6 +28,15 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
 
   useEffect(() => {
     let cancelled = false;
+    doneRef.current = false;
+    landmarkerRef.current = null;
+    streamRef.current = null;
+    setError(null);
+    setReady(false);
+    setProgress(0);
+    setAutoAvailable(true);
+    setStatus({ ok: false, msg: 'Line up the card inside the box, palm up' });
+
     (async () => {
       try {
         if (!navigator.mediaDevices?.getUserMedia) throw new Error('unsupported');
@@ -68,8 +77,13 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     })();
     return () => {
       cancelled = true;
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      landmarkerRef.current?.close();
+      const stream = streamRef.current;
+      streamRef.current = null;
+      stream?.getTracks().forEach((t) => t.stop());
+      const landmarker = landmarkerRef.current;
+      landmarkerRef.current = null;
+      landmarker?.close();
+      doneRef.current = false;
     };
   }, []);
 
@@ -80,10 +94,20 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     const c = document.createElement('canvas');
     c.width = v.videoWidth;
     c.height = v.videoHeight;
-    c.getContext('2d')!.drawImage(v, 0, 0);
+    const context = c.getContext('2d');
+    if (!context) {
+      doneRef.current = false;
+      setError('We could not take the photo. Please try again.');
+      return;
+    }
+    context.drawImage(v, 0, 0);
     c.toBlob(
       (b) => {
-        if (!b) return;
+        if (!b) {
+          doneRef.current = false;
+          setError('We could not take the photo. Please try again.');
+          return;
+        }
         streamRef.current?.getTracks().forEach((t) => t.stop());
         onCapture(new File([b], 'hand-camera.jpg', { type: 'image/jpeg' }));
       },
@@ -171,7 +195,8 @@ function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement
   const cw = container.clientWidth, ch = container.clientHeight;
   const W = 320, H = Math.round((W * ch) / cw);
   c.width = W; c.height = H;
-  const ctx = c.getContext('2d', { willReadFrequently: true })!;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return { ok: false, msg: 'Getting auto-capture ready…' };
   const scale = Math.max(cw / v.videoWidth, ch / v.videoHeight);
   const sw = cw / scale, sh = ch / scale;
   ctx.drawImage(v, (v.videoWidth - sw) / 2, (v.videoHeight - sh) / 2, sw, sh, 0, 0, W, H);

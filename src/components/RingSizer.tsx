@@ -30,8 +30,16 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [corners, setCorners] = useState<Point[] | null>(null);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
+  const [cameraSession, setCameraSession] = useState(0);
   const [cornersTouched, setCornersTouched] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
+
+  const openCamera = () => {
+    setError(null);
+    setResult(null);
+    setCameraSession((session) => session + 1);
+    setCameraOn(true);
+  };
 
   const pickFile = (selected: File | undefined) => {
     if (!selected) return;
@@ -92,7 +100,10 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     setError(null);
     setCorners(null);
     setImgSize(null);
+    setCornersTouched(false);
+    setAdjusting(false);
     setCameraOn(false);
+    setCameraSession((session) => session + 1);
     if (inputRef.current) inputRef.current.value = '';
   };
 
@@ -215,6 +226,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             </div>
           ) : cameraOn ? (
             <CameraCapture
+              key={cameraSession}
               onCapture={(f) => {
                 setCameraOn(false);
                 pickFile(f);
@@ -225,7 +237,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             <div className="grid gap-3">
               <button
                 type="button"
-                onClick={() => setCameraOn(true)}
+                onClick={openCamera}
                 className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-primary/50 bg-canvas transition-colors hover:border-primary"
               >
                 <span className="flex flex-col items-center gap-2 text-ink-muted">
