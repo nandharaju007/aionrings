@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
           const longPx = Math.max(pairA, pairB), shortPx = Math.min(pairA, pairB);
           const mmPerPx = (85.6 / longPx + 53.98 / shortPx) / 2;
           const fmt = (p: number[]) => `(${(p[0] / W * 100).toFixed(1)}% , ${(p[1] / H * 100).toFixed(1)}%)`;
-          cardHint = ` The user has manually marked the four card corners at ${pts.map(fmt).join(", ")} of the image width/height (image is ${W}x${H} px). From these marks the card's long edge is ${longPx.toFixed(0)} px and short edge ${shortPx.toFixed(0)} px in the original image, giving a scale of about ${mmPerPx.toFixed(4)} mm per original-image pixel, i.e. the card long edge spans ${(pairA >= pairB ? 1 : 1) * (longPx / W * 100).toFixed(1)}% of the image width-equivalent. Treat these user marks as the authoritative card location and scale; measure the finger width relative to the card's marked long edge (85.60 mm). Only ignore the marks if they clearly do not surround a card.`;
+          cardHint = ` The user has manually marked the four card corners at ${pts.map(fmt).join(", ")} of the image width/height (image is ${W}x${H} px). From these marks the card's long edge is ${longPx.toFixed(0)} px and short edge ${shortPx.toFixed(0)} px in the original image, giving a scale of about ${mmPerPx.toFixed(4)} mm per original-image pixel, i.e. the card long edge spans ${(longPx / W * 100).toFixed(1)}% of the image width. Treat these user marks as the authoritative card location and scale; measure the finger width relative to the card's marked long edge (85.60 mm). Only ignore the marks if they clearly do not surround a card.`;
         }
       }
     } catch {
