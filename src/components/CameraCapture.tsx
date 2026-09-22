@@ -7,7 +7,8 @@ import type { HandLandmarker } from '@mediapipe/tasks-vision';
 const BOX_W = 0.42;
 const CARD_ASPECT = 85.6 / 53.98;
 const HOLD_FRAMES = 8; // ~1 second of steady, correct framing
-const WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm';
+// Must match the installed package version, otherwise the detector fails to load silently.
+const WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm';
 const MODEL =
   'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
 
@@ -49,11 +50,16 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       try {
         const { FilesetResolver, HandLandmarker } = await import('@mediapipe/tasks-vision');
         const fileset = await FilesetResolver.forVisionTasks(WASM);
-        const lm = await HandLandmarker.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: MODEL, delegate: 'GPU' },
-          runningMode: 'IMAGE',
-          numHands: 1,
-        });
+        const make = (delegate: 'GPU' | 'CPU') =>
+          HandLandmarker.createFromOptions(fileset, {
+            baseOptions: { modelAssetPath: MODEL, delegate },
+            runningMode: 'IMAGE',
+            numHands: 1,
+            minHandDetectionConfidence: 0.3,
+            minHandPresenceConfidence: 0.3,
+          });
+        let lm: HandLandmarker;
+        try { lm = await make('GPU'); } catch { lm = await make('CPU'); }
         if (cancelled) return lm.close();
         landmarkerRef.current = lm;
       } catch {
@@ -95,9 +101,11 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       const v = videoRef.current;
       const lm = landmarkerRef.current;
       const box = boxRef.current?.parentElement;
-      if (!v || !lm || !box || !v.videoWidth || doneRef.current) return;
+      if (!v || !box || !v.videoWidth || doneRef.current) return;
+      if (!lm) { setStatus({ ok: false, msg: 'Getting auto-capture ready…' }); return; }
       const s = check(v, box, small, lm);
-      streak = s.ok ? streak + 1 : 0;
+      // Forgive a single shaky frame instead of restarting the countdown.
+      streak = s.ok ? streak + 1 : Math.max(0, streak - 2);
       setStatus(s.ok ? { ok: true, msg: 'Perfect, hold still…' } : s);
       setProgress(Math.min(1, streak / HOLD_FRAMES));
       if (streak >= HOLD_FRAMES) {
