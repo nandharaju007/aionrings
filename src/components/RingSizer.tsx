@@ -151,27 +151,18 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
         Measure your size from a photo
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-        Hold your open hand palm-up with any bank card resting flat in the center of your palm, then take a
-        straight-on photo from above. The card&apos;s exact width lets us measure your finger and match it to a ring
-        size.
+        One photo of your open palm with a bank card is all we need.
       </p>
-      <ul className="mt-3 space-y-1 text-xs text-ink-muted">
-        <li className="flex items-start gap-2">
-          <CreditCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Keep the entire card visible, with your fingers slightly open and relaxed around it, card details can be hidden.
-        </li>
-        <li>Fingers slightly apart, good light, camera straight above the hand.</li>
-      </ul>
 
-      <figure className="mt-4 flex items-center gap-4">
+      <figure className="mt-4">
         <img
           src={handCardSample}
           alt="Example: open hand with the palm facing upward and a bank card resting flat in its center, photographed straight from above"
-          className="h-24 w-24 shrink-0 rounded-xl border border-border object-cover"
+          className="mx-auto aspect-square w-full max-w-[280px] rounded-2xl border border-border object-cover shadow-card sm:max-w-[340px]"
           loading="lazy"
         />
-        <figcaption className="text-xs leading-relaxed text-ink-muted">
-          Take it like this: palm fully visible, card flat in the center, camera directly above.
+        <figcaption className="mt-2 text-center text-xs text-ink-muted">
+          Take it like this: palm up, card flat in the center, camera directly above.
         </figcaption>
       </figure>
 
