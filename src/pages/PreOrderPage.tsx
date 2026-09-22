@@ -1190,7 +1190,7 @@ function StringMethodIcon() {
     <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="8.5" y="3" width="7" height="18" rx="3.5" />
       <path d="M5.5 10.5c2.5 1.8 10.5 1.8 13 0" />
-it    </svg>
+</svg>
   );
 }
 
