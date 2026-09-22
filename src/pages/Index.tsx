@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringProduct from "@/assets/ring-product.jpg";
-import heroStudio from "@/assets/hero-concept-studio.jpg";
+import heroStudio from "@/assets/hero-concept-studio-v3.jpg";
 import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
 import posterLifeEarly from "@/assets/poster-life-early.jpg";
 import appScreenVitality from "@/assets/app-screen-vitality.png";
