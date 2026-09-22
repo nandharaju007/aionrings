@@ -5,7 +5,7 @@ export default function SleepTrackingRingPage() {
     <GuideArticle
       path="/smart-ring-guide/sleep-tracking-ring"
       metaTitle="Sleep Tracking Ring: How It Works & What to Look For | aiOn"
-      metaDescription="How a sleep tracking ring measures sleep stages, resting heart rate, HRV, SpO₂ and temperature overnight — what the numbers mean and how to choose a wellness ring for sleep."
+      metaDescription="How a sleep tracking ring measures sleep stages, resting heart rate, HRV, SpO₂ and temperature overnight, what the numbers mean and how to choose a wellness ring for sleep."
       eyebrow="Guide · Sleep"
       breadcrumbName="Sleep tracking ring"
       h1="Sleep tracking ring: how it works, what it measures, and what actually helps"
@@ -15,7 +15,7 @@ export default function SleepTrackingRingPage() {
           id: "how-it-works",
           h: "How a ring tracks sleep",
           body: [
-            "Rings use photoplethysmography (PPG) — small LEDs shine light into the finger and a sensor reads how much is reflected as blood pulses through. The finger's arteries sit close to the surface, so the signal is strong and less disturbed by movement than at the wrist. An accelerometer adds movement and position, and a skin-temperature sensor tracks warmth.",
+            "Rings use photoplethysmography (PPG), small LEDs shine light into the finger and a sensor reads how much is reflected as blood pulses through. The finger's arteries sit close to the surface, so the signal is strong and less disturbed by movement than at the wrist. An accelerometer adds movement and position, and a skin-temperature sensor tracks warmth.",
             "From those raw streams, the app estimates when you fell asleep, how long you stayed asleep, how often you woke, and roughly how the night was distributed across light, deep and REM sleep.",
           ],
         },
@@ -37,15 +37,15 @@ export default function SleepTrackingRingPage() {
           id: "accuracy",
           h: "How accurate is ring sleep tracking?",
           body: [
-            "Consumer wearables are generally good at detecting sleep versus wake and total sleep time, and less precise at splitting the night into exact stages. That is a limitation of every non-clinical device, including rings and watches — only a sleep lab measures brain activity directly.",
-            "The practical takeaway: treat stage percentages as trends, and put your attention on the numbers that are measured most reliably — total sleep, timing consistency, resting heart rate and HRV.",
+            "Consumer wearables are generally good at detecting sleep versus wake and total sleep time, and less precise at splitting the night into exact stages. That is a limitation of every non-clinical device, including rings and watches, only a sleep lab measures brain activity directly.",
+            "The practical takeaway: treat stage percentages as trends, and put your attention on the numbers that are measured most reliably, total sleep, timing consistency, resting heart rate and HRV.",
           ],
         },
         {
           id: "ring-vs-watch",
           h: "Sleep ring vs. smartwatch",
           bullets: [
-            "Comfort: a ring has no screen and no wrist strap, so it is easier to wear every night — and consistency is what makes sleep data useful.",
+            "Comfort: a ring has no screen and no wrist strap, so it is easier to wear every night, and consistency is what makes sleep data useful.",
             "Signal quality: finger PPG is less affected by loose fit and wrist movement.",
             "Battery: rings typically run for days, so overnight charging gaps are rarer.",
           ],
@@ -54,7 +54,7 @@ export default function SleepTrackingRingPage() {
           id: "using-the-data",
           h: "Turning sleep data into better nights",
           body: [
-            "The point of tracking is a change you can repeat. Pick one variable at a time — bedtime, late caffeine, evening alcohol, room temperature, late training — hold it for a week, and see how your baseline responds.",
+            "The point of tracking is a change you can repeat. Pick one variable at a time, bedtime, late caffeine, evening alcohol, room temperature, late training, hold it for a week, and see how your baseline responds.",
             "aiOn is built for exactly that: instead of five charts, the app gives you your night compared to your own baseline and one plain-language action for the day.",
           ],
         },
@@ -62,7 +62,7 @@ export default function SleepTrackingRingPage() {
       faqs={[
         {
           q: "Is a ring comfortable enough to sleep in every night?",
-          a: "Most people adapt within a few nights. A ring is lightweight, has no screen and does not press against the wrist, which is why many wearers keep it on overnight far more consistently than a watch. Fit matters — use the sizing guide before ordering.",
+          a: "Most people adapt within a few nights. A ring is lightweight, has no screen and does not press against the wrist, which is why many wearers keep it on overnight far more consistently than a watch. Fit matters, use the sizing guide before ordering.",
         },
         {
           q: "Can a sleep tracking ring detect sleep apnea?",
@@ -70,7 +70,7 @@ export default function SleepTrackingRingPage() {
         },
         {
           q: "Why is my HRV different from my friend's?",
-          a: "HRV varies widely between individuals based on age, genetics and fitness. Absolute values are not comparable between people — only your own trend over time is meaningful.",
+          a: "HRV varies widely between individuals based on age, genetics and fitness. Absolute values are not comparable between people, only your own trend over time is meaningful.",
         },
         {
           q: "Does the aiOn ring need to be charged overnight?",

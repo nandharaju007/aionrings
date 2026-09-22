@@ -5,7 +5,7 @@ export default function RecoveryRingPage() {
     <GuideArticle
       path="/smart-ring-guide/recovery-ring"
       metaTitle="Recovery Ring: HRV, Readiness & Training Load Explained | aiOn"
-      metaDescription="How a recovery tracking ring builds a readiness score from HRV, resting heart rate, sleep and strain — what a low score really means and how to train around it."
+      metaDescription="How a recovery tracking ring builds a readiness score from HRV, resting heart rate, sleep and strain, what a low score really means and how to train around it."
       eyebrow="Guide · Recovery"
       breadcrumbName="Recovery ring"
       h1="Recovery ring: what a readiness score is made of, and how to use it"
@@ -15,7 +15,7 @@ export default function RecoveryRingPage() {
           id: "inputs",
           h: "What goes into a readiness score",
           bullets: [
-            "Heart-rate variability overnight — the clearest single marker of whether your nervous system has settled.",
+            "Heart-rate variability overnight, the clearest single marker of whether your nervous system has settled.",
             "Resting heart rate, and how quickly it dropped after you fell asleep.",
             "Sleep quantity and consistency versus your own recent average.",
             "Recent strain: training volume and intensity over the last few days.",
@@ -47,14 +47,14 @@ export default function RecoveryRingPage() {
           h: "Common misreads",
           body: [
             "A single low score is not a verdict. Alcohol, a late heavy meal, a hot room, travel, or a late workout can all suppress overnight HRV without meaning you are overtrained.",
-            "Equally, a high score after a poor night can happen — the score is an estimate, not a truth. Sustained multi-day trends are what should change your plans.",
+            "Equally, a high score after a poor night can happen, since the score is an estimate, not a truth. Sustained multi-day trends are what should change your plans.",
           ],
         },
         {
           id: "aion",
           h: "How aiOn handles recovery",
           body: [
-            "aiOn reduces the morning to one number and one action. Instead of asking you to interpret four charts, the app tells you what changed against your baseline and what to do differently today — then shows the contributing factors if you want the detail.",
+            "aiOn reduces the morning to one number and one action. Instead of asking you to interpret four charts, the app tells you what changed against your baseline and what to do differently today, then shows the contributing factors if you want the detail.",
           ],
         },
       ]}

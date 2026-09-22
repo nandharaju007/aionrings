@@ -26,7 +26,7 @@ import videoRunTrail from "@/assets/video-run-trail.mp4.asset.json";
 
 
 /* ─────────────────────────────────────────────
-   Brand reveal — "ai · O(ring) · n" draws itself in
+   Brand reveal, "ai · O(ring) · n" draws itself in
    ───────────────────────────────────────────── */
 function BrandReveal() {
   const letter = {
@@ -45,7 +45,7 @@ function BrandReveal() {
           ai
         </motion.span>
 
-        {/* The O is the ring — drawn stroke + soft pulse */}
+        {/* The O is the ring, drawn stroke + soft pulse */}
         <span className="relative inline-block" style={{ width: "0.86em", height: "0.86em" }}>
           <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
             <defs>
@@ -109,10 +109,10 @@ const C = {
 /* Rotating insight line over the hero video */
 function HeroInsightTicker() {
   const lines = [
-    "Recovery is trending up — your body is ready for more today.",
+    "Recovery is trending up, so your body is ready for more today.",
     "Resting heart rate steady overnight. Nice consistency.",
     "Sleep quality improved 12% this week.",
-    "Breathing regularity high — a calm night of rest.",
+    "Breathing regularity high, a calm night of rest.",
   ];
   const [i, setI] = useState(0);
   useEffect(() => {
@@ -144,7 +144,7 @@ function HeroInsightTicker() {
    ───────────────────────────────────────────── */
 const SECTION = "py-14 sm:py-16 md:py-24";
 
-/* Video that only plays while visible — saves CPU and battery */
+/* Video that only plays while visible, saves CPU and battery */
 function LazyVideo({
   src,
   poster,
@@ -191,7 +191,7 @@ function LazyVideo({
   );
 }
 
-/* Monoline icon set — one consistent visual language, no emoji */
+/* Monoline icon set, one consistent visual language, no emoji */
 const GLYPHS: Record<string, ReactNode> = {
   heart: <path d="M12 20s-7-4.4-7-9.3A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7 3.3C19 15.6 12 20 12 20z" />,
   moon: <path d="M20 14.4A8 8 0 1 1 9.6 4 6.5 6.5 0 0 0 20 14.4z" />,
@@ -257,7 +257,7 @@ function Glyph({ name, className = "h-6 w-6", color = C.blue }: { name: string; 
 }
 
 /* ─────────────────────────────────────────────
-   Particle field — slow drifting stars
+   Particle field, slow drifting stars
    ───────────────────────────────────────────── */
 function ParticleField({ density = 60, opacity = 0.35, tone = "dark" }: { density?: number; opacity?: number; tone?: "dark" | "light" }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -268,7 +268,7 @@ function ParticleField({ density = 60, opacity = 0.35, tone = "dark" }: { densit
     if (!ctx) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    // Aggressive mobile reduction — canvas fill is the biggest scroll cost
+    // Aggressive mobile reduction, canvas fill is the biggest scroll cost
     const effectiveDensity = isMobile ? Math.min(density, 12) : density;
     let raf = 0;
     let visible = false;
@@ -325,7 +325,7 @@ function ParticleField({ density = 60, opacity = 0.35, tone = "dark" }: { densit
 }
 
 /* ─────────────────────────────────────────────
-   Aurora background — animated gradient blobs
+   Aurora background, animated gradient blobs
    ───────────────────────────────────────────── */
 function Aurora({ intensity = 0.5 }: { intensity?: number }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -337,7 +337,7 @@ function Aurora({ intensity = 0.5 }: { intensity?: number }) {
     return () => mq.removeEventListener("change", upd);
   }, []);
   if (isMobile) {
-    // Static, GPU-cheap gradient on mobile — no framer RAF, smaller blur
+    // Static, GPU-cheap gradient on mobile, no framer RAF, smaller blur
     return (
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <div
@@ -499,7 +499,7 @@ function Chip({ children, className = "", variant = "dark" }: { children: ReactN
 }
 
 /* ─────────────────────────────────────────────
-   Nature layer — organic backdrops & bands
+   Nature layer, organic backdrops & bands
    ───────────────────────────────────────────── */
 function NatureBackdrop({
   src,
@@ -640,7 +640,7 @@ function Hero() {
           </motion.p>
         </div>
 
-        {/* CTA — placed above the fold, before the cinematic proof */}
+        {/* CTA, placed above the fold, before the cinematic proof */}
         <motion.div
           className="mt-7 flex flex-col items-center"
           initial={{ opacity: 0, y: 16 }}
@@ -657,7 +657,7 @@ function Hero() {
           <p className="mt-3 text-xs text-ink-muted md:text-sm">Free aiOn app included · No subscription required</p>
         </motion.div>
 
-        {/* Cinematic proof — one video, edge-blended, no frame */}
+        {/* Cinematic proof, one video, edge-blended, no frame */}
         <motion.div
           className="relative mt-8 w-full md:mt-12"
           initial={{ opacity: 0, y: 24 }}
@@ -681,7 +681,7 @@ function Hero() {
               }}
             />
 
-            {/* Soft edge blend into the light page — removes the "box" */}
+            {/* Soft edge blend into the light page, removes the "box" */}
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -715,7 +715,7 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* Three finishes — colour balance right at the top */}
+        {/* Three finishes, colour balance right at the top */}
         <motion.div
           className="mt-8 flex items-center justify-center gap-8 sm:gap-12"
           initial={{ opacity: 0, y: 12 }}
@@ -740,7 +740,7 @@ function Hero() {
 }
 
 /* ─────────────────────────────────────────────
-   Early lifestyle proof — one full-bleed video
+   Early lifestyle proof, one full-bleed video
    ───────────────────────────────────────────── */
 function MorningProofSection() {
   return (
@@ -774,7 +774,7 @@ function MorningProofSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 2 — One Number
+   Section 2, One Number
    ───────────────────────────────────────────── */
 function VitalityScoreSection() {
   return (
@@ -831,7 +831,7 @@ function VitalityScoreSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 3 — Track · Understand · Act
+   Section 3, Track · Understand · Act
    ───────────────────────────────────────────── */
 function TrackUnderstandActSection() {
   const cols = [
@@ -927,7 +927,7 @@ function TrackUnderstandActSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section — Body Talking (You feel tired…)
+   Section, Body Talking (You feel tired…)
    ───────────────────────────────────────────── */
 function BodyTalkingSection() {
   const lines = [
@@ -1003,17 +1003,17 @@ function BodyTalkingSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 4 — The 6 Health Pillars
+   Section 4, The 6 Health Pillars
    ───────────────────────────────────────────── */
 function PillarsSection() {
   const pillars = [
     { icon: "heart", name: "Heart & Circulation", line: "Resting HR · HRV · Rhythm insight · BP trend (EST)", bullets: [
-      "HRV — a simple daily read on stress and resilience",
-      "Heart rhythm insight — wellness awareness, on demand",
-      "BP trend (EST) — general direction, not a reading",
+      "HRV, a simple daily read on stress and resilience",
+      "Heart rhythm insight, wellness awareness, on demand",
+      "BP trend (EST), general direction, not a reading",
     ]},
     { icon: "moon", name: "Sleep", line: "Stages · SpO₂ · Breathing · Temperature", bullets: [
-      "Deep, REM, Light — every stage, every night",
+      "Deep, REM, Light, every stage, every night",
       "Breathing rate trends while you sleep",
       "7 hours in bed is not 7 hours of sleep",
     ]},
@@ -1034,7 +1034,7 @@ function PillarsSection() {
     ]},
     { icon: "drop", name: "Metabolic Wellness", line: "Glucose trend (EST) · BP trend (EST)", bullets: [
       "Follow long-term lifestyle trends, not single numbers",
-      "EST trends show direction — they are not measurements",
+      "EST trends show direction and are not measurements",
       "Build habits around how your body responds",
     ]},
   ];
@@ -1105,7 +1105,7 @@ function PillarsSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 5 — Today's Quest
+   Section 5, Today's Quest
    ───────────────────────────────────────────── */
 function QuestSection() {
   const quests = [
@@ -1155,13 +1155,13 @@ function QuestSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section — The App (screens)
+   Section, The App (screens)
    ───────────────────────────────────────────── */
 function TheAppSection() {
   const screens = [
-    { src: appScreenVitality, alt: "aiOn app — Vitality Score", caption: "Your number, every morning." },
-    { src: appScreenQuest,    alt: "aiOn app — Today's Quest",  caption: "One quest a day." },
-    { src: appScreenSleep,    alt: "aiOn app — Sleep insight",  caption: "See what last night did." },
+    { src: appScreenVitality, alt: "aiOn app, Vitality Score", caption: "Your number, every morning." },
+    { src: appScreenQuest,    alt: "aiOn app, Today's Quest",  caption: "One quest a day." },
+    { src: appScreenSleep,    alt: "aiOn app, Sleep insight",  caption: "See what last night did." },
   ];
   return (
     <section id="app" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
@@ -1173,7 +1173,7 @@ function TheAppSection() {
             Your body, on screen.
           </h2>
           <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
-            Clean. Calm. Built to answer one question — what should I do today?
+            Clean. Calm. Built to answer one question, what should I do today?
           </p>
         </FadeUp>
 
@@ -1219,7 +1219,7 @@ function TheAppSection() {
 }
 
 /* ─────────────────────────────────────────────
-   In life — lifestyle video strip
+   In life, lifestyle video strip
    ───────────────────────────────────────────── */
 function InLifeSection() {
   const clips = [
@@ -1237,7 +1237,7 @@ function InLifeSection() {
             Worn, not watched.
           </h2>
           <p className="mt-4 md:mt-5 text-ink-soft text-base md:text-lg font-light">
-            From the first run to the last hour of sleep — aiOn simply stays with you.
+            From the first run to the last hour of sleep, aiOn simply stays with you.
           </p>
         </FadeUp>
 
@@ -1253,7 +1253,7 @@ function InLifeSection() {
             >
               <LazyVideo
                 src={c.src}
-                label={`${c.caption} — person wearing the aiOn ring`}
+                label={`${c.caption}, person wearing the aiOn ring`}
                 className="w-full h-[240px] md:h-[320px] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
                 style={{ filter: "contrast(1.03) saturate(0.95)" }}
               />
@@ -1271,7 +1271,7 @@ function InLifeSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 6 — Trends
+   Section 6, Trends
    ───────────────────────────────────────────── */
 function PreventiveSection() {
   return (
@@ -1314,7 +1314,7 @@ function PreventiveSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 7 — The Ring
+   Section 7, The Ring
    ───────────────────────────────────────────── */
 function RingSection() {
   const specs = [
@@ -1333,7 +1333,7 @@ function RingSection() {
         </FadeUp>
       </div>
 
-      {/* Full-bleed lifestyle ring image — no frame, no border */}
+      {/* Full-bleed lifestyle ring image, no frame, no border */}
       <FadeUp>
         <div className="relative w-screen left-1/2 -translate-x-1/2">
           <img
@@ -1412,7 +1412,7 @@ function RingSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 8 — Plans (no prices)
+   Section 8, Plans (no prices)
    ───────────────────────────────────────────── */
 function PlansSection() {
   const plans = [
@@ -1482,7 +1482,7 @@ function PlansSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Section 9 — Final CTA
+   Section 9, Final CTA
    ───────────────────────────────────────────── */
 function FinalCTA() {
   return (
@@ -1544,7 +1544,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What does the aiOn ring track?",
-    a: "Sleep duration and stages, resting heart rate, HRV, blood-oxygen saturation, skin-temperature deviation, daytime stress balance, steps, workouts and active calories, plus cycle-phase awareness for women's health — all compared to your own baseline rather than a population average.",
+    a: "Sleep duration and stages, resting heart rate, HRV, blood-oxygen saturation, skin-temperature deviation, daytime stress balance, steps, workouts and active calories, plus cycle-phase awareness for women's health, all compared to your own baseline rather than a population average.",
   },
   {
     q: "Is a smart ring better than a smartwatch for sleep and recovery?",
@@ -1584,7 +1584,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Can I share my data with my doctor?",
-    a: "You can export your data and share it if you choose. It is context for a conversation with your healthcare professional — not a diagnostic report, and it does not replace professional evaluation.",
+    a: "You can export your data and share it if you choose. It is context for a conversation with your healthcare professional, not a diagnostic report, and it does not replace professional evaluation.",
   },
   {
     q: "What should I do in an emergency?",
@@ -1600,10 +1600,10 @@ function FAQSection() {
         <FadeUp className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Questions, answered</p>
           <h2 className="mt-4 text-3xl md:text-5xl font-extralight tracking-tight text-ink">
-            Smart ring questions — and what aiOn isn’t
+            Smart ring questions, and what aiOn isn’t
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm md:text-base font-light text-ink-soft">
-            Sleep, recovery, battery, fit and finishes — plus the limits of a wellness companion.
+            Sleep, recovery, battery, fit and finishes, plus the limits of a wellness companion.
           </p>
         </FadeUp>
 
@@ -1707,7 +1707,7 @@ export default function Index() {
   return (
     <div className="min-h-screen text-ink" style={{ background: "#F6F8FC" }}>
       <SEO
-        title="aiOn Smart Ring — Sleep, Recovery & Stress Tracking Ring"
+        title="aiOn Smart Ring - Sleep, Recovery & Stress Tracking Ring"
         description="aiOn is an AI-native titanium smart ring for sleep, recovery, HRV, stress and activity tracking. Every signal becomes one daily Vitality Score and one clear action. A general wellness product."
         path="/"
         image="/og-image.jpg"
@@ -1760,17 +1760,17 @@ export default function Index() {
       />
       <Header />
       <main>
-        {/* 1 — First impression */}
+        {/* 1, First impression */}
         <Hero />
-        {/* 1.5 — Lifestyle proof, early */}
+        {/* 1.5, Lifestyle proof, early */}
         <MorningProofSection />
-        {/* 2 — The problem, in the user's own words */}
+        {/* 2, The problem, in the user's own words */}
         <BodyTalkingSection />
-        {/* 3 — The answer: one number */}
+        {/* 3, The answer: one number */}
         <VitalityScoreSection />
-        {/* 4 — How aiOn is different */}
+        {/* 4, How aiOn is different */}
         <TrackUnderstandActSection />
-        {/* 5 — What it reads */}
+        {/* 5, What it reads */}
         <PillarsSection />
         <NatureBand
           src={natureWalkRing}
@@ -1779,15 +1779,15 @@ export default function Index() {
           line="It lives in morning trails, fresh air and the steps you actually take."
           position="center 40%"
         />
-        {/* 6 — What you do with it */}
+        {/* 6, What you do with it */}
         <QuestSection />
-        {/* 7 — Trends over time */}
+        {/* 7, Trends over time */}
         <PreventiveSection />
-        {/* 8 — The app */}
+        {/* 8, The app */}
         <TheAppSection />
-        {/* 9 — The product */}
+        {/* 9, The product */}
         <RingSection />
-        {/* 10 — Life with it */}
+        {/* 10, Life with it */}
         <InLifeSection />
         <NatureBand
           src={natureNight}
@@ -1796,7 +1796,7 @@ export default function Index() {
           line="aiOn follows your sleep and recovery patterns, gently, all night."
           position="center 50%"
         />
-        {/* 11 — Plans, then conversion */}
+        {/* 11, Plans, then conversion */}
         <PlansSection />
         <FinalCTA />
         <FAQSection />

@@ -203,7 +203,7 @@ export function RingTryOn() {
               />
             ) : (
               <span className="text-sm text-ink-muted px-6 text-center">
-                {loading ? 'Rendering your preview — this can take up to a minute.' : 'Your preview appears here.'}
+                {loading ? 'Rendering your preview, this can take up to a minute.' : 'Your preview appears here.'}
               </span>
             )}
           </div>
@@ -222,7 +222,7 @@ export function RingTryOn() {
           {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
 
           <p className="mt-4 text-xs text-ink-muted leading-relaxed">
-            This preview is created digitally for illustration only — actual fit, size and finish may differ.
+            This preview is created digitally for illustration only, actual fit, size and finish may differ.
             Use the sizing guide before ordering.
           </p>
         </div>

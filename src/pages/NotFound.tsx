@@ -14,7 +14,7 @@ const NotFound = () => {
   return (
     <div className="min-h-screen bg-canvas flex flex-col">
       <SEO
-        title="Page not found — aiOn"
+        title="Page not found - aiOn"
         description="This aiOn page doesn't exist or has moved. Return to the homepage to explore the aiOn smart wellness ring."
         path="/404"
         image="/og-image.jpg"

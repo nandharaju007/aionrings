@@ -10,7 +10,7 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <SEO
-        title="Contact aiOn — We're here to help"
+        title="Contact aiOn - We're here to help"
         description="Reach the aiOn team for support, orders, and partnership inquiries. Send us a message and we'll reply within 1–2 business days."
         path="/contact"
         image="/og-support.jpg"

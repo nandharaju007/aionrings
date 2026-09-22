@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const TrademarksPage = () => {
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Trademarks & IP — aiOn"} description={"aiOn, aiOn Ring, and related marks — trademark, patent, and IP notices for Mazo Solutions Inc."} path="/trademarks" image="/og-policies.jpg" />
+      <SEO title={"Trademarks & IP - aiOn"} description={"aiOn, aiOn Ring, and related marks - trademark, patent, and IP notices for Mazo Solutions Inc."} path="/trademarks" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
@@ -32,9 +32,9 @@ const TrademarksPage = () => {
               <section>
                 <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">Registered & Common-Law Marks</h2>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li><strong>aiOn®</strong> — wearable health intelligence platform</li>
-                  <li><strong>aiOn Ring™</strong> — smart ring hardware product</li>
-                  <li><strong>Mazo Solutions®</strong> — corporate brand and parent entity</li>
+                  <li><strong>aiOn®</strong>, wearable health intelligence platform</li>
+                  <li><strong>aiOn Ring™</strong>, smart ring hardware product</li>
+                  <li><strong>Mazo Solutions®</strong>, corporate brand and parent entity</li>
                   <li>The aiOn ring glyph and wordmark</li>
                 </ul>
               </section>

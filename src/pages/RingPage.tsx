@@ -24,7 +24,7 @@ const specs: { label: string; value: string }[] = [
 const materials: { title: string; body: string }[] = [
   {
     title: 'Aerospace-grade titanium shell',
-    body: 'The outer band is machined from Grade 5 titanium — the same alloy trusted in aircraft and medical implants — for exceptional strength at almost no weight.',
+    body: 'The outer band is machined from Grade 5 titanium, the same alloy trusted in aircraft and medical implants, for exceptional strength at almost no weight.',
   },
   {
     title: 'Skin-friendly interior',
@@ -32,7 +32,7 @@ const materials: { title: string; body: string }[] = [
   },
   {
     title: 'Seamless, stone-free design',
-    body: 'No clasps, no stones, no logo on the band — a continuous circle engineered to disappear on your finger.',
+    body: 'No clasps, no stones, no logo on the band, a continuous circle engineered to disappear on your finger.',
   },
 ];
 
@@ -74,7 +74,7 @@ export default function RingPage() {
   return (
     <div className="min-h-screen bg-canvas">
       <SEO
-        title="aiOn Ring — Specs, Materials & Size Chart"
+        title="aiOn Ring - Specs, Materials & Size Chart"
         description="Detailed aiOn Ring specifications, aerospace-grade titanium materials, US size chart, and a photo guide to find your ring size."
         path="/ring"
         image="/og-image.jpg"
@@ -104,8 +104,8 @@ export default function RingPage() {
               <span className="eyebrow">The Ring</span>
               <h1 className="mt-2 text-4xl font-extralight text-ink md:text-5xl">aiOn Ring</h1>
               <p className="mt-4 leading-relaxed text-ink-soft">
-                A featherlight titanium ring that senses continuously — sleep, recovery,
-                vitals, stress, activity and cycle — and turns it all into one calm,
+                A featherlight titanium ring that senses continuously, sleep, recovery,
+                vitals, stress, activity and cycle, and turns it all into one calm,
                 daily picture of your wellbeing.
               </p>
               <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2">
@@ -182,7 +182,7 @@ export default function RingPage() {
             <h2 className="text-2xl font-light text-ink md:text-3xl">Size chart</h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
               Measure the inner diameter of a ring that fits you well, or wrap a thin strip of paper
-              around the base of your finger and measure its length (circumference). Match it below —
+              around the base of your finger and measure its length (circumference). Match it below -
               when between sizes, we recommend sizing up.
             </p>
             <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-white shadow-sm">
@@ -256,7 +256,7 @@ export default function RingPage() {
           </section>
 
           <p className="mt-14 text-[13px] leading-relaxed text-ink-muted">
-            Photo-based sizing and the virtual try-on are digital estimates for guidance only —
+            Photo-based sizing and the virtual try-on are digital estimates for guidance only -
             confirm your size before purchasing. aiOn is a general wellness product and is not a
             medical device; it is not intended to diagnose, treat, cure or prevent any disease.
           </p>

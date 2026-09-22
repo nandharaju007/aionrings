@@ -44,7 +44,7 @@ export default function ShopPage() {
     <div className="min-h-screen bg-canvas">
       <SEO
         title="Shop the aiOn Smart Wellness Ring"
-        description="Explore the aiOn smart wellness ring — titanium build, multi-sensor tracking, and a daily Vitality Score. Launching soon."
+        description="Explore the aiOn smart wellness ring, titanium build, multi-sensor tracking, and a daily Vitality Score. Launching soon."
         path="/shop"
         image="/og-image.jpg"
       />
@@ -126,7 +126,7 @@ export default function ShopPage() {
                   Something extraordinary is coming
                 </p>
                 <p className="text-ink-soft mb-6">
-                  The future of everyday wellness — crafted for your finger, designed for your life.
+                  The future of everyday wellness, crafted for your finger, designed for your life.
                 </p>
                 <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />

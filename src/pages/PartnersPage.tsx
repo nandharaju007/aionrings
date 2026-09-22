@@ -33,7 +33,7 @@ export default function PartnersPage() {
   const [done, setDone] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'aiOn Partner Program — Wellness & Lifestyle Partners';
+    document.title = 'aiOn Partner Program - Wellness & Lifestyle Partners';
   }, []);
 
   const update = <K extends keyof BulkForm>(k: K, v: BulkForm[K]) => setForm(p => ({ ...p, [k]: v }));
@@ -75,7 +75,7 @@ export default function PartnersPage() {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"aiOn Partner Program — Bring everyday wellness to your community"} description={"Join the aiOn Partner Program. Referral tools, bulk reservations, and co-branded launches for wellness studios, gyms, employers, and creators."} path="/partners" image="/og-partners.jpg" />
+      <SEO title={"aiOn Partner Program - Bring everyday wellness to your community"} description={"Join the aiOn Partner Program. Referral tools, bulk reservations, and co-branded launches for wellness studios, gyms, employers, and creators."} path="/partners" image="/og-partners.jpg" />
       <Header />
       <main className="pt-32 pb-32">
         <div className="mx-auto max-w-[1200px] px-6">
@@ -111,7 +111,7 @@ export default function PartnersPage() {
                   For wellness centers, studios <span className="text-gradient-brand">& businesses</span>.
                 </h1>
                 <p className="text-[15px] text-ink-muted max-w-xl mx-auto">
-                  Tell us about your organization. We'll contact you regarding pricing and delivery — no payment today.
+                  Tell us about your organization. We'll contact you regarding pricing and delivery, no payment today.
                 </p>
               </div>
 
@@ -175,7 +175,7 @@ export default function PartnersPage() {
                   Bring aiOn to <span className="text-gradient-brand">your community</span>.
                 </h1>
                 <p className="text-[17px] text-ink-soft max-w-2xl mx-auto leading-relaxed">
-                  Wellness centers, studios, gyms, employers and businesses can invite their customers to reserve the aiOn Ring — no inventory, no upfront cost.
+                  Wellness centers, studios, gyms, employers and businesses can invite their customers to reserve the aiOn Ring, no inventory, no upfront cost.
                 </p>
               </div>
 
@@ -216,7 +216,7 @@ export default function PartnersPage() {
                 <div className="grid md:grid-cols-3 gap-6">
                   {[
                     { icon: Sparkles, title: 'Become a partner', body: 'We create your dedicated partner code, referral link and QR code.' },
-                    { icon: QrCode, title: 'Share with your community', body: 'Invite your customers via your unique link — every reservation is attributed to you automatically.' },
+                    { icon: QrCode, title: 'Share with your community', body: 'Invite your customers via your unique link, every reservation is attributed to you automatically.' },
                     { icon: Handshake, title: 'We handle the rest', body: 'aiOn takes care of confirmations, fulfillment and customer communication end-to-end.' },
                   ].map(({ icon: Icon, title, body }) => (
                     <div key={title} className="surface-card p-8">

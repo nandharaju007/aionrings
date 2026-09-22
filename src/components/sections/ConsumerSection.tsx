@@ -26,7 +26,7 @@ export function ConsumerSection() {
           </h2>
 
           <p className="text-body text-ink-soft max-w-2xl mx-auto mb-12">
-            aiOn integrates seamlessly into your life—providing gentle awareness 
+            aiOn integrates seamlessly into your life-providing gentle awareness 
             without constant alerts. Understand your balance, your rhythms, 
             your trends. Health intelligence that respects your time.
           </p>

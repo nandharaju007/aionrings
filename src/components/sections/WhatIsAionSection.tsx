@@ -35,7 +35,7 @@ export function WhatIsAionSection() {
             
             <p className="text-body text-ink-soft">
               Through intelligent pattern recognition, aiOn transforms 
-              physiological signals into meaningful awareness—helping you 
+              physiological signals into meaningful awareness-helping you 
               understand not just where you are, but where you're heading.
             </p>
           </motion.div>

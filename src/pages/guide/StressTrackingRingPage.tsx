@@ -5,11 +5,11 @@ export default function StressTrackingRingPage() {
     <GuideArticle
       path="/smart-ring-guide/stress-tracking-ring"
       metaTitle="Stress Tracking Ring: How HRV Reveals Daytime Balance | aiOn"
-      metaDescription="How a stress tracking ring uses continuous heart rate and HRV to show calm versus activated time across your day — what the readings mean and how to build calmer routines."
+      metaDescription="How a stress tracking ring uses continuous heart rate and HRV to show calm versus activated time across your day, what the readings mean and how to build calmer routines."
       eyebrow="Guide · Stress"
       breadcrumbName="Stress tracking ring"
       h1="Stress tracking ring: seeing the load your day actually puts on you"
-      intro="Stress rarely announces itself. It shows up as a body that stays activated long after the meeting ended. A stress tracking ring reads continuous heart rate and heart-rate variability to show how much of your day was spent calm versus activated — and, more usefully, which parts of your week keep leaving you depleted."
+      intro="Stress rarely announces itself. It shows up as a body that stays activated long after the meeting ended. A stress tracking ring reads continuous heart rate and heart-rate variability to show how much of your day was spent calm versus activated, and, more usefully, which parts of your week keep leaving you depleted."
       sections={[
         {
           id: "measurement",
@@ -23,9 +23,9 @@ export default function StressTrackingRingPage() {
           id: "good-vs-bad",
           h: "Not all activation is bad",
           bullets: [
-            "Training, cold exposure and hard focused work all raise activation — that is productive stress.",
+            "Training, cold exposure and hard focused work all raise activation, that is productive stress.",
             "What matters is whether you return to baseline afterwards, and how long recovery takes.",
-            "Chronic patterns — high activation late in the evening, or never dropping into calm at all — are the signals worth changing.",
+            "Chronic patterns, high activation late in the evening, or never dropping into calm at all, are the signals worth changing.",
           ],
         },
         {
@@ -53,7 +53,7 @@ export default function StressTrackingRingPage() {
           id: "aion",
           h: "How aiOn presents stress",
           body: [
-            "aiOn shows daytime stress as a simple range with context — never as an alarm. The app connects it to the rest of your day, so a rough afternoon is read alongside last night's sleep and this week's training rather than in isolation.",
+            "aiOn shows daytime stress as a simple range with context, never as an alarm. The app connects it to the rest of your day, so a rough afternoon is read alongside last night's sleep and this week's training rather than in isolation.",
           ],
         },
       ]}

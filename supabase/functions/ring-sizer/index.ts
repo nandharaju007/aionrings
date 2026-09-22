@@ -20,9 +20,9 @@ const SIZE_CHART = [
 ];
 
 const PROMPT = [
-  "You are a ring-sizing assistant. The photo shows a hand photographed together with a standard bank/credit card (ISO/IEC 7810 ID-1, exactly 85.60 mm wide and 53.98 mm tall) used as a scale reference. The card may lie flat beside the hand, rest on the open palm, or rest against the fingers — any of these is fine as long as the card is flat and in roughly the same plane as the fingers, and the finger base is visible.",
+  "You are a ring-sizing assistant. The photo shows a hand photographed together with a standard bank/credit card (ISO/IEC 7810 ID-1, exactly 85.60 mm wide and 53.98 mm tall) used as a scale reference. The card may lie flat beside the hand, rest on the open palm, or rest against the fingers, any of these is fine as long as the card is flat and in roughly the same plane as the fingers, and the finger base is visible.",
   "Step 1: locate the card and measure its long edge in pixels to get a millimetres-per-pixel scale. If the card is angled, correct for perspective using both edges.",
-  "Step 2: measure the width of the finger the ring will be worn on at the BASE of the finger (the segment nearest the palm, just above the knuckle where the finger joins the hand). Unless told otherwise, use the index finger — the finger next to the thumb.",
+  "Step 2: measure the width of the finger the ring will be worn on at the BASE of the finger (the segment nearest the palm, just above the knuckle where the finger joins the hand). Unless told otherwise, use the index finger, the finger next to the thumb.",
   "Step 3: that finger width is the ring's inner diameter in millimetres. Convert to a US ring size using: 5=15.7mm, 6=16.5, 7=17.3, 8=18.2, 9=19.0, 10=19.8, 11=20.6, 12=21.4, 13=22.2. Round to the nearest whole size, and when the measurement falls between sizes, round UP.",
   "Only set ok to false if the card is missing or unreadable, or the base of the chosen finger is not visible. Otherwise give your best measurement and lower the confidence instead.",
   "Confidence: 'high' when the card and finger base are both sharp and flat-on, 'medium' when angled or slightly soft, 'low' otherwise.",

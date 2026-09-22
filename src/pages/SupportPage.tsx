@@ -7,7 +7,7 @@ import { Mail, Package, HelpCircle, MessageCircle } from 'lucide-react';
 const SupportPage = () => {
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"aiOn Support — We're here to help"} description={"Contact aiOn support for setup, orders, and shipping. Reach us at contact@aionrings.com and orders@aionrings.com."} path="/support" image="/og-support.jpg" />
+      <SEO title={"aiOn Support - We're here to help"} description={"Contact aiOn support for setup, orders, and shipping. Reach us at contact@aionrings.com and orders@aionrings.com."} path="/support" image="/og-support.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">

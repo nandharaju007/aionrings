@@ -11,7 +11,7 @@ export function AionLogo({
   showTagline = false,
   gradientId = 'aionLogoGradient',
 }: AionLogoProps) {
-  // Tight compact wordmark: ai · O(ring) · n — kerned close together
+  // Tight compact wordmark: ai · O(ring) · n, kerned close together
   const height = showTagline ? width * (78 / 120) : width * (60 / 120);
   const viewBox = showTagline ? '0 0 120 78' : '0 0 120 60';
   return (

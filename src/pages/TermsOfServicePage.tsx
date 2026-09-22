@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const TermsOfServicePage = () => {
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Terms of Service — aiOn"} description={"The terms that govern your use of the aiOn platform, ring, and companion services."} path="/terms-of-service" image="/og-policies.jpg" />
+      <SEO title={"Terms of Service - aiOn"} description={"The terms that govern your use of the aiOn platform, ring, and companion services."} path="/terms-of-service" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
