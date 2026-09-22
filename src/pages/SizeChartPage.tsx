@@ -6,8 +6,6 @@ import { SEO } from '@/components/SEO';
 type Row = { us: string; uk: string; eu: string; mm: string; circ: string; available: boolean };
 
 const rows: Row[] = [
-  { us: '5', uk: 'J½', eu: '49', mm: '15.7', circ: '49.3', available: false },
-  { us: '5.5', uk: 'K½', eu: '50', mm: '16.1', circ: '50.6', available: false },
   { us: '6', uk: 'L½', eu: '52', mm: '16.5', circ: '51.9', available: true },
   { us: '6.5', uk: 'M½', eu: '53', mm: '16.9', circ: '53.1', available: false },
   { us: '7', uk: 'N½', eu: '54', mm: '17.3', circ: '54.4', available: true },
@@ -32,6 +30,7 @@ export default function SizeChartPage() {
         title="Ring Size Chart - US, UK & EU Sizes | aiOn"
         description="Compare US, UK and European ring sizes with inner diameter and circumference in millimetres, and check your estimated aiOn Ring size."
         path="/size-chart"
+        image="/og-image.jpg"
       />
       <Header />
       <main className="pt-24 pb-20">
