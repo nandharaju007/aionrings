@@ -101,10 +101,10 @@ Deno.serve(async (req) => {
     const primary = inserted[0];
     const totalRings = inserted.reduce((s, r) => s + (r.quantity ?? 0), 0);
     const itemsHtml = inserted
-      .map((r) => `<li style="margin:4px 0;">${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` · ${r.ring_color}` : ""} — <span style="color:#4FB3FF;font-family:monospace;">${r.reservation_number}</span></li>`)
+      .map((r) => `<li style="margin:4px 0;">${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` · ${r.ring_color}` : ""}, <span style="color:#4FB3FF;font-family:monospace;">${r.reservation_number}</span></li>`)
       .join("");
     const itemsPlain = inserted
-      .map((r) => `${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` (${r.ring_color})` : ""} — ${r.reservation_number}`)
+      .map((r) => `${r.quantity} × Size ${r.ring_size}${r.ring_color ? ` (${r.ring_color})` : ""}, ${r.reservation_number}`)
       .join("<br>");
 
     const resendKey = Deno.env.get("RESEND_API_KEY");
@@ -113,13 +113,13 @@ Deno.serve(async (req) => {
         <div style="font-family:Inter,-apple-system,sans-serif;background:#0A1628;color:#E8F0F9;padding:40px 24px;">
           <div style="max-width:560px;margin:0 auto;background:linear-gradient(180deg,#0F1E33,#0A1628);border:1px solid rgba(79,179,255,0.15);border-radius:20px;padding:40px;">
             <h1 style="font-size:28px;font-weight:300;letter-spacing:-0.5px;margin:0 0 8px;">Your aiOn Ring is reserved.</h1>
-            <p style="color:#8B9DAF;font-size:15px;margin:0 0 32px;">The Full Circle of Health — reserved in your name.</p>
+            <p style="color:#8B9DAF;font-size:15px;margin:0 0 32px;">The Full Circle of Health, reserved in your name.</p>
             <div style="background:rgba(79,179,255,0.06);border:1px solid rgba(79,179,255,0.2);border-radius:14px;padding:24px;margin-bottom:24px;">
               <div style="font-size:11px;letter-spacing:3px;color:#4FB3FF;text-transform:uppercase;margin-bottom:12px;">Your Rings</div>
               <ul style="list-style:none;padding:0;margin:0;color:#E8F0F9;font-size:14px;">${itemsHtml}</ul>
             </div>
             <p style="color:#B8C5D3;line-height:1.7;font-size:14px;">Hi ${body.first_name}, we've secured <strong style="color:#fff;">${totalRings} × aiOn Ring${totalRings>1?"s":""}</strong>. You'll be among the first to receive shipping details as we approach launch.</p>
-            ${partner_name ? `<p style="color:#B8C5D3;line-height:1.7;font-size:14px;margin-top:16px;">Referred by <strong style="color:#fff;">${partner_name}</strong> — an official aiOn Partner.</p>` : ""}
+            ${partner_name ? `<p style="color:#B8C5D3;line-height:1.7;font-size:14px;margin-top:16px;">Referred by <strong style="color:#fff;">${partner_name}</strong>, an official aiOn Partner.</p>` : ""}
             <p style="color:#5A6B7E;font-size:12px;margin-top:32px;">aiOn Health Science LLC · A Mazo Solutions Inc company</p>
           </div>
         </div>`;

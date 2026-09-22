@@ -77,7 +77,7 @@ const MovementIcon = () => (
 const features = [
   {
     title: 'Metabolic Balance',
-    description: 'Estimated glucose trends and energy rhythm awareness over time — general wellness direction, not measurements.',
+    description: 'Estimated glucose trends and energy rhythm awareness over time, general wellness direction, not measurements.',
     icon: <MetabolicIcon />,
   },
   {
@@ -126,7 +126,7 @@ export function FeaturesSection() {
           </h2>
           <p className="text-body text-ink-soft">
             aiOn transforms raw signals into meaningful wellness insights. 
-            Each feature is designed to reveal patterns—helping you 
+            Each feature is designed to reveal patterns-helping you 
             understand your health as a continuous journey.
           </p>
         </motion.div>

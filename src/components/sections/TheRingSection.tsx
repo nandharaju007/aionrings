@@ -43,7 +43,7 @@ export function TheRingSection() {
             
             <p className="text-body text-ink-soft mb-6">
               Crafted from aerospace-grade titanium, the aiOn Ring sits 
-              weightlessly on your finger—an invisible companion that 
+              weightlessly on your finger-an invisible companion that 
               never sleeps, never stops learning.
             </p>
 

@@ -327,7 +327,7 @@ export default function PreOrderPage() {
   const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
 
   useEffect(() => {
-    document.title = "Pre-Order aiOn Ring — Founder Edition";
+    document.title = "Pre-Order aiOn Ring - Founder Edition";
     supabase
       .from("reservation_totals")
       .select("total_reservations, total_rings")
@@ -370,7 +370,7 @@ export default function PreOrderPage() {
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
-  // Field-level errors — always computed; only shown once touched or on submit attempt.
+  // Field-level errors, always computed; only shown once touched or on submit attempt.
   const errors: Partial<Record<FieldKey, string>> = {};
   if (!form.first_name.trim()) errors.first_name = "First name is required";
   if (!form.last_name.trim()) errors.last_name = "Last name is required";
@@ -381,7 +381,7 @@ export default function PreOrderPage() {
   if (!form.state.trim()) errors.state = "State / region is required";
   if (!form.zip_code.trim()) errors.zip_code = "ZIP / postal code is required";
   if (!form.country.trim()) errors.country = "Country is required";
-  if (!form.referral_source.trim()) errors.referral_source = "Required — enter \"Self\" if no referral";
+  if (!form.referral_source.trim()) errors.referral_source = "Required, enter \"Self\" if no referral";
 
   const ringSizeMissing = items.some((i) => !i.ring_size);
   if (ringSizeMissing) errors.ring_size = "Please select a ring size";
@@ -437,7 +437,7 @@ export default function PreOrderPage() {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Pre-order aiOn — Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
+      <SEO title={"Pre-order aiOn - Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
       <Header />
 
       <main className="pt-32 pb-32">
@@ -465,7 +465,7 @@ export default function PreOrderPage() {
                       </h2>
                       <p className="mt-2 text-[14px] text-ink-soft leading-relaxed">
                         {partner.name} is an official aiOn Partner helping customers gain early access to AI-powered
-                        wellness technology. Complete your reservation below — we'll take care of everything else.
+                        wellness technology. Complete your reservation below, we'll take care of everything else.
                       </p>
                     </div>
                   </div>
@@ -488,7 +488,7 @@ export default function PreOrderPage() {
                   .
                 </h1>
                 <p className="text-[16px] text-ink-soft max-w-xl mx-auto">
-                  Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of everyday wellness. No payment today — your place is held.
+                  Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of everyday wellness. No payment today, your place is held.
                 </p>
                 <p className="text-[12px] text-ink-muted max-w-xl mx-auto mt-4">
                   aiOn Ring is intended for general wellness purposes only and is not a medical device.
@@ -520,7 +520,7 @@ export default function PreOrderPage() {
                       <img
                         key={previewColor.id}
                         src={previewColor.image}
-                        alt={`aiOn Ring — ${previewColor.name}`}
+                        alt={`aiOn Ring, ${previewColor.name}`}
                         width={1024}
                         height={1024}
                         loading="lazy"
@@ -568,10 +568,10 @@ export default function PreOrderPage() {
                         Not sure of your ring size?
                       </div>
                       <p className="text-[14px] text-ink-soft leading-relaxed">
-                        Find your size in the way that suits you best — most people start with a quick photo.
+                        Find your size in the way that suits you best, most people start with a quick photo.
                       </p>
 
-                      {/* Option 1 — Photo size estimation (primary) */}
+                      {/* Option 1, Photo size estimation (primary) */}
                       <div className="mt-4 rounded-xl border-2 border-primary bg-white p-4 md:p-5 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                           <div className="flex-1">
@@ -582,7 +582,7 @@ export default function PreOrderPage() {
                               Try photo size estimation
                             </div>
                             <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-                              Take a photo of your open palm with a bank card — we'll match your US ring size
+                              Take a photo of your open palm with a bank card, we'll match your US ring size
                               in seconds.
                             </p>
                           </div>
@@ -603,7 +603,7 @@ export default function PreOrderPage() {
                         )}
                       </div>
 
-                      {/* Options 2 & 3 — alternative methods */}
+                      {/* Options 2 & 3, alternative methods */}
                       <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         <button
                           type="button"
@@ -781,7 +781,7 @@ export default function PreOrderPage() {
                     <div>
                       <Input
                         label="Who referred you?"
-                        placeholder='Name, partner or code — enter "Self" if none'
+                        placeholder='Name, partner or code, enter "Self" if none'
                         value={form.referral_source}
                         onChange={(v) => update("referral_source", v)}
                         onBlur={() => markTouched("referral_source")}
@@ -1037,7 +1037,7 @@ function PhoneInput({
   );
 }
 
-// Searchable country dropdown — typing filters the list below the field; clicking a
+// Searchable country dropdown, typing filters the list below the field; clicking a
 // suggestion fills it in. Still a plain text field underneath, so it submits/validates
 // exactly like the old Input did (a plain string), and free text still works if the
 // user types something not on the list.
@@ -1192,14 +1192,14 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
         <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
 
-        {/* Option 1 — Photo size estimation (primary, collapsed until chosen) */}
+        {/* Option 1, Photo size estimation (primary, collapsed until chosen) */}
         <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
           <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
             Option 1 · Recommended
           </span>
           <div className="mt-1 text-[16px] font-medium text-ink">Try photo size estimation</div>
           <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-            Take a photo of your open palm with a bank card — we'll match your US ring size in seconds.
+            Take a photo of your open palm with a bank card, we'll match your US ring size in seconds.
           </p>
           {photoOpen ? (
             <div className="mt-3">
@@ -1220,21 +1220,21 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
 
         <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
           <div>
-            <div className="font-medium text-ink mb-1">Option 2 — Existing ring</div>
+            <div className="font-medium text-ink mb-1">Option 2, Existing ring</div>
             <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
           </div>
           <div>
-            <div className="font-medium text-ink mb-1">Option 3 — String</div>
+            <div className="font-medium text-ink mb-1">Option 3, String</div>
             <p>
               Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
-              overlaps and measure the length — that's your circumference.
+              overlaps and measure the length, that's your circumference.
             </p>
           </div>
           <div>
             <div className="font-medium text-ink mb-1">Tips</div>
             <ul className="list-disc pl-5 space-y-1">
               <li>Measure at the end of the day when fingers are warmest.</li>
-              <li>Wear it snug — the sensors need skin contact.</li>
+              <li>Wear it snug, the sensors need skin contact.</li>
               <li>When in doubt, size up.</li>
             </ul>
           </div>
@@ -1262,7 +1262,7 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
         </div>
 
         <p className="mt-6 text-[12px] text-ink-muted">
-          Still unsure? Order any size — we'll ship a free sizing kit before your ring, and you can update your final
+          Still unsure? Order any size, we'll ship a free sizing kit before your ring, and you can update your final
           size before dispatch.
         </p>
       </div>

@@ -128,7 +128,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
       <ul className="mt-3 space-y-1 text-xs text-ink-muted">
         <li className="flex items-start gap-2">
           <CreditCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Keep the entire card visible, with your fingers slightly open and relaxed around it — card details can be hidden.
+          Keep the entire card visible, with your fingers slightly open and relaxed around it, card details can be hidden.
         </li>
         <li>Fingers slightly apart, good light, camera straight above the hand.</li>
       </ul>
@@ -214,7 +214,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
         </div>
 
         <div className="rounded-2xl border border-border bg-canvas p-5">
-          {loading && <p className="text-sm text-ink-muted">Reading your photo — this takes a few seconds.</p>}
+          {loading && <p className="text-sm text-ink-muted">Reading your photo, this takes a few seconds.</p>}
 
           {!loading && !result && !error && (
             <p className="text-sm text-ink-muted">Your estimated size appears here.</p>
@@ -245,7 +245,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <p className="mt-4 text-xs leading-relaxed text-ink-muted">
-            Photo-based sizing is a helpful estimate, not an exact measurement — it can be off by a size. A
+            Photo-based sizing is a helpful estimate, not an exact measurement, it can be off by a size. A
             free sizing kit ships before your ring, and you can change your size before dispatch.
           </p>
         </div>

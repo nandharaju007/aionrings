@@ -173,7 +173,7 @@ export function Footer() {
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-center text-[12px] text-[#6B7A8C]">
           Blood Pressure (EST) and Blood Glucose (EST) are non-medical wellness estimates showing
-          general trends only — they are not measurements and must not be used for any health or
+          general trends only, they are not measurements and must not be used for any health or
           treatment decision.
         </p>
       </div>

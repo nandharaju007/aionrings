@@ -58,7 +58,7 @@ export function IntelligenceSection() {
               <div>
                 <h3 className="text-lg font-light text-ink mb-2">Personal Baseline Modeling</h3>
                 <p className="text-body text-ink-soft">
-                  aiOn learns your unique physiology—establishing your personal 
+                  aiOn learns your unique physiology-establishing your personal 
                   normal before identifying meaningful changes.
                 </p>
               </div>
@@ -67,7 +67,7 @@ export function IntelligenceSection() {
                 <h3 className="text-lg font-light text-ink mb-2">Multi-Signal Fusion</h3>
                 <p className="text-body text-ink-soft">
                   Heart rate, HRV, sleep quality, stress levels, and estimated glucose
-                  and blood pressure trends—woven together into everyday wellness awareness.
+                  and blood pressure trends-woven together into everyday wellness awareness.
                 </p>
               </div>
 

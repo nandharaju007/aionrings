@@ -124,7 +124,7 @@ type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c" | "prici
 // ─── New: real shape of documents in the mobile app's "orders" collection ───
 // Note: many order items only ever reach the "interest" browsing stage and never
 // finish checkout, so shippingAddress/total/deliveryMethod/paymentMethod are often
-// simply absent — every field below is optional except the ones Mongoose always sets.
+// simply absent, every field below is optional except the ones Mongoose always sets.
 interface B2CShippingAddress {
   fullName?: string;
   address1?: string;
@@ -146,7 +146,7 @@ interface B2COrderItem {
   deliveryMethod?: string;
   saveAddress?: boolean;
   total?: number;
-  paymentMethod?: string; // legacy field on older documents only — not written anymore
+  paymentMethod?: string; // legacy field on older documents only, not written anymore
   createdAt: string;
 }
 
@@ -158,13 +158,13 @@ interface B2CUserOrders {
 }
 
 // New: the backend's GET /api/orders route now returns already-flattened,
-// paginated individual order items directly (via a $unwind aggregation) —
+// paginated individual order items directly (via a $unwind aggregation) -
 // each item includes its own email, no more nested outer account document.
 interface B2CFlatItem extends B2COrderItem {
   email: string;
 }
 
-// One flattened row per ORDER ITEM (not per user document) — each item is its own
+// One flattened row per ORDER ITEM (not per user document), each item is its own
 // distinct ring configuration/attempt with its own timestamp.
 interface B2CRow {
   orderItemId: string;
@@ -186,9 +186,9 @@ interface B2CRow {
 }
 
 // The material field is stored as an i18n key (e.g. "chooseYourRing.finishes.midnightBlack.name"),
-// not human text — this maps it to a readable label without needing the app's own i18n system.
+// not human text, this maps it to a readable label without needing the app's own i18n system.
 function humanizeMaterial(key?: string): string {
-  if (!key) return "—";
+  if (!key) return "-";
   if (key.includes("midnightBlack")) return "Midnight Black";
   if (key.includes("silver")) return "Silver";
   if (key.includes("roseGold")) return "Rose Gold";
@@ -241,10 +241,10 @@ interface WebOrderStatusEntry {
   estimatedDelivery?: string;
 }
 
-// UI-only status options for the new web_orders Status column — separate from the
+// UI-only status options for the new web_orders Status column, separate from the
 // existing Fulfillment tab's STATUSES/StatusPill (which belong to the Supabase
 // "reservations" flow and use different values like reserved/confirmed/cancelled).
-// Order Received is now a FIXED, always-shown first step (not a dropdown choice — every
+// Order Received is now a FIXED, always-shown first step (not a dropdown choice, every
 // order starts here automatically). The dropdown only ever offers what comes after it.
 // Processing has been removed entirely per explicit instruction.
 const SHIP_DELIVER_OPTIONS = [
@@ -333,13 +333,13 @@ export default function AdminReservationsPage() {
   const [expandedOrder, setExpandedOrder] = useState<WebOrderRow | null>(null);
   const [viewingLogFor, setViewingLogFor] = useState<WebOrderRow | null>(null);
   const [openStatusMenuFor, setOpenStatusMenuFor] = useState<string | null>(null);
-  // Real backend-persisted status history for web orders — fetched from
+  // Real backend-persisted status history for web orders, fetched from
   // GET /api/web-orders/status, grouped by orderId. Replaces the earlier local-only
   // UI state now that the backend/database (web_orders_status collection) exists.
   const [webOrderStatusLog, setWebOrderStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
   const [webOrderStatusLogError, setWebOrderStatusLogError] = useState<string | null>(null);
 
-  // ─── New: B2C tab (mobile app orders collection) — entirely independent state ───────
+  // ─── New: B2C tab (mobile app orders collection), entirely independent state ───────
   const [b2cOrders, setB2cOrders] = useState<B2CFlatItem[] | null>(null);
   const [b2cOrdersError, setB2cOrdersError] = useState<string | null>(null);
   const [b2cOrdersPage, setB2cOrdersPage] = useState(1);
@@ -347,7 +347,7 @@ export default function AdminReservationsPage() {
   const [b2cOrdersHasMore, setB2cOrdersHasMore] = useState(false);
   const [expandedB2CRow, setExpandedB2CRow] = useState<B2CRow | null>(null);
   const [viewingB2CLogFor, setViewingB2CLogFor] = useState<B2CRow | null>(null);
-  // Real backend-persisted status history for B2C orders — fetched from
+  // Real backend-persisted status history for B2C orders, fetched from
   // GET /api/orders/status, grouped by orderId. Replaces the earlier local-only UI
   // state now that the backend/database (orders_status collection) exists.
   const [b2cStatusLog, setB2cStatusLog] = useState<WebOrderStatusEntry[] | null>(null);
@@ -424,7 +424,7 @@ export default function AdminReservationsPage() {
     setLoading(false);
   }
 
-  // New: independent fetch for web_orders — kept separate from loadAll()/Supabase so
+  // New: independent fetch for web_orders, kept separate from loadAll()/Supabase so
   // the existing realtime-subscription flow for Fulfillment/Partners/Bulk is untouched.
   async function loadWebOrders(page = 1) {
     try {
@@ -442,7 +442,7 @@ export default function AdminReservationsPage() {
     }
   }
 
-  // New: independent fetch for the mobile app's "orders" collection (B2C tab) — same
+  // New: independent fetch for the mobile app's "orders" collection (B2C tab), same
   // pattern as loadWebOrders, completely separate from it and from Supabase. The
   // backend now returns already-flattened, paginated individual order items directly.
   async function loadB2COrders(page = 1) {
@@ -477,7 +477,7 @@ export default function AdminReservationsPage() {
     }
   }
 
-  // Same pattern, but for the B2C (mobile app) orders_status collection — entirely
+  // Same pattern, but for the B2C (mobile app) orders_status collection, entirely
   // separate from the web-orders status log above.
   async function loadB2COrderStatuses() {
     try {
@@ -572,7 +572,7 @@ export default function AdminReservationsPage() {
     }
   }
 
-  // Live refresh: new pre-orders appear in Fulfillment automatically (unchanged —
+  // Live refresh: new pre-orders appear in Fulfillment automatically (unchanged -
   // Reservations tab no longer depends on the Supabase "reservations" table, so it's
   // not part of this subscription; it has its own manual refresh below instead).
   useEffect(() => {
@@ -640,7 +640,7 @@ export default function AdminReservationsPage() {
     }));
   }, [filteredWebOrders]);
 
-  // Real POST to the backend — always appends a new entry, never overwrites. Preserves
+  // Real POST to the backend, always appends a new entry, never overwrites. Preserves
   // the same "Delivered implies Shipped already happened" cascade as before, but now as
   // genuine separate database inserts if the shipped step hasn't been recorded yet.
   async function handleStatusChange(orderId: string, newValue: string) {
@@ -666,7 +666,7 @@ export default function AdminReservationsPage() {
     }
   }
 
-  // Builds the 3-step timeline for one order from the REAL fetched log — "Order Received"
+  // Builds the 3-step timeline for one order from the REAL fetched log, "Order Received"
   // always uses the order's own createdAt (matches the backend's own auto-created
   // "received" entry, which fires the instant an order is placed). Shipped/Delivered use
   // their real logged date if an entry exists for that order+status, otherwise an
@@ -707,7 +707,7 @@ export default function AdminReservationsPage() {
     return "";
   }
 
-  // ─── New: B2C tab logic — reshaping, status/timeline, all independent of the above ──
+  // ─── New: B2C tab logic, reshaping, status/timeline, all independent of the above ──
   // The backend now returns already-flattened, paginated items directly (one per row),
   // so this is a simple reshape (field renaming + material humanizing), not a flatMap.
   const b2cRows = useMemo<B2CRow[] | null>(() => {
@@ -718,10 +718,10 @@ export default function AdminReservationsPage() {
       accountEmail: item.email,
       fullName: item.shippingAddress?.fullName ?? "",
       phone: item.shippingAddress?.phone ?? "",
-      size: item.size ?? "—",
+      size: item.size ?? "-",
       materialLabel: humanizeMaterial(item.material),
-      subscription: item.subscription ?? "—",
-      deliveryMethod: item.deliveryMethod ?? "—",
+      subscription: item.subscription ?? "-",
+      deliveryMethod: item.deliveryMethod ?? "-",
       total: item.total ?? null,
       address1: item.shippingAddress?.address1 ?? "",
       city: item.shippingAddress?.city ?? "",
@@ -767,7 +767,7 @@ export default function AdminReservationsPage() {
 
   // Shared low-level POST, reused by both modals below and by the (rare, defensive)
   // auto-shipped-insert if an order somehow reaches Delivered without a prior Shipped
-  // entry — mirrors the exact same fetch this file already used before the modals existed.
+  // entry, mirrors the exact same fetch this file already used before the modals existed.
   async function postB2CStatus(orderItemId: string, body: Record<string, unknown>) {
     return fetch(`${B2C_ORDER_STATUS_API}/${orderItemId}/status`, {
       method: "POST",
@@ -781,7 +781,7 @@ export default function AdminReservationsPage() {
     setShippingModalFor(row);
   }
 
-  // No modal needed anymore — Delivered no longer collects a manually-typed location,
+  // No modal needed anymore, Delivered no longer collects a manually-typed location,
   // since it's now derived directly from the order's own shipping address wherever it's
   // displayed (admin Log popup, mobile Order Tracking, and the delivered email).
   async function submitDelivered(row: B2CRow) {
@@ -841,7 +841,7 @@ export default function AdminReservationsPage() {
       const confirmed = entriesForOrder.find((e) => e.status === opt.value);
       if (confirmed) return { value: opt.value, label: opt.label, date: confirmed.date, completed: true };
       // Prefer the REAL admin-entered estimatedDelivery (stored on the shipped entry)
-      // for the Delivered step's estimate, once a shipped entry exists — only fall back
+      // for the Delivered step's estimate, once a shipped entry exists, only fall back
       // to the generic offset guess if the order hasn't shipped yet at all.
       if (opt.value === "delivered" && shippedEntry?.estimatedDelivery) {
         return { value: opt.value, label: opt.label, date: shippedEntry.estimatedDelivery, completed: false };
@@ -1191,7 +1191,7 @@ export default function AdminReservationsPage() {
                               </div>
                               <div className="text-[12px] text-ink-soft mt-1">
                                 Size <span className="text-ink">{r.ring_size}</span> · Color{" "}
-                                <span className="text-ink">{r.ring_color ?? "—"}</span> · Qty{" "}
+                                <span className="text-ink">{r.ring_color ?? "-"}</span> · Qty{" "}
                                 <span className="text-ink">{r.quantity}</span> ·{" "}
                                 {new Date(r.created_at).toLocaleDateString()}
                               </div>
@@ -1423,13 +1423,13 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{r.email}</td>
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{r.phone}</td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
-                                {firstItem?.ring_size ?? "—"}
+                                {firstItem?.ring_size ?? "-"}
                                 {extraItems > 0 && <span className="text-ink-muted text-[11px]"> (+{extraItems})</span>}
                               </td>
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
-                                {firstItem?.ring_color ?? "—"}
+                                {firstItem?.ring_color ?? "-"}
                               </td>
-                              <td className="px-4 py-3 text-center whitespace-nowrap">{firstItem?.quantity ?? "—"}</td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">{firstItem?.quantity ?? "-"}</td>
                               <td
                                 className="px-4 py-3 text-ink-soft text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
                                 title={`${r.address}, ${r.city}, ${r.state} ${r.zip_code}, ${r.country}`}
@@ -1437,7 +1437,7 @@ export default function AdminReservationsPage() {
                                 {r.address}, {r.city}, {r.state} {r.zip_code}, {r.country}
                               </td>
                               <td className="px-4 py-3 text-primary text-center whitespace-nowrap">
-                                {r.partner_code ?? r.referral_source ?? "—"}
+                                {r.partner_code ?? r.referral_source ?? "-"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap relative">
                                 <div className="inline-flex items-center gap-2">
@@ -1830,7 +1830,7 @@ export default function AdminReservationsPage() {
                             <td className="px-4 py-3 text-ink-soft">{r.email}</td>
                             <td className="px-4 py-3 text-ink-soft">{r.phone}</td>
                             <td className="px-4 py-3">{r.estimated_quantity}</td>
-                            <td className="px-4 py-3 text-ink-soft">{r.partner_code ?? "—"}</td>
+                            <td className="px-4 py-3 text-ink-soft">{r.partner_code ?? "-"}</td>
                             <td className="px-4 py-3 text-ink-soft">{r.status}</td>
                           </tr>
                         ))}
@@ -1899,12 +1899,12 @@ export default function AdminReservationsPage() {
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {new Date(r.createdAt).toLocaleDateString()}
                               </td>
-                              <td className="px-4 py-3 text-center whitespace-nowrap">{r.fullName || "—"}</td>
+                              <td className="px-4 py-3 text-center whitespace-nowrap">{r.fullName || "-"}</td>
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                                 {r.accountEmail}
                               </td>
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
-                                {r.phone || "—"}
+                                {r.phone || "-"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">{r.size}</td>
                               <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
@@ -1917,13 +1917,13 @@ export default function AdminReservationsPage() {
                                 {r.deliveryMethod}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap">
-                                {r.total != null ? `$${r.total.toFixed(2)}` : "—"}
+                                {r.total != null ? `$${r.total.toFixed(2)}` : "-"}
                               </td>
                               <td
                                 className="px-4 py-3 text-ink-soft text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
                                 title={hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : ""}
                               >
-                                {hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : "—"}
+                                {hasAddress ? `${r.address1}, ${r.city}, ${r.state} ${r.zip}, ${r.country}` : "-"}
                               </td>
                               <td className="px-4 py-3 text-center whitespace-nowrap relative">
                                 <div className="inline-flex items-center gap-2">
@@ -2233,7 +2233,7 @@ export default function AdminReservationsPage() {
                   {pricingConfig && (
                     <div className="max-w-2xl">
                       <div className="text-[13px] text-ink-muted mb-6">
-                        These prices are live — the mobile app fetches them directly, so changes here take effect the
+                        These prices are live, the mobile app fetches them directly, so changes here take effect the
                         next time a user opens the app.
                       </div>
 

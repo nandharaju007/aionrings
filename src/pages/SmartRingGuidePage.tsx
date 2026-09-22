@@ -11,7 +11,7 @@ const TOPICS: { id: string; h: string; body: string[] }[] = [
     h: "Sleep tracking with a smart ring",
     body: [
       "A ring sits on the finger, where blood-flow signals are strong and movement artefacts are low, so it can stay on all night without being noticed. Overnight, aiOn follows sleep duration and timing, sleep stages, resting heart rate, heart-rate variability (HRV), blood-oxygen saturation (SpO₂) and skin-temperature deviation from your own baseline.",
-      "What matters for wellness is the pattern, not a single night. aiOn shows how your last night compares to your rolling baseline and turns that into one plain-language takeaway — for example, whether a later bedtime is what pulled your HRV down this week.",
+      "What matters for wellness is the pattern, not a single night. aiOn shows how your last night compares to your rolling baseline and turns that into one plain-language takeaway, for example, whether a later bedtime is what pulled your HRV down this week.",
     ],
   },
   {
@@ -48,7 +48,7 @@ const TOPICS: { id: string; h: string; body: string[] }[] = [
     id: "choosing",
     h: "How to choose a smart wellness ring",
     body: [
-      "Comfort and fit come first — a ring is only useful if it's worn every night, so check sizing before ordering and pick a finish you'll wear daily.",
+      "Comfort and fit come first, a ring is only useful if it's worn every night, so check sizing before ordering and pick a finish you'll wear daily.",
       "Then look at what happens to the data. Most rings measure similar signals; the difference is whether the app turns them into something you can act on, how long the battery lasts, whether a subscription is required, and how your data is stored and protected.",
       "aiOn is built around that last part: an AI-native app that reduces the day to one Vitality Score and one action, aircraft-grade titanium in three finishes, and a privacy-first data model. It is a general wellness product, not a medical device, and it does not diagnose, treat or prevent any condition.",
     ],
@@ -103,7 +103,7 @@ export default function SmartRingGuidePage() {
     <div className="min-h-screen bg-canvas text-ink">
       <SEO
         title="Smart Ring Guide: Sleep, Recovery, HRV & Stress Tracking | aiOn"
-        description="How wellness rings track sleep, recovery, HRV, stress, activity and cycle signals — what each reading means, how accurate it is, and how to choose a smart ring you'll actually wear."
+        description="How wellness rings track sleep, recovery, HRV, stress, activity and cycle signals, what each reading means, how accurate it is, and how to choose a smart ring you'll actually wear."
         path="/smart-ring-guide"
         image="/og-image.jpg"
         type="article"
@@ -111,9 +111,9 @@ export default function SmartRingGuidePage() {
           {
             "@context": "https://schema.org",
             "@type": "Article",
-            headline: "Smart Ring Guide — Sleep, Recovery, Stress & Activity",
+            headline: "Smart Ring Guide - Sleep, Recovery, Stress & Activity",
             description:
-              "How smart wellness rings track sleep, recovery, HRV, stress, activity and cycle signals — and how to choose one.",
+              "How smart wellness rings track sleep, recovery, HRV, stress, activity and cycle signals, and how to choose one.",
             mainEntityOfPage: `${SITE}/smart-ring-guide`,
             author: { "@type": "Organization", name: "aiOn" },
             publisher: { "@type": "Organization", name: "aiOn Health Science LLC" },
@@ -156,7 +156,7 @@ export default function SmartRingGuidePage() {
             The smart ring guide: sleep, recovery, stress and everyday wellness
           </h1>
           <p className="mt-6 text-[17px] leading-relaxed text-ink-soft">
-            Smart rings measure the quiet signals your body produces all day — heart rate, heart-rate variability,
+            Smart rings measure the quiet signals your body produces all day, heart rate, heart-rate variability,
             blood oxygen, skin temperature, movement and sleep. This guide explains what each signal means, what a
             ring can and cannot tell you, and how aiOn turns those signals into one clear daily action.
           </p>
@@ -204,7 +204,7 @@ export default function SmartRingGuidePage() {
                 {
                   to: "/smart-ring-guide/stress-tracking-ring",
                   t: "Stress tracking ring",
-                  d: "Reading calm versus activated time — and the patterns worth fixing.",
+                  d: "Reading calm versus activated time, and the patterns worth fixing.",
                 },
               ].map((c) => (
                 <Link
@@ -234,7 +234,7 @@ export default function SmartRingGuidePage() {
           <section className="mt-16 rounded-3xl border border-ink/10 bg-canvas-alt p-8 text-center">
             <h2 className="text-2xl font-light text-ink">See it in the aiOn app</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] text-ink-soft">
-              Sleep, recovery, vitals, stress, activity and cycle insights — in one place.
+              Sleep, recovery, vitals, stress, activity and cycle insights, in one place.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link

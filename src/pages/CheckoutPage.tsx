@@ -44,7 +44,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-canvas">
   <SEO
-        title="Checkout — aiOn Smart Wellness Ring"
+        title="Checkout - aiOn Smart Wellness Ring"
         description="Complete your aiOn smart wellness ring order securely."
         path="/checkout"
         image="/og-image.jpg"
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-canvas">
       <SEO
-        title="Checkout — aiOn Smart Wellness Ring"
+        title="Checkout - aiOn Smart Wellness Ring"
         description="Complete your aiOn smart wellness ring order securely."
         path="/checkout"
         image="/og-image.jpg"

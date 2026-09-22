@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const AccessibilityPage = () => {
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Accessibility — aiOn"} description={"aiOn's commitment to WCAG-aligned, accessible digital and product experiences."} path="/accessibility" image="/og-policies.jpg" />
+      <SEO title={"Accessibility - aiOn"} description={"aiOn's commitment to WCAG-aligned, accessible digital and product experiences."} path="/accessibility" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">

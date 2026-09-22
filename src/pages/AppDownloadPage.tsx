@@ -276,7 +276,7 @@ function AppHero() {
             style={{ background: GRADIENT }}
           />
           <div className="relative flex items-end gap-6">
-            <PhoneMock src={appScreenVitality} alt="aiOn app — Today, Vitality Score" width={252} />
+            <PhoneMock src={appScreenVitality} alt="aiOn app, Today, Vitality Score" width={252} />
             <img
               src={ringMidnight}
               alt="aiOn Smart Ring in Midnight finish"
@@ -291,16 +291,16 @@ function AppHero() {
 }
 
 const SCREENS: { src?: string; alt: string; label: string }[] = [
-  { src: appScreenVitality, alt: "aiOn app — Today / Vitality Score", label: "Today" },
-  { src: appScreenInsights.url, alt: "aiOn app — Insights", label: "Insights" },
-  { src: appScreenActivity.url, alt: "aiOn app — Activity", label: "Activity" },
-  { src: appScreenSleep, alt: "aiOn app — Sleep", label: "Sleep" },
-  { src: appScreenWomens.url, alt: "aiOn app — Women's Health", label: "Women's Health" },
-  { src: appScreenQuest, alt: "aiOn app — Today's Quest", label: "Quest" },
-  { src: appScreenHealthAge.url, alt: "aiOn app — Health Age", label: "Health Age" },
-  { src: appScreenVitals.url, alt: "aiOn app — Vitals", label: "Vitals" },
-  { src: appScreenRecovery.url, alt: "aiOn app — Recovery", label: "Recovery" },
-  { src: appScreenNutrition.url, alt: "aiOn app — Nutrition", label: "Nutrition" },
+  { src: appScreenVitality, alt: "aiOn app, Today / Vitality Score", label: "Today" },
+  { src: appScreenInsights.url, alt: "aiOn app, Insights", label: "Insights" },
+  { src: appScreenActivity.url, alt: "aiOn app, Activity", label: "Activity" },
+  { src: appScreenSleep, alt: "aiOn app, Sleep", label: "Sleep" },
+  { src: appScreenWomens.url, alt: "aiOn app, Women's Health", label: "Women's Health" },
+  { src: appScreenQuest, alt: "aiOn app, Today's Quest", label: "Quest" },
+  { src: appScreenHealthAge.url, alt: "aiOn app, Health Age", label: "Health Age" },
+  { src: appScreenVitals.url, alt: "aiOn app, Vitals", label: "Vitals" },
+  { src: appScreenRecovery.url, alt: "aiOn app, Recovery", label: "Recovery" },
+  { src: appScreenNutrition.url, alt: "aiOn app, Nutrition", label: "Nutrition" },
 ];
 
 function ExperienceSection() {
@@ -385,7 +385,7 @@ function DemoSection() {
           ))}
         </div>
         <p className="mt-6 text-[12px] text-ink-muted">
-          Placeholder footage — in-app screen recordings can replace these clips at any time.
+          Placeholder footage, in-app screen recordings can replace these clips at any time.
         </p>
       </div>
     </section>
@@ -437,7 +437,7 @@ function StorySection() {
             />
             <div className="relative flex items-end gap-5">
               <img src={ringMidnight} alt="aiOn Ring" loading="lazy" className="w-20 sm:w-24" />
-              <PhoneMock src={appScreenQuest} alt="aiOn app — daily guidance" width={216} />
+              <PhoneMock src={appScreenQuest} alt="aiOn app, daily guidance" width={216} />
             </div>
           </FadeUp>
         </div>
@@ -451,31 +451,31 @@ const DISCOVERY: { kicker: string; copy: string; src?: string; alt: string }[] =
     kicker: "Sleep better",
     copy: "Understand your sleep stages, quality and recovery.",
     src: appScreenSleep,
-    alt: "aiOn app — Sleep",
+    alt: "aiOn app, Sleep",
   },
   {
     kicker: "Move more",
     copy: "Track activities, workouts, steps, distance and calories.",
     src: appScreenActivity.url,
-    alt: "aiOn app — Activity",
+    alt: "aiOn app, Activity",
   },
   {
     kicker: "Women's health",
     copy: "Follow your cycle phases and how they shape your day.",
     src: appScreenWomens.url,
-    alt: "aiOn app — Women's Health",
+    alt: "aiOn app, Women's Health",
   },
   {
     kicker: "Recover smarter",
     copy: "Understand stress, recovery and daily wellness patterns.",
     src: appScreenRecovery.url,
-    alt: "aiOn app — Recovery",
+    alt: "aiOn app, Recovery",
   },
   {
     kicker: "Know your vitals",
     copy: "See supported wellness measurements and trends.",
     src: appScreenVitals.url,
-    alt: "aiOn app — Vitals",
+    alt: "aiOn app, Vitals",
   },
 ];
 

@@ -184,7 +184,7 @@ export function GuideArticle({
           <section className="mt-16 rounded-3xl border border-ink/10 bg-canvas-alt p-8 text-center">
             <h2 className="text-2xl font-light text-ink">See it in the aiOn app</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] text-ink-soft">
-              Sleep, recovery, vitals, stress, activity and cycle insights — in one place.
+              Sleep, recovery, vitals, stress, activity and cycle insights, in one place.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link

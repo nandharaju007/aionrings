@@ -18,7 +18,7 @@ export const ContactForm = () => {
     try {
       const { error } = await supabase.functions.invoke('send-contact-message', { body: form });
       if (error) throw error;
-      toast.success("Message sent — we'll reply to you shortly.");
+      toast.success("Message sent, we'll reply to you shortly.");
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
       console.error('contact form failed:', err);

@@ -75,7 +75,7 @@ const CISPolicyPage = () => {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Security & CIS Policy — aiOn"} description={"aiOn's CIS-aligned security posture — encryption, access controls, monitoring, and incident response."} path="/cis-policy" image="/og-policies.jpg" />
+      <SEO title={"Security & CIS Policy - aiOn"} description={"aiOn's CIS-aligned security posture - encryption, access controls, monitoring, and incident response."} path="/cis-policy" image="/og-policies.jpg" />
       <Header />
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
@@ -95,7 +95,7 @@ const CISPolicyPage = () => {
                 <p>
                   Mazo Solutions Inc. is committed to maintaining the highest standards of information security 
                   for the aiOn platform. This policy outlines our alignment with the Center for Internet Security 
-                  (CIS) Controls framework — a globally recognized set of best practices for securing IT systems 
+                  (CIS) Controls framework, a globally recognized set of best practices for securing IT systems 
                   and data.
                 </p>
                 <p className="mt-4">
