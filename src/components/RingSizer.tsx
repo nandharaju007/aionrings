@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Upload, Ruler, RotateCcw, CreditCard, X } from 'lucide-react';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
+import { CardAligner, defaultCorners, type Point } from '@/components/CardAligner';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -25,6 +26,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [result, setResult] = useState<SizeResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [corners, setCorners] = useState<Point[] | null>(null);
+  const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
 
   const pickFile = (selected: File | undefined) => {
     if (!selected) return;
@@ -38,6 +41,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     }
     setError(null);
     setResult(null);
+    setCorners(null);
+    setImgSize(null);
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
   };
@@ -51,6 +56,12 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     const form = new FormData();
     form.append('image', file, file.name || 'hand.jpg');
     form.append('finger', finger);
+    if (corners && imgSize) {
+      form.append(
+        'card_corners',
+        JSON.stringify({ width: imgSize.w, height: imgSize.h, corners: corners.map((p) => [p.x, p.y]) }),
+      );
+    }
 
     try {
       const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -74,6 +85,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     setPreview(null);
     setResult(null);
     setError(null);
+    setCorners(null);
+    setImgSize(null);
     if (inputRef.current) inputRef.current.value = '';
   };
 
@@ -154,21 +167,42 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             className="sr-only"
             onChange={(e) => pickFile(e.target.files?.[0])}
           />
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-canvas transition-colors hover:border-primary"
-          >
-            {preview ? (
-              <img src={preview} alt="Your uploaded hand with a card" className="h-full w-full object-cover" />
-            ) : (
+          {preview ? (
+            <div>
+              <CardAligner
+                src={preview}
+                corners={corners}
+                onChange={setCorners}
+                onImageLoad={(w, h) => {
+                  setImgSize({ w, h });
+                  setCorners(defaultCorners(w / h));
+                }}
+              />
+              <p className="mt-2 text-xs leading-relaxed text-ink-muted">
+                Drag the four dots onto the corners of your card. This tells us the card&apos;s exact size in your
+                photo, so your ring size is more accurate.
+              </p>
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="mt-1 text-xs text-primary underline-offset-2 hover:underline"
+              >
+                Use a different photo
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-canvas transition-colors hover:border-primary"
+            >
               <span className="flex flex-col items-center gap-2 text-ink-muted">
                 <Upload className="h-5 w-5" />
                 <span className="text-sm">Upload hand + card photo</span>
                 <span className="text-xs">JPG or PNG, up to 12 MB</span>
               </span>
-            )}
-          </button>
+            </button>
+          )}
 
           <div className="mt-4">
             <p className="mb-2 text-[11px] uppercase tracking-wider text-ink-muted">Finger</p>
