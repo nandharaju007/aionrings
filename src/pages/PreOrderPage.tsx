@@ -1230,13 +1230,22 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
 
         {/* Option 1, Photo size estimation (primary, collapsed until chosen) */}
         <div className="rounded-2xl border-2 border-primary bg-primary/[0.04] p-4 mb-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
-            Option 1 · Recommended
-          </span>
-          <div className="mt-1 text-[16px] font-medium text-ink">Try photo size estimation</div>
-          <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-            Take a photo of your open palm with a bank card, we'll match your US ring size in seconds.
-          </p>
+          <div className="flex items-center gap-3">
+            <img
+              src={handCardSample}
+              alt="Example photo: open palm with a bank card resting flat in its center"
+              className="w-14 h-14 rounded-xl object-cover border border-border shrink-0"
+            />
+            <div className="min-w-0">
+              <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
+                Recommended
+              </span>
+              <div className="mt-0.5 text-[15px] font-medium text-ink">Try photo size estimation</div>
+              <p className="mt-0.5 text-[12px] text-ink-soft leading-relaxed">
+                A quick photo of your palm with a bank card, we'll match your US size in seconds.
+              </p>
+            </div>
+          </div>
           {photoOpen ? (
             <div className="mt-3">
               <RingSizer compact />
@@ -1254,26 +1263,43 @@ function SizingGuide({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
-          <div>
-            <div className="font-medium text-ink mb-1">Option 2, Existing ring</div>
-            <p>Measure the inside diameter of a ring you already wear (in millimetres) and match it below.</p>
-          </div>
-          <div>
-            <div className="font-medium text-ink mb-1">Option 3, String</div>
-            <p>
-              Wrap a string or strip of paper around the base of the finger you'll wear the aiOn on. Mark where it
-              overlaps and measure the length, that's your circumference.
+        {/* Other sizing options, grouped and visual */}
+        <div className="text-[11px] font-semibold uppercase tracking-[2px] text-ink-muted mb-2">
+          Other sizing options
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 mb-5">
+          <div className="rounded-xl border border-border bg-white p-4">
+            <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center">
+              <RingMethodIcon />
+            </span>
+            <div className="mt-2 text-[13px] font-medium text-ink">Measure a ring you already wear</div>
+            <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
+              Match its inner diameter to the chart below.
             </p>
           </div>
-          <div>
-            <div className="font-medium text-ink mb-1">Tips</div>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Measure at the end of the day when fingers are warmest.</li>
-              <li>Wear it snug, the sensors need skin contact.</li>
-              <li>When in doubt, size up.</li>
-            </ul>
+          <div className="rounded-xl border border-border bg-white p-4">
+            <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center">
+              <StringMethodIcon />
+            </span>
+            <div className="mt-2 text-[13px] font-medium text-ink">Wrap a string around your finger</div>
+            <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
+              Measure its length and match it to the chart.
+            </p>
           </div>
+        </div>
+
+        {/* Quick tips, one line each with an icon */}
+        <div className="space-y-2 mb-2">
+          {[
+            { icon: Clock, text: "Measure at the end of the day, when fingers are warmest." },
+            { icon: Fingerprint, text: "Wear it snug, the sensors need skin contact." },
+            { icon: ArrowUp, text: "When in doubt, size up." },
+          ].map(({ icon: Icon, text }) => (
+            <div key={text} className="flex items-center gap-2.5 text-[13px] text-ink-soft">
+              <Icon className="w-4 h-4 text-primary shrink-0" />
+              <span>{text}</span>
+            </div>
+          ))}
         </div>
 
         <div className="mt-6 rounded-2xl border border-border overflow-hidden">
