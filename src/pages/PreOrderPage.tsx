@@ -1176,6 +1176,24 @@ function ConfirmationCard({ name, partner }: { name: string; partner?: string | 
   );
 }
 
+function RingMethodIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="14" r="6.5" />
+      <path d="M12 7.5 9.5 4.5h5L12 7.5Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function StringMethodIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="8.5" y="3" width="7" height="18" rx="3.5" />
+      <path d="M5.5 10.5c2.5 1.8 10.5 1.8 13 0" />
+it    </svg>
+  );
+}
+
 function SizingGuide({ onClose }: { onClose: () => void }) {
   const [photoOpen, setPhotoOpen] = useState(false);
 
