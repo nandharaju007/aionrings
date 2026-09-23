@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowUp, Camera, Check, ChevronDown, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
+import { ArrowUp, Camera, Check, ChevronDown, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Smartphone, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
@@ -589,6 +589,10 @@ export default function PreOrderPage() {
                             </div>
                             <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
                               A quick photo of your palm with a bank card, we'll match your US size in seconds.
+                            </p>
+                            <p className="mt-1.5 text-[12px] text-ink-muted leading-relaxed flex items-center gap-1.5">
+                              <Smartphone className="w-3.5 h-3.5 shrink-0 text-primary" />
+                              Designed for your phone, the camera opens full screen so you can line up your hand and card easily. On a computer, use one of the other sizing options below.
                             </p>
                           </div>
                           <button
