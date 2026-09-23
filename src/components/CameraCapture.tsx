@@ -5,6 +5,7 @@ import type { HandLandmarker } from '@mediapipe/tasks-vision';
 
 // Guide box: centered, 56% of the preview width, bank-card aspect ratio.
 const BOX_W = 0.56;
+const MAX_BOX_W = 420; // Must match the max-w cap on the rendered guide box below.
 const CARD_ASPECT = 85.6 / 53.98;
 const HOLD_FRAMES = 8; // ~1 second of steady, correct framing
 // Must match the installed package version, otherwise the detector fails to load silently.
@@ -203,8 +204,8 @@ function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement
   const sw = cw / scale, sh = ch / scale;
   ctx.drawImage(v, (v.videoWidth - sw) / 2, (v.videoHeight - sh) / 2, sw, sh, 0, 0, W, H);
 
-  // Guide box in canvas pixels
-  const bw = W * BOX_W, bh = bw / CARD_ASPECT;
+  // Guide box in canvas pixels, capped exactly like the rendered box (max-w-[420px]).
+  const bw = W * Math.min(BOX_W, MAX_BOX_W / container.clientWidth), bh = bw / CARD_ASPECT;
   const bx = (W - bw) / 2, by = (H - bh) / 2;
 
   let res;
