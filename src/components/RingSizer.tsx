@@ -69,6 +69,10 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     const form = new FormData();
     form.append('image', file, file.name || 'hand.jpg');
     form.append('finger', finger);
+    if (imgSize) {
+      form.append('img_width', String(imgSize.w));
+      form.append('img_height', String(imgSize.h));
+    }
     if (corners && imgSize && cornersTouched) {
       form.append(
         'card_corners',
