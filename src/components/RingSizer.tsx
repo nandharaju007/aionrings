@@ -234,7 +234,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
                 <span className="flex flex-col items-center gap-2 text-ink-muted">
                   <Camera className="h-5 w-5 text-primary" />
                   <span className="text-sm text-ink">Use my camera</span>
-                  <span className="text-xs">Frame your palm and card with a live guide</span>
+                  <span className="text-xs">Opens full screen, best on your phone</span>
                 </span>
               </button>
               <button

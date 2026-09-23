@@ -3,8 +3,8 @@ import { Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { HandLandmarker } from '@mediapipe/tasks-vision';
 
-// Guide box: centered, 42% of the preview width, bank-card aspect ratio.
-const BOX_W = 0.42;
+// Guide box: centered, 56% of the preview width, bank-card aspect ratio.
+const BOX_W = 0.56;
 const CARD_ASPECT = 85.6 / 53.98;
 const HOLD_FRAMES = 8; // ~1 second of steady, correct framing
 // Must match the installed package version, otherwise the detector fails to load silently.
