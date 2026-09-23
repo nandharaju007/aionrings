@@ -42,6 +42,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
   const boxRef = useRef<HTMLDivElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const landmarkerRef = useRef<HandLandmarker | null>(null);
+  const detectorFallbackRef = useRef(false);
   const doneRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
@@ -53,6 +54,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     let cancelled = false;
     doneRef.current = false;
     landmarkerRef.current = null;
+    detectorFallbackRef.current = false;
     streamRef.current = null;
     setError(null);
     setReady(false);
@@ -85,11 +87,20 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (cancelled) return;
         landmarkerRef.current = lm;
       } catch {
-        if (!cancelled) setAutoAvailable(false);
+        if (!cancelled) {
+          detectorFallbackRef.current = true;
+          setAutoAvailable(true);
+        }
       }
     })();
+    // Some phones take a long time to initialise MediaPipe, or block its model download.
+    // Card detection can still auto-capture a correctly framed photo in that case.
+    const fallbackTimer = window.setTimeout(() => {
+      if (!cancelled && !landmarkerRef.current) detectorFallbackRef.current = true;
+    }, 4000);
     return () => {
       cancelled = true;
+      window.clearTimeout(fallbackTimer);
       const stream = streamRef.current;
       streamRef.current = null;
       stream?.getTracks().forEach((t) => t.stop());
@@ -137,7 +148,10 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       const lm = landmarkerRef.current;
       const box = boxRef.current?.parentElement;
       if (!v || !box || !v.videoWidth || doneRef.current) return;
-      if (!lm) { setStatus({ ok: false, msg: 'Getting auto-capture ready…' }); return; }
+      if (!lm && !detectorFallbackRef.current) {
+        setStatus({ ok: false, msg: 'Getting auto-capture ready…' });
+        return;
+      }
       const s = check(v, box, small, lm);
       // Forgive a single shaky frame instead of restarting the countdown.
       streak = s.ok ? streak + 1 : Math.max(0, streak - 2);
@@ -204,7 +218,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
 }
 
 // Draw the visible (object-cover) part of the video into a small canvas, then check hand + card.
-function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement, lm: HandLandmarker): Status {
+function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement, lm: HandLandmarker | null): Status {
   const cw = container.clientWidth, ch = container.clientHeight;
   const W = 320, H = Math.round((W * ch) / cw);
   c.width = W; c.height = H;
@@ -218,61 +232,67 @@ function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement
   const bw = W * Math.min(BOX_W, MAX_BOX_W / container.clientWidth), bh = bw / CARD_ASPECT;
   const bx = (W - bw) / 2, by = (H - bh) / 2;
 
-  let res;
-  try { res = lm.detect(c); } catch { return { ok: false, msg: 'Line up the card inside the box, palm up' }; }
-  const hand = res.landmarks?.[0];
-  if (!hand) return { ok: false, msg: 'Show your open hand, palm up' };
-
-  const px = hand.map((p) => ({ x: p.x * W, y: p.y * H }));
-  // Whole hand visible with a small margin
-  if (hand.some((p) => p.x < 0.02 || p.x > 0.98 || p.y < 0.02 || p.y > 0.98))
-    return { ok: false, msg: 'Move back so your whole hand is in view' };
-
-  // Fingers open: each fingertip farther from the wrist than its middle joint
-  const d = (a: number, b: number) => Math.hypot(px[a].x - px[b].x, px[a].y - px[b].y);
-  const open = [[8, 6], [12, 10], [16, 14], [20, 18]].every(([tip, pip]) => d(tip, 0) > d(pip, 0) * 1.1);
-  if (!open) return { ok: false, msg: 'Open your fingers a little' };
-
-  // Scale: palm width (index to little-finger base) should be close to the card width (85.6 mm vs ~75–90 mm palm)
-  const ratio = d(5, 17) / bw;
-  if (ratio < 0.55) return { ok: false, msg: 'Move closer' };
-  if (ratio > 1.35) return { ok: false, msg: 'Move a little farther away' };
-
-  // Palm centre should sit inside the box
-  const pc = [0, 5, 9, 13, 17].reduce((a, i) => ({ x: a.x + px[i].x / 5, y: a.y + px[i].y / 5 }), { x: 0, y: 0 });
-  if (pc.x < bx - bw * 0.15 || pc.x > bx + bw * 1.15 || pc.y < by - bh * 0.4 || pc.y > by + bh * 1.4)
-    return { ok: false, msg: 'Center your palm under the box' };
-
-  // Card: uniform interior and visible edges along the box outline
+  // Card: look for its edges near the guide, rather than requiring them to sit on
+  // the guide's exact pixels. This works with patterned and dark bank cards too.
   const img = ctx.getImageData(0, 0, W, H).data;
   const lum = (x: number, y: number) => {
     const i = (Math.round(y) * W + Math.round(x)) * 4;
     return 0.299 * img[i] + 0.587 * img[i + 1] + 0.114 * img[i + 2];
   };
-  const vals: number[] = [];
-  for (let y = by + bh * 0.2; y < by + bh * 0.8; y += 3)
-    for (let x = bx + bw * 0.2; x < bx + bw * 0.8; x += 3) vals.push(lum(x, y));
-  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
-  const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length);
-
-  // Edge contrast: compare just inside vs just outside each side of the box (tolerant band)
-  const band = Math.max(4, bw * 0.08);
-  let edgeHits = 0, edgeSamples = 0;
-  for (let t = 0.15; t <= 0.85; t += 0.1) {
-    const pairs: [number, number, number, number][] = [
-      [bx + bw * t, by + band, bx + bw * t, by - band],
-      [bx + bw * t, by + bh - band, bx + bw * t, by + bh + band],
-      [bx + band, by + bh * t, bx - band, by + bh * t],
-      [bx + bw - band, by + bh * t, bx + bw + band, by + bh * t],
-    ];
-    for (const [ix, iy, ox, oy] of pairs) {
-      if (ox < 0 || oy < 0 || ox >= W || oy >= H) continue;
-      edgeSamples++;
-      if (Math.abs(lum(ix, iy) - lum(ox, oy)) > 18) edgeHits++;
+  const cardScore = (x: number, y: number, width: number) => {
+    const height = width / CARD_ASPECT;
+    const band = Math.max(3, width * 0.055);
+    let hits = 0, samples = 0;
+    for (let t = 0.12; t <= 0.88; t += 0.08) {
+      const pairs: [number, number, number, number][] = [
+        [x + width * t, y + band, x + width * t, y - band],
+        [x + width * t, y + height - band, x + width * t, y + height + band],
+        [x + band, y + height * t, x - band, y + height * t],
+        [x + width - band, y + height * t, x + width + band, y + height * t],
+      ];
+      for (const [ix, iy, ox, oy] of pairs) {
+        if (ix < 0 || iy < 0 || ox < 0 || oy < 0 || ix >= W || iy >= H || ox >= W || oy >= H) continue;
+        samples++;
+        if (Math.abs(lum(ix, iy) - lum(ox, oy)) > 14) hits++;
+      }
+    }
+    return samples ? hits / samples : 0;
+  };
+  let bestCardScore = 0;
+  for (const size of [0.72, 0.84, 0.96, 1.06]) {
+    for (const dx of [-0.08, 0, 0.08]) {
+      for (const dy of [-0.08, 0, 0.08]) {
+        const width = bw * size;
+        bestCardScore = Math.max(bestCardScore, cardScore(bx + (bw - width) / 2 + bw * dx, by + (bh - width / CARD_ASPECT) / 2 + bh * dy, width));
+      }
     }
   }
-  const edgeScore = edgeSamples ? edgeHits / edgeSamples : 0;
-  if (sd > 32 || edgeScore < 0.45) return { ok: false, msg: 'Place the card flat inside the box' };
+  if (bestCardScore < 0.2) return { ok: false, msg: 'Place the card flat inside the box' };
+
+  // Prefer hand landmarks when available. The tolerances deliberately allow a
+  // card to cover part of the palm, which otherwise makes open hands look closed.
+  if (lm) {
+    let res;
+    try { res = lm.detect(c); } catch { res = null; }
+    const hand = res?.landmarks?.[0];
+    if (!hand) return { ok: false, msg: 'Show your open hand, palm up' };
+
+    const px = hand.map((p) => ({ x: p.x * W, y: p.y * H }));
+    if (hand.some((p) => p.x < 0.01 || p.x > 0.99 || p.y < 0.01 || p.y > 0.99))
+      return { ok: false, msg: 'Move back so your whole hand is in view' };
+
+    const d = (a: number, b: number) => Math.hypot(px[a].x - px[b].x, px[a].y - px[b].y);
+    const openCount = [[8, 6], [12, 10], [16, 14], [20, 18]].filter(([tip, pip]) => d(tip, 0) > d(pip, 0) * 1.04).length;
+    if (openCount < 3) return { ok: false, msg: 'Open your fingers a little' };
+
+    const ratio = d(5, 17) / bw;
+    if (ratio < 0.42) return { ok: false, msg: 'Move closer' };
+    if (ratio > 1.6) return { ok: false, msg: 'Move a little farther away' };
+
+    const pc = [0, 5, 9, 13, 17].reduce((a, i) => ({ x: a.x + px[i].x / 5, y: a.y + px[i].y / 5 }), { x: 0, y: 0 });
+    if (pc.x < bx - bw * 0.3 || pc.x > bx + bw * 1.3 || pc.y < by - bh * 0.65 || pc.y > by + bh * 1.65)
+      return { ok: false, msg: 'Center your palm under the box' };
+  }
 
   return { ok: true, msg: '' };
 }
