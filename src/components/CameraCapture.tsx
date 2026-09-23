@@ -15,6 +15,28 @@ const MODEL =
 
 type Status = { ok: boolean; msg: string };
 
+// Load the hand detector once and keep it for the whole visit. Closing and re-creating it
+// on "Start over" often fails silently on phones, which stopped auto-capture the second time.
+let detectorPromise: Promise<HandLandmarker> | null = null;
+function getDetector() {
+  if (!detectorPromise) {
+    detectorPromise = (async () => {
+      const { FilesetResolver, HandLandmarker } = await import('@mediapipe/tasks-vision');
+      const fileset = await FilesetResolver.forVisionTasks(WASM);
+      const make = (delegate: 'GPU' | 'CPU') =>
+        HandLandmarker.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath: MODEL, delegate },
+          runningMode: 'IMAGE',
+          numHands: 1,
+          minHandDetectionConfidence: 0.3,
+          minHandPresenceConfidence: 0.3,
+        });
+      try { return await make('GPU'); } catch { return await make('CPU'); }
+    })().catch((e) => { detectorPromise = null; throw e; });
+  }
+  return detectorPromise;
+}
+
 export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => void; onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -50,6 +72,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play().catch(() => {});
+          if (!cancelled && videoRef.current.videoWidth) setReady(true);
         }
       } catch {
         setError('We could not open your camera. Please allow camera access, or upload a photo instead.');
@@ -58,19 +81,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     // Load the hand detector in the background; manual capture still works if it fails.
     (async () => {
       try {
-        const { FilesetResolver, HandLandmarker } = await import('@mediapipe/tasks-vision');
-        const fileset = await FilesetResolver.forVisionTasks(WASM);
-        const make = (delegate: 'GPU' | 'CPU') =>
-          HandLandmarker.createFromOptions(fileset, {
-            baseOptions: { modelAssetPath: MODEL, delegate },
-            runningMode: 'IMAGE',
-            numHands: 1,
-            minHandDetectionConfidence: 0.3,
-            minHandPresenceConfidence: 0.3,
-          });
-        let lm: HandLandmarker;
-        try { lm = await make('GPU'); } catch { lm = await make('CPU'); }
-        if (cancelled) return lm.close();
+        const lm = await getDetector();
+        if (cancelled) return;
         landmarkerRef.current = lm;
       } catch {
         if (!cancelled) setAutoAvailable(false);
@@ -81,9 +93,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       const stream = streamRef.current;
       streamRef.current = null;
       stream?.getTracks().forEach((t) => t.stop());
-      const landmarker = landmarkerRef.current;
       landmarkerRef.current = null;
-      landmarker?.close();
       doneRef.current = false;
     };
   }, []);

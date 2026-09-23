@@ -69,9 +69,17 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
     const form = new FormData();
     form.append('image', file, file.name || 'hand.jpg');
     form.append('finger', finger);
-    if (imgSize) {
-      form.append('img_width', String(imgSize.w));
-      form.append('img_height', String(imgSize.h));
+    let size = imgSize;
+    if (!size) {
+      try {
+        const bmp = await createImageBitmap(file);
+        size = { w: bmp.width, h: bmp.height };
+        bmp.close();
+      } catch { size = null; }
+    }
+    if (size) {
+      form.append('img_width', String(size.w));
+      form.append('img_height', String(size.h));
     }
     if (corners && imgSize && cornersTouched) {
       form.append(

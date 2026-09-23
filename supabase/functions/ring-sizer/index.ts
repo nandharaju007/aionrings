@@ -6,7 +6,10 @@ const corsHeaders = {
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 const MODEL = "openai/gpt-6-astra";
-const SAMPLES = 3;
+const SAMPLES = 5;
+// Seen from above, a finger looks wider than it is deep, so the visible width overstates
+// the round inner diameter a ring needs. This brings the width back to a ring diameter.
+const WIDTH_TO_DIAMETER = 0.95;
 
 const SIZE_CHART = [
   { size: "5", diameter: 15.7 },
@@ -199,8 +202,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    const mm = median(widths);
-    const spread = Math.max(...widths) - Math.min(...widths);
+    const mm = median(widths) * WIDTH_TO_DIAMETER;
+    const spread = (Math.max(...widths) - Math.min(...widths)) * WIDTH_TO_DIAMETER;
     const match = SIZE_CHART.reduce((best, r) => (Math.abs(r.diameter - mm) < Math.abs(best.diameter - mm) ? r : best));
     let confidence = widths.length < 2 || spread > 1.6 ? "low" : spread > 0.8 ? "medium" : "high";
     const modelConf = samples.find((s) => s.confidence)?.confidence;
