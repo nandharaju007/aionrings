@@ -276,7 +276,7 @@ function check(
     if (!hand) {
       // A strong card match is enough while the hand model is loading or misses a
       // frame. The stricter threshold prevents background edges from triggering.
-      if (bestCardScore >= 0.18) return { ok: true, msg: '' };
+      if (bestCardScore >= 0.12) return { ok: true, msg: '' };
       return { ok: false, msg: 'Show your open hand, palm up' };
     }
 
@@ -297,7 +297,7 @@ function check(
     const pc = [0, 5, 9, 13, 17].reduce((a, i) => ({ x: a.x + px[i].x / 5, y: a.y + px[i].y / 5 }), { x: 0, y: 0 });
     if (pc.x < bx - bw * 0.3 || pc.x > bx + bw * 1.3 || pc.y < by - bh * 0.65 || pc.y > by + bh * 1.65)
       return { ok: false, msg: 'Center your palm under the box' };
-  } else if (bestCardScore < 0.18) {
+  } else if (bestCardScore < 0.12) {
     return { ok: false, msg: 'Place the card flat inside the box' };
   }
 
