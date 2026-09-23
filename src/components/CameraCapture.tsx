@@ -72,6 +72,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play().catch(() => {});
+          if (!cancelled && videoRef.current.videoWidth) setReady(true);
         }
       } catch {
         setError('We could not open your camera. Please allow camera access, or upload a photo instead.');
