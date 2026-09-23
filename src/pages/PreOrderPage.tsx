@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowUp, Camera, Check, ChevronDown, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Smartphone, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
+import { ArrowUp, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Smartphone, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
@@ -361,7 +361,12 @@ export default function PreOrderPage() {
   const founderClaimed = totals.rings;
   const founderLeft = Math.max(0, FOUNDER_CAP - founderClaimed);
   const founderPct = Math.min(100, (founderClaimed / FOUNDER_CAP) * 100);
-  const previewColor = useMemo(() => RING_COLORS.find((c) => c.id === items[0]?.ring_color) ?? RING_COLORS[0], [items]);
+  const selectedColorIdx = Math.max(0, RING_COLORS.findIndex((c) => c.id === items[0]?.ring_color));
+  const [previewIdx, setPreviewIdx] = useState(selectedColorIdx);
+  useEffect(() => setPreviewIdx(selectedColorIdx), [selectedColorIdx]);
+  const previewColor = RING_COLORS[previewIdx] ?? RING_COLORS[0];
+  const swipeStart = useRef<number | null>(null);
+  const stepPreview = (d: number) => setPreviewIdx((i) => (i + d + RING_COLORS.length) % RING_COLORS.length);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
@@ -516,7 +521,16 @@ export default function PreOrderPage() {
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
                 {/* Product preview */}
                 <div className="min-w-0 lg:sticky lg:top-28">
-                  <div className="relative aspect-square rounded-3xl border border-border bg-gradient-to-b from-[#EEF3FA] to-white overflow-hidden shadow-sm">
+                  <div
+                    className="relative aspect-square rounded-3xl border border-border bg-gradient-to-b from-[#EEF3FA] to-white overflow-hidden shadow-sm touch-pan-y select-none"
+                    onPointerDown={(e) => { swipeStart.current = e.clientX; }}
+                    onPointerUp={(e) => {
+                      if (swipeStart.current === null) return;
+                      const dx = e.clientX - swipeStart.current;
+                      swipeStart.current = null;
+                      if (Math.abs(dx) > 40) stepPreview(dx < 0 ? 1 : -1);
+                    }}
+                  >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
                         key={previewColor.id}
@@ -524,9 +538,20 @@ export default function PreOrderPage() {
                         alt={`aiOn Ring, ${previewColor.name}`}
                         width={1024}
                         height={1024}
-                        loading="lazy"
+                        draggable={false}
                         className="w-4/5 h-4/5 object-contain drop-shadow-[0_30px_60px_rgba(10,22,40,0.25)] animate-in fade-in duration-500"
                       />
+                    </div>
+                    <button type="button" aria-label="Previous colour" onClick={() => stepPreview(-1)} className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/90 text-ink shadow-sm hover:bg-white">
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button type="button" aria-label="Next colour" onClick={() => stepPreview(1)} className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/90 text-ink shadow-sm hover:bg-white">
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                    <div className="absolute top-5 left-0 right-0 flex justify-center gap-2">
+                      {RING_COLORS.map((c, i) => (
+                        <button key={c.id} type="button" aria-label={`Show ${c.name}`} onClick={() => setPreviewIdx(i)} className={`h-2 rounded-full transition-all ${i === previewIdx ? "w-6 bg-primary" : "w-2 bg-ink-muted/40"}`} />
+                      ))}
                     </div>
                     <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
                       <div>

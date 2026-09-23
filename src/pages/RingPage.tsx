@@ -229,7 +229,10 @@ export default function RingPage() {
                   height={1024}
                 />
                 <figcaption className="px-4 py-3 text-[13px] text-ink-muted">
-                  A good photo: palm facing upward, card flat in the center and fully visible, fingers relaxed, camera directly above.
+                  <span className="mb-1 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[12px] font-medium text-primary">
+                    Actual ring size in this photo: US 9
+                  </span>
+                  <span className="block">A good photo: palm facing upward, card flat in the center and fully visible, fingers relaxed, camera directly above.</span>
                 </figcaption>
               </figure>
 
