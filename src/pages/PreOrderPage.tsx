@@ -319,7 +319,7 @@ export default function PreOrderPage() {
   const [form, setForm] = useState<FormState>(() => ({ ...INITIAL, referral_source: referral ?? "" }));
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [sizingOpen, setSizingOpen] = useState<false | "all" | "ring" | "string">(false);
+  const [sizingOpen, setSizingOpen] = useState(false);
   const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -608,37 +608,25 @@ export default function PreOrderPage() {
                         )}
                       </div>
 
-                      {/* Other sizing options, grouped and visual */}
+                      {/* Other sizing options, one simple combined action */}
                       <div className="mt-4">
-                        <div className="text-[11px] font-semibold uppercase tracking-[2px] text-ink-muted mb-2">
-                          Other sizing options
-                        </div>
-                        <div className="grid gap-2 sm:grid-cols-2">
-                          <button
-                            type="button"
-                            onClick={() => setSizingOpen("ring")}
-                            className="flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
-                          >
-                            <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
-                              <RingMethodIcon />
+                        <button
+                          type="button"
+                          onClick={() => setSizingOpen(true)}
+                          className="w-full flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
+                        >
+                          <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
+                            <RingMethodIcon />
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block text-[13px] font-medium text-ink leading-snug">
+                              Measure with a ring or a strip of paper
                             </span>
-                            <span className="text-[13px] font-medium text-ink leading-snug">
-                              Measure a ring you already wear
+                            <span className="block text-[12px] text-ink-muted leading-snug">
+                              Two quick ways to find your size at home
                             </span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setSizingOpen("string")}
-                            className="flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
-                          >
-                            <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
-                              <StringMethodIcon />
-                            </span>
-                            <span className="text-[13px] font-medium text-ink leading-snug">
-                              Wrap a string around your finger
-                            </span>
-                          </button>
-                        </div>
+                          </span>
+                        </button>
                       </div>
 
                       <p className="mt-3 text-[12px] text-ink-muted flex items-center gap-1.5">
@@ -923,7 +911,7 @@ export default function PreOrderPage() {
         </div>
       </main>
 
-      {sizingOpen && <SizingGuide method={sizingOpen} onClose={() => setSizingOpen(false)} />}
+      {sizingOpen && <SizingGuide onClose={() => setSizingOpen(false)} />}
 
       <Footer />
     </div>
