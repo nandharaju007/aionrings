@@ -142,8 +142,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
   }, [ready, error]);
 
   return (
-    <div>
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-border bg-foreground sm:aspect-[4/3]">
+    <div className="fixed inset-0 z-50 flex flex-col bg-foreground" style={{ height: '100dvh' }}>
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <video
           ref={videoRef}
           playsInline
@@ -155,7 +155,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
             <div
               ref={boxRef}
-              className={`aspect-[85.6/53.98] w-[42%] rounded-lg border-2 shadow-[0_0_0_9999px_hsl(var(--foreground)/0.25)] transition-colors ${
+              className={`aspect-[85.6/53.98] w-[56%] max-w-[420px] rounded-lg border-2 shadow-[0_0_0_9999px_hsl(var(--foreground)/0.25)] transition-colors ${
                 status.ok ? 'border-solid border-primary' : 'border-dashed border-primary-foreground/90'
               }`}
             />
@@ -171,20 +171,22 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         )}
         {error && <p className="absolute inset-0 flex items-center p-6 text-center text-sm text-primary-foreground">{error}</p>}
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">
-        {autoAvailable
-          ? 'The photo is taken automatically once your hand and card are lined up. You can also tap "Take photo".'
-          : 'Tap "Take photo" when the card is inside the box.'}
-      </p>
-      <div className="mt-3 flex flex-wrap gap-3">
-        <Button type="button" onClick={capture} disabled={!ready || !!error} className="rounded-full">
-          <Camera className="h-4 w-4" />
-          Take photo
-        </Button>
-        <Button type="button" variant="outline" onClick={onClose} className="rounded-full">
-          <X className="h-4 w-4" />
-          Cancel
-        </Button>
+      <div className="shrink-0 bg-foreground px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+        <p className="text-center text-xs text-primary-foreground/70">
+          {autoAvailable
+            ? 'The photo is taken automatically once your hand and card are lined up. You can also tap "Take photo".'
+            : 'Tap "Take photo" when the card is inside the box.'}
+        </p>
+        <div className="mt-3 flex items-center justify-center gap-3">
+          <Button type="button" variant="outline" onClick={onClose} className="rounded-full border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <X className="h-4 w-4" />
+            Cancel
+          </Button>
+          <Button type="button" onClick={capture} disabled={!ready || !!error} className="rounded-full">
+            <Camera className="h-4 w-4" />
+            Take photo
+          </Button>
+        </div>
       </div>
     </div>
   );

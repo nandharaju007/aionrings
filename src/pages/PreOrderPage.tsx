@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowUp, Camera, Check, ChevronDown, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
+import { ArrowUp, Camera, Check, ChevronDown, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Smartphone, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
