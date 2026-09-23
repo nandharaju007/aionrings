@@ -590,6 +590,10 @@ export default function PreOrderPage() {
                             <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
                               A quick photo of your palm with a bank card, we'll match your US size in seconds.
                             </p>
+                            <p className="mt-1.5 text-[12px] text-ink-muted leading-relaxed flex items-center gap-1.5">
+                              <Smartphone className="w-3.5 h-3.5 shrink-0 text-primary" />
+                              Designed for your phone, the camera opens full screen so you can line up your hand and card easily. On a computer, use one of the other sizing options below.
+                            </p>
                           </div>
                           <button
                             type="button"
