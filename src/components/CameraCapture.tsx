@@ -96,7 +96,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     // Some phones take a long time to initialise MediaPipe, or block its model download.
     // Card detection can still auto-capture a correctly framed photo in that case.
     const fallbackTimer = window.setTimeout(() => {
-      if (!cancelled && !landmarkerRef.current) detectorFallbackRef.current = true;
+      if (!cancelled) detectorFallbackRef.current = true;
     }, 4000);
     return () => {
       cancelled = true;
@@ -152,7 +152,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         setStatus({ ok: false, msg: 'Getting auto-capture ready…' });
         return;
       }
-      const s = check(v, box, small, lm);
+      const s = check(v, box, small, lm, detectorFallbackRef.current);
       // Forgive a single shaky frame instead of restarting the countdown.
       streak = s.ok ? streak + 1 : Math.max(0, streak - 2);
       setStatus(s.ok ? { ok: true, msg: 'Perfect, hold still…' } : s);
@@ -218,7 +218,13 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
 }
 
 // Draw the visible (object-cover) part of the video into a small canvas, then check hand + card.
-function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement, lm: HandLandmarker | null): Status {
+function check(
+  v: HTMLVideoElement,
+  container: HTMLElement,
+  c: HTMLCanvasElement,
+  lm: HandLandmarker | null,
+  allowCardFallback: boolean,
+): Status {
   const cw = container.clientWidth, ch = container.clientHeight;
   const W = 320, H = Math.round((W * ch) / cw);
   c.width = W; c.height = H;
@@ -267,15 +273,18 @@ function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement
       }
     }
   }
-  if (bestCardScore < 0.2) return { ok: false, msg: 'Place the card flat inside the box' };
-
   // Prefer hand landmarks when available. The tolerances deliberately allow a
   // card to cover part of the palm, which otherwise makes open hands look closed.
   if (lm) {
     let res;
     try { res = lm.detect(c); } catch { res = null; }
     const hand = res?.landmarks?.[0];
-    if (!hand) return { ok: false, msg: 'Show your open hand, palm up' };
+    if (!hand) {
+      if (allowCardFallback && bestCardScore >= 0.12) return { ok: true, msg: '' };
+      return { ok: false, msg: 'Show your open hand, palm up' };
+    }
+
+    if (bestCardScore < 0.08) return { ok: false, msg: 'Place the card flat inside the box' };
 
     const px = hand.map((p) => ({ x: p.x * W, y: p.y * H }));
     if (hand.some((p) => p.x < 0.01 || p.x > 0.99 || p.y < 0.01 || p.y > 0.99))
@@ -292,6 +301,8 @@ function check(v: HTMLVideoElement, container: HTMLElement, c: HTMLCanvasElement
     const pc = [0, 5, 9, 13, 17].reduce((a, i) => ({ x: a.x + px[i].x / 5, y: a.y + px[i].y / 5 }), { x: 0, y: 0 });
     if (pc.x < bx - bw * 0.3 || pc.x > bx + bw * 1.3 || pc.y < by - bh * 0.65 || pc.y > by + bh * 1.65)
       return { ok: false, msg: 'Center your palm under the box' };
+  } else if (bestCardScore < 0.12) {
+    return { ok: false, msg: 'Place the card flat inside the box' };
   }
 
   return { ok: true, msg: '' };
