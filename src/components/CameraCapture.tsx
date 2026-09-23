@@ -7,7 +7,8 @@ import type { HandLandmarker } from '@mediapipe/tasks-vision';
 const BOX_W = 0.56;
 const MAX_BOX_W = 420; // Must match the max-w cap on the rendered guide box below.
 const CARD_ASPECT = 85.6 / 53.98;
-const HOLD_FRAMES = 4; // A short steady hold; detection itself can be slow on phones.
+const HOLD_SCORE = 2.4; // Roughly three good checks, with partial credit for a brief miss.
+const CHECK_INTERVAL_MS = 90;
 // Must match the installed package version, otherwise the detector fails to load silently.
 const WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm';
 const MODEL =
@@ -42,7 +43,6 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
   const boxRef = useRef<HTMLDivElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const landmarkerRef = useRef<HandLandmarker | null>(null);
-  const detectorFallbackRef = useRef(false);
   const doneRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
@@ -54,7 +54,6 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     let cancelled = false;
     doneRef.current = false;
     landmarkerRef.current = null;
-    detectorFallbackRef.current = false;
     streamRef.current = null;
     setError(null);
     setReady(false);
@@ -87,20 +86,11 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (cancelled) return;
         landmarkerRef.current = lm;
       } catch {
-        if (!cancelled) {
-          detectorFallbackRef.current = true;
-          setAutoAvailable(true);
-        }
+        if (!cancelled) setAutoAvailable(true);
       }
     })();
-    // Some phones take a long time to initialise MediaPipe, or block its model download.
-    // Card detection can still auto-capture a correctly framed photo in that case.
-    const fallbackTimer = window.setTimeout(() => {
-      if (!cancelled) detectorFallbackRef.current = true;
-    }, 4000);
     return () => {
       cancelled = true;
-      window.clearTimeout(fallbackTimer);
       const stream = streamRef.current;
       streamRef.current = null;
       stream?.getTracks().forEach((t) => t.stop());
@@ -138,31 +128,36 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     );
   };
 
-  // Auto-detection loop (~8 checks per second).
+  // Check on video frames with a short throttle. Card detection starts immediately,
+  // so a slow model download never makes a correctly framed shopper wait.
   useEffect(() => {
     if (!ready || error) return;
     const small = document.createElement('canvas');
-    let streak = 0;
-    const id = window.setInterval(() => {
+    let score = 0;
+    let animationFrame = 0;
+    let lastCheck = 0;
+    const tick = (now: number) => {
+      if (doneRef.current) return;
+      animationFrame = window.requestAnimationFrame(tick);
+      if (now - lastCheck < CHECK_INTERVAL_MS) return;
+      lastCheck = now;
       const v = videoRef.current;
       const lm = landmarkerRef.current;
       const box = boxRef.current?.parentElement;
       if (!v || !box || !v.videoWidth || doneRef.current) return;
-      if (!lm && !detectorFallbackRef.current) {
-        setStatus({ ok: false, msg: 'Getting auto-capture ready…' });
-        return;
-      }
-      const s = check(v, box, small, lm, detectorFallbackRef.current);
-      // Forgive intermittent mobile detector misses instead of restarting the countdown.
-      streak = s.ok ? streak + 1 : Math.max(0, streak - 1);
+      const s = check(v, box, small, lm);
+      // Keep most progress through one noisy frame. This prevents the camera from
+      // making users repeatedly reposition an already aligned hand and card.
+      score = s.ok ? Math.min(HOLD_SCORE, score + 1) : Math.max(0, score - 0.35);
       setStatus(s.ok ? { ok: true, msg: 'Perfect, hold still…' } : s);
-      setProgress(Math.min(1, streak / HOLD_FRAMES));
-      if (streak >= HOLD_FRAMES) {
-        window.clearInterval(id);
+      setProgress(Math.min(1, score / HOLD_SCORE));
+      if (score >= HOLD_SCORE) {
+        window.cancelAnimationFrame(animationFrame);
         capture();
       }
-    }, 125);
-    return () => window.clearInterval(id);
+    };
+    animationFrame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(animationFrame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, error]);
 
@@ -223,7 +218,6 @@ function check(
   container: HTMLElement,
   c: HTMLCanvasElement,
   lm: HandLandmarker | null,
-  allowCardFallback: boolean,
 ): Status {
   const cw = container.clientWidth, ch = container.clientHeight;
   const W = 320, H = Math.round((W * ch) / cw);
@@ -265,9 +259,9 @@ function check(
     return samples ? hits / samples : 0;
   };
   let bestCardScore = 0;
-  for (const size of [0.72, 0.84, 0.96, 1.06]) {
-    for (const dx of [-0.08, 0, 0.08]) {
-      for (const dy of [-0.08, 0, 0.08]) {
+  for (const size of [0.68, 0.78, 0.88, 0.98, 1.08]) {
+    for (const dx of [-0.12, -0.06, 0, 0.06, 0.12]) {
+      for (const dy of [-0.12, -0.06, 0, 0.06, 0.12]) {
         const width = bw * size;
         bestCardScore = Math.max(bestCardScore, cardScore(bx + (bw - width) / 2 + bw * dx, by + (bh - width / CARD_ASPECT) / 2 + bh * dy, width));
       }
@@ -280,7 +274,9 @@ function check(
     try { res = lm.detect(c); } catch { res = null; }
     const hand = res?.landmarks?.[0];
     if (!hand) {
-      if (allowCardFallback && bestCardScore >= 0.12) return { ok: true, msg: '' };
+      // A strong card match is enough while the hand model is loading or misses a
+      // frame. The stricter threshold prevents background edges from triggering.
+      if (bestCardScore >= 0.12) return { ok: true, msg: '' };
       return { ok: false, msg: 'Show your open hand, palm up' };
     }
 
