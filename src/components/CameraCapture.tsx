@@ -7,7 +7,7 @@ import type { HandLandmarker } from '@mediapipe/tasks-vision';
 const BOX_W = 0.56;
 const MAX_BOX_W = 420; // Must match the max-w cap on the rendered guide box below.
 const CARD_ASPECT = 85.6 / 53.98;
-const HOLD_FRAMES = 8; // ~1 second of steady, correct framing
+const HOLD_FRAMES = 4; // A short steady hold; detection itself can be slow on phones.
 // Must match the installed package version, otherwise the detector fails to load silently.
 const WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm';
 const MODEL =
@@ -153,8 +153,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         return;
       }
       const s = check(v, box, small, lm, detectorFallbackRef.current);
-      // Forgive a single shaky frame instead of restarting the countdown.
-      streak = s.ok ? streak + 1 : Math.max(0, streak - 2);
+      // Forgive intermittent mobile detector misses instead of restarting the countdown.
+      streak = s.ok ? streak + 1 : Math.max(0, streak - 1);
       setStatus(s.ok ? { ok: true, msg: 'Perfect, hold still…' } : s);
       setProgress(Math.min(1, streak / HOLD_FRAMES));
       if (streak >= HOLD_FRAMES) {
