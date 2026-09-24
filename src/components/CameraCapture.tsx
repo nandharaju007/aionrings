@@ -7,7 +7,7 @@ import type { HandLandmarker } from '@mediapipe/tasks-vision';
 const BOX_W = 0.56;
 const MAX_BOX_W = 420; // Must match the max-w cap on the rendered guide box below.
 const CARD_ASPECT = 85.6 / 53.98;
-const HOLD_SCORE = 2.4; // Roughly three good checks, with partial credit for a brief miss.
+const HOLD_SCORE = 6; // About half a second of confirmed hand-and-card alignment.
 const CHECK_INTERVAL_MS = 90;
 // Must match the installed package version, otherwise the detector fails to load silently.
 const WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm';
@@ -86,7 +86,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (cancelled) return;
         landmarkerRef.current = lm;
       } catch {
-        if (!cancelled) setAutoAvailable(true);
+        if (!cancelled) setAutoAvailable(false);
       }
     })();
     return () => {
@@ -273,12 +273,7 @@ function check(
     let res;
     try { res = lm.detect(c); } catch { res = null; }
     const hand = res?.landmarks?.[0];
-    if (!hand) {
-      // A strong card match is enough while the hand model is loading or misses a
-      // frame. The stricter threshold prevents background edges from triggering.
-      if (bestCardScore >= 0.12) return { ok: true, msg: '' };
-      return { ok: false, msg: 'Show your open hand, palm up' };
-    }
+    if (!hand) return { ok: false, msg: 'Show your open hand, palm up' };
 
     if (bestCardScore < 0.08) return { ok: false, msg: 'Place the card flat inside the box' };
 
@@ -297,8 +292,8 @@ function check(
     const pc = [0, 5, 9, 13, 17].reduce((a, i) => ({ x: a.x + px[i].x / 5, y: a.y + px[i].y / 5 }), { x: 0, y: 0 });
     if (pc.x < bx - bw * 0.3 || pc.x > bx + bw * 1.3 || pc.y < by - bh * 0.65 || pc.y > by + bh * 1.65)
       return { ok: false, msg: 'Center your palm under the box' };
-  } else if (bestCardScore < 0.12) {
-    return { ok: false, msg: 'Place the card flat inside the box' };
+  } else {
+    return { ok: false, msg: 'Getting hand detection ready…' };
   }
 
   return { ok: true, msg: '' };
