@@ -6,13 +6,12 @@ const corsHeaders = {
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 const MODEL = "openai/gpt-6-astra";
-const SAMPLES = 5;
+const SAMPLES = 6;
 // Seen from above, a finger looks wider than it is deep, so the visible width overstates
 // the round inner diameter a ring needs. This brings the width back to a ring diameter.
 const WIDTH_TO_DIAMETER = 0.95;
 
 const SIZE_CHART = [
-  { size: "5", diameter: 15.7 },
   { size: "6", diameter: 16.5 },
   { size: "7", diameter: 17.3 },
   { size: "8", diameter: 18.2 },
@@ -24,12 +23,13 @@ const SIZE_CHART = [
 ];
 
 const PROMPT = [
-  "You locate points in a photo for ring sizing. The photo shows a hand with a standard bank card (85.60 x 53.98 mm) resting on the palm or near the fingers.",
+  "You measure a finger for ring sizing. The photo shows a hand with a standard bank card (85.60 x 53.98 mm) resting on the palm or near the fingers.",
   "Use normalized coordinates: x from 0 (left edge) to 1000 (right edge), y from 0 (top edge) to 1000 (bottom edge) of the full image.",
-  "1) card_corners: the four corners of the card, in order around the card (clockwise), placed exactly on the card's outer corners.",
-  "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm and the first knuckle, where a ring sits), on a line perpendicular to the finger. If the card covers the finger base, use the visible part of the lower segment just beyond the card edge. Put each point exactly on the skin edge, not inside the finger and not on the background.",
-  "Be as precise as possible; small errors change the ring size.",
-  "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays.",
+  "1) card_corners: the four OUTER corners of the card, clockwise. Include the full card including rounded corners; do not place them on printed designs inside the card.",
+  "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm crease and the first knuckle, where a ring sits), on a line perpendicular to the finger's direction. Put each point exactly where skin meets background, at the outermost edge of the finger silhouette. Do not measure at the fingertip or at a knuckle.",
+  "3) width_ratio: the finger width at that spot divided by the length of the card's SHORT edge (53.98 mm), judged visually by comparing them. Adult fingers are typically 0.28 to 0.45 of the short edge.",
+  "Be precise; small errors change the ring size.",
+  "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays and width_ratio 0.",
   "Confidence: 'high' when sharp and flat-on, 'medium' when angled or soft, 'low' otherwise. Note: one short sentence, no dashes. Answer in json.",
 ].join(" ");
 
@@ -37,18 +37,19 @@ const POINT = { type: "array", items: { type: "number" } };
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["ok", "card_corners", "finger_edges", "confidence", "note"],
+  required: ["ok", "card_corners", "finger_edges", "width_ratio", "confidence", "note"],
   properties: {
     ok: { type: "boolean" },
     card_corners: { type: "array", items: POINT },
     finger_edges: { type: "array", items: POINT },
+    width_ratio: { type: "number" },
     confidence: { type: ["string", "null"], enum: ["high", "medium", "low", null] },
     note: { type: "string" },
   },
 };
 
 type Pt = [number, number];
-type Sample = { ok: boolean; card_corners: Pt[]; finger_edges: Pt[]; confidence: string | null; note: string };
+type Sample = { ok: boolean; card_corners: Pt[]; finger_edges: Pt[]; width_ratio?: number; confidence: string | null; note: string };
 
 async function readStream(res: Response) {
   const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
@@ -183,29 +184,47 @@ Deno.serve(async (req) => {
     }
 
     const toPx = (p: number[]): Pt => [(Number(p[0]) / 1000) * W, (Number(p[1]) / 1000) * H];
+    // Adult ring-finger widths sit roughly between 14 and 25 mm; anything outside is a misread.
+    const plausible = (mm: number) => mm >= 14 && mm <= 25;
     const widths: number[] = [];
     for (const s of samples) {
-      if (!s.ok || s.card_corners?.length !== 4 || s.finger_edges?.length !== 2) continue;
+      if (!s.ok) continue;
+      // Direct visual comparison with the card's short edge (robust to point-placement noise).
+      const r = Number(s.width_ratio);
+      if (Number.isFinite(r) && plausible(r * 53.98)) widths.push(r * 53.98);
+      if (s.card_corners?.length !== 4 || s.finger_edges?.length !== 2) continue;
       const corners = s.card_corners.map(toPx);
       const edges = s.finger_edges.map(toPx);
       if (![...corners, ...edges].every((p) => p.every(Number.isFinite))) continue;
       const scale = userScale ?? cardScale(corners);
       if (!scale) continue;
       const mm = dist(edges[0], edges[1]) * scale;
-      if (mm > 10 && mm < 30) widths.push(mm);
+      if (plausible(mm)) widths.push(mm);
     }
 
-    if (!widths.length) {
+    if (widths.length < 2) {
       return json({
         ok: false, us_size: null, inner_diameter_mm: null, confidence: null,
         note: samples[0]?.note || "We could not see the card and finger clearly. Please retake the photo with the card flat on your palm.",
       });
     }
 
-    const mm = median(widths) * WIDTH_TO_DIAMETER;
-    const spread = (Math.max(...widths) - Math.min(...widths)) * WIDTH_TO_DIAMETER;
+    // Drop outliers far from the median before averaging.
+    const med = median(widths);
+    const kept = widths.filter((w) => Math.abs(w - med) <= 1.5);
+    const core = kept.length >= 2 ? kept : widths;
+    const mm = (core.reduce((a, b) => a + b, 0) / core.length) * WIDTH_TO_DIAMETER;
+    const spread = (Math.max(...core) - Math.min(...core)) * WIDTH_TO_DIAMETER;
+
+    if (mm < 15.7 || mm > 23) {
+      return json({
+        ok: false, us_size: null, inner_diameter_mm: null, confidence: null,
+        note: "That reading looks unreliable. Please retake the photo from directly above with the card flat and fully visible, or use the free sizing kit.",
+      });
+    }
+
     const match = SIZE_CHART.reduce((best, r) => (Math.abs(r.diameter - mm) < Math.abs(best.diameter - mm) ? r : best));
-    let confidence = widths.length < 2 || spread > 1.6 ? "low" : spread > 0.8 ? "medium" : "high";
+    let confidence = spread > 2 ? "low" : spread > 1 ? "medium" : "high";
     const modelConf = samples.find((s) => s.confidence)?.confidence;
     if (modelConf === "low" || (modelConf === "medium" && confidence === "high")) confidence = modelConf;
 
@@ -214,10 +233,6 @@ Deno.serve(async (req) => {
     const neighbour = mm > match.diameter ? SIZE_CHART[idx + 1] : SIZE_CHART[idx - 1];
     if (neighbour && Math.abs(mm - match.diameter) > 0.3) {
       note += ` You are between US ${match.size} and US ${neighbour.size}; the free sizing kit will confirm.`;
-    }
-    if (mm > 22.6 || mm < 16.1) {
-      note += " This is outside our US 6 to 13 range, so please retake the photo or use the free sizing kit.";
-      confidence = "low";
     }
 
     return json({ ok: true, us_size: match.size, inner_diameter_mm: Math.round(mm * 10) / 10, confidence, note });
