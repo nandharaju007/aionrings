@@ -50,8 +50,8 @@ const sizeChart: { us: string; mm: string; circumference: string }[] = [
 const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   {
     icon: Hand,
-    title: 'Open your hand palm-up',
-    body: 'Hold your palm fully visible, with your fingers slightly open and relaxed.',
+    title: 'Remove every ring',
+    body: 'Take off all rings and jewelry from your hand. Hold your palm fully visible, with your fingers slightly open and relaxed.',
   },
   {
     icon: CreditCard,
@@ -214,7 +214,7 @@ export default function RingPage() {
           <section className="mt-16 md:mt-20" id="photo-sizing">
             <h2 className="text-2xl font-light text-ink md:text-3xl">Find your size with a photo</h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-              No measuring tape? Take one photo of your open palm holding a bank card and our sizing
+               No measuring tape? Remove all rings, then take one photo of your open palm with a bank card and our sizing
               assistant estimates your ring size. Here’s exactly how to take it:
             </p>
 
@@ -232,7 +232,7 @@ export default function RingPage() {
                   <span className="mb-1 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[12px] font-medium text-primary">
                     Actual ring size in this photo: US 9
                   </span>
-                  <span className="block">A good photo: palm facing upward, card flat in the center and fully visible, fingers relaxed, camera directly above.</span>
+                  <span className="block">A good photo: no rings, palm facing upward, card flat in the center of the palm, all fingers visible, camera directly above.</span>
                 </figcaption>
               </figure>
 

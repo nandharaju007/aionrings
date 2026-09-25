@@ -194,8 +194,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
       <div className="shrink-0 bg-foreground px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
         <p className="text-center text-xs text-primary-foreground/70">
           {autoAvailable
-            ? 'The photo is taken automatically once your hand and card are lined up. You can also tap "Take photo".'
-            : 'Tap "Take photo" when the card is inside the box.'}
+            ? 'Remove all rings. The photo is taken automatically once your open hand and card are lined up.'
+            : 'Remove all rings, then tap "Take photo" when the card is inside the box.'}
         </p>
         <div className="mt-3 flex items-center justify-center gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="rounded-full border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
