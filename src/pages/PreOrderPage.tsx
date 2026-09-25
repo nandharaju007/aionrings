@@ -613,7 +613,7 @@ export default function PreOrderPage() {
                               Try photo size estimation
                             </div>
                             <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-                              A quick photo of your palm with a bank card, we'll match your US size in seconds.
+                              Remove all rings, then place a bank card flat in the center of your palm with every finger visible.
                             </p>
                             <p className="mt-1.5 text-[12px] text-ink-muted leading-relaxed flex items-center gap-1.5">
                               <Smartphone className="w-3.5 h-3.5 shrink-0 text-primary" />
