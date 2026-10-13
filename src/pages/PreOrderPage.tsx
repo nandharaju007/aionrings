@@ -324,18 +324,10 @@ export default function PreOrderPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
-  const [totals, setTotals] = useState<{ reservations: number; rings: number }>({ reservations: 0, rings: 0 });
   const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
 
   useEffect(() => {
     document.title = "Pre-Order aiOn Ring - Founder Edition";
-    supabase
-      .from("reservation_totals")
-      .select("total_reservations, total_rings")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) setTotals({ reservations: Number(data.total_reservations), rings: Number(data.total_rings) });
-      });
   }, [confirmed]);
 
   useEffect(() => {
@@ -358,9 +350,6 @@ export default function PreOrderPage() {
 
   }, [partnerCode]);
 
-  const founderClaimed = totals.rings;
-  const founderLeft = Math.max(0, FOUNDER_CAP - founderClaimed);
-  const founderPct = Math.min(100, (founderClaimed / FOUNDER_CAP) * 100);
   const selectedColorIdx = Math.max(0, RING_COLORS.findIndex((c) => c.id === items[0]?.ring_color));
   const [previewIdx, setPreviewIdx] = useState(selectedColorIdx);
   useEffect(() => setPreviewIdx(selectedColorIdx), [selectedColorIdx]);
@@ -500,22 +489,6 @@ export default function PreOrderPage() {
                   aiOn Ring is intended for general wellness purposes only and is not a medical device.
                 </p>
 
-                {/* Founder counter */}
-                <div className="mt-10 max-w-md mx-auto">
-                  <div className="flex items-baseline justify-between text-[13px] mb-2">
-                    <span className="text-ink-soft">Founder Edition claimed</span>
-                    <span className="font-medium text-ink">
-                      {founderClaimed} / {FOUNDER_CAP}
-                    </span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-border overflow-hidden">
-                    <div
-                      className="h-full transition-all duration-700"
-                      style={{ width: `${founderPct}%`, background: GRADIENT }}
-                    />
-                  </div>
-                  <p className="mt-3 text-[12px] text-ink-muted">Only {founderLeft} founder rings remain.</p>
-                </div>
               </div>
 
               <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-start">
