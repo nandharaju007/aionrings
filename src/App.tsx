@@ -29,6 +29,7 @@ import SocialEmbedsPage from "./pages/SocialEmbedsPage";
 import { CookieConsent } from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
+import DeleteAccountRedirect from "./pages/DeleteAccountRedirect";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
             <Route path="/accessibility" element={<AccessibilityPage />} />
             <Route path="/trademarks" element={<TrademarksPage />} />
+            <Route path="/delete-account" element={<DeleteAccountRedirect />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
