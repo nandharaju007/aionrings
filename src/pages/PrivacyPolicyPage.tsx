@@ -17,7 +17,7 @@ const PrivacyPolicyPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Privacy Policy</h1>
-            <p className="text-ink-muted mb-12">Last updated: March 24, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: October 26, 2026</p>
 
             <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
