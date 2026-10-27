@@ -17,7 +17,7 @@ const PrivacyPolicyPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Privacy Policy</h1>
-            <p className="text-ink-muted mb-12">Last updated: March 24, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: October 26, 2026</p>
 
             <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
@@ -118,9 +118,11 @@ const PrivacyPolicyPage = () => {
               <section>
                 <h2 className="text-xl font-light text-ink mb-4 border-b border-border/50 pb-2">7. Data Retention</h2>
                 <p>
-                  We retain your personal data for as long as your account is active or as needed to provide services. 
-                  Upon account deletion, we remove all personally identifiable data within 30 days. Anonymized, 
-                  aggregated data may be retained for research and product improvement purposes.
+                  We retain your personal data for as long as your account is active or as needed to provide services.{" "}
+                  Upon account deletion, we remove all personally identifiable data within 30 days. Until then you can
+                  restore your account by signing in to the app again; readings kept only on your phone are removed from
+                  the phone you delete it on. Anonymized, aggregated data may be retained for research and product
+                  improvement purposes.
                 </p>
               </section>
 
