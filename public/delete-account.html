@@ -74,7 +74,8 @@
       <ul>
         <li>stops the account working straight away, and signs it out on your phone;</li>
         <li>removes your profile, settings, health profile and sign-in details from aiOn's service within 30 days;</li>
-        <li>releases your rings, so someone else can pair them.</li>
+        <li>releases your rings, so someone else can pair them;</li>
+        <li>can be undone for 30 days: sign in to the aiOn app again and choose <strong>Restore my account</strong>.</li>
       </ul>
       <div class="note">Your Apple ID or Google account is <strong>not</strong> deleted or changed. aiOn only stops having
         access to it.</div>
@@ -88,7 +89,8 @@
     <section id="confirm" hidden>
       <h1>Delete this aiOn account?</h1>
       <p>You're signed in as <span class="who" id="who"></span>.</p>
-      <p class="lead">If an aiOn account uses this sign-in, it will be deleted. This cannot be undone.</p>
+      <p class="lead">If an aiOn account uses this sign-in, it will be deleted within 30 days. Until then you can
+        restore it by signing in to the aiOn app.</p>
       <div class="note">Readings kept only on a phone stay on that phone. To remove them too, delete the aiOn app from it.</div>
       <div class="actions">
         <button class="danger" id="delete" type="button">Delete my aiOn account</button>
@@ -104,8 +106,8 @@
 
     <section id="done" hidden aria-live="polite">
       <h1>Done</h1>
-      <p class="lead">If an aiOn account used this sign-in, it has been deleted. Its data is removed from aiOn's service
-        within 30 days.</p>
+      <p class="lead" id="done-text">If there was an aiOn account for this sign-in, it will be deleted within 30 days.
+        Until then you can restore it by signing in to the aiOn app.</p>
       <p>You can close this page.</p>
     </section>
 
@@ -224,7 +226,7 @@
     if(session?.user?.app_metadata?.provider === 'apple' && session.provider_refresh_token) {
       body.reauth = { provider: 'apple', provider_refresh_token: session.provider_refresh_token }
     }
-    const { error } = await client.functions.invoke('delete-account', { body })
+    const { data: answer, error } = await client.functions.invoke('delete-account', { body })
     if(error) {
       const reason = await codeFrom(error)
       show('confirm')
@@ -236,6 +238,14 @@
     }
     // The service has ended every session, this one included; forget it here too.
     await client.auth.signOut({ scope: 'local' }).catch(() => {})
+    // The date the account will be removed (feature 028), in this browser's own time zone. Shown only to
+    // whoever just signed in with this Apple ID or Google account; with no account the wording stays general.
+    if(answer?.removal_at) {
+      const date = new Date(answer.removal_at).toLocaleDateString(undefined,
+        { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+      $('done-text').textContent = `Your aiOn account will be deleted on ${date}. `
+        + 'Until then you can restore it by signing in to the aiOn app.'
+    }
     show('done')
   })
 
