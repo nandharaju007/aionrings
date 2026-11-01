@@ -4,6 +4,7 @@ import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
 import { CardAligner, defaultCorners, type Point } from '@/components/CardAligner';
 import { CameraCapture } from '@/components/CameraCapture';
+import { isPhoneDevice } from '@/lib/phone-camera';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -35,8 +36,10 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
   const [cameraSession, setCameraSession] = useState(0);
   const [cornersTouched, setCornersTouched] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
+  const [phoneCamera] = useState(() => isPhoneDevice(navigator));
 
   const openCamera = () => {
+    if (!phoneCamera) return;
     setError(null);
     setResult(null);
     setCameraSession((session) => session + 1);
@@ -229,7 +232,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
                 </button>
               </div>
             </div>
-          ) : cameraOn ? (
+          ) : cameraOn && phoneCamera ? (
             <CameraCapture
               key={cameraSession}
               onCapture={(f) => {
@@ -240,17 +243,18 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             />
           ) : (
             <div className="grid gap-3">
-              <button
+              {phoneCamera ? <Button
                 type="button"
                 onClick={openCamera}
-                className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-primary/50 bg-canvas transition-colors hover:border-primary"
+                variant="outline"
+                className="flex h-auto aspect-[4/3] w-full items-center justify-center overflow-hidden whitespace-normal rounded-2xl border-2 border-dashed border-primary/50 bg-canvas transition-colors hover:border-primary"
               >
                 <span className="flex flex-col items-center gap-2 text-ink-muted">
                   <Camera className="h-5 w-5 text-primary" />
                   <span className="text-sm text-ink">Use my camera</span>
-                  <span className="text-xs">Opens full screen, best on your phone</span>
+                  <span className="text-xs">Opens full screen on your phone</span>
                 </span>
-              </button>
+              </Button> : <p className="text-sm text-ink-muted">Camera sizing is available on phones only.</p>}
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
