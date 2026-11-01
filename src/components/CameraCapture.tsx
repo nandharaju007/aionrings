@@ -86,7 +86,11 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
         if (cancelled) return;
         landmarkerRef.current = lm;
       } catch {
-        if (!cancelled) setAutoAvailable(false);
+        if (!cancelled) {
+          setAutoAvailable(false);
+          setProgress(0);
+          setStatus({ ok: false, msg: 'Hand detection is unavailable. Line up your hand and card, then tap "Take photo".' });
+        }
       }
     })();
     return () => {
@@ -128,10 +132,10 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     );
   };
 
-  // Check on video frames with a short throttle. Card detection starts immediately,
-  // so a slow model download never makes a correctly framed shopper wait.
+  // Check on video frames with a short throttle. A detected hand is required;
+  // if the detector fails to load, leave the camera available for manual capture.
   useEffect(() => {
-    if (!ready || error) return;
+    if (!ready || error || !autoAvailable) return;
     const small = document.createElement('canvas');
     let score = 0;
     let animationFrame = 0;
@@ -159,7 +163,7 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     animationFrame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(animationFrame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, error]);
+  }, [ready, error, autoAvailable]);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-foreground" style={{ height: '100dvh' }}>
