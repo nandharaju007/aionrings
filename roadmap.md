@@ -2,8 +2,8 @@
 ## Phone camera walkthrough
 - [x] Reproduce cookie notice covering the phone camera shutter.
 - [x] Keep full-screen camera controls above site overlays without changing consent.
-- [ ] Verify capture, restart, and camera-permission-denied recovery.
-- [ ] Explain real-photo steps and physical US-size confirmation.
+- [x] Verify capture, restart, and camera-permission-denied recovery in phone simulation.
+- [x] Explain real-photo steps and physical US-size confirmation.
 
 ## Sizing FAQ
 - [x] Add a dedicated FAQ explaining photo width, US sizes, missing smaller-finger readings, and physical fit confirmation.
