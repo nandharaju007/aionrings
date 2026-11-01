@@ -580,7 +580,7 @@ export default function PreOrderPage() {
                           />
                           <div className="flex-1 min-w-0">
                             <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
-                              Recommended
+                              Experimental · confirm with sizing kit
                             </span>
                             <div className="mt-1 text-[16px] md:text-[17px] font-medium text-ink">
                               Try photo size estimation
