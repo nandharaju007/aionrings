@@ -139,7 +139,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
         <span className="eyebrow mt-6">Photo Sizing</span>
         <h3 className="mt-2 text-2xl font-light text-ink">Find my size with a photo</h3>
         <p className="mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
-          Remove all rings, then use one photo of your open hand and a bank card to estimate your US ring size.
+          Remove all rings, then use one photo of your open hand and a bank card to check visible finger width. Confirm your US size with a physical sizer.
         </p>
         <Button type="button" onClick={() => setIsOpen(true)} className="mt-6 min-h-12 w-full rounded-full">
           <Ruler className="h-4 w-4" />

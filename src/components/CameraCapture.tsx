@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { createPortal } from 'react-dom';
 import type { HandLandmarker } from '@mediapipe/tasks-vision';
 
 // Guide box: centered, 56% of the preview width, bank-card aspect ratio.
@@ -165,8 +166,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, error, autoAvailable]);
 
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-foreground" style={{ height: '100dvh' }}>
+  return createPortal(
+    <div className="fixed inset-0 z-[60] flex flex-col bg-foreground" style={{ height: '100dvh' }}>
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <video
           ref={videoRef}
@@ -212,7 +213,8 @@ export function CameraCapture({ onCapture, onClose }: { onCapture: (f: File) => 
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
