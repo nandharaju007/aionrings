@@ -1,35 +1,17 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { z } from "npm:zod@3";
+import { summarizeReadings, photoResult, type Point } from "./measurement.ts";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 const MODEL = "openai/gpt-6-astra";
 const SAMPLES = 6;
-// Seen from above, a finger looks wider than it is deep, so the visible width overstates
-// the round inner diameter a ring needs. This brings the width back to a ring diameter.
-const WIDTH_TO_DIAMETER = 0.95;
-
-const SIZE_CHART = [
-  { size: "6", diameter: 16.5 },
-  { size: "7", diameter: 17.3 },
-  { size: "8", diameter: 18.2 },
-  { size: "9", diameter: 19.0 },
-  { size: "10", diameter: 19.8 },
-  { size: "11", diameter: 20.6 },
-  { size: "12", diameter: 21.4 },
-  { size: "13", diameter: 22.2 },
-];
-
 const PROMPT = [
-  "You measure a finger for ring sizing. The photo shows a hand with a standard bank card (85.60 x 53.98 mm) resting on the palm or near the fingers.",
+  "You locate visible finger edges for an experimental projected-width measurement, not a ring size. The photo shows a hand with a standard bank card (85.60 x 53.98 mm) resting on the palm or near the fingers.",
   "Use normalized coordinates: x from 0 (left edge) to 1000 (right edge), y from 0 (top edge) to 1000 (bottom edge) of the full image.",
   "1) card_corners: the four OUTER corners of the card, clockwise. Include the full card including rounded corners; do not place them on printed designs inside the card.",
-  "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm crease and the first knuckle, where a ring sits), on a line perpendicular to the finger's direction. Put each point exactly where skin meets background, at the outermost edge of the finger silhouette. Do not measure at the fingertip or at a knuckle.",
-  "3) width_ratio: the finger width at that spot divided by the length of the card's SHORT edge (53.98 mm), judged visually by comparing them. Adult fingers are typically 0.28 to 0.45 of the short edge.",
-  "Be precise; small errors change the ring size.",
-  "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays and width_ratio 0.",
+  "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm crease and the first knuckle, where a ring sits), on a line perpendicular to the finger's direction. Reject if adjacent fingers overlap either edge or the ring-wearing segment is obscured. Put each point exactly where skin meets background, at the outermost edge of the finger silhouette. Do not measure at the fingertip or at a knuckle.",
+  "Locate edges only; do not guess a ring size or an anatomical correction.",
+  "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays.",
   "Confidence: 'high' when sharp and flat-on, 'medium' when angled or soft, 'low' otherwise. Note: one short sentence, no dashes. Answer in json.",
 ].join(" ");
 
@@ -37,22 +19,22 @@ const POINT = { type: "array", items: { type: "number" } };
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["ok", "card_corners", "finger_edges", "width_ratio", "confidence", "note"],
+  required: ["ok", "card_corners", "finger_edges", "confidence", "note"],
   properties: {
     ok: { type: "boolean" },
     card_corners: { type: "array", items: POINT },
     finger_edges: { type: "array", items: POINT },
-    width_ratio: { type: "number" },
     confidence: { type: ["string", "null"], enum: ["high", "medium", "low", null] },
     note: { type: "string" },
   },
 };
 
-type Pt = [number, number];
-type Sample = { ok: boolean; card_corners: Pt[]; finger_edges: Pt[]; width_ratio?: number; confidence: string | null; note: string };
+type Pt = Point;
+type Sample = { ok: boolean; card_corners: Pt[]; finger_edges: Pt[]; confidence: string | null; note: string };
 
 async function readStream(res: Response) {
-  const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
+  if (!res.body) throw new Error("Missing response body");
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = "";
   let text = "";
   while (true) {
@@ -81,23 +63,10 @@ async function readStream(res: Response) {
   return text;
 }
 
-const dist = (a: Pt, b: Pt) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-const median = (v: number[]) => {
-  const s = [...v].sort((a, b) => a - b);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
-};
-
-// mm per pixel from 4 card corners in pixel space
-function cardScale(pts: Pt[]) {
-  const s = [dist(pts[0], pts[1]), dist(pts[1], pts[2]), dist(pts[2], pts[3]), dist(pts[3], pts[0])];
-  const a = (s[0] + s[2]) / 2, b = (s[1] + s[3]) / 2;
-  const longPx = Math.max(a, b), shortPx = Math.min(a, b);
-  if (longPx < 10 || shortPx < 10) return null;
-  const ratio = longPx / shortPx;
-  if (ratio < 1.2 || ratio > 2.2) return null; // not a card shape
-  return (85.6 / longPx + 53.98 / shortPx) / 2;
-}
+const PointSchema = z.tuple([z.number().finite().min(0).max(1000), z.number().finite().min(0).max(1000)]);
+const SampleSchema = z.object({ ok: z.boolean(), card_corners: z.array(PointSchema).max(4), finger_edges: z.array(PointSchema).max(2), confidence: z.enum(["high", "medium", "low"]).nullable(), note: z.string().max(1000) });
+const Dimensions = z.object({ width: z.coerce.number().int().min(100).max(20000), height: z.coerce.number().int().min(100).max(20000), finger: z.enum(["index", "middle", "ring"]) });
+const MarkedCard = z.object({ width: z.number().int().positive(), height: z.number().int().positive(), corners: z.array(z.tuple([z.number().min(0).max(1), z.number().min(0).max(1)])).length(4) });
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -111,23 +80,17 @@ Deno.serve(async (req) => {
 
     const form = await req.formData();
     const image = form.get("image");
-    const finger = String(form.get("finger") ?? "index").replace(/[^a-z]/gi, "").slice(0, 10) || "index";
-    let W = Number(form.get("img_width")) || 0;
-    let H = Number(form.get("img_height")) || 0;
-
-    // Optional user-marked corners (normalized 0..1) give an exact scale.
-    let userScale: number | null = null;
-    try {
-      const raw = form.get("card_corners");
-      if (typeof raw === "string" && raw) {
-        const c = JSON.parse(raw);
-        const cw = Number(c.width), ch = Number(c.height);
-        if (cw > 0 && ch > 0) { W = W || cw; H = H || ch; }
-        const pts = (c.corners as number[][]).map(([x, y]) => [Number(x) * cw, Number(y) * ch] as Pt);
-        if (pts.length === 4 && pts.every((p) => p.every(Number.isFinite))) userScale = cardScale(pts);
-      }
-    } catch {
-      userScale = null;
+    const parsed = Dimensions.safeParse({ width: form.get("img_width"), height: form.get("img_height"), finger: form.get("finger") ?? "index" });
+    if (!parsed.success) return json({ error: "Please upload a photo with valid dimensions and choose a finger." }, 400);
+    const { width: W, height: H, finger } = parsed.data;
+    let markedCorners: Pt[] | undefined;
+    const raw = form.get("card_corners");
+    if (raw) {
+      try {
+        const marked = MarkedCard.parse(JSON.parse(String(raw)));
+        if (marked.width !== W || marked.height !== H) return json({ error: "Card markers do not match the photo dimensions." }, 400);
+        markedCorners = marked.corners.map(([x, y]) => [x * 1000, y * 1000]);
+      } catch { return json({ error: "Please mark all four card corners within the photo." }, 400); }
     }
 
     if (!(image instanceof File) || image.size === 0) {
@@ -136,7 +99,7 @@ Deno.serve(async (req) => {
     if (image.size > 12 * 1024 * 1024) {
       return json({ error: "Photo is too large. Please use an image under 12 MB." }, 400);
     }
-    if (!(W > 0 && H > 0)) { W = 1000; H = 1000; }
+    if (!image.type.startsWith("image/")) return json({ error: "Please upload an image file." }, 400);
 
     const bytes = new Uint8Array(await image.arrayBuffer());
     let binary = "";
@@ -150,7 +113,9 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           model: MODEL,
           stream: true,
-          reasoning: { effort: "low" },
+          store: false,
+          reasoning: { effort: "medium", summary: "auto" },
+          include: ["reasoning.encrypted_content"],
           text: { format: { type: "json_schema", name: "ring_points", strict: true, schema: SCHEMA } },
           input: [{
             role: "user",
@@ -167,7 +132,8 @@ Deno.serve(async (req) => {
         return { status: upstream.status };
       }
       try {
-        return JSON.parse(await readStream(upstream)) as Sample;
+        const parsed = SampleSchema.safeParse(JSON.parse(await readStream(upstream)));
+        return parsed.success ? parsed.data : null;
       } catch {
         return null;
       }
@@ -183,59 +149,7 @@ Deno.serve(async (req) => {
       return json({ error: "Could not read a measurement from that photo. Please try another." }, 422);
     }
 
-    const toPx = (p: number[]): Pt => [(Number(p[0]) / 1000) * W, (Number(p[1]) / 1000) * H];
-    // Adult ring-finger widths sit roughly between 14 and 25 mm; anything outside is a misread.
-    const plausible = (mm: number) => mm >= 14 && mm <= 25;
-    const widths: number[] = [];
-    for (const s of samples) {
-      if (!s.ok) continue;
-      // Direct visual comparison with the card's short edge (robust to point-placement noise).
-      const r = Number(s.width_ratio);
-      if (Number.isFinite(r) && plausible(r * 53.98)) widths.push(r * 53.98);
-      if (s.card_corners?.length !== 4 || s.finger_edges?.length !== 2) continue;
-      const corners = s.card_corners.map(toPx);
-      const edges = s.finger_edges.map(toPx);
-      if (![...corners, ...edges].every((p) => p.every(Number.isFinite))) continue;
-      const scale = userScale ?? cardScale(corners);
-      if (!scale) continue;
-      const mm = dist(edges[0], edges[1]) * scale;
-      if (plausible(mm)) widths.push(mm);
-    }
-
-    if (widths.length < 2) {
-      return json({
-        ok: false, us_size: null, inner_diameter_mm: null, confidence: null,
-        note: samples[0]?.note || "We could not see the card and finger clearly. Please retake the photo with the card flat on your palm.",
-      });
-    }
-
-    // Drop outliers far from the median before averaging.
-    const med = median(widths);
-    const kept = widths.filter((w) => Math.abs(w - med) <= 1.5);
-    const core = kept.length >= 2 ? kept : widths;
-    const mm = (core.reduce((a, b) => a + b, 0) / core.length) * WIDTH_TO_DIAMETER;
-    const spread = (Math.max(...core) - Math.min(...core)) * WIDTH_TO_DIAMETER;
-
-    if (mm < 15.7 || mm > 23) {
-      return json({
-        ok: false, us_size: null, inner_diameter_mm: null, confidence: null,
-        note: "That reading looks unreliable. Please retake the photo from directly above with the card flat and fully visible, or use the free sizing kit.",
-      });
-    }
-
-    const match = SIZE_CHART.reduce((best, r) => (Math.abs(r.diameter - mm) < Math.abs(best.diameter - mm) ? r : best));
-    let confidence = spread > 2 ? "low" : spread > 1 ? "medium" : "high";
-    const modelConf = samples.find((s) => s.confidence)?.confidence;
-    if (modelConf === "low" || (modelConf === "medium" && confidence === "high")) confidence = modelConf;
-
-    let note = "Measured several times from your photo and averaged.";
-    const idx = SIZE_CHART.indexOf(match);
-    const neighbour = mm > match.diameter ? SIZE_CHART[idx + 1] : SIZE_CHART[idx - 1];
-    if (neighbour && Math.abs(mm - match.diameter) > 0.3) {
-      note += ` You are between US ${match.size} and US ${neighbour.size}; the free sizing kit will confirm.`;
-    }
-
-    return json({ ok: true, us_size: match.size, inner_diameter_mm: Math.round(mm * 10) / 10, confidence, note });
+    return json(photoResult(summarizeReadings(samples, W, H, markedCorners)));
   } catch (error) {
     console.error("ring-sizer failed", error);
     return json({ error: "Could not estimate your size. Please try again." }, 500);
