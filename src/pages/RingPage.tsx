@@ -66,7 +66,7 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   {
     icon: Ruler,
     title: 'Get your estimate',
-    body: 'Upload the photo and our sizing assistant measures your finger against the card and matches it to a US ring size.',
+    body: 'A photo can estimate visible finger width, but not confirm ring fit. Use the sizing kit or a physical ring sizer to choose your US size.',
   },
 ];
 

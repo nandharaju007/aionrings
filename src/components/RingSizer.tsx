@@ -14,6 +14,8 @@ type SizeResult = {
   us_size?: string | null;
   inner_diameter_mm?: number | null;
   confidence?: string | null;
+  projected_width_mm?: number | null;
+  requires_physical_confirmation?: boolean;
   note?: string;
   error?: string;
 };
@@ -160,10 +162,10 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
       )}
       {!compact && <span className="eyebrow">Photo Sizing</span>}
       <h3 className={`${compact ? 'text-[15px] font-medium' : 'mt-2 pr-12 text-2xl font-extralight sm:text-3xl'} text-ink`}>
-        Measure your size from a photo
+        Photo sizing · confirmation required
       </h3>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-        Remove all rings, then take one photo of your open palm with a bank card.
+        Remove all rings, then take one photo of your open palm with a bank card. A photo cannot reliably confirm your ring size.
       </p>
 
       <figure className="mt-4">
@@ -204,7 +206,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
               />
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
                 {adjusting
-                  ? 'Drag the dots onto the card corners. Close enough is fine.'
+                  ? 'Place each dot precisely on an outer card corner.'
                   : 'We find the card in your photo automatically. Just tap "Estimate my size".'}
               </p>
               <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
@@ -267,7 +269,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
                 <button
                   key={f}
                   type="button"
-                  onClick={() => setFinger(f)}
+                  onClick={() => { setFinger(f); setResult(null); setError(null); }}
                   className={`rounded-full border px-4 py-2 text-sm capitalize transition-colors ${
                     finger === f
                       ? 'border-primary bg-primary/5 text-primary'
@@ -307,37 +309,32 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           {loading && <p className="text-sm text-ink-muted">Reading your photo, this takes a few seconds.</p>}
 
           {!loading && !result && !error && (
-            <p className="text-sm text-ink-muted">Your estimated size appears here.</p>
+            <p className="text-sm text-ink-muted">Confirm your ring size with the sizing kit or a physical ring sizer. Photo sizing is not validated for choosing a size.</p>
           )}
 
-          {result && result.ok && result.us_size && (
+          {result && result.ok && result.us_size && !result.requires_physical_confirmation && (
             <div>
-              <div className="text-[11px] uppercase tracking-[3px] text-ink-muted">Estimated size</div>
-              <div className="mt-1 text-4xl font-light text-ink">US {result.us_size}</div>
-              {typeof result.inner_diameter_mm === 'number' && (
-                <div className="mt-1 text-sm text-ink-soft">
-                  ≈ {result.inner_diameter_mm.toFixed(1)} mm inner diameter
-                </div>
-              )}
-              {result.confidence && (
-                <div className="mt-2 text-xs capitalize text-ink-muted">Confidence: {result.confidence}</div>
-              )}
-              {result.note && <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">{result.note}</p>}
+              <p className="text-sm text-ink-soft">This photo result is unvalidated. Please confirm your size with the sizing kit or a physical ring sizer.</p>
             </div>
           )}
 
-          {result && !result.ok && (
-            <p className="text-sm text-ink-soft">
-              {result.note || 'We could not measure that photo. Please retake it with the card flat against your hand.'}
-            </p>
+          {result && (!result.ok || result.requires_physical_confirmation) && (
+            <div>
+              <p className="text-sm font-medium text-ink">Physical sizing required</p>
+              {typeof result.projected_width_mm === 'number' && (
+                <p className="mt-2 text-sm text-ink-soft">Visible finger width: ≈ {result.projected_width_mm.toFixed(1)} mm (not ring diameter)</p>
+              )}
+              <p className="mt-2 text-sm text-ink-soft">
+                {result.note || 'A palm photo cannot confirm ring size. Please use the sizing kit or a physical ring sizer.'}
+              </p>
+            </div>
           )}
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <p className="mt-4 text-xs leading-relaxed text-ink-muted">
-            Photo-based sizing is a helpful estimate, not an exact measurement, and it can be off by a
-            size. A free sizing kit ships before your ring, and you can change your size before
-            dispatch.
+            Photo errors can exceed one ring size. Do not choose your size from a photo result.
+            Confirm with the free sizing kit before your ring is dispatched.
           </p>
         </div>
       </div>
