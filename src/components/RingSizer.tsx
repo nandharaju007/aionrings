@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Upload, Ruler, RotateCcw, X, Camera } from 'lucide-react';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
@@ -170,6 +171,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
       <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
         Remove all rings, then take one photo of your open palm with a bank card. A photo cannot reliably confirm your ring size.
       </p>
+      <Link to="/faq" className="mt-2 inline-block text-xs text-primary underline underline-offset-4">Sizing questions? Read the FAQ</Link>
 
       <figure className="mt-4">
         <img
