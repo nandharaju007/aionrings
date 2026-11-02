@@ -102,10 +102,10 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
         body: form,
       });
       const data = (await res.json()) as SizeResult;
-      if (!res.ok) throw new Error(data.error || 'Could not estimate your size.');
+      if (!res.ok) throw new Error(data.error || 'Could not check your photo.');
       setResult(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not estimate your size. Please try again.');
+      setError(e instanceof Error ? e.message : 'Could not check your photo. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -137,13 +137,13 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           <Ruler className="h-5 w-5" />
         </span>
         <span className="eyebrow mt-6">Photo Sizing</span>
-        <h3 className="mt-2 text-2xl font-light text-ink">Find my size with a photo</h3>
+        <h3 className="mt-2 text-2xl font-light text-ink">Check my finger with a photo</h3>
         <p className="mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
           Remove all rings, then use one photo of your open hand and a bank card to check visible finger width. Confirm your US size with a physical sizer.
         </p>
         <Button type="button" onClick={() => setIsOpen(true)} className="mt-6 min-h-12 w-full rounded-full">
           <Ruler className="h-4 w-4" />
-          Estimate my size
+          Check my photo
         </Button>
       </article>
     );
@@ -212,7 +212,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
                 {adjusting
                   ? 'Place each dot precisely on an outer card corner.'
-                  : 'We find the card in your photo automatically. Just tap "Estimate my size".'}
+                  : 'We find the card in your photo automatically. Tap "Check my photo" to check visible finger width, not US size.'}
               </p>
               <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
                 <button
@@ -289,15 +289,15 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           </div>
 
           <div className="mt-5 flex flex-wrap gap-3">
-            <button
+            <Button
               type="button"
               onClick={run}
               disabled={!file || loading}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Ruler className="h-4 w-4" />
-              {loading ? 'Measuring…' : 'Estimate my size'}
-            </button>
+              {loading ? 'Checking photo…' : 'Check my photo'}
+            </Button>
             {(file || result) && (
               <button
                 type="button"
@@ -318,21 +318,23 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             <p className="text-sm text-ink-muted">Confirm your ring size with the sizing kit or a physical ring sizer. Photo sizing is not validated for choosing a size.</p>
           )}
 
-          {result && result.ok && result.us_size && !result.requires_physical_confirmation && (
-            <div>
-              <p className="text-sm text-ink-soft">This photo result is unvalidated. Please confirm your size with the sizing kit or a physical ring sizer.</p>
-            </div>
-          )}
-
-          {result && (!result.ok || result.requires_physical_confirmation) && (
-            <div>
-              <p className="text-sm font-medium text-ink">Physical sizing required</p>
+          {result && (
+            <div role="status" aria-live="polite">
+              <p className="text-sm font-medium text-ink">
+                {typeof result.projected_width_mm === 'number' ? 'Photo checked — confirm your fit' : 'No reliable width reading'}
+              </p>
               {typeof result.projected_width_mm === 'number' && (
                 <p className="mt-2 text-sm text-ink-soft">Visible finger width: ≈ {result.projected_width_mm.toFixed(1)} mm (not ring diameter)</p>
               )}
               <p className="mt-2 text-sm text-ink-soft">
-                {result.note || 'A palm photo cannot confirm ring size. Please use the sizing kit or a physical ring sizer.'}
+                {typeof result.projected_width_mm === 'number'
+                  ? 'Your photo was processed. This is not a camera error: visible finger width cannot be converted reliably into a US ring size.'
+                  : 'We could not reliably measure this photo. Retaking it may improve the width reading, but will not provide a confirmed US ring size.'}
               </p>
+              <p className="mt-2 text-sm text-ink-soft">Use a physical ring sizer or the sizing kit to confirm your fit, then compare your measurement with the size chart.</p>
+              <Button asChild variant="outline" className="mt-4 gap-2">
+                <Link to="/size-chart"><Ruler className="h-4 w-4" />View US size chart</Link>
+              </Button>
             </div>
           )}
 

@@ -1,4 +1,9 @@
 # Sizing accuracy
+## Photo result clarity
+- [x] Replace size-estimation promises with photo-check labels and distinguish an unavailable reading from a camera error.
+- [x] Give photo results a direct path to the physical US size chart without recommending an unvalidated size.
+- [ ] Verify photo result and size-chart navigation in preview.
+
 ## Phone camera walkthrough
 - [x] Reproduce cookie notice covering the phone camera shutter.
 - [x] Keep full-screen camera controls above site overlays without changing consent.
