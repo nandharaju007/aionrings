@@ -17,7 +17,7 @@ const PrivacyPolicyPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Privacy Policy</h1>
-            <p className="text-ink-muted mb-12">Last updated: October 26, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: November 3, 2026</p>
 
             <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
@@ -40,6 +40,7 @@ const PrivacyPolicyPage = () => {
                   <li>Sleep patterns and stages</li>
                   <li>Activity and movement data</li>
                   <li>Stress and recovery signals</li>
+                  <li>Blood pressure estimates, and the blood pressure cuff readings you enter to calibrate your ring (kept on your phone and sent to your ring; not sent to our servers)</li>
                 </ul>
 
                 <h3 className="text-lg font-light text-ink/90 mb-2 mt-6">2.2 Personal Information</h3>
@@ -48,6 +49,7 @@ const PrivacyPolicyPage = () => {
                   <li>Age, gender, and physical profile (height, weight)</li>
                   <li>Account credentials (encrypted)</li>
                   <li>Communication preferences</li>
+                  <li>App preferences saved with your account: language, appearance, whether the weather background is on, and whether you have taken the app tour and seen its tips (with the interests you picked for it)</li>
                 </ul>
 
                 <h3 className="text-lg font-light text-ink/90 mb-2 mt-6">2.3 Device & Usage Data</h3>
@@ -60,8 +62,9 @@ const PrivacyPolicyPage = () => {
 
                 <h3 className="text-lg font-light text-ink/90 mb-2 mt-6">2.4 Location Data</h3>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>GPS and approximate location (only when explicitly enabled)</li>
-                  <li>Location is used for contextual wellness insights (e.g., altitude, climate correlation)</li>
+                  <li>Approximate location, only if you allow it, while you are using the app</li>
+                  <li>Used for the optional weather background on the Today screen: your position is rounded to about 10 km and sent directly from your phone to our weather provider, Open-Meteo, to look up the current weather. It is not stored, not sent to our servers, and not linked to your account</li>
+                  <li>You can turn this off at any time in the app (Profile › Appearance › Weather background) or in your phone's settings</li>
                 </ul>
               </section>
 
@@ -98,6 +101,7 @@ const PrivacyPolicyPage = () => {
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong className="text-ink">Healthcare Providers:</strong> Only with your explicit, revocable consent through the provider dashboard integration</li>
                   <li><strong className="text-ink">Service Providers:</strong> Trusted partners who assist in operating our platform (bound by strict confidentiality agreements)</li>
+                  <li><strong className="text-ink">Weather Provider:</strong> If you turn on the weather background and allow location, an approximate position (rounded to about 10 km) is sent from your phone to Open-Meteo (open-meteo.com) to get the current weather. No name, email address, account or device identifier is sent</li>
                   <li><strong className="text-ink">Legal Requirements:</strong> When required by applicable law, regulation, or legal process</li>
                   <li><strong className="text-ink">Anonymized Data:</strong> Aggregated, de-identified data for research and product improvement</li>
                 </ul>
@@ -111,7 +115,7 @@ const PrivacyPolicyPage = () => {
                   <li><strong className="text-ink">Portability:</strong> Export your data in a standard, machine-readable format</li>
                   <li><strong className="text-ink">Correction:</strong> Update or correct any inaccurate personal information</li>
                   <li><strong className="text-ink">Withdrawal:</strong> Revoke consent for data processing at any time</li>
-                  <li><strong className="text-ink">Opt-Out:</strong> Disable cloud sync, location tracking, or marketing communications</li>
+                  <li><strong className="text-ink">Opt-Out:</strong> Disable cloud sync, location (including the weather background), or marketing communications</li>
                 </ul>
               </section>
 
