@@ -17,7 +17,7 @@ const PrivacyPolicyPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-4xl font-extralight mb-2">Privacy Policy</h1>
-            <p className="text-ink-muted mb-12">Last updated: November 3, 2026</p>
+            <p className="text-ink-muted mb-12">Last updated: November 5, 2026</p>
 
             <div className="space-y-10 text-ink-soft leading-relaxed">
               <section>
@@ -63,7 +63,7 @@ const PrivacyPolicyPage = () => {
                 <h3 className="text-lg font-light text-ink/90 mb-2 mt-6">2.4 Location Data</h3>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>Approximate location, only if you allow it, while you are using the app</li>
-                  <li>Used for the optional weather background on the Today screen: your position is rounded to about 10 km and sent directly from your phone to our weather provider, Open-Meteo, to look up the current weather. It is not stored, not sent to our servers, and not linked to your account</li>
+                  <li>Used for the optional weather background on the Today screen: your position is rounded to about 10 km and sent to aiOn's weather service, which asks MET Norway (met.no) for the current weather. Your position is not stored with your identity and not logged; only the weather for the area is kept, for at most 3 hours</li>
                   <li>You can turn this off at any time in the app (Profile › Appearance › Weather background) or in your phone's settings</li>
                 </ul>
               </section>
@@ -101,7 +101,7 @@ const PrivacyPolicyPage = () => {
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong className="text-ink">Healthcare Providers:</strong> Only with your explicit, revocable consent through the provider dashboard integration</li>
                   <li><strong className="text-ink">Service Providers:</strong> Trusted partners who assist in operating our platform (bound by strict confidentiality agreements)</li>
-                  <li><strong className="text-ink">Weather Provider:</strong> If you turn on the weather background and allow location, an approximate position (rounded to about 10 km) is sent from your phone to Open-Meteo (open-meteo.com) to get the current weather. No name, email address, account or device identifier is sent</li>
+                  <li><strong className="text-ink">Weather Provider:</strong> If you turn on the weather background and allow location, an approximate position (rounded to about 10 km) is sent to aiOn's weather service, which asks MET Norway (met.no) for the current weather. MET Norway receives only the rounded position, from aiOn's server. No name, email address, account or device identifier is sent</li>
                   <li><strong className="text-ink">Legal Requirements:</strong> When required by applicable law, regulation, or legal process</li>
                   <li><strong className="text-ink">Anonymized Data:</strong> Aggregated, de-identified data for research and product improvement</li>
                 </ul>
