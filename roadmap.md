@@ -21,3 +21,7 @@
 - [x] Prevent shoppers treating photo output as a confirmed ring size.
 - [x] Verify the live sizing request and visible result using the uploaded screenshot; no recommended US size displayed.
 - [ ] Validate real-hand accuracy against known physical sizes (blocked: original photos and physical measurements).
+## Simpler photo flow
+- [x] Reduce photo sizing to photo, finger check, and physical fit confirmation.
+- [x] Remove duplicate instructions and optional card-marking controls from the main flow.
+- [x] Verify upload, capture, retake, result, and chart navigation on phone and desktop.

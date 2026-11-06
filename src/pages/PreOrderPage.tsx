@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowUp, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Smartphone, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
+import { ArrowUp, Check, ChevronDown, ChevronLeft, ChevronRight, Clock, Fingerprint, Loader2, Minus, Plus, ShieldCheck, Sparkles, Truck, Handshake, Trash2, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SEO } from '@/components/SEO';
 import { Footer } from "@/components/Footer";
@@ -10,7 +10,7 @@ import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
 import { RingSizer } from "@/components/RingSizer";
-import handCardSample from "@/assets/hand-card-sample-palm.jpg";
+
 
 const GRADIENT = "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)";
 const FOUNDER_CAP = 2000;
@@ -320,7 +320,6 @@ export default function PreOrderPage() {
   const [items, setItems] = useState<RingItem[]>([newItem()]);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [sizingOpen, setSizingOpen] = useState(false);
-  const [photoSizerOpen, setPhotoSizerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
@@ -567,47 +566,10 @@ export default function PreOrderPage() {
                         Not sure of your ring size?
                       </div>
                       <p className="text-[14px] text-ink-soft leading-relaxed">
-                        Find your size in the way that suits you best, most people start with a quick photo.
+                        Start with a photo check, then confirm your fit with a physical sizer.
                       </p>
-
-                      {/* Option 1, Photo size estimation (primary) */}
-                      <div className="mt-4 rounded-xl border-2 border-primary bg-white p-4 md:p-5 shadow-sm">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                          <img
-                            src={handCardSample}
-                            alt="Example photo: open palm with a bank card resting flat in its center"
-                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-border shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <span className="text-[11px] font-semibold uppercase tracking-[2px] text-primary">
-                              Experimental · confirm with sizing kit
-                            </span>
-                            <div className="mt-1 text-[16px] md:text-[17px] font-medium text-ink">
-                              Try photo size estimation
-                            </div>
-                            <p className="mt-1 text-[13px] text-ink-soft leading-relaxed">
-                              Remove all rings, then place a bank card flat in the center of your palm with every finger visible.
-                            </p>
-                            <p className="mt-1.5 text-[12px] text-ink-muted leading-relaxed flex items-center gap-1.5">
-                              <Smartphone className="w-3.5 h-3.5 shrink-0 text-primary" />
-                              Designed for your phone, the camera opens full screen so you can line up your hand and card easily. On a computer, use one of the other sizing options below.
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setPhotoSizerOpen((v) => !v)}
-                            className="shrink-0 h-12 px-6 rounded-full font-semibold text-white text-[14px] inline-flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:scale-[1.02]"
-                            style={{ background: GRADIENT }}
-                          >
-                            <Camera className="w-4 h-4" />
-                            {photoSizerOpen ? "Hide photo estimation" : "Try photo size estimation"}
-                          </button>
-                        </div>
-                        {photoSizerOpen && (
-                          <div className="mt-4">
-                            <RingSizer />
-                          </div>
-                        )}
+                      <div className="mt-5 border-y border-border py-5">
+                        <RingSizer compact />
                       </div>
 
                       {/* Other sizing options, one simple combined action */}

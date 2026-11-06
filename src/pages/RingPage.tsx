@@ -65,7 +65,7 @@ const photoSteps: { icon: typeof Hand; title: string; body: string }[] = [
   },
   {
     icon: Ruler,
-    title: 'Get your estimate',
+    title: 'Confirm your fit',
     body: 'A photo can estimate visible finger width, but not confirm ring fit. Use the sizing kit or a physical ring sizer to choose your US size.',
   },
 ];
@@ -139,7 +139,7 @@ export default function RingPage() {
               <span className="eyebrow">Experience the Ring</span>
               <h2 className="mt-2 text-3xl font-light text-ink md:text-4xl">See the fit before you reserve.</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                Preview your preferred finish on your own hand, then estimate your ring size from a photo.
+                Preview your preferred finish on your own hand, check your finger with a photo and confirm your size with a physical sizer.
               </p>
             </div>
             <div className="mt-8 grid items-start gap-5 md:grid-cols-2">
@@ -212,10 +212,9 @@ export default function RingPage() {
 
           {/* Photo sizing instructions */}
           <section className="mt-16 md:mt-20" id="photo-sizing">
-            <h2 className="text-2xl font-light text-ink md:text-3xl">Find your size with a photo</h2>
+            <h2 className="text-2xl font-light text-ink md:text-3xl">Prepare your hand photo</h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-               No measuring tape? Remove all rings, then take one photo of your open palm with a bank card and our sizing
-              assistant estimates your ring size. Here’s exactly how to take it:
+              Remove all rings and place a bank card flat on your open palm. The photo checks visible finger width; a physical sizer confirms your US ring size.
             </p>
 
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -257,7 +256,7 @@ export default function RingPage() {
               href="#ring-experience"
               className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Estimate my size from a photo
+              Start photo check
             </a>
           </section>
 
