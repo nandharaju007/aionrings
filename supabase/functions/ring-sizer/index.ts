@@ -13,9 +13,9 @@ const PROMPT = [
   "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm crease and the first knuckle, where a ring sits), on a line perpendicular to the finger's direction. Reject if adjacent fingers overlap either edge or the ring-wearing segment is obscured. Put each point exactly where skin meets background, at the outermost edge of the finger silhouette. Do not measure at the fingertip or at a knuckle.",
   "Locate edges only; do not guess a ring size or an anatomical correction.",
   "Reference: use a bank card (85.60 x 53.98 mm) if present, else a US quarter (24.26 mm). Set reference to 'card', 'quarter' or 'none'. For a quarter, coin_edges are two points on opposite edges across its full diameter; otherwise empty.",
-  "Quality: blurry true if edges are soft; too_dark true if underexposed; hand_tilted true if the palm or reference is not flat-on to the camera.",
+  "Quality: blurry true ONLY if the photo is clearly out of focus or motion blurred so the card corners or finger edges cannot be placed; naturally soft skin edges are normal and are NOT blurry. too_dark true only if underexposed so edges cannot be seen; hand_tilted true if the palm or reference is not flat-on to the camera.",
   "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays.",
-  "Confidence: 'high' when sharp and flat-on, 'medium' when angled or soft, 'low' otherwise. Note: one short sentence, no dashes. Answer in json.",
+  "Confidence: 'high' when edges are clearly locatable and the card is flat-on, 'medium' when edges are locatable but slightly soft or angled, 'low' when you are guessing. Note: one short sentence, no dashes. Answer in json.",
 ].join(" ");
 
 const POINT = { type: "array", items: { type: "number" } };
@@ -160,7 +160,7 @@ Deno.serve(async (req) => {
     // Card corners marked by hand still override the model's corners.
     const readings = markedCorners ? samples.map((r) => ({ ...r, card_corners: markedCorners! })) : samples;
     const width = summarizeWithReference(readings, W, H);
-    const flags = qualityFlags(readings, W, H);
+    const flags = qualityFlags(readings, W, H, width);
     if (width === null && !flags.length) flags.push("inconsistent");
 
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
