@@ -5,6 +5,7 @@ import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 import { Button } from '@/components/ui/button';
 import { CameraCapture } from '@/components/CameraCapture';
 import { isPhoneDevice } from '@/lib/phone-camera';
+import { FLAG_HELP, formatUs } from '@/lib/sizing-flags';
 
 const FINGERS = ['index', 'middle', 'ring'] as const;
 
@@ -19,6 +20,9 @@ type SizeResult = {
   requires_physical_confirmation?: boolean;
   note?: string;
   error?: string;
+  quality_flags?: string[];
+  sizes_enabled?: boolean;
+  estimate?: { us: number; low: number; high: number } | null;
 };
 
 export function RingSizer({ compact = false, collapsible = false }: { compact?: boolean; collapsible?: boolean }) {
@@ -207,11 +211,26 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
 
       {result && (
         <div className="mt-5" role="status" aria-live="polite">
-          <p className="text-lg font-medium">{typeof result.projected_width_mm === 'number' ? 'Photo checked' : 'Photo check complete'}</p>
-          {typeof result.projected_width_mm === 'number' ? (
-            <p className="mt-2 text-sm text-ink-soft">Visible finger width: {result.projected_width_mm.toFixed(1)} mm. This is not ring diameter or a US size.</p>
+          {result.quality_flags && result.quality_flags.length > 0 ? (
+            <>
+              <p className="text-lg font-medium">Let’s fix the photo</p>
+              <ul className="mt-2 space-y-2 text-sm text-ink-soft">
+                {result.quality_flags.map((f) => (
+                  <li key={f}><span className="font-medium text-ink">{FLAG_HELP[f]?.title ?? f}.</span> {FLAG_HELP[f]?.fix}</li>
+                ))}
+              </ul>
+              <Button type="button" variant="outline" onClick={reset} className="mt-4 h-12 w-full"><RotateCcw />Retake photo</Button>
+            </>
+          ) : result.sizes_enabled && result.estimate ? (
+            <>
+              <p className="text-lg font-medium">Estimated size: US {formatUs(result.estimate.low)}–{formatUs(result.estimate.high)}</p>
+              <p className="mt-2 text-sm text-ink-soft">A photo estimate, not a fitting. Confirm with the sizing kit before ordering.</p>
+            </>
           ) : (
-            <p className="mt-2 text-sm text-ink-soft">We couldn’t get a reliable finger width. You can still confirm your size with a physical sizer—no need to keep retaking photos.</p>
+            <>
+              <p className="text-lg font-medium">Sizing coming soon</p>
+              <p className="mt-2 text-sm text-ink-soft">Use a physical sizing kit to be sure of your size.</p>
+            </>
           )}
           <div className="mt-5 border-t border-border pt-4">
             <h4 className="font-medium">Next: confirm your US size</h4>
