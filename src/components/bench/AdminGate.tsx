@@ -35,7 +35,7 @@ export function AdminGate({ title, children }: { title: string; children: ReactN
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SEO title={`${title} · aiOn`} description="Internal sizing accuracy tools." noindex />
+      <SEO title={`${title} · aiOn`} description="Internal sizing accuracy tools." path="/bench" image="/og-image.jpg" noindex />
       <Header />
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-28 text-base sm:px-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
