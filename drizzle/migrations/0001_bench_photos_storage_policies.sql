@@ -1,0 +1,3 @@
+CREATE POLICY "Admins read bench photo files" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'bench-photos' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins upload bench photo files" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'bench-photos' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins delete bench photo files" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'bench-photos' AND public.has_role(auth.uid(), 'admin'));

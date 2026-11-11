@@ -31,6 +31,8 @@ import { CookieConsent } from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import DeleteAccountRedirect from "./pages/DeleteAccountRedirect";
+import BenchPage from "./pages/BenchPage";
+import BenchSourcesPage from "./pages/BenchSourcesPage";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +69,8 @@ const App = () => (
             <Route path="/accessibility" element={<AccessibilityPage />} />
             <Route path="/trademarks" element={<TrademarksPage />} />
             <Route path="/delete-account" element={<DeleteAccountRedirect />} />
+            <Route path="/bench" element={<BenchPage />} />
+            <Route path="/bench/sources" element={<BenchSourcesPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
