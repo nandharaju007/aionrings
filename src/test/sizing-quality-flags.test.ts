@@ -42,3 +42,10 @@ describe('reading agreement', () => {
     expect(summarizeWithReference([18, 18, 18].map(at) as never, 1000, 1000)).toBeNull();
   });
 });
+
+describe('blur is only blamed when it blocked the measurement', () => {
+  it('does not say "blurry" when readings measured a width but disagreed', () => {
+    const rs = [17.0, 17.5, 18.0, 18.8, 19.5, 20.0].map((mm) => reading({ finger_edges: [[500, 500], [500 + mm * 4, 500]] }));
+    expect(qualityFlags(rs as never, 1000, 1000, null)).not.toContain('blurry');
+  });
+});

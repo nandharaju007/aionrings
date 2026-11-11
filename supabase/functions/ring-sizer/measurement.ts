@@ -119,8 +119,12 @@ export function qualityFlags(readings: RefReading[], width: number, height: numb
   if (majority((r) => r.reference !== 'quarter' && r.card_corners.length === 4 &&
       cardScale(r.card_corners.map(([x, y]) => [x * width / 1000, y * height / 1000] as Point)) === null)) flags.add('hand_tilted');
   if (majority((r) => !r.ok || r.finger_edges.length !== 2)) flags.add('finger_hidden');
-  if (measuredWidth === null && majority((r) => !!r.blurry)) flags.add('blurry');
-  if (measuredWidth === null && majority((r) => !!r.too_dark)) flags.add('too_dark');
+  // Blur/darkness are only blamed when they actually stopped most readings from measuring.
+  // If 4+ readings measured a width, the photo was usable; disagreement is reported as 'inconsistent'.
+  const measured = readings.filter((r) => measureWithReference(r, width, height) !== null).length;
+  const blocked = measuredWidth === null && measured < 4;
+  if (blocked && majority((r) => !!r.blurry)) flags.add('blurry');
+  if (blocked && majority((r) => !!r.too_dark)) flags.add('too_dark');
   return [...flags];
 }
 
