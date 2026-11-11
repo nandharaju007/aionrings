@@ -40,8 +40,12 @@ function validPoints(points: Point[], count: number) {
   return points.length === count && points.every((p) => p.length === 2 && p.every((v) => Number.isFinite(v) && v >= 0 && v <= 1000));
 }
 
+// Medium = edges locatable but naturally soft (skin rarely has crisp edges). Agreement across
+// readings in summarize*() is the real reliability gate; only 'low' is rejected outright.
+const usable = (c: string | null) => c === 'high' || c === 'medium';
+
 export function measureProjectedWidth(reading: Reading, width: number, height: number, markedCorners?: Point[]): number | null {
-  if (!reading.ok || reading.confidence !== 'high' || width <= 0 || height <= 0 ||
+  if (!reading.ok || !usable(reading.confidence) || width <= 0 || height <= 0 ||
       !validPoints(reading.finger_edges, 2) || !validPoints(reading.card_corners, 4)) return null;
   const toPixel = (p: Point): Point => [p[0] * width / 1000, p[1] * height / 1000];
   const corners = markedCorners ?? reading.card_corners;
@@ -95,7 +99,7 @@ export function coinScale(edges: Point[]): number | null {
 /** Projected finger width in mm using a card or a US quarter for scale. */
 export function measureWithReference(reading: RefReading, width: number, height: number): number | null {
   if (reading.reference === 'quarter') {
-    if (!reading.ok || reading.confidence !== 'high' || !validPoints(reading.finger_edges, 2) || !validPoints(reading.coin_edges ?? [], 2)) return null;
+    if (!reading.ok || !usable(reading.confidence) || !validPoints(reading.finger_edges, 2) || !validPoints(reading.coin_edges ?? [], 2)) return null;
     const toPixel = (p: Point): Point => [p[0] * width / 1000, p[1] * height / 1000];
     const scale = coinScale(reading.coin_edges!.map(toPixel));
     if (scale === null) return null;
@@ -105,7 +109,8 @@ export function measureWithReference(reading: RefReading, width: number, height:
   return measureProjectedWidth(reading, width, height);
 }
 
-export function qualityFlags(readings: RefReading[], width: number, height: number): QualityFlag[] {
+/** Pass the agreed width when one was measured: then blur/darkness did not stop the measurement and is not reported. */
+export function qualityFlags(readings: RefReading[], width: number, height: number, measuredWidth: number | null = null): QualityFlag[] {
   const flags = new Set<QualityFlag>();
   const n = readings.length || 1;
   const majority = (pred: (r: RefReading) => boolean) => readings.filter(pred).length * 2 > n;
@@ -114,14 +119,24 @@ export function qualityFlags(readings: RefReading[], width: number, height: numb
   if (majority((r) => r.reference !== 'quarter' && r.card_corners.length === 4 &&
       cardScale(r.card_corners.map(([x, y]) => [x * width / 1000, y * height / 1000] as Point)) === null)) flags.add('hand_tilted');
   if (majority((r) => !r.ok || r.finger_edges.length !== 2)) flags.add('finger_hidden');
-  if (majority((r) => !!r.blurry)) flags.add('blurry');
-  if (majority((r) => !!r.too_dark)) flags.add('too_dark');
+  // Blur/darkness are only blamed when they actually stopped most readings from measuring.
+  // If 4+ readings measured a width, the photo was usable; disagreement is reported as 'inconsistent'.
+  const measured = readings.filter((r) => measureWithReference(r, width, height) !== null).length;
+  const blocked = measuredWidth === null && measured < 4;
+  if (blocked && majority((r) => !!r.blurry)) flags.add('blurry');
+  if (blocked && majority((r) => !!r.too_dark)) flags.add('too_dark');
   return [...flags];
 }
 
 export function summarizeWithReference(readings: RefReading[], width: number, height: number) {
   const widths = readings.map((r) => measureWithReference(r, width, height)).filter((v): v is number => v !== null);
-  if (widths.length < 4 || Math.max(...widths) - Math.min(...widths) > 0.4) return null;
+  if (widths.length < 4) return null;
+  // Point placement varies by ~1 mm between readings even on sharp photos. Ignore the single
+  // highest and lowest (when 5+), then require the rest to agree within 1 mm. Whether that is
+  // accurate enough for a size is decided by the /bench gate, not here.
+  const sorted = [...widths].sort((a, b) => a - b);
+  const core = sorted.length >= 5 ? sorted.slice(1, -1) : sorted;
+  if (core[core.length - 1] - core[0] > 1.0) return null;
   return Math.round(median(widths) * 10) / 10;
 }
 
