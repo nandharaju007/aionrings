@@ -27,3 +27,18 @@ describe('photo quality flags', () => {
     expect(qualityFlags(rs as never, 1000, 1000, null)).toContain('blurry');
   });
 });
+
+describe('reading agreement', () => {
+  const at = (mm: number) => reading({ finger_edges: [[500, 500], [500 + mm * 4, 500]] });
+  it('accepts six readings whose middle four agree within 1 mm', () => {
+    const rs = [17.7, 18.2, 18.4, 18.8, 19.2, 19.3].map(at);
+    expect(summarizeWithReference(rs as never, 1000, 1000)).toBe(18.6);
+  });
+  it('rejects readings whose middle values spread more than 1 mm', () => {
+    const rs = [17.0, 17.5, 18.0, 18.8, 19.5, 20.0].map(at);
+    expect(summarizeWithReference(rs as never, 1000, 1000)).toBeNull();
+  });
+  it('needs at least four usable readings', () => {
+    expect(summarizeWithReference([18, 18, 18].map(at) as never, 1000, 1000)).toBeNull();
+  });
+});

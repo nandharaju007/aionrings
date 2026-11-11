@@ -126,7 +126,13 @@ export function qualityFlags(readings: RefReading[], width: number, height: numb
 
 export function summarizeWithReference(readings: RefReading[], width: number, height: number) {
   const widths = readings.map((r) => measureWithReference(r, width, height)).filter((v): v is number => v !== null);
-  if (widths.length < 4 || Math.max(...widths) - Math.min(...widths) > 0.4) return null;
+  if (widths.length < 4) return null;
+  // Point placement varies by ~1 mm between readings even on sharp photos. Ignore the single
+  // highest and lowest (when 5+), then require the rest to agree within 1 mm. Whether that is
+  // accurate enough for a size is decided by the /bench gate, not here.
+  const sorted = [...widths].sort((a, b) => a - b);
+  const core = sorted.length >= 5 ? sorted.slice(1, -1) : sorted;
+  if (core[core.length - 1] - core[0] > 1.0) return null;
   return Math.round(median(widths) * 10) / 10;
 }
 
