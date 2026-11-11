@@ -1,6 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
-import { summarizeReadings, photoResult, type Point } from "./measurement.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { summarizeWithReference, qualityFlags, estimateSize, type Point, type ChartRow } from "./measurement.ts";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 const MODEL = "openai/gpt-6-astra";
@@ -11,6 +12,8 @@ const PROMPT = [
   "1) card_corners: the four OUTER corners of the card, clockwise. Include the full card including rounded corners; do not place them on printed designs inside the card.",
   "2) finger_edges: two points on opposite skin edges of the chosen finger, across its LOWER segment (between the palm crease and the first knuckle, where a ring sits), on a line perpendicular to the finger's direction. Reject if adjacent fingers overlap either edge or the ring-wearing segment is obscured. Put each point exactly where skin meets background, at the outermost edge of the finger silhouette. Do not measure at the fingertip or at a knuckle.",
   "Locate edges only; do not guess a ring size or an anatomical correction.",
+  "Reference: use a bank card (85.60 x 53.98 mm) if present, else a US quarter (24.26 mm). Set reference to 'card', 'quarter' or 'none'. For a quarter, coin_edges are two points on opposite edges across its full diameter; otherwise empty.",
+  "Quality: blurry true if edges are soft; too_dark true if underexposed; hand_tilted true if the palm or reference is not flat-on to the camera.",
   "Set ok to false only if the card or the finger's lower segment is not visible; then use empty arrays.",
   "Confidence: 'high' when sharp and flat-on, 'medium' when angled or soft, 'low' otherwise. Note: one short sentence, no dashes. Answer in json.",
 ].join(" ");
@@ -19,18 +22,23 @@ const POINT = { type: "array", items: { type: "number" } };
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["ok", "card_corners", "finger_edges", "confidence", "note"],
+  required: ["ok", "reference", "card_corners", "coin_edges", "finger_edges", "confidence", "blurry", "too_dark", "hand_tilted", "note"],
   properties: {
     ok: { type: "boolean" },
     card_corners: { type: "array", items: POINT },
     finger_edges: { type: "array", items: POINT },
+    reference: { type: "string", enum: ["card", "quarter", "none"] },
+    coin_edges: { type: "array", items: POINT },
+    blurry: { type: "boolean" },
+    too_dark: { type: "boolean" },
+    hand_tilted: { type: "boolean" },
     confidence: { type: ["string", "null"], enum: ["high", "medium", "low", null] },
     note: { type: "string" },
   },
 };
 
 type Pt = Point;
-type Sample = { ok: boolean; card_corners: Pt[]; finger_edges: Pt[]; confidence: string | null; note: string };
+type Sample = z.infer<typeof SampleSchema>;
 
 async function readStream(res: Response) {
   if (!res.body) throw new Error("Missing response body");
@@ -64,7 +72,7 @@ async function readStream(res: Response) {
 }
 
 const PointSchema = z.tuple([z.number().finite().min(0).max(1000), z.number().finite().min(0).max(1000)]);
-const SampleSchema = z.object({ ok: z.boolean(), card_corners: z.array(PointSchema).max(4), finger_edges: z.array(PointSchema).max(2), confidence: z.enum(["high", "medium", "low"]).nullable(), note: z.string().max(1000) });
+const SampleSchema = z.object({ ok: z.boolean(), card_corners: z.array(PointSchema).max(4), finger_edges: z.array(PointSchema).max(2), reference: z.enum(["card", "quarter", "none"]), coin_edges: z.array(PointSchema).max(2), blurry: z.boolean(), too_dark: z.boolean(), hand_tilted: z.boolean(), confidence: z.enum(["high", "medium", "low"]).nullable(), note: z.string().max(1000) });
 const Dimensions = z.object({ width: z.coerce.number().int().min(100).max(20000), height: z.coerce.number().int().min(100).max(20000), finger: z.enum(["index", "middle", "ring"]) });
 const MarkedCard = z.object({ width: z.number().int().positive(), height: z.number().int().positive(), corners: z.array(z.tuple([z.number().min(0).max(1), z.number().min(0).max(1)])).length(4) });
 
@@ -149,7 +157,36 @@ Deno.serve(async (req) => {
       return json({ error: "Could not read a measurement from that photo. Please try another." }, 422);
     }
 
-    return json(photoResult(summarizeReadings(samples, W, H, markedCorners)));
+    // Card corners marked by hand still override the model's corners.
+    const readings = markedCorners ? samples.map((r) => ({ ...r, card_corners: markedCorners! })) : samples;
+    const width = summarizeWithReference(readings, W, H);
+    const flags = qualityFlags(readings, W, H);
+    if (width === null && !flags.length) flags.push("inconsistent");
+
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: settings } = await admin.from("sizing_settings").select("show_sizes, size_chart, chart_version").eq("id", true).maybeSingle();
+    let benchCaller = false;
+    if (form.get("bench") === "1") {
+      const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+      const { data: u } = await admin.auth.getUser(token);
+      if (u?.user) {
+        const { data: isAdmin } = await admin.rpc("has_role", { _user_id: u.user.id, _role: "admin" });
+        benchCaller = isAdmin === true;
+      }
+      if (!benchCaller) return json({ error: "Admin sign-in required for the test bench." }, 403);
+    }
+    const estimate = width === null ? null : estimateSize(width, (settings?.size_chart ?? []) as ChartRow[]);
+    const reveal = benchCaller || settings?.show_sizes === true;
+    return json({
+      ok: width !== null && flags.length === 0,
+      projected_width_mm: width,
+      quality_flags: flags,
+      sizes_enabled: settings?.show_sizes === true,
+      chart_version: settings?.chart_version ?? null,
+      estimate: reveal && flags.length === 0 ? estimate : null,
+      us_size: null,
+      requires_physical_confirmation: !reveal,
+    });
   } catch (error) {
     console.error("ring-sizer failed", error);
     return json({ error: "Could not estimate your size. Please try again." }, 500);
