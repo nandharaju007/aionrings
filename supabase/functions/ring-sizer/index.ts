@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
             role: "user",
             content: [
               { type: "input_text", text: `${PROMPT} The ring will be worn on the ${finger} finger. The image is ${W}x${H} pixels.` },
-              { type: "input_image", image_url: dataUrl },
+              { type: "input_image", image_url: dataUrl, detail: "high" },
             ],
           }],
         }),
