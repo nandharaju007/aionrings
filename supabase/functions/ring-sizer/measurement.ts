@@ -73,3 +73,106 @@ export function photoResult(projectedWidth: number | null) {
       : 'The photo measures visible finger width, not ring fit. Finger shape and knuckle clearance cannot be confirmed from this view. Please use the sizing kit or a physical ring sizer to choose your size.',
   };
 }
+// ─── Reference-scaled estimate (hidden from shoppers until the bench passes) ───
+export type ChartRow = { us: number; diameter_mm: number; circumference_mm: number };
+export type QualityFlag = 'reference_missing' | 'hand_tilted' | 'finger_hidden' | 'blurry' | 'too_dark' | 'inconsistent';
+export type RefReading = Reading & {
+  reference?: 'card' | 'quarter' | 'none';
+  coin_edges?: Point[];
+  blurry?: boolean;
+  too_dark?: boolean;
+  hand_tilted?: boolean;
+};
+
+export const QUARTER_MM = 24.26;
+
+export function coinScale(edges: Point[]): number | null {
+  if (edges.length !== 2) return null;
+  const d = distance(edges[0], edges[1]);
+  return d >= 20 ? QUARTER_MM / d : null;
+}
+
+/** Projected finger width in mm using a card or a US quarter for scale. */
+export function measureWithReference(reading: RefReading, width: number, height: number): number | null {
+  if (reading.reference === 'quarter') {
+    if (!reading.ok || reading.confidence !== 'high' || !validPoints(reading.finger_edges, 2) || !validPoints(reading.coin_edges ?? [], 2)) return null;
+    const toPixel = (p: Point): Point => [p[0] * width / 1000, p[1] * height / 1000];
+    const scale = coinScale(reading.coin_edges!.map(toPixel));
+    if (scale === null) return null;
+    const mm = distance(toPixel(reading.finger_edges[0]), toPixel(reading.finger_edges[1])) * scale;
+    return mm >= 14 && mm <= 25 ? mm : null;
+  }
+  return measureProjectedWidth(reading, width, height);
+}
+
+export function qualityFlags(readings: RefReading[], width: number, height: number): QualityFlag[] {
+  const flags = new Set<QualityFlag>();
+  const n = readings.length || 1;
+  const majority = (pred: (r: RefReading) => boolean) => readings.filter(pred).length * 2 > n;
+  if (majority((r) => r.reference === 'none' || (r.reference !== 'quarter' && r.card_corners.length !== 4))) flags.add('reference_missing');
+  if (majority((r) => !!r.hand_tilted)) flags.add('hand_tilted');
+  if (majority((r) => r.reference !== 'quarter' && r.card_corners.length === 4 &&
+      cardScale(r.card_corners.map(([x, y]) => [x * width / 1000, y * height / 1000] as Point)) === null)) flags.add('hand_tilted');
+  if (majority((r) => !r.ok || r.finger_edges.length !== 2)) flags.add('finger_hidden');
+  if (majority((r) => !!r.blurry)) flags.add('blurry');
+  if (majority((r) => !!r.too_dark)) flags.add('too_dark');
+  return [...flags];
+}
+
+export function summarizeWithReference(readings: RefReading[], width: number, height: number) {
+  const widths = readings.map((r) => measureWithReference(r, width, height)).filter((v): v is number => v !== null);
+  if (widths.length < 4 || Math.max(...widths) - Math.min(...widths) > 0.4) return null;
+  return Math.round(median(widths) * 10) / 10;
+}
+
+/**
+ * Width at the ring position → inner circumference (π·w, assumes a round finger) → nearest
+ * chart size, reported as ±0.5 size. This assumption is exactly what the /bench must validate.
+ */
+export function estimateSize(widthMm: number, chart: ChartRow[]) {
+  const rows = [...chart].filter((r) => Number.isFinite(r.us) && Number.isFinite(r.circumference_mm)).sort((a, b) => a.us - b.us);
+  if (!rows.length || !Number.isFinite(widthMm)) return null;
+  const circumference = Math.PI * widthMm;
+  if (circumference < rows[0].circumference_mm - 1.5 || circumference > rows[rows.length - 1].circumference_mm + 1.5) return null;
+  const best = rows.reduce((a, b) => Math.abs(b.circumference_mm - circumference) < Math.abs(a.circumference_mm - circumference) ? b : a);
+  return {
+    us: best.us,
+    low: Math.max(rows[0].us, best.us - 0.5),
+    high: Math.min(rows[rows.length - 1].us, best.us + 0.5),
+    circumference_mm: Math.round(circumference * 10) / 10,
+  };
+}
+
+export type BenchRow = { confirmed_size: number; est_size: number | null; finger: string };
+
+/** Error in half sizes (estimate − confirmed); null when no estimate. */
+export const halfSizeError = (confirmed: number, est: number | null) => est === null ? null : Math.round((est - confirmed) * 2);
+
+export function benchSummary(rows: BenchRow[], rule = { minShare: 0.8, minPhotos: 15 }) {
+  const errs = rows.map((r) => halfSizeError(r.confirmed_size, r.est_size));
+  const abs = errs.map((e) => (e === null ? null : Math.abs(e)));
+  const total = rows.length;
+  const share = (max: number) => total ? abs.filter((e) => e !== null && e <= max).length / total : 0;
+  const scored = abs.filter((e): e is number => e !== null);
+  const group = (key: (r: BenchRow) => string) => {
+    const out: Record<string, { n: number; within_half: number }> = {};
+    rows.forEach((r, i) => {
+      const k = key(r); out[k] ??= { n: 0, within_half: 0 };
+      out[k].n++; if (abs[i] !== null && abs[i]! <= 1) out[k].within_half++;
+    });
+    return out;
+  };
+  const range = (s: number) => s <= 6 ? '4-6' : s <= 9 ? '6.5-9' : s <= 12 ? '9.5-12' : '12.5-15';
+  const withinHalf = share(1);
+  return {
+    total,
+    within_half: withinHalf,
+    within_one: share(2),
+    no_estimate: abs.filter((e) => e === null).length,
+    mean_error_sizes: scored.length ? scored.reduce((a, b) => a + b, 0) / scored.length / 2 : null,
+    worst_error_sizes: scored.length ? Math.max(...scored) / 2 : null,
+    by_range: group((r) => range(r.confirmed_size)),
+    by_finger: group((r) => r.finger),
+    passed: total >= rule.minPhotos && withinHalf >= rule.minShare,
+  };
+}
