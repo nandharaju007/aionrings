@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      bench_photos: {
+        Row: {
+          chart_version: number | null
+          confirmation_method: string
+          confirmed_size: number
+          created_at: string
+          error_half_sizes: number | null
+          est_high: number | null
+          est_low: number | null
+          est_size: number | null
+          finger: string
+          hand: string
+          id: string
+          projected_width_mm: number | null
+          quality_flags: string[]
+          ran_at: string | null
+          storage_path: string
+        }
+        Insert: {
+          chart_version?: number | null
+          confirmation_method: string
+          confirmed_size: number
+          created_at?: string
+          error_half_sizes?: number | null
+          est_high?: number | null
+          est_low?: number | null
+          est_size?: number | null
+          finger: string
+          hand: string
+          id?: string
+          projected_width_mm?: number | null
+          quality_flags?: string[]
+          ran_at?: string | null
+          storage_path: string
+        }
+        Update: {
+          chart_version?: number | null
+          confirmation_method?: string
+          confirmed_size?: number
+          created_at?: string
+          error_half_sizes?: number | null
+          est_high?: number | null
+          est_low?: number | null
+          est_size?: number | null
+          finger?: string
+          hand?: string
+          id?: string
+          projected_width_mm?: number | null
+          quality_flags?: string[]
+          ran_at?: string | null
+          storage_path?: string
+        }
+        Relationships: []
+      }
       bulk_reservations: {
         Row: {
           business_name: string
@@ -59,6 +113,48 @@ export type Database = {
           reservation_number?: string
           size_breakdown?: Json | null
           status?: string
+        }
+        Relationships: []
+      }
+      data_sources: {
+        Row: {
+          commercial_use: string
+          contents: string | null
+          created_at: string
+          has_ring_sizes: string
+          id: string
+          licence: string
+          link: string | null
+          name: string
+          notes: string | null
+          reviewed_by: string | null
+          reviewed_on: string | null
+        }
+        Insert: {
+          commercial_use?: string
+          contents?: string | null
+          created_at?: string
+          has_ring_sizes?: string
+          id?: string
+          licence?: string
+          link?: string | null
+          name: string
+          notes?: string | null
+          reviewed_by?: string | null
+          reviewed_on?: string | null
+        }
+        Update: {
+          commercial_use?: string
+          contents?: string | null
+          created_at?: string
+          has_ring_sizes?: string
+          id?: string
+          licence?: string
+          link?: string | null
+          name?: string
+          notes?: string | null
+          reviewed_by?: string | null
+          reviewed_on?: string | null
         }
         Relationships: []
       }
@@ -238,6 +334,36 @@ export type Database = {
           status?: string
           tracking_number?: string | null
           zip_code?: string
+        }
+        Relationships: []
+      }
+      sizing_settings: {
+        Row: {
+          chart_version: number
+          id: boolean
+          pass_min_photos: number
+          pass_min_share: number
+          show_sizes: boolean
+          size_chart: Json
+          updated_at: string
+        }
+        Insert: {
+          chart_version?: number
+          id?: boolean
+          pass_min_photos?: number
+          pass_min_share?: number
+          show_sizes?: boolean
+          size_chart?: Json
+          updated_at?: string
+        }
+        Update: {
+          chart_version?: number
+          id?: boolean
+          pass_min_photos?: number
+          pass_min_share?: number
+          show_sizes?: boolean
+          size_chart?: Json
+          updated_at?: string
         }
         Relationships: []
       }
