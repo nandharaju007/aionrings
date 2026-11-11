@@ -23,6 +23,15 @@ describe('Photo measurement safeguards', () => {
   it('rejects a tilted card rather than averaging conflicting scales', () => {
     expect(cardScale([[0, 0], [428, 0], [428, 200], [0, 200]])).toBeNull();
   });
+  it('accepts a flat card whose corners are each a few pixels off', () => {
+    // 170 x 107 card (real photo scale) with ~4 px corner noise
+    const scale = cardScale([[3, -2], [172, 2], [168, 108], [-1, 104]]);
+    expect(scale).not.toBeNull();
+    expect(scale!).toBeCloseTo(85.6 / 170, 1);
+  });
+  it('still rejects a card in clear perspective (far side 15% shorter)', () => {
+    expect(cardScale([[0, 0], [428, 0], [396, 230], [32, 230]])).toBeNull();
+  });
   it('rejects crossed corners', () => {
     expect(cardScale([[0, 0], [428, 269.9], [428, 0], [0, 269.9]])).toBeNull();
   });

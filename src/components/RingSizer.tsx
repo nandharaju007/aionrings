@@ -195,7 +195,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             <div className="grid grid-cols-3 gap-2">
               {FINGERS.map((f) => (
                 <Button key={f} type="button" variant={finger === f ? 'default' : 'outline'} aria-pressed={finger === f}
-                  onClick={() => { setFinger(f); setError(null); }} className="h-11 capitalize">{f}</Button>
+                  onClick={() => { setFinger(f); setError(null); }}
+                  className={`h-11 capitalize ${finger === f ? 'hover:bg-primary' : 'hover:bg-background hover:text-foreground'}`}>{f}</Button>
               ))}
             </div>
           </fieldset>
@@ -228,8 +229,8 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             </>
           ) : (
             <>
-              <p className="text-lg font-medium">Sizing coming soon</p>
-              <p className="mt-2 text-sm text-ink-soft">Use a physical sizing kit to be sure of your size.</p>
+              <p className="text-lg font-medium">Photo received — no size yet</p>
+              <p className="mt-2 text-sm text-ink-soft">This isn't an error. Photo sizes are still being tested for accuracy, so we don't show a US size yet. Use the free sizing kit to be sure of your size.</p>
             </>
           )}
           <div className="mt-5 border-t border-border pt-4">

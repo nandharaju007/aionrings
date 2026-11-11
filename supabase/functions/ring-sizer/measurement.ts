@@ -14,6 +14,8 @@ const median = (values: number[]) => {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 };
 
+export const CARD_TOLERANCE = 0.08;
+
 export function cardScale(corners: Point[]): number | null {
   if (corners.length !== 4 || corners.some((p) => p.length !== 2 || p.some((v) => !Number.isFinite(v)))) return null;
   const vectors = corners.map((p, i) => {
@@ -22,17 +24,19 @@ export function cardScale(corners: Point[]): number | null {
   });
   const lengths = corners.map((p, i) => distance(p, corners[(i + 1) % 4]));
   if (Math.min(...lengths) < 40) return null;
-  // Refuse skew, perspective and foreshortening rather than average incompatible scales.
-  if (Math.abs(lengths[0] - lengths[2]) / Math.max(lengths[0], lengths[2]) > 0.03 ||
-      Math.abs(lengths[1] - lengths[3]) / Math.max(lengths[1], lengths[3]) > 0.03) return null;
+  // Refuse clear skew, perspective and foreshortening rather than average incompatible scales.
+  // Tolerance allows for corner-placement noise on a small card (a few pixels on each corner);
+  // agreement across readings in summarize*() remains the main reliability gate.
+  if (Math.abs(lengths[0] - lengths[2]) / Math.max(lengths[0], lengths[2]) > CARD_TOLERANCE ||
+      Math.abs(lengths[1] - lengths[3]) / Math.max(lengths[1], lengths[3]) > CARD_TOLERANCE) return null;
   for (let i = 0; i < 4; i++) {
     const a = vectors[i], b = vectors[(i + 1) % 4];
-    if (Math.abs(a[0] * b[0] + a[1] * b[1]) / (lengths[i] * lengths[(i + 1) % 4]) > 0.03) return null;
+    if (Math.abs(a[0] * b[0] + a[1] * b[1]) / (lengths[i] * lengths[(i + 1) % 4]) > CARD_TOLERANCE) return null;
   }
   const a = (lengths[0] + lengths[2]) / 2;
   const b = (lengths[1] + lengths[3]) / 2;
   const longScale = 85.6 / Math.max(a, b), shortScale = 53.98 / Math.min(a, b);
-  if (Math.abs(longScale - shortScale) / Math.max(longScale, shortScale) > 0.03) return null;
+  if (Math.abs(longScale - shortScale) / Math.max(longScale, shortScale) > CARD_TOLERANCE) return null;
   return (longScale + shortScale) / 2;
 }
 
