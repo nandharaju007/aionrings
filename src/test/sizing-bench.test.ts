@@ -9,7 +9,7 @@ describe('Sizing estimate and bench rules', () => {
     expect([e.us, e.low, e.high]).toEqual([9, 8.5, 9.5]);
   });
   it('uses the editable chart, not a hard-coded one', () => {
-    const shifted = chart.map((r) => ({ ...r, circumference_mm: r.circumference_mm + 2.6 }));
+    const shifted = chart.map((r) => ({ ...r, circumference_mm: r.circumference_mm + 1.28 }));
     expect(estimateSize(18.95, shifted)!.us).toBe(8.5);
   });
   it('scales from a US quarter (24.26 mm)', () => {
