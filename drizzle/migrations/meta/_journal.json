@@ -15,6 +15,13 @@
       "when": 1794357669949,
       "tag": "0001_bench_photos_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794516199671,
+      "tag": "0002_restrict_reservation_totals",
+      "breakpoints": true
     }
   ]
 }
