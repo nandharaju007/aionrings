@@ -9,6 +9,7 @@ const productLinks: { label: string; href: string }[] = [
   { label: 'Pre-Order', href: '/preorder' },
   { label: 'Size Guide', href: '/preorder' },
   { label: 'Sizing FAQ', href: '/faq' },
+  { label: 'Sizing kit', href: '/sizing-kit' },
   { label: 'Smart Ring Guide', href: '/smart-ring-guide' },
 ];
 const companyLinks: { label: string; href: string }[] = [

@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import ShopPage from "./pages/ShopPage";
 import RingPage from "./pages/RingPage";
 import SizeChartPage from "./pages/SizeChartPage";
+import SizingKitPage from "./pages/SizingKitPage";
 import FAQPage from "./pages/FAQPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/ring" element={<RingPage />} />
             <Route path="/size-chart" element={<SizeChartPage />} />
+            <Route path="/sizing-kit" element={<SizingKitPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/preorder" element={<PreOrderPage />} />
             <Route path="/partners" element={<PartnersPage />} />
