@@ -52,7 +52,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
     { title: 'Measure', text: 'Lay the strip flat. Measure from 0 to your mark on a real ruler.', action: '' },
   ];
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
-  const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)) : null;
+  const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(first), unit)) : null;
   const chosenSize = adjustedSize ?? (result && 'us' in result ? String(result.us) : '');
   useLayoutEffect(() => {
     if (!submitted) return;
@@ -105,13 +105,13 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
           <p className="mt-2 text-xs text-muted-foreground">{repeatStep ? 'Enter your new ruler reading. We’ll match both readings to a US ring size.' : 'Enter the number you read on your own ruler, not a ring size.'}</p>
           {method === 'circumference' && <p className="mt-1 text-xs text-muted-foreground">Example only: 5.72 cm = 57.2 mm → US 8.</p>}
           {result?.error && <div ref={outcomeRef} tabIndex={-1} role="alert" className="mt-3 rounded-md border border-destructive p-3 text-sm text-destructive"><p className="font-medium">No size yet</p><p className="mt-1">{result.error}</p><p className="mt-2">Check the units: a reading of 5.72 belongs in cm; 57.2 belongs in mm. For an unusual reading, verify with a physical sizing kit.</p></div>}
-          <Button type="button" onClick={() => { if (!(repeatStep ? second : first).trim()) { setInputError(`Enter your ${repeatStep ? 'second ' : ''}ruler reading in ${unit} above to find your size.`); measurementRef.current?.focus(); return; } setInputError(''); if (!repeatStep) { setRepeatStep(true); return; } if (!method) return; const reading = physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)); setAttempt(value => value + 1); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Quick double-check'}<ArrowRight /></Button>
+          <Button type="button" onClick={() => { if (!first.trim()) { setInputError(`Enter your ruler reading in ${unit} above to find your size.`); measurementRef.current?.focus(); return; } setInputError(''); if (!method) return; const mm = measurementInMillimetres(Number(first), unit); const reading = physicalSize(method, mm, mm); setSecond(first); setAttempt(value => value + 1); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">Show my size<ArrowRight /></Button>
         </>}
         <Button variant="ghost" type="button" onClick={() => { if (repeatStep) { setRepeatStep(false); setSubmitted(false); } else if (visualStep > 0) { setVisualStep(0); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
       </> : result && 'us' in result ? <div ref={outcomeRef} tabIndex={-1} role="status" className="pt-6 scroll-mt-24">
         <p className="text-lg font-medium">Your suggested ring size</p>
         <p className="mt-1 text-4xl font-light text-primary">US {result.us}</p>
-        <p className="mt-2 text-sm text-muted-foreground">Your readings: {first} and {second} {unit}.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Your reading: {first} {unit}. For extra confidence, measure once more and check you get the same size.</p>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{result.between ? 'Between sizes: this is the larger whole size. Confirm with a physical sizing kit before ordering.' : 'A size-chart match, not a guaranteed aiOn fit. A wide sensor ring can fit differently from a ring you own.'}</p>
         <label className="mt-5 block text-sm" htmlFor="physical-size-choice">Confirm or adjust your size</label>
         <Select value={chosenSize} disabled={selected} onValueChange={value => { setAdjustedSize(value); setFit(false); }}><SelectTrigger id="physical-size-choice" className="mt-2 h-12"><SelectValue /></SelectTrigger><SelectContent>{PHYSICAL_SIZES.map(row => <SelectItem key={row.us} value={String(row.us)}>US {row.us}{row.us === result.us ? ' · suggested' : ''}</SelectItem>)}</SelectContent></Select>
