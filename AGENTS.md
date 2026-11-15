@@ -7,3 +7,4 @@
 - Keep the photo/check/fit-confirmation stages in the shared RingSizer, with automatic card detection and no manual corner step; both entry pages must use the same simple flow.
 - Keep physical-measurement guidance shared across shopping and sizing pages, with pure chart conversion and repeat-reading checks tested separately; never treat illustrative screen dimensions as a real ruler or chart matches as verified sensor-ring fit.
 - Load third-party measurement tutorials only on explicit watch clicks, using privacy-enhanced embeds with publisher credit and a direct viewing fallback; avoid silently loading external video services.
+- Open the static printable sizer through a same-origin fetch and an in-page blob preview, not a hardcoded live-domain redirect, so preview restrictions cannot block the external navigation.

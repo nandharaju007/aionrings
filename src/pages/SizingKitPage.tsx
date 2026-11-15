@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { PhysicalRingSizer } from '@/components/PhysicalRingSizer';
+import { PrintableSizer } from '@/components/PrintableSizer';
 
 const PDF = '/downloads/aion-printable-ring-sizer.pdf';
 
@@ -44,9 +45,7 @@ export default function SizingKitPage() {
             <Button asChild size="lg">
               <a href={PDF} download="aion-printable-ring-sizer.pdf"><Download className="mr-2 h-4 w-4" />Download printable sizer (PDF)</a>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href={`https://www.aionrings.com${PDF}`} target="_blank" rel="noopener noreferrer"><Printer className="mr-2 h-4 w-4" />Open to print</a>
-            </Button>
+            <PrintableSizer label="Open to print" />
           </div>
 
           <h2 className="mt-14 text-2xl font-light text-ink">Paper strip: step by step</h2>
