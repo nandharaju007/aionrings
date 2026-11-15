@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Circle, Download, Ruler, RotateCcw, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RingSizer } from '@/components/RingSizer';
+import { MeasurementVideo } from '@/components/MeasurementVideo';
 import { physicalSize, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
@@ -81,6 +82,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         {onSelect ? <Button type="button" disabled={!fit || selected} onClick={() => { if (result.us === undefined) return; onSelect(String(result.us)); setSelected(true); }} className="mt-5 h-12 w-full">{selected ? <><Check />Size applied</> : <>{selectionLabel}<ArrowRight /></>}</Button> : <Button asChild className="mt-5 h-12 w-full" disabled={!fit}><Link to={`/preorder?measured_size=${result.us}`} onClick={e => { if (!fit) e.preventDefault(); }} aria-disabled={!fit}>Continue with US {result.us}<ArrowRight /></Link></Button>}
         <Button type="button" variant="ghost" onClick={reset} className="mt-2 w-full"><RotateCcw />Measure again</Button>
       </div> : null}
+      {stage < 2 && <MeasurementVideo />}
       <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Warm hands, relaxed finger. If your knuckle is larger or readings feel uncertain, use a physical sizing kit.</p>
       <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-4 text-xs text-primary"><Link to="/size-chart" className="underline underline-offset-4">US size chart</Link><Link to="/faq" className="underline underline-offset-4">Sizing questions</Link></div>
       {showPhoto && <details className="mt-4 border-t border-border pt-4"><summary className="cursor-pointer text-xs text-muted-foreground">Camera photo check · still being validated</summary><div className="mt-4"><RingSizer compact /></div></details>}

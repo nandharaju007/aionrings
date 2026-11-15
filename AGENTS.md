@@ -6,3 +6,4 @@
 - Render the full-screen sizing camera in a body portal above site overlays so cookie notices and parent stacking contexts cannot block its shutter or cancel controls.
 - Keep the photo/check/fit-confirmation stages in the shared RingSizer, with automatic card detection and no manual corner step; both entry pages must use the same simple flow.
 - Keep physical-measurement guidance shared across shopping and sizing pages, with pure chart conversion and repeat-reading checks tested separately; never treat illustrative screen dimensions as a real ruler or chart matches as verified sensor-ring fit.
+- Load third-party measurement tutorials only on explicit watch clicks, using privacy-enhanced embeds with publisher credit and a direct viewing fallback; avoid silently loading external video services.
