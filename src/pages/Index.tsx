@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, ReactNode } from "react";
 import { SEO } from "@/components/SEO";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
+import { Snowflake } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ringProduct from "@/assets/ring-product.jpg";
@@ -604,6 +605,19 @@ function Hero() {
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-20 pb-12 md:pt-28 md:pb-16">
         {/* Brand reveal */}
         <BrandReveal />
+
+        {/* Winter season touch */}
+        <motion.div
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/70 px-4 py-1.5 shadow-sm backdrop-blur-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        >
+          <Snowflake className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+          <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-ink-soft">
+            Winter wellness season
+          </span>
+        </motion.div>
 
         {/* Headline */}
         <div className="mx-auto max-w-4xl text-center">

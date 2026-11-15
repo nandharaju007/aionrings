@@ -29,6 +29,7 @@ import ContactPage from "./pages/ContactPage";
 import AppDownloadPage from "./pages/AppDownloadPage";
 import SocialEmbedsPage from "./pages/SocialEmbedsPage";
 import { CookieConsent } from "./components/CookieConsent";
+import { WinterSnow } from "./components/WinterSnow";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import DeleteAccountRedirect from "./pages/DeleteAccountRedirect";
@@ -77,6 +78,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <CookieConsent />
+          <WinterSnow />
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>
