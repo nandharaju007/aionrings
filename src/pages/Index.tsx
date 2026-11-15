@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Snowflake } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { LaunchStories } from "@/components/LaunchStories";
 import ringProduct from "@/assets/ring-product.jpg";
 import heroStudio from "@/assets/hero-concept-studio-v3.jpg";
 import videoLifeEarly from "@/assets/video-life-early.mp4.asset.json";
@@ -1803,6 +1804,7 @@ export default function Index() {
         <RingSection />
         {/* 10, Life with it */}
         <InLifeSection />
+        <LaunchStories />
         <NatureBand
           src={natureNight}
           eyebrow="Sleep · Recovery"
