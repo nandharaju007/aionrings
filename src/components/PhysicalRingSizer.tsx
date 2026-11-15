@@ -59,7 +59,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
           <Button variant="outline" type="button" onClick={() => { setMethod('diameter'); setStage(1); }} className="h-auto min-h-24 justify-start gap-3 whitespace-normal bg-card px-4 py-5 text-left hover:bg-secondary hover:text-foreground"><Circle className="text-primary" /><span>Yes, use my ring<span className="mt-1 block text-xs font-normal text-muted-foreground">Fastest · ring + millimetre ruler</span></span></Button>
           <Button variant="outline" type="button" onClick={() => { setMethod('circumference'); setStage(1); }} className="h-auto min-h-24 justify-start gap-3 whitespace-normal bg-card px-4 py-5 text-left hover:bg-secondary hover:text-foreground"><Scissors className="text-primary" /><span>No, measure my finger<span className="mt-1 block text-xs font-normal text-muted-foreground">Paper strip + pen + ruler</span></span></Button>
         </div>
-        <Button asChild variant="link" className="mt-3 h-auto whitespace-normal px-0 text-left"><a href="/downloads/aion-printable-ring-sizer.pdf" download><Download />Prefer to print? Get the free sizer</a></Button>
+        <Button asChild variant="link" className="mt-3 h-auto whitespace-normal px-0 text-left"><a href="https://www.aionrings.com/downloads/aion-printable-ring-sizer.pdf" target="_blank" rel="noopener noreferrer"><Download />Open printable sizer (PDF)</a></Button>
       </> : stage === 1 ? <>
         <div className="mt-5 rounded-lg bg-secondary/60 p-3 motion-safe:animate-in motion-safe:fade-in">
           <MeasurementVisual method={method} step={visualStep} />

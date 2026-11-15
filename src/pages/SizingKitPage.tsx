@@ -45,7 +45,7 @@ export default function SizingKitPage() {
               <a href={PDF} download="aion-printable-ring-sizer.pdf"><Download className="mr-2 h-4 w-4" />Download printable sizer (PDF)</a>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href={PDF} target="_blank" rel="noopener noreferrer"><Printer className="mr-2 h-4 w-4" />Open to print</a>
+              <a href={`https://www.aionrings.com${PDF}`} target="_blank" rel="noopener noreferrer"><Printer className="mr-2 h-4 w-4" />Open to print</a>
             </Button>
           </div>
 
