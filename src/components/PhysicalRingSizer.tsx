@@ -12,7 +12,7 @@ import { PaperMeasurementVisual } from '@/components/PaperMeasurementVisual';
 import { PHYSICAL_SIZES, measurementInMillimetres, physicalSize, type MeasurementUnit, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
-  if (method === 'circumference') return <PaperMeasurementVisual key={step} step={step < 3 ? 0 : 1} />;
+  if (method === 'circumference') return <PaperMeasurementVisual key={step} step={step} />;
   return (
     <svg viewBox="0 0 320 185" role="img" aria-label="Measure straight across the ring opening, from inside edge to inside edge, with a real ruler" className="mx-auto w-full max-w-sm text-primary">
         <circle cx="160" cy="86" r="66" className="fill-background stroke-border" strokeWidth="18" />
@@ -44,9 +44,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const [adjustedSize, setAdjustedSize] = useState<string | null>(null);
   const [delivery, setDelivery] = useState({ name: '', address: '', city: '', postcode: '', country: '' });
   const wrapSteps = [
-    { title: 'Get ready', text: 'Remove your rings. Cut a 5 mm-wide paper strip. Grab a pen and ruler.', action: 'My strip is ready' },
-    { title: 'Wrap', text: 'Wrap once around your chosen finger. Snug, not tight; it should slide over your knuckle.', action: 'The wrap feels comfortable' },
-    { title: 'Mark', text: 'Hold the paper still. Mark the lower layer where the starting end overlaps it.', action: 'I’ve marked the strip' },
+    { title: 'Wrap & mark', text: 'Wrap a narrow paper strip around your finger. Mark where the starting end overlaps.', action: 'I’ve marked the strip' },
     { title: 'Measure', text: 'Lay the strip flat. Measure from 0 to your mark on a real ruler.', action: '' },
   ];
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
@@ -61,7 +59,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
       </div>
       <h3 className="mt-3 text-2xl font-light">Find your aiOn ring size.</h3>
       {method && <ol aria-label="Sizing progress" className="mt-5 grid grid-cols-3 border-b border-border pb-4 text-xs">
-        {['Choose', 'Measure', 'Your size'].map((label, i) => <li key={label} aria-current={stage === i ? 'step' : undefined} className={`flex items-center gap-2 ${stage === i ? 'text-primary font-medium' : 'text-muted-foreground'}`}><span className="flex h-6 w-6 items-center justify-center rounded-full border border-current">{stage > i ? <Check className="h-3 w-3" /> : i + 1}</span>{label}</li>)}
+        {(method === 'circumference' ? ['Wrap & mark', 'Measure', 'Your size'] : ['Choose', 'Measure', 'Your size']).map((label, i) => { const active = method === 'circumference' ? stage === 2 ? 2 : visualStep : stage; return <li key={label} aria-current={active === i ? 'step' : undefined} className={`flex items-center gap-2 ${active === i ? 'text-primary font-medium' : 'text-muted-foreground'}`}><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-current">{active > i ? <Check className="h-3 w-3" /> : i + 1}</span>{label}</li>; })}
       </ol>}
       {photoCheck ? <div className="mt-5"><Button variant="ghost" onClick={reset} className="mb-4"><ArrowLeft />All sizing options</Button><RingSizer compact /></div> : kitRequest ? <div className="pt-6">
         <Package className="h-8 w-8 text-primary" />
@@ -81,24 +79,24 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
           {showPhoto && <Button variant="outline" type="button" onClick={() => setPhotoCheck(true)} className="h-auto min-h-24 flex-row justify-start gap-3 whitespace-normal bg-card p-4 text-left hover:bg-secondary hover:text-foreground sm:flex-col sm:items-start"><img src={handCardPhoto} alt="Card flat in an open palm" className="h-16 w-16 shrink-0 rounded-md object-cover sm:h-20 sm:w-full" /><span className="min-w-0"><span className="inline-flex items-center gap-2"><Camera className="h-4 w-4 shrink-0" />Phone camera</span><span className="mt-1 block text-xs font-normal text-muted-foreground">Photo check · sizes still in testing</span></span></Button>}
         </div>
       </> : stage === 1 ? <>
-        <p className="mt-5 text-sm font-medium">{method === 'circumference' ? `${visualStep + 1} of 4 · ${wrapStep.title}` : repeatStep ? 'One quick double-check' : 'Measure with your ruler'}</p>
+        <p className="mt-5 text-sm font-medium">{repeatStep ? 'Quick check: measure once more' : method === 'circumference' ? wrapStep.title : 'Measure with your ruler'}</p>
         <div className="mt-3 rounded-lg bg-secondary/60 p-3 motion-safe:animate-in motion-safe:fade-in">
           <MeasurementVisual method={method} step={visualStep} />
         </div>
-        <p className="mt-3 text-sm leading-relaxed">{method === 'circumference' ? wrapStep.text : repeatStep ? 'Measure the inside opening again.' : 'Measure across the inside opening, not the metal.'}</p>
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{method === 'diameter' ? 'Choose a ring that fits your intended finger. Use a real millimetre ruler; this picture is not actual size.' : repeatStep ? 'Second check: use a fresh strip and repeat the same steps.' : 'Warm hands give a more representative fit. Don’t stretch or pull the paper tight.'}</p>
-        {method === 'circumference' && visualStep < 3 ? <Button type="button" onClick={() => setVisualStep(visualStep + 1)} className="mt-5 h-12 w-full whitespace-normal">{wrapStep.action}<ArrowRight /></Button> : <>
+        <p className="mt-3 text-sm leading-relaxed">{method === 'circumference' ? repeatStep ? 'Wrap and mark a fresh strip, then measure it again.' : wrapStep.text : repeatStep ? 'Measure the inside opening again.' : 'Measure across the inside opening, not the metal.'}</p>
+        {method === 'diameter' ? <p className="mt-2 text-xs text-muted-foreground">Use a ring that fits this finger and a real ruler.</p> : visualStep === 0 && <p className="mt-2 text-xs text-muted-foreground">Remove rings · strip about 5 mm wide · snug, not tight · slides over your knuckle.</p>}
+        {method === 'circumference' && visualStep === 0 ? <Button type="button" onClick={() => setVisualStep(1)} className="mt-5 h-12 w-full whitespace-normal">{wrapStep.action}<ArrowRight /></Button> : <>
           <fieldset className="mt-5">
-            <legend className="text-sm font-medium">Units on your ruler</legend>
-            <div className="mt-2 flex gap-2">{(['cm', 'mm'] as const).map(value => <Button key={value} type="button" variant={unit === value ? 'default' : 'outline'} aria-pressed={unit === value} onClick={() => changeUnit(value)} className="h-11 flex-1">{value === 'cm' ? 'Centimetres (cm)' : 'Millimetres (mm)'}</Button>)}</div>
+            <legend className="text-sm font-medium">Ruler units</legend>
+            <div className="mt-2 flex gap-2">{(['cm', 'mm'] as const).map(value => <Button key={value} type="button" variant={unit === value ? 'default' : 'outline'} aria-pressed={unit === value} onClick={() => changeUnit(value)} className="h-11 flex-1">{value}</Button>)}</div>
           </fieldset>
-          <p className="mt-2 text-xs text-muted-foreground">The picture’s numbered marks are cm; each small division is 1 mm. 5.95 cm = 59.5 mm.</p>
+          {method === 'circumference' && <p className="mt-2 text-xs text-muted-foreground">Numbered marks = cm · small ticks = mm.</p>}
           {repeatStep && <p className="mt-4 text-xs text-muted-foreground">First measurement: {first} {unit}</p>}
           <label className="mt-5 block text-sm font-medium">{repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`}<input key={repeatStep ? 'repeat' : 'first'} type="number" inputMode="decimal" step={unit === 'cm' ? '0.01' : '0.1'} min="0" aria-label={repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`} value={repeatStep ? second : first} placeholder={unit === 'cm' ? method === 'diameter' ? 'e.g. 1.90' : 'e.g. 5.95' : method === 'diameter' ? 'e.g. 19.0' : 'e.g. 59.5'} onChange={e => { (repeatStep ? setSecond : setFirst)(e.target.value); setSubmitted(false); }} className="mt-2 h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring" /></label>
           {result?.error && <p role="alert" className="mt-3 text-sm text-destructive">{result.error}</p>}
-          <Button type="button" disabled={repeatStep ? !second : !first} onClick={() => { if (!repeatStep) { setRepeatStep(true); if (method === 'circumference') setVisualStep(0); return; } if (!method) return; const reading = physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Double-check my measurement'}<ArrowRight /></Button>
+          <Button type="button" disabled={repeatStep ? !second : !first} onClick={() => { if (!repeatStep) { setRepeatStep(true); return; } if (!method) return; const reading = physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Quick double-check'}<ArrowRight /></Button>
         </>}
-        <Button variant="ghost" type="button" onClick={() => { if (visualStep > 0) { setVisualStep(visualStep - 1); } else if (repeatStep) { setRepeatStep(false); setVisualStep(method === 'circumference' ? 3 : 0); setSubmitted(false); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
+        <Button variant="ghost" type="button" onClick={() => { if (repeatStep) { setRepeatStep(false); setSubmitted(false); } else if (visualStep > 0) { setVisualStep(0); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
       </> : result && 'us' in result ? <div role="status" className="pt-6">
         <p className="text-xs text-muted-foreground">Suggested size from your measurements</p>
         <p className="mt-1 text-4xl font-light text-primary">US {result.us}</p>
@@ -110,8 +108,8 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         {onSelect ? <Button type="button" disabled={!fit || selected} onClick={() => { if (!chosenSize) return; onSelect(chosenSize); setSelected(true); }} className="mt-5 h-12 w-full">{selected ? <><Check />Size applied</> : <>{selectionLabel}<ArrowRight /></>}</Button> : <Button asChild className="mt-5 h-12 w-full" disabled={!fit}><Link to={`/preorder?measured_size=${chosenSize}`} onClick={e => { if (!fit) e.preventDefault(); }} aria-disabled={!fit}>Continue with US {chosenSize}<ArrowRight /></Link></Button>}
         <Button type="button" variant="ghost" onClick={reset} className="mt-2 w-full"><RotateCcw />Measure again</Button>
       </div> : null}
-      {stage === 1 && <MeasurementVideo />}
       <details className="mt-5 border-t border-border pt-4"><summary className="cursor-pointer text-sm text-muted-foreground">More sizing options & help</summary>
+        {stage === 1 && <MeasurementVideo />}
         {!method && !kitRequest && <Button variant="ghost" type="button" onClick={() => { setMethod('diameter'); setStage(1); }} className="mt-3"><Circle />Measure a ring that fits</Button>}
         <div className="mt-3"><PrintableSizer /></div>
         <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Measure with warm hands. If your knuckle is larger or you’re unsure, use a physical sizing kit.</p>

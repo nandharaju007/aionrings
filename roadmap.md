@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Short paper-strip flow
+- [x] Combine preparation, wrap and mark into one visual step; keep measurement and repeat check together.
+- [x] Verify unit conversion, mismatched-reading protection and applying a size on phone and desktop.
 ## Three clear sizing options
 - [x] Show kit, paper and phone camera choices together with simple visual guidance.
 - [x] Collect a delivery address for an email kit request; keep availability and shipping unconfirmed.
