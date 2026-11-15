@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Simple choices and detailed wrapping
+- [x] Add a sample sizing-kit email request without promising availability or delivery.
+- [x] Guide paper preparation, wrapping, marking and ruler reading one step at a time; verify size selection on phone and desktop.
 ## Interactive measurement imagery
 - [x] Replace the paper-strip drawing with realistic examples and tappable guidance.
 - [x] Verify marking, ruler guidance and final size selection on phone and desktop.
