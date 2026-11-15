@@ -20,7 +20,7 @@ import ringRose from "@/assets/ring-finish-rose.png";
 import videoMorningRose from "@/assets/video-life-morning-rose.mp4.asset.json";
 import natureSunrise from "@/assets/nature-sunrise-ridge.jpg";
 import natureWalkRing from "@/assets/nature-walk-ring.jpg";
-import natureForest from "@/assets/nature-forest-trail.jpg";
+import winterRing from "@/assets/winter-ring-worn.jpg";
 import natureWater from "@/assets/nature-calm-water.jpg";
 import natureNight from "@/assets/nature-restful-night.jpg";
 import videoRunTrail from "@/assets/video-run-trail.mp4.asset.json";
@@ -1055,7 +1055,7 @@ function PillarsSection() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <section id="signals" className={`relative overflow-hidden bg-canvas ${SECTION}`}>
-      <NatureBackdrop src={natureForest} opacity={0.22} position="center 55%" />
+      <NatureBackdrop src={winterRing} opacity={0.22} position="center 55%" />
       <ParticleField density={35} opacity={0.12} tone="dark" />
       <div className="container mx-auto px-6 relative z-10">
         <FadeUp className="text-center max-w-3xl mx-auto">
@@ -1501,7 +1501,7 @@ function PlansSection() {
 function FinalCTA() {
   return (
     <section className={`relative overflow-hidden bg-canvas ${SECTION}`}>
-      <NatureBackdrop src={natureForest} opacity={0.12} position="center 30%" />
+      <NatureBackdrop src={winterRing} opacity={0.12} position="center 30%" />
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div
           className="mx-auto relative w-full max-w-5xl overflow-hidden rounded-[28px]"
