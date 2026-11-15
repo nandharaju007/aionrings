@@ -171,7 +171,7 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
             <img src={handCardSample} alt="Open palm with a bank card flat in its center and all fingers visible"
               className="mx-auto aspect-square w-full max-w-[280px] rounded-lg border border-border object-cover" loading="lazy" />
             <figcaption className="mt-3 text-center text-sm leading-relaxed text-ink-soft">
-              No rings. Card flat on your palm. All fingers visible.<br />Hold your phone straight above.
+              Remove rings. Place a standard bank or ID card flat on your palm.<br />Keep all fingers visible; hold your phone straight above.
             </figcaption>
           </figure>
           <div className="mt-5 grid gap-2">
@@ -230,12 +230,12 @@ export function RingSizer({ compact = false, collapsible = false }: { compact?: 
           ) : (
             <>
               <p className="text-lg font-medium">Photo received — no size yet</p>
-              <p className="mt-2 text-sm text-ink-soft">This isn't an error. Photo sizes are still being tested for accuracy, so we don't show a US size yet. Use the free sizing kit to be sure of your size.</p>
+              <p className="mt-2 text-sm text-ink-soft">Photo sizes are still being tested. Use the paper guide or request a physical sizing kit to confirm your size.</p>
             </>
           )}
           <div className="mt-5 border-t border-border pt-4">
             <h4 className="font-medium">Next: confirm your US size</h4>
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">Use the free sizing kit or a physical ring sizer, then match your confirmed measurement to the size chart.</p>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">Use a physical ring sizer or request a sizing kit to verify fit before ordering.</p>
             <Button asChild className="mt-4 h-12 w-full"><Link to="/size-chart"><Ruler />View US size chart</Link></Button>
             <Button type="button" variant="ghost" onClick={reset} className="mt-2 w-full"><ArrowLeft />Start again</Button>
           </div>

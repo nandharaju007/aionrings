@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, Circle, Mail, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Camera, Check, Circle, Mail, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import wrapPhoto from '@/assets/sizing-paper-wrap.jpg';
+import handCardPhoto from '@/assets/hand-card-sample-palm.jpg';
 import { RingSizer } from '@/components/RingSizer';
 import { MeasurementVideo } from '@/components/MeasurementVideo';
 import { PrintableSizer } from '@/components/PrintableSizer';
 import { PaperMeasurementVisual } from '@/components/PaperMeasurementVisual';
-import { measurementInMillimetres, physicalSize, type MeasurementUnit, type PhysicalMethod } from '@/lib/physical-sizing';
+import { PHYSICAL_SIZES, measurementInMillimetres, physicalSize, type MeasurementUnit, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
   if (method === 'circumference') return <PaperMeasurementVisual key={step} step={step < 3 ? 0 : 1} />;
@@ -37,37 +40,45 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const [selected, setSelected] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [kitRequest, setKitRequest] = useState(false);
+  const [photoCheck, setPhotoCheck] = useState(false);
+  const [adjustedSize, setAdjustedSize] = useState<string | null>(null);
+  const [delivery, setDelivery] = useState({ name: '', address: '', city: '', postcode: '', country: '' });
   const wrapSteps = [
-    { title: 'Prepare your strip', text: 'Remove your rings. Cut a narrow strip of plain paper, about 5 mm wide. Have a pen and a millimetre ruler ready.', action: 'My strip is ready' },
-    { title: 'Wrap your finger', text: 'Wrap the strip once around the base of the finger you’ll wear your aiOn ring on. Keep it flat and snug, not tight. Check that it slides over your knuckle without forcing it.', action: 'The wrap feels comfortable' },
-    { title: 'Mark the overlap', text: 'Hold the strip in place. Draw a thin line on the lower layer exactly where the starting end meets it. This line marks the full distance around your finger.', action: 'I’ve marked the strip' },
-    { title: 'Read your ruler', text: 'Unwrap and lay the strip flat. Put the starting end at 0 on your ruler. Read the distance to your pen mark—not to the end of the paper.', action: '' },
+    { title: 'Get ready', text: 'Remove your rings. Cut a 5 mm-wide paper strip. Grab a pen and ruler.', action: 'My strip is ready' },
+    { title: 'Wrap', text: 'Wrap once around your chosen finger. Snug, not tight; it should slide over your knuckle.', action: 'The wrap feels comfortable' },
+    { title: 'Mark', text: 'Hold the paper still. Mark the lower layer where the starting end overlaps it.', action: 'I’ve marked the strip' },
+    { title: 'Measure', text: 'Lay the strip flat. Measure from 0 to your mark on a real ruler.', action: '' },
   ];
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
   const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)) : null;
-  const reset = () => { setMethod(null); setKitRequest(false); setUnit('mm'); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
+  const chosenSize = adjustedSize ?? (result && 'us' in result ? String(result.us) : '');
+  const reset = () => { setMethod(null); setKitRequest(false); setPhotoCheck(false); setAdjustedSize(null); setUnit('mm'); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
   return (
     <div className="min-w-0 text-foreground">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="inline-flex items-center gap-2 text-xs text-primary"><Ruler className="h-4 w-4" />Find your fit</span>
-        <span className="text-xs text-muted-foreground">Sample kit or measure at home</span>
+        <span className="text-xs text-muted-foreground">Three ways to find your fit</span>
       </div>
       <h3 className="mt-3 text-2xl font-light">Find your aiOn ring size.</h3>
-      <ol aria-label="Sizing progress" className="mt-5 grid grid-cols-3 border-b border-border pb-4 text-xs">
+      {method && <ol aria-label="Sizing progress" className="mt-5 grid grid-cols-3 border-b border-border pb-4 text-xs">
         {['Choose', 'Measure', 'Your size'].map((label, i) => <li key={label} aria-current={stage === i ? 'step' : undefined} className={`flex items-center gap-2 ${stage === i ? 'text-primary font-medium' : 'text-muted-foreground'}`}><span className="flex h-6 w-6 items-center justify-center rounded-full border border-current">{stage > i ? <Check className="h-3 w-3" /> : i + 1}</span>{label}</li>)}
-      </ol>
-      {kitRequest ? <div className="pt-6">
+      </ol>}
+      {photoCheck ? <div className="mt-5"><Button variant="ghost" onClick={reset} className="mb-4"><ArrowLeft />All sizing options</Button><RingSizer compact /></div> : kitRequest ? <div className="pt-6">
         <Package className="h-8 w-8 text-primary" />
         <h4 className="mt-3 text-lg font-medium">Request a sample sizing kit</h4>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Try physical sample sizes on the finger you’ll wear your ring on. Ask our team about availability, any cost and delivery before choosing your size.</p>
-        <Button asChild className="mt-5 h-12 w-full"><a href={`mailto:orders@aionrings.com?subject=${encodeURIComponent('aiOn sample sizing kit request')}&body=${encodeURIComponent('Hello aiOn team,\n\nI would like to request a sample ring sizing kit. Please confirm availability, any cost and delivery options.\n\nMy name:\nDelivery country / postcode:\nPre-order reference (if any):\n\nThank you.')}`}><Mail />Email a kit request</a></Button>
-        <p className="mt-2 text-xs text-muted-foreground">Opens your email app. Send the message to request a kit; this does not place an order.</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The best way to verify fit: try sample sizes on your finger.</p>
+        <form className="mt-5 space-y-3" onSubmit={event => { event.preventDefault(); const body = `Hello aiOn team,\nPlease confirm availability, any cost and shipping for a ring sizing kit.\n\nName: ${delivery.name}\nAddress: ${delivery.address}\nCity: ${delivery.city}\nPostcode: ${delivery.postcode}\nCountry: ${delivery.country}`; window.location.href = `mailto:orders@aionrings.com?subject=${encodeURIComponent('aiOn sample sizing kit request')}&body=${encodeURIComponent(body)}`; }}>
+          {([{ key: 'name', label: 'Full name', autoComplete: 'name' }, { key: 'address', label: 'Street address', autoComplete: 'street-address' }, { key: 'city', label: 'City', autoComplete: 'address-level2' }, { key: 'postcode', label: 'Postal / ZIP code', autoComplete: 'postal-code' }, { key: 'country', label: 'Country', autoComplete: 'country-name' }] as const).map(field => <label key={field.key} className="block text-sm">{field.label}<input required autoComplete={field.autoComplete} value={delivery[field.key]} onChange={event => setDelivery({ ...delivery, [field.key]: event.target.value })} className="mt-1 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground" /></label>)}
+          <Button type="submit" className="h-12 w-full"><Mail />Email my kit request</Button>
+        </form>
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Send the request in your email app. Our team must confirm availability, any cost and shipping; no kit is ordered or dispatched yet.</p>
         <Button variant="ghost" type="button" onClick={reset} className="mt-3"><ArrowLeft />Back</Button>
       </div> : !method ? <>
         <p className="mt-5 text-sm text-muted-foreground">How would you like to find your size?</p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <Button variant="outline" type="button" onClick={() => setKitRequest(true)} className="h-auto min-h-24 justify-start gap-3 whitespace-normal bg-card px-4 py-5 text-left hover:bg-secondary hover:text-foreground"><Package className="shrink-0 text-primary" /><span>Request a sample kit<span className="mt-1 block text-xs font-normal text-muted-foreground">Try physical sizes on your finger</span></span></Button>
-          <Button variant="outline" type="button" onClick={() => { setMethod('circumference'); setStage(1); }} className="h-auto min-h-24 justify-start gap-3 whitespace-normal bg-card px-4 py-5 text-left hover:bg-secondary hover:text-foreground"><Scissors className="shrink-0 text-primary" /><span>Wrap with paper<span className="mt-1 block text-xs font-normal text-muted-foreground">Paper, pen and ruler · about 2 minutes</span></span></Button>
+        <div className={`mt-4 grid gap-3 ${showPhoto ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+          <Button variant="outline" type="button" onClick={() => setKitRequest(true)} className="h-auto min-h-24 flex-row justify-start gap-3 whitespace-normal bg-card p-4 text-left hover:bg-secondary hover:text-foreground sm:flex-col sm:items-start"><Package className="h-12 w-12 shrink-0 text-primary sm:h-20 sm:w-20" /><span>Get a sizing kit<span className="mt-1 block text-xs font-normal text-primary">Best for confirming fit</span></span></Button>
+          <Button variant="outline" type="button" onClick={() => { setMethod('circumference'); setStage(1); }} className="h-auto min-h-24 flex-row justify-start gap-3 whitespace-normal bg-card p-4 text-left hover:bg-secondary hover:text-foreground sm:flex-col sm:items-start"><img src={wrapPhoto} alt="Paper wrapped around a finger" className="h-16 w-16 shrink-0 rounded-md object-cover sm:h-20 sm:w-full" /><span>Paper strip<span className="mt-1 block text-xs font-normal text-muted-foreground">Wrap · mark · measure</span></span></Button>
+          {showPhoto && <Button variant="outline" type="button" onClick={() => setPhotoCheck(true)} className="h-auto min-h-24 flex-row justify-start gap-3 whitespace-normal bg-card p-4 text-left hover:bg-secondary hover:text-foreground sm:flex-col sm:items-start"><img src={handCardPhoto} alt="Card flat in an open palm" className="h-16 w-16 shrink-0 rounded-md object-cover sm:h-20 sm:w-full" /><span className="min-w-0"><span className="inline-flex items-center gap-2"><Camera className="h-4 w-4 shrink-0" />Phone camera</span><span className="mt-1 block text-xs font-normal text-muted-foreground">Photo check · sizes still in testing</span></span></Button>}
         </div>
       </> : stage === 1 ? <>
         <p className="mt-5 text-sm font-medium">{method === 'circumference' ? `${visualStep + 1} of 4 · ${wrapStep.title}` : repeatStep ? 'One quick double-check' : 'Measure with your ruler'}</p>
@@ -89,11 +100,14 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         </>}
         <Button variant="ghost" type="button" onClick={() => { if (visualStep > 0) { setVisualStep(visualStep - 1); } else if (repeatStep) { setRepeatStep(false); setVisualStep(method === 'circumference' ? 3 : 0); setSubmitted(false); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
       </> : result && 'us' in result ? <div role="status" className="pt-6">
-        <p className="text-xs text-muted-foreground">Your measurement matches</p>
+        <p className="text-xs text-muted-foreground">Suggested size from your measurements</p>
         <p className="mt-1 text-4xl font-light text-primary">US {result.us}</p>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{result.between ? 'Between sizes: this is the larger whole size. Confirm with a physical sizing kit before ordering.' : 'A size-chart match, not a guaranteed aiOn fit. A wide sensor ring can fit differently from a ring you own.'}</p>
+        <label className="mt-5 block text-sm" htmlFor="physical-size-choice">Confirm or adjust your size</label>
+        <Select value={chosenSize} disabled={selected} onValueChange={value => { setAdjustedSize(value); setFit(false); }}><SelectTrigger id="physical-size-choice" className="mt-2 h-12"><SelectValue /></SelectTrigger><SelectContent>{PHYSICAL_SIZES.map(row => <SelectItem key={row.us} value={String(row.us)}>US {row.us}{row.us === result.us ? ' · suggested' : ''}</SelectItem>)}</SelectContent></Select>
+        {adjustedSize && adjustedSize !== String(result.us) && <p className="mt-2 text-xs text-muted-foreground">You chose US {adjustedSize}. Verify this change with a physical sizing kit.</p>}
         <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed"><input type="checkbox" checked={fit} onChange={e => setFit(e.target.checked)} className="mt-1 h-4 w-4 accent-primary" />I measured the same finger twice and will confirm the fit with a physical sizing kit before my ring ships.</label>
-        {onSelect ? <Button type="button" disabled={!fit || selected} onClick={() => { if (result.us === undefined) return; onSelect(String(result.us)); setSelected(true); }} className="mt-5 h-12 w-full">{selected ? <><Check />Size applied</> : <>{selectionLabel}<ArrowRight /></>}</Button> : <Button asChild className="mt-5 h-12 w-full" disabled={!fit}><Link to={`/preorder?measured_size=${result.us}`} onClick={e => { if (!fit) e.preventDefault(); }} aria-disabled={!fit}>Continue with US {result.us}<ArrowRight /></Link></Button>}
+        {onSelect ? <Button type="button" disabled={!fit || selected} onClick={() => { if (!chosenSize) return; onSelect(chosenSize); setSelected(true); }} className="mt-5 h-12 w-full">{selected ? <><Check />Size applied</> : <>{selectionLabel}<ArrowRight /></>}</Button> : <Button asChild className="mt-5 h-12 w-full" disabled={!fit}><Link to={`/preorder?measured_size=${chosenSize}`} onClick={e => { if (!fit) e.preventDefault(); }} aria-disabled={!fit}>Continue with US {chosenSize}<ArrowRight /></Link></Button>}
         <Button type="button" variant="ghost" onClick={reset} className="mt-2 w-full"><RotateCcw />Measure again</Button>
       </div> : null}
       {stage === 1 && <MeasurementVideo />}
@@ -102,7 +116,6 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         <div className="mt-3"><PrintableSizer /></div>
         <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Measure with warm hands. If your knuckle is larger or you’re unsure, use a physical sizing kit.</p>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-primary"><Link to="/size-chart" className="underline underline-offset-4">US size chart</Link><Link to="/faq" className="underline underline-offset-4">Sizing questions</Link></div>
-        {showPhoto && <details className="mt-4 border-t border-border pt-4"><summary className="cursor-pointer text-xs text-muted-foreground">Camera photo check · still being validated</summary><div className="mt-4"><RingSizer compact /></div></details>}
       </details>
     </div>
   );

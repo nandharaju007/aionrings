@@ -1,4 +1,8 @@
 # Sizing accuracy
+## Three clear sizing options
+- [x] Show kit, paper and phone camera choices together with simple visual guidance.
+- [x] Collect a delivery address for an email kit request; keep availability and shipping unconfirmed.
+- [x] Add editable physical chart results and verify phone/desktop flows without bypassing the camera accuracy gate.
 ## Simple choices and detailed wrapping
 - [x] Add a sample sizing-kit email request without promising availability or delivery.
 - [x] Guide paper preparation, wrapping, marking and ruler reading one step at a time; verify size selection on phone and desktop.
