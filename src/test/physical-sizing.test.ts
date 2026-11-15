@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { physicalSize } from '../lib/physical-sizing';
+import { measurementInMillimetres, physicalSize } from '../lib/physical-sizing';
 
 describe('Physical ring measurements', () => {
+  it('converts centimetres to millimetres before matching circumference', () => {
+    expect(measurementInMillimetres(5.95, 'cm')).toBe(59.5);
+    expect(physicalSize('circumference', measurementInMillimetres(5.95, 'cm'), measurementInMillimetres(5.95, 'cm'))).toMatchObject({ us: 9 });
+  });
+  it('keeps millimetre measurements unchanged', () => {
+    expect(measurementInMillimetres(59.5, 'mm')).toBe(59.5);
+  });
   it('maps 19 mm inside diameter to the chart US 9', () => {
     expect(physicalSize('diameter', 19, 19)).toMatchObject({ us: 9, between: false });
   });

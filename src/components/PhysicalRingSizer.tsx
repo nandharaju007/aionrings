@@ -6,7 +6,7 @@ import { RingSizer } from '@/components/RingSizer';
 import { MeasurementVideo } from '@/components/MeasurementVideo';
 import { PrintableSizer } from '@/components/PrintableSizer';
 import { PaperMeasurementVisual } from '@/components/PaperMeasurementVisual';
-import { physicalSize, type PhysicalMethod } from '@/lib/physical-sizing';
+import { measurementInMillimetres, physicalSize, type MeasurementUnit, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
   if (method === 'circumference') return <PaperMeasurementVisual key={step} step={step < 3 ? 0 : 1} />;
@@ -28,6 +28,11 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const [repeatStep, setRepeatStep] = useState(false);
   const [first, setFirst] = useState('');
   const [second, setSecond] = useState('');
+  const [unit, setUnit] = useState<MeasurementUnit>('mm');
+  const changeUnit = (next: MeasurementUnit) => {
+    const convert = (value: string) => value === '' ? '' : String(Number((measurementInMillimetres(Number(value), unit) / (next === 'cm' ? 10 : 1)).toFixed(6)));
+    setFirst(convert(first)); setSecond(convert(second)); setUnit(next); setSubmitted(false);
+  };
   const [fit, setFit] = useState(false);
   const [selected, setSelected] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -36,11 +41,11 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
     { title: 'Prepare your strip', text: 'Remove your rings. Cut a narrow strip of plain paper, about 5 mm wide. Have a pen and a millimetre ruler ready.', action: 'My strip is ready' },
     { title: 'Wrap your finger', text: 'Wrap the strip once around the base of the finger you’ll wear your aiOn ring on. Keep it flat and snug, not tight. Check that it slides over your knuckle without forcing it.', action: 'The wrap feels comfortable' },
     { title: 'Mark the overlap', text: 'Hold the strip in place. Draw a thin line on the lower layer exactly where the starting end meets it. This line marks the full distance around your finger.', action: 'I’ve marked the strip' },
-    { title: 'Read your ruler', text: 'Unwrap and lay the strip flat. Put the starting end at 0 on a real millimetre ruler. Read the distance to your pen mark—not to the end of the paper.', action: '' },
+    { title: 'Read your ruler', text: 'Unwrap and lay the strip flat. Put the starting end at 0 on your ruler. Read the distance to your pen mark—not to the end of the paper.', action: '' },
   ];
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
-  const result = method && submitted ? physicalSize(method, Number(first), Number(second)) : null;
-  const reset = () => { setMethod(null); setKitRequest(false); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
+  const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)) : null;
+  const reset = () => { setMethod(null); setKitRequest(false); setUnit('mm'); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
   return (
     <div className="min-w-0 text-foreground">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -72,10 +77,15 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         <p className="mt-3 text-sm leading-relaxed">{method === 'circumference' ? wrapStep.text : repeatStep ? 'Measure the inside opening again.' : 'Measure across the inside opening, not the metal.'}</p>
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{method === 'diameter' ? 'Choose a ring that fits your intended finger. Use a real millimetre ruler; this picture is not actual size.' : repeatStep ? 'Second check: use a fresh strip and repeat the same steps.' : 'Warm hands give a more representative fit. Don’t stretch or pull the paper tight.'}</p>
         {method === 'circumference' && visualStep < 3 ? <Button type="button" onClick={() => setVisualStep(visualStep + 1)} className="mt-5 h-12 w-full whitespace-normal">{wrapStep.action}<ArrowRight /></Button> : <>
-          {repeatStep && <p className="mt-4 text-xs text-muted-foreground">First measurement: {first} mm</p>}
-          <label className="mt-5 block text-sm font-medium">{repeatStep ? 'Second measurement (mm)' : 'Your measurement (mm)'}<input key={repeatStep ? 'repeat' : 'first'} type="number" inputMode="decimal" step="0.1" min="0" aria-label={repeatStep ? 'Second measurement (mm)' : 'Your measurement (mm)'} value={repeatStep ? second : first} placeholder={method === 'diameter' ? 'e.g. 19.0' : 'e.g. 59.5'} onChange={e => { (repeatStep ? setSecond : setFirst)(e.target.value); setSubmitted(false); }} className="mt-2 h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring" /></label>
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium">Units on your ruler</legend>
+            <div className="mt-2 flex gap-2">{(['cm', 'mm'] as const).map(value => <Button key={value} type="button" variant={unit === value ? 'default' : 'outline'} aria-pressed={unit === value} onClick={() => changeUnit(value)} className="h-11 flex-1">{value === 'cm' ? 'Centimetres (cm)' : 'Millimetres (mm)'}</Button>)}</div>
+          </fieldset>
+          <p className="mt-2 text-xs text-muted-foreground">The picture’s numbered marks are cm; each small division is 1 mm. 5.95 cm = 59.5 mm.</p>
+          {repeatStep && <p className="mt-4 text-xs text-muted-foreground">First measurement: {first} {unit}</p>}
+          <label className="mt-5 block text-sm font-medium">{repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`}<input key={repeatStep ? 'repeat' : 'first'} type="number" inputMode="decimal" step={unit === 'cm' ? '0.01' : '0.1'} min="0" aria-label={repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`} value={repeatStep ? second : first} placeholder={unit === 'cm' ? method === 'diameter' ? 'e.g. 1.90' : 'e.g. 5.95' : method === 'diameter' ? 'e.g. 19.0' : 'e.g. 59.5'} onChange={e => { (repeatStep ? setSecond : setFirst)(e.target.value); setSubmitted(false); }} className="mt-2 h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring" /></label>
           {result?.error && <p role="alert" className="mt-3 text-sm text-destructive">{result.error}</p>}
-          <Button type="button" disabled={repeatStep ? !second : !first} onClick={() => { if (!repeatStep) { setRepeatStep(true); if (method === 'circumference') setVisualStep(0); return; } if (!method) return; const reading = physicalSize(method, Number(first), Number(second)); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Double-check my measurement'}<ArrowRight /></Button>
+          <Button type="button" disabled={repeatStep ? !second : !first} onClick={() => { if (!repeatStep) { setRepeatStep(true); if (method === 'circumference') setVisualStep(0); return; } if (!method) return; const reading = physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Double-check my measurement'}<ArrowRight /></Button>
         </>}
         <Button variant="ghost" type="button" onClick={() => { if (visualStep > 0) { setVisualStep(visualStep - 1); } else if (repeatStep) { setRepeatStep(false); setVisualStep(method === 'circumference' ? 3 : 0); setSubmitted(false); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
       </> : result && 'us' in result ? <div role="status" className="pt-6">

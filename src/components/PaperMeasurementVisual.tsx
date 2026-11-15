@@ -15,7 +15,7 @@ export function PaperMeasurementVisual({ step }: { step: number }) {
           {!open && <span aria-hidden="true" className="absolute inset-0 rounded-full border-2 border-primary motion-safe:animate-ping" />}
           {open ? <X className="h-5 w-5" /> : wrapping ? <Pencil className="h-5 w-5" /> : <Ruler className="h-5 w-5" />}
         </Button>
-        {open && <div role="status" className="absolute inset-x-3 bottom-3 rounded-md border border-border bg-background/95 p-3 text-sm text-foreground shadow-sm motion-safe:animate-in motion-safe:fade-in">{wrapping ? 'Draw a line where the end of the strip overlaps. Keep the paper snug, not tight.' : 'Align the start with 0, then count millimetres to your mark. Read your own strip, not this example.'}</div>}
+        {open && <div role="status" className="absolute inset-x-3 bottom-3 rounded-md border border-border bg-background/95 p-3 text-sm text-foreground shadow-sm motion-safe:animate-in motion-safe:fade-in">{wrapping ? 'Draw a line where the end of the strip overlaps. Keep the paper snug, not tight.' : 'Align the start with 0. Numbered marks are centimetres; small divisions are millimetres. Read your own strip, not this example.'}</div>}
       </div>
       <figcaption className="mt-2 text-xs text-muted-foreground">Illustrative example · use your own paper and a real ruler.</figcaption>
     </figure>

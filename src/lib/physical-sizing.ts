@@ -11,6 +11,10 @@ export const PHYSICAL_SIZES = [
 ] as const;
 
 export type PhysicalMethod = 'diameter' | 'circumference';
+export type MeasurementUnit = 'mm' | 'cm';
+export function measurementInMillimetres(value: number, unit: MeasurementUnit) {
+  return unit === 'cm' ? value * 10 : value;
+}
 export function physicalSize(method: PhysicalMethod, first: number, second: number) {
   if (!Number.isFinite(first) || !Number.isFinite(second) || first <= 0 || second <= 0) return { error: 'Enter both measurements in millimetres.' };
   const tolerance = method === 'diameter' ? 0.3 : 1;
