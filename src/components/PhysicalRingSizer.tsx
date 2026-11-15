@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Camera, Check, Circle, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -54,10 +54,16 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
   const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)) : null;
   const chosenSize = adjustedSize ?? (result && 'us' in result ? String(result.us) : '');
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!submitted) return;
-    outcomeRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
-    outcomeRef.current?.focus({ preventScroll: true });
+    const outcome = outcomeRef.current;
+    if (!outcome) return;
+    outcome.focus({ preventScroll: true });
+    outcome.scrollIntoView({ block: 'start', behavior: 'instant' });
+    const frame = requestAnimationFrame(() => {
+      outcome.scrollIntoView({ block: 'start', behavior: 'instant' });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [submitted, stage, attempt]);
   const reset = () => { setMethod(null); setKitRequest(false); setPhotoCheck(false); setAdjustedSize(null); setUnit('mm'); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
   return (
