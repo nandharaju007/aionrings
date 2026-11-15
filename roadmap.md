@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Easier measurement steps
+- [x] Show one measurement input at a time with a guided repeat check and clear back navigation.
+- [x] Keep optional sizing tools out of the main flow and verify phone and desktop size selection.
 ## Physical sizing alternative
 - [x] Build a shared visual ring / paper measurement guide with repeat-reading checks.
 - [x] Make it primary on pre-order, ring and sizing-kit pages; retain optional photo checking.
