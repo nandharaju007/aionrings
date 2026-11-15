@@ -1,4 +1,8 @@
 # Sizing accuracy
+## Physical sizing alternative
+- [x] Build a shared visual ring / paper measurement guide with repeat-reading checks.
+- [x] Make it primary on pre-order, ring and sizing-kit pages; retain optional photo checking.
+- [x] Verify measurements, size selection, print download and mobile layouts.
 ## Photo result clarity
 - [x] Replace size-estimation promises with photo-check labels and distinguish an unavailable reading from a camera error.
 - [x] Give photo results a direct path to the physical US size chart without recommending an unvalidated size.

@@ -9,7 +9,7 @@ import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
-import { RingSizer } from "@/components/RingSizer";
+import { PhysicalRingSizer } from "@/components/PhysicalRingSizer";
 
 
 const GRADIENT = "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)";
@@ -20,18 +20,6 @@ const RING_COLORS = [
   { id: "midnight", name: "Midnight Black", image: ringMidnight, swatch: "linear-gradient(135deg,#2A2F38,#0B0F16)" },
   { id: "silver", name: "Titanium Silver", image: ringSilver, swatch: "linear-gradient(135deg,#EDEFF2,#9AA3AD)" },
   { id: "rose", name: "Rose Gold", image: ringRose, swatch: "linear-gradient(135deg,#F3C4AE,#C98D6E)" },
-];
-
-// US ring size → inner diameter (mm) reference
-const SIZE_CHART: Array<{ size: string; diameter: string; circumference: string }> = [
-  { size: "6", diameter: "16.5 mm", circumference: "51.8 mm" },
-  { size: "7", diameter: "17.3 mm", circumference: "54.4 mm" },
-  { size: "8", diameter: "18.1 mm", circumference: "57.0 mm" },
-  { size: "9", diameter: "19.0 mm", circumference: "59.5 mm" },
-  { size: "10", diameter: "19.8 mm", circumference: "62.1 mm" },
-  { size: "11", diameter: "20.6 mm", circumference: "64.6 mm" },
-  { size: "12", diameter: "21.4 mm", circumference: "67.2 mm" },
-  { size: "13", diameter: "22.2 mm", circumference: "69.7 mm" },
 ];
 
 // Standard list of country names for the searchable Country field below.
@@ -317,9 +305,12 @@ export default function PreOrderPage() {
   const partnerCode = (params.get("partner") || "").trim().toLowerCase() || undefined;
 
   const [form, setForm] = useState<FormState>(() => ({ ...INITIAL, referral_source: referral ?? "" }));
-  const [items, setItems] = useState<RingItem[]>([newItem()]);
+  const [items, setItems] = useState<RingItem[]>(() => {
+    const item = newItem();
+    const measured = params.get("measured_size");
+    return [{ ...item, ring_size: measured && RING_SIZES.includes(measured) ? measured : "" }];
+  });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [sizingOpen, setSizingOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
@@ -561,44 +552,11 @@ export default function PreOrderPage() {
                 {/* Form */}
                 <form onSubmit={onSubmit} className="min-w-0 space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
                   <Section title="Your rings">
-                    <div className="rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/[0.06] to-white p-5 md:p-6 shadow-sm">
-                      <div className="text-[18px] md:text-[20px] font-medium text-ink mb-1.5">
-                        Not sure of your ring size?
-                      </div>
-                      <p className="text-[14px] text-ink-soft leading-relaxed">
-                        Start with a photo check, then confirm your fit with a physical sizer.
-                      </p>
-                      <div className="mt-5 border-y border-border py-5">
-                        <RingSizer compact />
-                      </div>
-
-                      {/* Other sizing options, one simple combined action */}
-                      <div className="mt-4">
-                        <button
-                          type="button"
-                          onClick={() => setSizingOpen(true)}
-                          className="w-full flex items-center gap-3 rounded-xl border border-border bg-white p-3.5 text-left transition-colors hover:border-primary/40"
-                        >
-                          <span className="w-11 h-11 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
-                            <RingMethodIcon />
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-[13px] font-medium text-ink leading-snug">
-                              Measure with a ring or a strip of paper
-                            </span>
-                            <span className="block text-[12px] text-ink-muted leading-snug">
-                              Two quick ways to find your size at home
-                            </span>
-                          </span>
-                        </button>
-                      </div>
-
-                      <p className="mt-3 text-[12px] text-ink-muted flex items-center gap-1.5">
-                        <Truck className="w-3.5 h-3.5 shrink-0" />
-                        A free sizing kit ships before your ring, adjust your size anytime.
-                      </p>
-                    </div>
-
+                    <section className="border-y border-border py-6" aria-label="Find your ring size">
+                      <PhysicalRingSizer selectionLabel="Use this size for Ring 1" onSelect={(size) => {
+                        setItems(previous => previous.map((item, index) => index === 0 ? { ...item, ring_size: size } : item));
+                      }} />
+                    </section>
 
                     {items.map((item, idx) => (
                       <div
@@ -875,7 +833,6 @@ export default function PreOrderPage() {
         </div>
       </main>
 
-      {sizingOpen && <SizingGuide onClose={() => setSizingOpen(false)} />}
 
       <Footer />
     </div>
@@ -1128,125 +1085,3 @@ function ConfirmationCard({ name, partner }: { name: string; partner?: string | 
   );
 }
 
-function RingMethodIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="14" r="6.5" />
-      <path d="M12 7.5 9.5 4.5h5L12 7.5Z" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
-function StringMethodIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="8.5" y="3" width="7" height="18" rx="3.5" />
-      <path d="M5.5 10.5c2.5 1.8 10.5 1.8 13 0" />
-</svg>
-  );
-}
-
-function SizingGuide({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-ink/35 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative w-full max-w-lg rounded-3xl border border-border bg-white p-8 max-h-[90vh] overflow-y-auto shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full border border-border text-ink-muted hover:border-primary/40 hover:text-ink flex items-center justify-center transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div className="text-[11px] uppercase tracking-[3px] text-primary mb-2">Sizing Guide</div>
-        <h3 className="text-2xl font-light tracking-tight mb-4 text-ink">Find your perfect fit.</h3>
-
-        {/* Measure at home, both ways in one card */}
-        <div className="rounded-xl border border-border bg-white p-4 mb-5">
-          <div className="flex items-start gap-3">
-            <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
-              <RingMethodIcon />
-            </span>
-            <div className="min-w-0">
-              <div className="text-[13px] font-medium text-ink">Use a ring you already wear</div>
-              <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
-                Pick a ring that fits the same finger, measure straight across its inside edge in mm, then find the
-                closest "Inner Diameter" in the chart below.
-              </p>
-            </div>
-          </div>
-          <div className="my-3 border-t border-border" />
-          <div className="flex items-start gap-3">
-            <span className="w-10 h-10 rounded-full bg-canvas border border-border flex items-center justify-center shrink-0">
-              <StringMethodIcon />
-            </span>
-            <div className="min-w-0">
-              <div className="text-[13px] font-medium text-ink">Or wrap a strip of paper</div>
-              <p className="mt-1 text-[12px] text-ink-muted leading-relaxed">
-                Wrap it snugly around the base of your finger, mark where it overlaps, lay it flat and measure its
-                length in mm, then find the closest "Circumference" in the chart below.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick tips, one line each with an icon */}
-        <div className="space-y-2 mb-2">
-          {[
-            { icon: Clock, text: "Measure at the end of the day, when fingers are warmest." },
-            { icon: Fingerprint, text: "Wear it snug, the sensors need skin contact." },
-            { icon: ArrowUp, text: "When in doubt, size up." },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-2.5 text-[13px] text-ink-soft">
-              <Icon className="w-4 h-4 text-primary shrink-0" />
-              <span>{text}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-border overflow-hidden">
-          <table className="w-full text-[13px]">
-            <thead>
-              <tr className="bg-canvas text-ink-muted text-[11px] uppercase tracking-[2px]">
-                <th className="text-left px-4 py-2 font-medium">US Size</th>
-                <th className="text-left px-4 py-2 font-medium">Inner Diameter</th>
-                <th className="text-left px-4 py-2 font-medium">Circumference</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SIZE_CHART.map((row) => (
-                <tr key={row.size} className="border-t border-border">
-                  <td className="px-4 py-2 font-medium text-ink">{row.size}</td>
-                  <td className="px-4 py-2 text-ink-soft">{row.diameter}</td>
-                  <td className="px-4 py-2 text-ink-soft">{row.circumference}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <p className="mt-6 text-[12px] text-ink-muted">
-          Still unsure? Order any size, we'll ship a free sizing kit before your ring, and you can update your final
-          size before dispatch.
-        </p>
-      </div>
-    </div>
-  );
-}

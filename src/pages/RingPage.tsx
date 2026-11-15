@@ -4,7 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
 import { RingTryOn } from '@/components/RingTryOn';
-import { RingSizer } from '@/components/RingSizer';
+import { PhysicalRingSizer } from '@/components/PhysicalRingSizer';
 import ringProduct from '@/assets/ring-product.jpg';
 import handCardSample from '@/assets/hand-card-sample-palm.jpg';
 
@@ -139,12 +139,12 @@ export default function RingPage() {
               <span className="eyebrow">Experience the Ring</span>
               <h2 className="mt-2 text-3xl font-light text-ink md:text-4xl">See the fit before you reserve.</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                Preview your preferred finish on your own hand, check your finger with a photo and confirm your size with a physical sizer.
+                Preview your finish, then find your size using a ring you own or a paper strip and ruler.
               </p>
             </div>
             <div className="mt-8 grid items-start gap-5 md:grid-cols-2">
               <RingTryOn />
-              <RingSizer collapsible />
+              <PhysicalRingSizer />
             </div>
           </section>
 

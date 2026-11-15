@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
+import { PhysicalRingSizer } from '@/components/PhysicalRingSizer';
 
 const PDF = '/downloads/aion-printable-ring-sizer.pdf';
 
@@ -34,8 +35,11 @@ export default function SizingKitPage() {
           </nav>
           <h1 className="mt-6 text-3xl font-light text-ink md:text-5xl">Find your size at home</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-            Print our free sizer, measure in two minutes, and reserve with confidence. The aiOn Ring comes in whole US sizes 6 to 13.
+            Use a ring you own or a strip of paper and a ruler. Match your measurements to US sizes 6–13, then confirm with a physical sizing kit.
           </p>
+          <section className="mt-8 max-w-2xl border-y border-border py-7" aria-label="Find your ring size">
+            <PhysicalRingSizer />
+          </section>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild size="lg">
               <a href={PDF} download="aion-printable-ring-sizer.pdf"><Download className="mr-2 h-4 w-4" />Download printable sizer (PDF)</a>
@@ -48,7 +52,7 @@ export default function SizingKitPage() {
           <h2 className="mt-14 text-2xl font-light text-ink">Paper strip: step by step</h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-2">
             {steps.map((s, i) => (
-              <li key={s.title} className="rounded-2xl border border-border bg-card p-5">
+                <li key={s.title} className="rounded-lg border border-border bg-card p-5">
                 <div className="flex items-center gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground">{i + 1}</span>
                   <s.icon className="h-5 w-5 text-ink-muted" aria-hidden />

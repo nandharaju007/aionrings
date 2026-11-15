@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SEO } from '@/components/SEO';
+import { Button } from '@/components/ui/button';
 
 type Row = { us: string; uk: string; eu: string; mm: string; circ: string; available: boolean };
 
@@ -43,9 +44,8 @@ export default function SizeChartPage() {
 
           <h1 className="mt-6 text-3xl font-light text-ink md:text-5xl">Ring size chart</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-            Got a size from our photo estimate, or know your size in another country's system? Find it
-            below to see the matching US, UK and European size. The aiOn Ring comes in whole US sizes
-            6 to 13, shown in bold. If you land on a half size, we recommend sizing up.
+            Match a measurement from a ring or paper strip to this reference chart. The aiOn Ring comes
+            in whole US sizes 6 to 13, shown in bold. Between sizes? Confirm the larger size with a physical sizing kit.
           </p>
 
           <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-white shadow-sm">
@@ -87,7 +87,7 @@ export default function SizeChartPage() {
             {[
               { t: 'From a ring you own', b: 'Measure the inside edge of a ring that fits well and match it to the inner diameter column.' },
               { t: 'With a strip of paper', b: 'Wrap it around the base of your finger, mark where it meets, and match the length to the circumference column.' },
-              { t: 'From your photo estimate', b: 'Find your estimated US size above to see its UK and EU equivalent and exact measurements.' },
+              { t: 'Confirm your fit', b: 'Chart matches are a starting point. A wide sensor ring may fit differently; confirm with a physical sizing kit.' },
             ].map((c) => (
               <div key={c.t} className="rounded-2xl border border-border bg-white p-5 shadow-sm">
                 <h2 className="text-base font-medium text-ink">{c.t}</h2>
@@ -97,12 +97,8 @@ export default function SizeChartPage() {
           </div>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link to="/ring#ring-experience" className="rounded-full bg-primary px-6 py-3 text-[14px] font-medium text-primary-foreground">
-              Estimate my size from a photo
-            </Link>
-            <Link to="/preorder" className="rounded-full border border-border px-6 py-3 text-[14px] font-medium text-ink">
-              Reserve your ring
-            </Link>
+            <Button asChild><Link to="/sizing-kit">Find my size step by step</Link></Button>
+            <Button asChild variant="outline"><Link to="/preorder">Reserve your ring</Link></Button>
           </div>
 
           <p className="mt-8 text-[13px] leading-relaxed text-ink-muted">

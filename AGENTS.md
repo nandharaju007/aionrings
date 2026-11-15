@@ -5,3 +5,4 @@
 - Keep the sizing FAQ in a dedicated routed page using the shared header, footer, SEO and accordion components to preserve site navigation and accessible question controls.
 - Render the full-screen sizing camera in a body portal above site overlays so cookie notices and parent stacking contexts cannot block its shutter or cancel controls.
 - Keep the photo/check/fit-confirmation stages in the shared RingSizer, with automatic card detection and no manual corner step; both entry pages must use the same simple flow.
+- Keep physical-measurement guidance shared across shopping and sizing pages, with pure chart conversion and repeat-reading checks tested separately; never treat illustrative screen dimensions as a real ruler or chart matches as verified sensor-ring fit.
