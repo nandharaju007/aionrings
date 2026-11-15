@@ -337,6 +337,39 @@ export type Database = {
         }
         Relationships: []
       }
+      sizing_kit_requests: {
+        Row: {
+          address: string
+          city: string
+          country: string
+          created_at: string
+          id: string
+          name: string
+          postcode: string
+          region: string
+        }
+        Insert: {
+          address: string
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          name: string
+          postcode: string
+          region?: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          name?: string
+          postcode?: string
+          region?: string
+        }
+        Relationships: []
+      }
       sizing_settings: {
         Row: {
           chart_version: number

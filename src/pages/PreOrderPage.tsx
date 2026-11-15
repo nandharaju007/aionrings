@@ -549,15 +549,15 @@ export default function PreOrderPage() {
                   </div>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={onSubmit} className="min-w-0 space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
-                  <Section title="Your rings">
+                <div className="min-w-0 space-y-10 rounded-3xl border border-border bg-white p-6 md:p-10 shadow-sm">
                     <section className="border-y border-border py-6" aria-label="Find your ring size">
                       <PhysicalRingSizer selectionLabel="Use this size for Ring 1" onSelect={(size) => {
                         setItems(previous => previous.map((item, index) => index === 0 ? { ...item, ring_size: size } : item));
                       }} />
                     </section>
 
+                <form onSubmit={onSubmit} className="space-y-10">
+                  <Section title="Your rings">
                     {items.map((item, idx) => (
                       <div
                         key={item.id}
@@ -827,6 +827,7 @@ export default function PreOrderPage() {
                     .
                   </p>
                 </form>
+                </div>
               </div>
             </>
           )}

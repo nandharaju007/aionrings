@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Ship a sample kit from a delivery address
+- [x] Replace email-only requests with a validated, saved shipping-address form.
+- [x] Show requests to administrators and verify a real submission reads back; explain ordering after finding a size.
 ## Clear Show my size outcome
 - [x] Explain ruler input and units; bring either the suggested US size or measurement error into view.
 - [x] Verify successful results in cm and mm and visible feedback for mismatched units.

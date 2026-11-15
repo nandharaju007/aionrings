@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Camera, Check, Circle, Mail, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Camera, Check, Circle, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import wrapPhoto from '@/assets/sizing-paper-wrap.jpg';
@@ -9,6 +9,7 @@ import { RingSizer } from '@/components/RingSizer';
 import { MeasurementVideo } from '@/components/MeasurementVideo';
 import { PrintableSizer } from '@/components/PrintableSizer';
 import { PaperMeasurementVisual } from '@/components/PaperMeasurementVisual';
+import { SizingKitRequest } from '@/components/SizingKitRequest';
 import { PHYSICAL_SIZES, measurementInMillimetres, physicalSize, type MeasurementUnit, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
@@ -43,7 +44,6 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const [kitRequest, setKitRequest] = useState(false);
   const [photoCheck, setPhotoCheck] = useState(false);
   const [adjustedSize, setAdjustedSize] = useState<string | null>(null);
-  const [delivery, setDelivery] = useState({ name: '', address: '', city: '', postcode: '', country: '' });
   const wrapSteps = [
     { title: 'Wrap & mark', text: 'Wrap a narrow paper strip around your finger. Mark where the starting end overlaps.', action: 'I’ve marked the strip' },
     { title: 'Measure', text: 'Lay the strip flat. Measure from 0 to your mark on a real ruler.', action: '' },
@@ -68,14 +68,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         {(method === 'circumference' ? ['Wrap & mark', 'Measure', 'Your size'] : ['Choose', 'Measure', 'Your size']).map((label, i) => { const active = method === 'circumference' ? stage === 2 ? 2 : visualStep : stage; return <li key={label} aria-current={active === i ? 'step' : undefined} className={`flex items-center gap-2 ${active === i ? 'text-primary font-medium' : 'text-muted-foreground'}`}><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-current">{active > i ? <Check className="h-3 w-3" /> : i + 1}</span>{label}</li>; })}
       </ol>}
       {photoCheck ? <div className="mt-5"><Button variant="ghost" onClick={reset} className="mb-4"><ArrowLeft />All sizing options</Button><RingSizer compact /></div> : kitRequest ? <div className="pt-6">
-        <Package className="h-8 w-8 text-primary" />
-        <h4 className="mt-3 text-lg font-medium">Request a sample sizing kit</h4>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The best way to verify fit: try sample sizes on your finger.</p>
-        <form className="mt-5 space-y-3" onSubmit={event => { event.preventDefault(); const body = `Hello aiOn team,\nPlease confirm availability, any cost and shipping for a ring sizing kit.\n\nName: ${delivery.name}\nAddress: ${delivery.address}\nCity: ${delivery.city}\nPostcode: ${delivery.postcode}\nCountry: ${delivery.country}`; window.location.href = `mailto:orders@aionrings.com?subject=${encodeURIComponent('aiOn sample sizing kit request')}&body=${encodeURIComponent(body)}`; }}>
-          {([{ key: 'name', label: 'Full name', autoComplete: 'name' }, { key: 'address', label: 'Street address', autoComplete: 'street-address' }, { key: 'city', label: 'City', autoComplete: 'address-level2' }, { key: 'postcode', label: 'Postal / ZIP code', autoComplete: 'postal-code' }, { key: 'country', label: 'Country', autoComplete: 'country-name' }] as const).map(field => <label key={field.key} className="block text-sm">{field.label}<input required autoComplete={field.autoComplete} value={delivery[field.key]} onChange={event => setDelivery({ ...delivery, [field.key]: event.target.value })} className="mt-1 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground" /></label>)}
-          <Button type="submit" className="h-12 w-full"><Mail />Email my kit request</Button>
-        </form>
-        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Send the request in your email app. Our team must confirm availability, any cost and shipping; no kit is ordered or dispatched yet.</p>
+        <SizingKitRequest />
         <Button variant="ghost" type="button" onClick={reset} className="mt-3"><ArrowLeft />Back</Button>
       </div> : !method ? <>
         <p className="mt-5 text-sm text-muted-foreground">How would you like to find your size?</p>

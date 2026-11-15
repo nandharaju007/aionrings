@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminSizingKitRequests } from "@/components/AdminSizingKitRequests";
+import { Button } from "@/components/ui/button";
 import {
   Loader2,
   LogOut,
@@ -119,7 +121,7 @@ interface WebOrderRow {
   items: WebOrderItem[];
 }
 
-type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c" | "pricing";
+type Tab = "reservations" | "fulfillment" | "partners" | "bulk" | "b2c" | "pricing" | "kits";
 
 // ─── New: real shape of documents in the mobile app's "orders" collection ───
 // Note: many order items only ever reach the "interest" browsing stage and never
@@ -1118,13 +1120,14 @@ export default function AdminReservationsPage() {
           ) : (
             <>
               <div className="flex flex-wrap gap-1 mb-8 rounded-full border border-border bg-white p-1 w-fit">
-                {(["reservations", "fulfillment", "partners", "bulk", "b2c", "pricing"] as Tab[]).map((t) => (
-                  <button
+                {(["reservations", "fulfillment", "kits", "partners", "bulk", "b2c", "pricing"] as Tab[]).map((t) => (
+                  <Button
+                    variant={tab === t ? "default" : "ghost"}
                     key={t}
                     onClick={() => setTab(t)}
-                    className={`px-5 py-2 text-[13px] rounded-full transition-colors ${tab === t ? "bg-primary text-white shadow-sm" : "text-ink-muted hover:text-primary"}`}
+                    className="px-5 py-2 text-[13px] rounded-full"
                   >
-                    {t === "reservations"
+                    {t === "kits" ? "Sizing Kits" : t === "reservations"
                       ? "Reservations"
                       : t === "fulfillment"
                         ? "Orders & Delivery"
@@ -1135,10 +1138,11 @@ export default function AdminReservationsPage() {
                             : t === "b2c"
                               ? "B2C"
                               : "Pricing"}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
+              {tab === "kits" && <AdminSizingKitRequests />}
               {tab === "fulfillment" && (
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6">
