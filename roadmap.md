@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Clear Show my size outcome
+- [x] Explain ruler input and units; bring either the suggested US size or measurement error into view.
+- [x] Verify successful results in cm and mm and visible feedback for mismatched units.
 ## Short paper-strip flow
 - [x] Combine preparation, wrap and mark into one visual step; keep measurement and repeat check together.
 - [x] Verify unit conversion, mismatched-reading protection and applying a size on phone and desktop.

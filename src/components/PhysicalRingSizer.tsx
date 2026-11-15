@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Camera, Check, Circle, Mail, Package, Ruler, RotateCcw, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: num
 }
 
 export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', showPhoto = true }: { onSelect?: (size: string) => void; selectionLabel?: string; showPhoto?: boolean }) {
+  const outcomeRef = useRef<HTMLDivElement>(null);
   const [method, setMethod] = useState<PhysicalMethod | null>(null);
   const [stage, setStage] = useState(0);
   const [visualStep, setVisualStep] = useState(0);
@@ -50,6 +51,11 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
   const wrapStep = wrapSteps[visualStep] ?? wrapSteps[0];
   const result = method && submitted ? physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)) : null;
   const chosenSize = adjustedSize ?? (result && 'us' in result ? String(result.us) : '');
+  useEffect(() => {
+    if (!submitted) return;
+    outcomeRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+    outcomeRef.current?.focus({ preventScroll: true });
+  }, [submitted, stage]);
   const reset = () => { setMethod(null); setKitRequest(false); setPhotoCheck(false); setAdjustedSize(null); setUnit('mm'); setStage(0); setVisualStep(0); setRepeatStep(false); setFirst(''); setSecond(''); setFit(false); setSelected(false); setSubmitted(false); };
   return (
     <div className="min-w-0 text-foreground">
@@ -93,13 +99,16 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
           {method === 'circumference' && <p className="mt-2 text-xs text-muted-foreground">Numbered marks = cm · small ticks = mm.</p>}
           {repeatStep && <p className="mt-4 text-xs text-muted-foreground">First measurement: {first} {unit}</p>}
           <label className="mt-5 block text-sm font-medium">{repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`}<input key={repeatStep ? 'repeat' : 'first'} type="number" inputMode="decimal" step={unit === 'cm' ? '0.01' : '0.1'} min="0" aria-label={repeatStep ? `Second measurement (${unit})` : `Your measurement (${unit})`} value={repeatStep ? second : first} placeholder={unit === 'cm' ? method === 'diameter' ? 'e.g. 1.90' : 'e.g. 5.95' : method === 'diameter' ? 'e.g. 19.0' : 'e.g. 59.5'} onChange={e => { (repeatStep ? setSecond : setFirst)(e.target.value); setSubmitted(false); }} className="mt-2 h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring" /></label>
-          {result?.error && <p role="alert" className="mt-3 text-sm text-destructive">{result.error}</p>}
+          <p className="mt-2 text-xs text-muted-foreground">{repeatStep ? 'Enter your new ruler reading. We’ll match both readings to a US ring size.' : 'Enter the number you read on your own ruler, not a ring size.'}</p>
+          {method === 'circumference' && <p className="mt-1 text-xs text-muted-foreground">Example only: 5.72 cm = 57.2 mm → US 8.</p>}
+          {result?.error && <div ref={outcomeRef} tabIndex={-1} role="alert" className="mt-3 rounded-md border border-destructive p-3 text-sm text-destructive"><p className="font-medium">No size yet</p><p className="mt-1">{result.error}</p><p className="mt-2">Check the units: a reading of 5.72 belongs in cm; 57.2 belongs in mm. For an unusual reading, verify with a physical sizing kit.</p></div>}
           <Button type="button" disabled={repeatStep ? !second : !first} onClick={() => { if (!repeatStep) { setRepeatStep(true); return; } if (!method) return; const reading = physicalSize(method, measurementInMillimetres(Number(first), unit), measurementInMillimetres(Number(second), unit)); setSubmitted(true); if ('us' in reading) setStage(2); }} className="mt-5 h-12 w-full">{repeatStep ? 'Show my size' : 'Quick double-check'}<ArrowRight /></Button>
         </>}
         <Button variant="ghost" type="button" onClick={() => { if (repeatStep) { setRepeatStep(false); setSubmitted(false); } else if (visualStep > 0) { setVisualStep(0); } else reset(); }} className="mt-2"><ArrowLeft />Back</Button>
-      </> : result && 'us' in result ? <div role="status" className="pt-6">
-        <p className="text-xs text-muted-foreground">Suggested size from your measurements</p>
+      </> : result && 'us' in result ? <div ref={outcomeRef} tabIndex={-1} role="status" className="pt-6 scroll-mt-24">
+        <p className="text-lg font-medium">Your suggested ring size</p>
         <p className="mt-1 text-4xl font-light text-primary">US {result.us}</p>
+        <p className="mt-2 text-sm text-muted-foreground">Your readings: {first} and {second} {unit}.</p>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{result.between ? 'Between sizes: this is the larger whole size. Confirm with a physical sizing kit before ordering.' : 'A size-chart match, not a guaranteed aiOn fit. A wide sensor ring can fit differently from a ring you own.'}</p>
         <label className="mt-5 block text-sm" htmlFor="physical-size-choice">Confirm or adjust your size</label>
         <Select value={chosenSize} disabled={selected} onValueChange={value => { setAdjustedSize(value); setFit(false); }}><SelectTrigger id="physical-size-choice" className="mt-2 h-12"><SelectValue /></SelectTrigger><SelectContent>{PHYSICAL_SIZES.map(row => <SelectItem key={row.us} value={String(row.us)}>US {row.us}{row.us === result.us ? ' · suggested' : ''}</SelectItem>)}</SelectContent></Select>
