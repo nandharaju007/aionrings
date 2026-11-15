@@ -89,7 +89,7 @@ export function PhysicalRingSizer({ onSelect, selectionLabel = 'Use this size', 
         <div className="mt-3 rounded-lg bg-secondary/60 p-3 motion-safe:animate-in motion-safe:fade-in">
           <MeasurementVisual method={method} step={visualStep} />
         </div>
-        <p className="mt-3 text-sm leading-relaxed">{method === 'circumference' ? repeatStep ? 'Wrap and mark a fresh strip, then measure it again.' : wrapStep.text : repeatStep ? 'Measure the inside opening again.' : 'Measure across the inside opening, not the metal.'}</p>
+        {(method !== 'circumference' || repeatStep) && <p className="mt-3 text-sm leading-relaxed">{method === 'circumference' ? 'Wrap and mark a fresh strip, then measure it again.' : repeatStep ? 'Measure the inside opening again.' : 'Measure across the inside opening, not the metal.'}</p>}
         {method === 'diameter' ? <p className="mt-2 text-xs text-muted-foreground">Use a ring that fits this finger and a real ruler.</p> : visualStep === 0 && <p className="mt-2 text-xs text-muted-foreground">Remove rings · strip about 5 mm wide · snug, not tight · slides over your knuckle.</p>}
         {method === 'circumference' && visualStep === 0 ? <Button type="button" onClick={() => setVisualStep(1)} className="mt-5 h-12 w-full whitespace-normal">{wrapStep.action}<ArrowRight /></Button> : <>
           <fieldset className="mt-5">
