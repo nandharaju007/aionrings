@@ -5,30 +5,18 @@ import { Button } from '@/components/ui/button';
 import { RingSizer } from '@/components/RingSizer';
 import { MeasurementVideo } from '@/components/MeasurementVideo';
 import { PrintableSizer } from '@/components/PrintableSizer';
+import { PaperMeasurementVisual } from '@/components/PaperMeasurementVisual';
 import { physicalSize, type PhysicalMethod } from '@/lib/physical-sizing';
 
 function MeasurementVisual({ method, step }: { method: PhysicalMethod; step: number }) {
+  if (method === 'circumference') return <PaperMeasurementVisual key={step} step={step} />;
   return (
-    <svg viewBox="0 0 320 185" role="img" aria-label={method === 'diameter' ? 'Measure straight across the ring opening, from inside edge to inside edge, with a real ruler' : step === 0 ? 'Wrap a narrow strip of paper around the finger and mark where it overlaps' : 'Lay the paper flat against a real ruler and measure from the start to your mark'} className="mx-auto w-full max-w-sm text-primary">
-      {method === 'diameter' ? <>
+    <svg viewBox="0 0 320 185" role="img" aria-label="Measure straight across the ring opening, from inside edge to inside edge, with a real ruler" className="mx-auto w-full max-w-sm text-primary">
         <circle cx="160" cy="86" r="66" className="fill-background stroke-border" strokeWidth="18" />
         <circle cx="160" cy="86" r="57" fill="none" stroke="currentColor" strokeWidth="2" />
         <path d="M103 86h114m-57-8v16M103 80v12m114-12v12" fill="none" stroke="currentColor" strokeWidth="2" />
         <text x="160" y="68" textAnchor="middle" className="fill-foreground text-[12px]">Inside edge → inside edge</text>
         <path d="M65 157h190M65 157v10m19-10v6m19-6v10m19-10v6m19-6v10m19-10v6m19-6v10m19-10v6m19-6v10m19-10v6m19-6v10" stroke="currentColor" fill="none" />
-      </> : step === 0 ? <>
-        <rect x="132" y="12" width="56" height="155" rx="28" className="fill-secondary stroke-border" strokeWidth="2" />
-        <path d="M110 102c0-25 100-25 100 0v23c0 25-100 25-100 0z" className="fill-background" stroke="currentColor" strokeWidth="2" />
-        <path d="M110 102c0 25 100 25 100 0m-50 19v20m-9-10h18" fill="none" stroke="currentColor" strokeWidth="2" />
-        <text x="230" y="125" className="fill-foreground text-[12px]">Mark here</text>
-      </> : <>
-        <rect x="38" y="55" width="246" height="32" className="fill-background stroke-border" strokeWidth="2" />
-        <path d="M44 48v47m194-47v47M44 115h194m-194-5v10m194-10v10" stroke="currentColor" strokeWidth="2" />
-        <text x="44" y="38" textAnchor="middle" className="fill-foreground text-[12px]">Start</text>
-        <text x="238" y="38" textAnchor="middle" className="fill-foreground text-[12px]">Your mark</text>
-        <text x="141" y="140" textAnchor="middle" className="fill-foreground text-[12px]">Measure this length in mm</text>
-        {Array.from({ length: 25 }, (_, i) => <path key={i} d={`M${44 + i * 8} 155v${i % 5 === 0 ? 14 : 7}`} stroke="currentColor" />)}
-      </>}
     </svg>
   );
 }

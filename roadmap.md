@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Interactive measurement imagery
+- [x] Replace the paper-strip drawing with realistic examples and tappable guidance.
+- [x] Verify marking, ruler guidance and final size selection on phone and desktop.
 ## Easier measurement steps
 - [x] Show one measurement input at a time with a guided repeat check and clear back navigation.
 - [x] Keep optional sizing tools out of the main flow and verify phone and desktop size selection.
