@@ -1777,6 +1777,7 @@ export default function Index() {
       <main>
         {/* 1, First impression */}
         <Hero />
+        <LaunchStories />
         {/* 1.5, Lifestyle proof, early */}
         <MorningProofSection />
         {/* 2, The problem, in the user's own words */}
@@ -1804,7 +1805,6 @@ export default function Index() {
         <RingSection />
         {/* 10, Life with it */}
         <InLifeSection />
-        <LaunchStories />
         <NatureBand
           src={natureNight}
           eyebrow="Sleep · Recovery"
