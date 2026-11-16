@@ -29,6 +29,13 @@
       "when": 1794778714723,
       "tag": "0003_create_sizing_kit_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794800778658,
+      "tag": "0004_add_contact_to_sizing_kit_requests",
+      "breakpoints": true
     }
   ]
 }

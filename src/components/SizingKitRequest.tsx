@@ -12,9 +12,11 @@ const fields = [
   { key: 'region', label: 'State / province (optional)', autoComplete: 'address-level1', max: 100 },
   { key: 'postcode', label: 'Postal / ZIP code', autoComplete: 'postal-code', max: 30 },
   { key: 'country', label: 'Country', autoComplete: 'country-name', max: 100 },
+  { key: 'email', label: 'Email address', autoComplete: 'email', max: 254 },
+  { key: 'phone', label: 'Phone number', autoComplete: 'tel', max: 30 },
 ] as const;
 export function SizingKitRequest() {
-  const [address, setAddress] = useState({ name: '', address: '', city: '', region: '', postcode: '', country: '' });
+  const [address, setAddress] = useState({ name: '', address: '', city: '', region: '', postcode: '', country: '', email: '', phone: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
@@ -36,7 +38,7 @@ export function SizingKitRequest() {
       } catch { setError('Your request could not be saved. Please try again.'); }
       finally { setBusy(false); }
     }}>
-      {fields.map(field => <label key={field.key} className="block text-sm">{field.label}<input required={field.key !== 'region'} disabled={busy} autoComplete={field.autoComplete} maxLength={field.max} value={address[field.key]} onChange={event => setAddress({ ...address, [field.key]: event.target.value })} className="mt-1 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground" /></label>)}
+      {fields.map(field => <label key={field.key} className="block text-sm">{field.label}<input required={field.key !== 'region'} disabled={busy} type={field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : 'text'} autoComplete={field.autoComplete} maxLength={field.max} value={address[field.key]} onChange={event => setAddress({ ...address, [field.key]: event.target.value })} className="mt-1 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground" /></label>)}
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <Button type="submit" disabled={busy} className="h-12 w-full">{busy ? <Loader2 className="animate-spin" /> : <Package />}{busy ? 'Saving…' : 'Request my sizing kit'}</Button>
     </form>

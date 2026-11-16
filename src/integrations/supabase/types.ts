@@ -343,8 +343,10 @@ export type Database = {
           city: string
           country: string
           created_at: string
+          email: string
           id: string
           name: string
+          phone: string
           postcode: string
           region: string
         }
@@ -353,8 +355,10 @@ export type Database = {
           city: string
           country: string
           created_at?: string
+          email?: string
           id?: string
           name: string
+          phone?: string
           postcode: string
           region?: string
         }
@@ -363,8 +367,10 @@ export type Database = {
           city?: string
           country?: string
           created_at?: string
+          email?: string
           id?: string
           name?: string
+          phone?: string
           postcode?: string
           region?: string
         }

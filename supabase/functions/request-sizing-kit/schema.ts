@@ -5,4 +5,6 @@ export const kitAddressSchema = z.object({
   name: field(100), address: field(200), city: field(100),
   region: z.string().trim().max(100).regex(/^[^\u0000-\u001f\u007f<>]*$/).default(''),
   postcode: field(30), country: field(100),
+  email: z.string().trim().toLowerCase().email('Please enter a valid email address.').max(254),
+  phone: z.string().trim().min(7, 'Please enter your phone number.').max(30).regex(/^[+0-9][0-9 ()-]*$/, 'Please enter a valid phone number.'),
 }).strict();

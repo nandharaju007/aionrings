@@ -1,0 +1,1 @@
+ALTER TABLE public.sizing_kit_requests ADD COLUMN email TEXT NOT NULL DEFAULT '', ADD COLUMN phone TEXT NOT NULL DEFAULT '';
