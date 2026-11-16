@@ -28,6 +28,7 @@ import SupportPage from "./pages/SupportPage";
 import ContactPage from "./pages/ContactPage";
 import AppDownloadPage from "./pages/AppDownloadPage";
 import SocialEmbedsPage from "./pages/SocialEmbedsPage";
+import CampaignPage from "./pages/CampaignPage";
 import { CookieConsent } from "./components/CookieConsent";
 import { WinterSnow } from "./components/WinterSnow";
 import ScrollToTop from "./components/ScrollToTop";
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/smart-ring-guide/stress-tracking-ring" element={<StressTrackingRingPage />} />
             <Route path="/app" element={<AppDownloadPage />} />
             <Route path="/social-embeds" element={<SocialEmbedsPage />} />
+            <Route path="/campaign" element={<CampaignPage />} />
             <Route path="/admin" element={<AdminReservationsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

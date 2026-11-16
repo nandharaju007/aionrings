@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Publish launch campaign media
+- [x] Upload final corrected videos, latest product reveal and branded promotional photos.
+- [x] Verify the campaign page and downloads, save changes and request publishing.
 ## Ship a sample kit from a delivery address
 - [x] Replace email-only requests with a validated, saved shipping-address form.
 - [x] Show requests to administrators and verify a real submission reads back; explain ordering after finding a size.

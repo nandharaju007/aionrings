@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Volume2, VolumeX } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import film from "@/assets/campaign/aion-ring-launch-film.mp4.asset.json";
 import poster from "@/assets/campaign/aion-ring-launch-film-poster.jpg.asset.json";
 import holiday from "@/assets/campaign/aion-holiday-gift.jpg.asset.json";
@@ -38,6 +39,7 @@ export function LaunchStories() {
           <p className="text-xs md:text-sm tracking-[0.35em] text-ink-muted uppercase">Launching soon</p>
           <h2 className="mt-4 text-4xl md:text-6xl font-extralight text-ink leading-[1.05]">A day with aiOn.</h2>
           <p className="mt-4 text-ink-soft text-base md:text-lg font-light">Morning to night, quietly on your hand.</p>
+          <Button asChild variant="outline" className="mt-5"><Link to="/campaign">View campaign videos & photos</Link></Button>
         </div>
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-[minmax(0,360px)_1fr] gap-5 items-start">
           <div className="relative mx-auto w-full max-w-[360px] overflow-hidden rounded-[28px] bg-ink">
