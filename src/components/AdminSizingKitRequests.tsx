@@ -112,7 +112,7 @@ export function AdminSizingKitRequests() {
           <table className="w-full text-[13px]">
             <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
               <tr>
-                <th className="px-4 py-3 text-center font-medium">Received</th>
+                <th className="px-4 py-3 text-center font-medium">Date</th>
                 <th className="px-4 py-3 text-center font-medium">Name</th>
                 <th className="px-4 py-3 text-center font-medium">Email</th>
                 <th className="px-4 py-3 text-center font-medium">Phone</th>
@@ -126,7 +126,7 @@ export function AdminSizingKitRequests() {
               {pageRows.map((row) => (
                 <tr key={row.id} className="h-14 border-t border-border hover:bg-white">
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
-                    {new Date(row.created_at).toLocaleString()}
+                    {new Date(row.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-center whitespace-nowrap">{titleCaseName(row.name)}</td>
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{row.email}</td>
