@@ -173,11 +173,13 @@ export function AdminSizingKitRequests() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <Button variant="outline" size="icon" className="rounded-full w-8 h-8"
+                    <button
+                      onClick={() => setViewingLog(row)}
                       aria-label={`View status log for ${titleCaseName(row.name)}`} title="View status log"
-                      onClick={() => setViewingLog(row)}>
+                      className="inline-flex items-center justify-center rounded-full border border-border w-8 h-8 hover:border-border"
+                    >
                       <History className="w-3.5 h-3.5" />
-                    </Button>
+                    </button>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
