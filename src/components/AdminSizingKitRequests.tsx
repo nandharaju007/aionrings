@@ -114,8 +114,8 @@ export function AdminSizingKitRequests() {
               <tr>
                 <th className="px-4 py-3 text-center font-medium">ID</th>
                 <th className="px-4 py-3 text-center font-medium">Date</th>
-                <th className="px-4 py-3 text-left font-medium">Name</th>
-                <th className="px-4 py-3 text-left font-medium">Email</th>
+                <th className="px-4 py-3 text-center font-medium">Name</th>
+                <th className="px-4 py-3 text-center font-medium">Email</th>
                 <th className="px-4 py-3 text-center font-medium">Phone</th>
                 <th className="px-4 py-3 text-center font-medium">Location</th>
                 <th className="px-4 py-3 text-center font-medium">Status</th>
