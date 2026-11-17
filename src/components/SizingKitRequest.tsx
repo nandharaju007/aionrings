@@ -68,28 +68,50 @@ export function SizingKitRequest() {
               {PHONE_CODE_OPTIONS.map(option => <option key={option.iso} value={option.country}>{option.country}</option>)}
             </select>
             <ChevronDown className="pointer-events-none absolute right-3 top-4 h-4 w-4 text-muted-foreground" />
-          </div> : <div className="mt-1.5 flex min-w-0 items-center gap-2">
-          {field.key === 'phone' && <select aria-label="Country dial code" disabled={busy} value={phoneIso} className={`${inputClass} w-28 shrink-0 px-2`} onChange={event => {
-            setPhoneIso(event.target.value);
-            setAddress(previous => ({ ...previous, phone: formatKitPhone(previous.phone, event.target.value) }));
-            setFieldErrors(previous => ({ ...previous, phone: undefined }));
-          }}>
-            {PHONE_CODE_OPTIONS.map(option => <option key={option.iso} value={option.iso}>{option.iso} +{option.code}</option>)}
-          </select>}
+          </div> : field.key === 'phone' ? <div className={`mt-1.5 flex min-w-0 items-stretch overflow-hidden rounded-xl border bg-background transition-all focus-within:ring-2 focus-within:ring-primary/30 ${message ? 'border-destructive' : 'border-input focus-within:border-primary'}`}>
+            <div className="relative flex shrink-0 items-center">
+              <select aria-label="Country dial code" disabled={busy} value={phoneIso} className="h-12 cursor-pointer appearance-none border-r border-input bg-transparent pl-3 pr-8 text-[14px] text-foreground focus:outline-none" onChange={event => {
+                setPhoneIso(event.target.value);
+                setAddress(previous => ({ ...previous, phone: formatKitPhone(previous.phone, event.target.value) }));
+                setFieldErrors(previous => ({ ...previous, phone: undefined }));
+              }}>
+                {PHONE_CODE_OPTIONS.map(option => <option key={option.iso} value={option.iso}>{option.iso} +{option.code}</option>)}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2 h-4 w-4 text-muted-foreground" />
+            </div>
+            <input
+              id="kit-phone"
+              required
+              disabled={busy}
+              type="tel"
+              autoComplete={field.autoComplete}
+              maxLength={field.max}
+              placeholder={kitPhoneExample(phoneIso)}
+              value={address.phone}
+              aria-invalid={message ? true : undefined}
+              aria-describedby={message ? 'kit-phone-error' : undefined}
+              onChange={event => {
+                const value = event.target.value;
+                setAddress(previous => ({ ...previous, phone: formatKitPhone(value, phoneIso) }));
+                if (message) setFieldErrors(previous => ({ ...previous, phone: undefined }));
+              }}
+              className="h-12 min-w-0 flex-1 bg-transparent px-4 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+            />
+          </div> : <div className="mt-1.5 min-w-0">
           <input
             id={`kit-${field.key}`}
             required={field.key !== 'region'}
             disabled={busy}
-            type={field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : 'text'}
+            type={field.key === 'email' ? 'email' : 'text'}
             autoComplete={field.autoComplete}
             maxLength={field.max}
-            placeholder={field.key === 'phone' ? kitPhoneExample(phoneIso) : field.placeholder}
+            placeholder={field.placeholder}
             value={address[field.key]}
             aria-invalid={message ? true : undefined}
             aria-describedby={message ? `kit-${field.key}-error` : undefined}
             onChange={event => {
               const value = event.target.value;
-              setAddress(previous => ({ ...previous, [field.key]: field.key === 'phone' ? formatKitPhone(value, phoneIso) : value }));
+              setAddress(previous => ({ ...previous, [field.key]: value }));
               if (message) setFieldErrors(previous => ({ ...previous, [field.key]: undefined }));
             }}
             className={inputClass}

@@ -927,15 +927,15 @@ function PhoneInput({
     return match ? `${match.iso}|${match.code}` : `US|1`;
   }, [code, iso]);
 
-  const fieldClass = `h-12 rounded-xl border bg-white text-ink focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all ${
-    error ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary"
-  }`;
-
   return (
-    <div className="block">
+    <label className="block">
       <span className="text-[13px] text-ink-soft">{label}</span>
-      <div className="mt-1.5 grid grid-cols-[128px_1fr] gap-3">
-        <div className="relative">
+      <div
+        className={`mt-1.5 flex items-stretch rounded-xl border bg-white overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary/30 ${
+          error ? "border-red-400" : "border-border focus-within:border-primary"
+        }`}
+      >
+        <div className="relative flex items-center">
           <select
             value={selectValue}
             onChange={(e) => {
@@ -943,7 +943,7 @@ function PhoneInput({
               onCodeChange(nextCode, nextIso);
             }}
             aria-label="Country dial code"
-            className={`${fieldClass} w-full pl-3 pr-8 text-[14px] appearance-none cursor-pointer truncate`}
+            className="h-12 bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer"
             style={{ backgroundImage: "none" }}
           >
             {PHONE_CODE_OPTIONS.map((o) => (
@@ -952,7 +952,7 @@ function PhoneInput({
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
+          <ChevronDown className="absolute right-2 w-4 h-4 text-ink-muted pointer-events-none" />
         </div>
         <input
           type="tel"
@@ -961,11 +961,11 @@ function PhoneInput({
           onBlur={onBlur}
           placeholder={placeholder}
           maxLength={30}
-          className={`${fieldClass} w-full min-w-0 px-4 text-[15px] placeholder-ink-muted`}
+          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-ink placeholder-ink-muted focus:outline-none"
         />
       </div>
       {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
-    </div>
+    </label>
   );
 }
 
