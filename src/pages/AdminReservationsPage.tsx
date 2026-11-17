@@ -1393,7 +1393,7 @@ export default function AdminReservationsPage() {
                     <table className="w-full text-[13px]">
                       <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
                         <tr>
-                          <th className="px-4 py-3 text-center font-medium">#</th>
+                          <th className="px-4 py-3 text-center font-medium">ID</th>
                           <th className="px-4 py-3 text-center font-medium">Date</th>
                           <th className="px-4 py-3 text-center font-medium">Name</th>
                           <th className="px-4 py-3 text-center font-medium">Email</th>
@@ -1875,7 +1875,7 @@ export default function AdminReservationsPage() {
                     <table className="w-full text-[13px]">
                       <thead className="bg-canvas text-[11px] uppercase tracking-[2px] text-ink-muted border-b border-border">
                         <tr>
-                          <th className="px-4 py-3 text-center font-medium">#</th>
+                          <th className="px-4 py-3 text-center font-medium">ID</th>
                           <th className="px-4 py-3 text-center font-medium">Date</th>
                           <th className="px-4 py-3 text-center font-medium">Name</th>
                           <th className="px-4 py-3 text-center font-medium">Email</th>
