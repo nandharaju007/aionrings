@@ -1,25 +1,28 @@
 import { useState } from 'react';
-import { Check, Loader2, Package } from 'lucide-react';
+import { Check, ChevronDown, Loader2, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { kitAddressSchema } from '@/lib/kit-address';
+import { formatKitPhone, kitContactForSubmission, kitPhoneExample } from '@/lib/kit-contact';
+import { COUNTRY_ISO2, PHONE_CODE_OPTIONS } from '@/lib/dial-codes';
 import sizingKitBox from '@/assets/sizing-kit-box.jpg.asset.json';
 
 const fields = [
-  { key: 'name', label: 'Full name', autoComplete: 'name', max: 100 },
-  { key: 'address', label: 'Street address & apartment', autoComplete: 'street-address', max: 200 },
-  { key: 'city', label: 'City', autoComplete: 'address-level2', max: 100 },
-  { key: 'region', label: 'State / province (optional)', autoComplete: 'address-level1', max: 100 },
-  { key: 'postcode', label: 'Postal / ZIP code', autoComplete: 'postal-code', max: 12 },
-  { key: 'country', label: 'Country', autoComplete: 'country-name', max: 100 },
-  { key: 'email', label: 'Email address', autoComplete: 'email', max: 254 },
-  { key: 'phone', label: 'Phone number', autoComplete: 'tel', max: 20 },
+  { key: 'firstName', label: 'First name', autoComplete: 'given-name', max: 49, placeholder: 'Jane' },
+  { key: 'lastName', label: 'Last name', autoComplete: 'family-name', max: 49, placeholder: 'Doe' },
+  { key: 'email', label: 'Email address', autoComplete: 'email', max: 254, placeholder: 'jane@example.com' },
+  { key: 'phone', label: 'Phone number', autoComplete: 'tel-national', max: 30, placeholder: '' },
+  { key: 'country', label: 'Country', autoComplete: 'country-name', max: 100, placeholder: 'Select your country' },
+  { key: 'address', label: 'Street address & apartment', autoComplete: 'street-address', max: 200, placeholder: '123 Main Street, Apt 4' },
+  { key: 'city', label: 'City', autoComplete: 'address-level2', max: 100, placeholder: 'City' },
+  { key: 'region', label: 'State / province (optional)', autoComplete: 'address-level1', max: 100, placeholder: 'State / province' },
+  { key: 'postcode', label: 'Postal / ZIP code', autoComplete: 'postal-code', max: 12, placeholder: 'Postal / ZIP code' },
 ] as const;
 
 type FieldKey = (typeof fields)[number]['key'];
 
 export function SizingKitRequest() {
-  const [address, setAddress] = useState({ name: '', address: '', city: '', region: '', postcode: '', country: '', email: '', phone: '' });
+  const [address, setAddress] = useState({ firstName: '', lastName: '', address: '', city: '', region: '', postcode: '', country: 'United States', email: '', phone: '' });
+  const [phoneIso, setPhoneIso] = useState('US');
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
@@ -32,17 +35,11 @@ export function SizingKitRequest() {
     <Package className="mt-4 h-8 w-8 text-primary" />
     <h4 className="mt-3 text-lg font-medium">Where should we send your sizing kit?</h4>
     <p className="mt-2 text-sm text-muted-foreground">Try the sample sizes first. Order your aiOn ring once you know your fit.</p>
-    <form className="mt-5 space-y-3" noValidate onSubmit={async event => {
+    <form className="mt-5 grid grid-cols-2 gap-3" noValidate onSubmit={async event => {
       event.preventDefault(); event.stopPropagation(); if (busy) return;
-      const parsed = kitAddressSchema.safeParse(address);
-      if (!parsed.success) {
-        const issues = parsed.error.flatten().fieldErrors;
-        const next: Partial<Record<FieldKey, string>> = {};
-        for (const field of fields) {
-          const message = issues[field.key]?.[0];
-          if (message) next[field.key] = message;
-        }
-        setFieldErrors(next);
+      const parsed = kitContactForSubmission(address, phoneIso);
+      if (!parsed.data) {
+        setFieldErrors(parsed.errors);
         setError('Please fix the highlighted fields above.');
         return;
       }
@@ -56,27 +53,53 @@ export function SizingKitRequest() {
     }}>
       {fields.map(field => {
         const message = fieldErrors[field.key];
-        return <label key={field.key} className="block text-sm">{field.label}
+        const paired = ['firstName', 'lastName', 'city', 'region'].includes(field.key);
+        const inputClass = `h-12 w-full min-w-0 rounded-xl border bg-background px-4 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 ${message ? 'border-destructive' : 'border-input focus:border-primary'}`;
+        return <div key={field.key} className={paired ? 'min-w-0' : 'col-span-2 min-w-0'}>
+          <label htmlFor={`kit-${field.key}`} className="block text-[13px] text-muted-foreground">{field.label}</label>
+          {field.key === 'country' ? <div className="relative mt-1.5">
+            <select id="kit-country" value={address.country} disabled={busy} autoComplete="country-name" aria-invalid={!!message} aria-describedby={message ? 'kit-country-error' : undefined} className={`${inputClass} appearance-none pr-10`} onChange={event => {
+              const country = event.target.value;
+              const iso = COUNTRY_ISO2[country];
+              if (iso) setPhoneIso(iso);
+              setAddress(previous => ({ ...previous, country, phone: iso ? formatKitPhone(previous.phone, iso) : previous.phone }));
+              setFieldErrors(previous => ({ ...previous, country: undefined, phone: undefined }));
+            }}>
+              {PHONE_CODE_OPTIONS.map(option => <option key={option.iso} value={option.country}>{option.country}</option>)}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-4 h-4 w-4 text-muted-foreground" />
+          </div> : <div className="mt-1.5 flex min-w-0 items-center gap-2">
+          {field.key === 'phone' && <select aria-label="Country dial code" disabled={busy} value={phoneIso} className={`${inputClass} w-28 shrink-0 px-2`} onChange={event => {
+            setPhoneIso(event.target.value);
+            setAddress(previous => ({ ...previous, phone: formatKitPhone(previous.phone, event.target.value) }));
+            setFieldErrors(previous => ({ ...previous, phone: undefined }));
+          }}>
+            {PHONE_CODE_OPTIONS.map(option => <option key={option.iso} value={option.iso}>{option.iso} +{option.code}</option>)}
+          </select>}
           <input
+            id={`kit-${field.key}`}
             required={field.key !== 'region'}
             disabled={busy}
             type={field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : 'text'}
             autoComplete={field.autoComplete}
             maxLength={field.max}
+            placeholder={field.key === 'phone' ? kitPhoneExample(phoneIso) : field.placeholder}
             value={address[field.key]}
             aria-invalid={message ? true : undefined}
             aria-describedby={message ? `kit-${field.key}-error` : undefined}
             onChange={event => {
-              setAddress({ ...address, [field.key]: event.target.value });
+              const value = event.target.value;
+              setAddress(previous => ({ ...previous, [field.key]: field.key === 'phone' ? formatKitPhone(value, phoneIso) : value }));
               if (message) setFieldErrors(previous => ({ ...previous, [field.key]: undefined }));
             }}
-            className={`mt-1 h-11 w-full rounded-md border bg-background px-3 text-base text-foreground ${message ? 'border-destructive' : 'border-input'}`}
+            className={inputClass}
           />
+          </div>}
           {message && <p id={`kit-${field.key}-error`} role="alert" className="mt-1 text-xs text-destructive">{message}</p>}
-        </label>;
+        </div>;
       })}
-      {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" disabled={busy} className="h-12 w-full">{busy ? <Loader2 className="animate-spin" /> : <Package />}{busy ? 'Saving…' : 'Request my sizing kit'}</Button>
+      {error && <p role="alert" className="col-span-2 text-sm text-destructive">{error}</p>}
+      <Button type="submit" disabled={busy} className="col-span-2 h-12 w-full">{busy ? <Loader2 className="animate-spin" /> : <Package />}{busy ? 'Saving…' : 'Request my sizing kit'}</Button>
     </form>
   </>;
 }

@@ -10,4 +10,5 @@
 - Open the static printable sizer through a same-origin fetch and an in-page blob preview, not a hardcoded live-domain redirect, so preview restrictions cannot block the external navigation.
 - Keep interactive paper-measurement imagery in a shared visual component and label it illustrative; image hotspots explain technique but must never supply a shopper's measurement.
 - Store sizing-kit shipping requests through a server-validated function with admin-only reads; a request must reach the fulfillment team rather than opening an email app.
+- Adapt sizing-kit first/last names and country-aware phone inputs to the existing request payload in a tested client helper; this preserves fulfillment storage while using international phone metadata.
 - Serve final campaign media through CDN pointers in a dedicated download catalog; use corrected final versions and fetch blobs for same-origin downloads.
