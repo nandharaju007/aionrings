@@ -1125,7 +1125,7 @@ export default function AdminReservationsPage() {
                     variant={tab === t ? "default" : "ghost"}
                     key={t}
                     onClick={() => setTab(t)}
-                    className="px-5 py-2 text-[13px] rounded-full"
+                    className={`px-5 py-2 text-[13px] rounded-full ${tab === t ? "" : "hover:bg-primary hover:text-primary-foreground"}`}
                   >
                     {t === "kits" ? "Sizing Kits" : t === "reservations"
                       ? "Reservations"
