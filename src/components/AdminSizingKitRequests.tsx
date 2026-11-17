@@ -114,8 +114,8 @@ export function AdminSizingKitRequests() {
               <tr>
                 <th className="px-4 py-3 text-center font-medium">ID</th>
                 <th className="px-4 py-3 text-center font-medium">Date</th>
-                <th className="px-4 py-3 text-center font-medium">Name</th>
-                <th className="px-4 py-3 text-center font-medium">Email</th>
+                <th className="px-4 py-3 text-left font-medium">Name</th>
+                <th className="px-4 py-3 text-left font-medium">Email</th>
                 <th className="px-4 py-3 text-center font-medium">Phone</th>
                 <th className="px-4 py-3 text-center font-medium">Location</th>
                 <th className="px-4 py-3 text-center font-medium">Status</th>
@@ -132,8 +132,8 @@ export function AdminSizingKitRequests() {
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                     {new Date(row.created_at).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-center whitespace-nowrap">{titleCaseName(row.name)}</td>
-                  <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{row.email}</td>
+                  <td className="px-4 py-3 text-left whitespace-nowrap">{titleCaseName(row.name)}</td>
+                  <td className="px-4 py-3 text-ink-soft text-left whitespace-nowrap">{row.email}</td>
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{row.phone}</td>
                   <td
                     className="px-4 py-3 text-ink-soft text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
