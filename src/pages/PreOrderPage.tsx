@@ -935,7 +935,7 @@ function PhoneInput({
           error ? "border-red-400" : "border-border focus-within:border-primary"
         }`}
       >
-        <div className="relative flex items-center">
+        <div className="relative flex items-center shrink-0">
           <select
             value={selectValue}
             onChange={(e) => {
@@ -943,7 +943,7 @@ function PhoneInput({
               onCodeChange(nextCode, nextIso);
             }}
             aria-label="Country dial code"
-            className="h-12 bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer"
+            className="h-12 w-[108px] bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer truncate"
             style={{ backgroundImage: "none" }}
           >
             {PHONE_CODE_OPTIONS.map((o) => (
@@ -961,7 +961,7 @@ function PhoneInput({
           onBlur={onBlur}
           placeholder={placeholder}
           maxLength={30}
-          className="flex-1 h-12 bg-transparent px-3 text-[15px] text-ink placeholder-ink-muted focus:outline-none"
+          className="flex-1 min-w-0 h-12 bg-transparent px-3 text-[15px] text-ink placeholder-ink-muted focus:outline-none"
         />
       </div>
       {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
