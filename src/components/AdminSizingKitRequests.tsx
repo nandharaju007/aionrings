@@ -5,6 +5,13 @@ import type { Tables } from "@/integrations/supabase/types";
 
 const PAGE_SIZE = 10;
 
+const titleCaseName = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
+    .join(" ");
+
 export function AdminSizingKitRequests() {
   const [rows, setRows] = useState<Tables<"sizing_kit_requests">[]>([]);
   const [busy, setBusy] = useState(true);
@@ -72,7 +79,7 @@ export function AdminSizingKitRequests() {
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">
                     {new Date(row.created_at).toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-center whitespace-nowrap">{row.name}</td>
+                  <td className="px-4 py-3 text-center whitespace-nowrap">{titleCaseName(row.name)}</td>
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{row.email}</td>
                   <td className="px-4 py-3 text-ink-soft text-center whitespace-nowrap">{row.phone}</td>
                   <td
@@ -135,7 +142,7 @@ export function AdminSizingKitRequests() {
             </div>
             <div className="space-y-3 text-[14px]">
               <div>
-                <div className="font-medium text-ink">{expanded.name}</div>
+                <div className="font-medium text-ink">{titleCaseName(expanded.name)}</div>
                 <div className="text-ink-soft">
                   {expanded.email} · {expanded.phone}
                 </div>
