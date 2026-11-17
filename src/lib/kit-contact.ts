@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AsYouType, getExampleNumber, parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js';
+import { AsYouType, getExampleNumber, parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js/max';
 import examples from 'libphonenumber-js/mobile/examples';
 import { COUNTRY_ISO2 } from '@/lib/dial-codes';
 import { kitAddressSchema } from '@/lib/kit-address';
@@ -22,7 +22,8 @@ export function kitPhoneExample(iso: string) {
 
 export function kitPhoneForSubmission(value: string, iso: string) {
   const phone = parsePhoneNumberFromString(value, iso as CountryCode);
-  return phone?.isPossible() && phone.country === iso ? phone.number : undefined;
+  const type = phone?.getType();
+  return phone?.isValid() && phone.country === iso && (type === 'MOBILE' || type === 'FIXED_LINE_OR_MOBILE') ? phone.number : undefined;
 }
 
 export function kitContactForSubmission(values: {
@@ -43,6 +44,8 @@ export function kitContactForSubmission(values: {
     }
   }
   if (!COUNTRY_ISO2[address.country]) errors.country = 'Please select your country.';
-  if (!phone) errors.phone = 'Enter a valid phone number for the selected dial code.';
+  if (!phone) errors.phone = phoneIso === 'IN'
+    ? 'Enter a 10-digit Indian mobile number starting with 6, 7, 8 or 9 (+91).'
+    : 'Enter a valid mobile number for the selected country dial code.';
   return { data: parsed.success && names.success && !Object.keys(errors).length ? parsed.data : undefined, errors };
 }

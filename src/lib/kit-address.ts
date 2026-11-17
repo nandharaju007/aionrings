@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
 
 const plainText = /^[^<>]*$/;
 const nameLike = /^[A-Za-zÀ-ÖØ-öø-ÿ'’.\- ]+$/;
@@ -37,5 +38,10 @@ export const kitAddressSchema = z.object({
     .min(7, 'Please enter your phone number.')
     .max(20, 'Phone number must be under 20 characters.')
     .regex(/^\+?[0-9][0-9 ()-]*$/, 'Phone number can only contain digits, spaces, brackets, hyphens and a leading +.')
-    .refine(value => (value.match(/[0-9]/g) ?? []).length >= 7, 'Phone number must have at least 7 digits.'),
+    .refine(value => (value.match(/[0-9]/g) ?? []).length >= 7, 'Phone number must have at least 7 digits.')
+    .refine(value => {
+      const phone = parsePhoneNumberFromString(value);
+      const type = phone?.getType();
+      return phone?.isValid() && (type === 'MOBILE' || type === 'FIXED_LINE_OR_MOBILE');
+    }, 'Enter a valid mobile number including its country code.'),
 }).strict();

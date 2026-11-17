@@ -43,6 +43,9 @@ describe('Sizing kit address request', () => {
     expect(kitAddressSchema.safeParse({ ...address, phone: 'call me' }).success).toBe(false);
     expect(kitAddressSchema.safeParse({ ...address, phone: '12' }).success).toBe(false);
     expect(kitAddressSchema.safeParse({ ...address, phone: '+ ( ) - ' }).success).toBe(false);
+    expect(kitAddressSchema.safeParse({ ...address, phone: '+9198765432101' }).success).toBe(false);
+    expect(kitAddressSchema.safeParse({ ...address, phone: '+919876543210' }).success).toBe(true);
+    expect(kitAddressSchema.safeParse({ ...address, phone: '9876543210' }).success).toBe(false);
   });
 
   it('rejects overlong or markup input', () => {
