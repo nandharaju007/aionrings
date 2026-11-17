@@ -141,24 +141,34 @@ export function AdminSizingKitRequests() {
                   >
                     {row.address}, {[row.city, row.region, row.postcode].filter(Boolean).join(", ")}, {row.country}
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    <div className="inline-flex items-center gap-2 whitespace-nowrap">
+                  <td className="px-4 py-3 text-center whitespace-nowrap relative">
+                    <div className="inline-flex items-center gap-2">
                       <span className={`text-[12px] font-medium ${statusError ? "text-ink-muted" : "text-primary"}`}>
                         {statusError ? "Unavailable" : currentStatus(row.id) === "received" ? "Request Received" : currentStatus(row.id) === "shipped" ? "Shipped" : "Delivered"}
                       </span>
-                      <Button variant="outline" size="icon" className="w-6 h-6 rounded-full shrink-0"
-                        aria-label={`Change status for ${titleCaseName(row.name)}`}
-                        title={statusError || "Change status"}
-                        disabled={Boolean(statusError) || savingStatus === row.id || currentStatus(row.id) === "delivered"}
-                        onClick={() => setOpenStatusMenu(openStatusMenu === row.id ? null : row.id)}>
-                        <ChevronDown className="w-3 h-3" />
-                      </Button>
+                      {(() => {
+                        const isFinal = Boolean(statusError) || savingStatus === row.id || currentStatus(row.id) === "delivered";
+                        return (
+                          <button
+                            disabled={isFinal}
+                            aria-label={`Change status for ${titleCaseName(row.name)}`}
+                            title={statusError || "Change status"}
+                            onClick={() => !isFinal && setOpenStatusMenu(openStatusMenu === row.id ? null : row.id)}
+                            className={`inline-flex items-center justify-center w-6 h-6 rounded-full border shrink-0 ${isFinal ? "border-border opacity-30 cursor-not-allowed" : "border-border hover:border-border"}`}
+                          >
+                            <ChevronDown className="w-3 h-3" />
+                          </button>
+                        );
+                      })()}
                     </div>
                     {openStatusMenu === row.id && (
-                      <div className="mt-1 rounded-xl border border-border bg-background p-1">
-                        <Button variant="ghost" className="w-full text-[12px]" onClick={() => void updateStatus(row.id, currentStatus(row.id) === "shipped" ? "delivered" : "shipped")}>
+                      <div className="absolute z-50 top-full mt-1 right-4 w-36 flex flex-col rounded-xl border border-border bg-white shadow-lg py-1 overflow-hidden">
+                        <button
+                          onClick={() => void updateStatus(row.id, currentStatus(row.id) === "shipped" ? "delivered" : "shipped")}
+                          className="block w-full text-left px-3 py-2.5 text-[12px] text-ink-soft hover:bg-canvas hover:text-ink transition-colors"
+                        >
                           {currentStatus(row.id) === "shipped" ? "Delivered" : "Shipped"}
-                        </Button>
+                        </button>
                       </div>
                     )}
                   </td>
