@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
+import { emailTypoSuggestion } from './email';
 
 const plainText = /^[^<>]*$/;
 const nameLike = /^[A-Za-zÀ-ÖØ-öø-ÿ'’.\- ]+$/;
@@ -33,7 +34,14 @@ export const kitAddressSchema = z.object({
   email: z.string().trim().toLowerCase()
     .min(1, 'Please enter your email address.')
     .email('Please enter a valid email address.')
-    .max(254, 'Email must be under 254 characters.'),
+    .max(254, 'Email must be under 254 characters.')
+    .superRefine((value, ctx) => {
+      const suggestion = emailTypoSuggestion(value);
+      if (suggestion) {
+        const local = value.slice(0, value.lastIndexOf('@') + 1);
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Did you mean ${local}${suggestion}?` });
+      }
+    }),
   phone: z.string().trim()
     .min(7, 'Please enter your phone number.')
     .max(20, 'Phone number must be under 20 characters.')

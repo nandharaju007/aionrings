@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { validateEmail } from '@/lib/email';
 import { toast } from 'sonner';
 
 export const ContactForm = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
 
+  const emailCheck = validateEmail(form.email);
+  const emailHint = form.email.trim() && !emailCheck.ok ? emailCheck.message : null;
+
   const valid =
     form.name.trim().length > 1 &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()) &&
+    emailCheck.ok &&
     form.message.trim().length > 4;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,6 +55,7 @@ export const ContactForm = () => {
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
+        {emailHint && <p className="text-xs text-amber-400 md:col-start-2 -mt-2">{emailHint}</p>}
       </div>
       <input
         className={field}

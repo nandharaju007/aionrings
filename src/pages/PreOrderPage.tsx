@@ -9,6 +9,7 @@ import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
+import { validateEmail } from "@/lib/email";
 import { PhysicalRingSizer } from "@/components/PhysicalRingSizer";
 
 
@@ -291,8 +292,10 @@ function normalizePhoneForSubmission(code: string, phone: string) {
   return `+${dialCode}${digits}`;
 }
 
-function isEmail(v: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+function emailError(v: string): string | undefined {
+  const check = validateEmail(v);
+  if (check.ok) return undefined;
+  return check.message;
 }
 function isPhoneNumberValid(code: string, phone: string) {
   const normalizedDigits = normalizePhoneForSubmission(code, phone).replace(/\D+/g, "");
@@ -359,7 +362,8 @@ export default function PreOrderPage() {
   const errors: Partial<Record<FieldKey, string>> = {};
   if (!form.first_name.trim()) errors.first_name = "First name is required";
   if (!form.last_name.trim()) errors.last_name = "Last name is required";
-  if (!isEmail(form.email)) errors.email = "Enter a valid email address";
+  const emailIssue = emailError(form.email);
+  if (emailIssue) errors.email = emailIssue;
   if (!isPhoneNumberValid(form.phone_code, form.phone)) errors.phone = "Enter a valid phone number";
   if (!form.address.trim()) errors.address = "Address is required";
   if (!form.city.trim()) errors.city = "City is required";

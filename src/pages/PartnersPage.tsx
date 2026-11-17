@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { SEO } from '@/components/SEO';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
+import { validateEmail } from '@/lib/email';
 import { Handshake, Users, Building2, ArrowRight, Check, Loader2, QrCode, Sparkles } from 'lucide-react';
 
 const GRADIENT = 'linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)';
@@ -38,9 +39,13 @@ export default function PartnersPage() {
 
   const update = <K extends keyof BulkForm>(k: K, v: BulkForm[K]) => setForm(p => ({ ...p, [k]: v }));
 
+  const emailCheck = validateEmail(form.email);
+  let emailHint: string | null = null;
+  if (form.email.trim() && !emailCheck.ok) emailHint = emailCheck.message ?? null;
+
   const canSubmit =
     form.business_name.trim() && form.contact_person.trim() &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+    emailCheck.ok &&
     form.phone.trim() && form.estimated_quantity >= 1;
 
   async function onSubmit(e: React.FormEvent) {
@@ -119,7 +124,10 @@ export default function PartnersPage() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <Field label="Business / Organization name" value={form.business_name} onChange={v => update('business_name', v)} required />
                   <Field label="Contact person" value={form.contact_person} onChange={v => update('contact_person', v)} required />
-                  <Field label="Business email" type="email" value={form.email} onChange={v => update('email', v)} required />
+                  <div>
+                    <Field label="Business email" type="email" value={form.email} onChange={v => update('email', v)} required />
+                    {emailHint && <p className="text-xs text-amber-400 mt-1">{emailHint}</p>}
+                  </div>
                   <Field label="Phone" type="tel" value={form.phone} onChange={v => update('phone', v)} required />
                 </div>
                 <div>
