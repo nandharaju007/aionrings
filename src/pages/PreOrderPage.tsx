@@ -943,7 +943,7 @@ function PhoneInput({
               onCodeChange(nextCode, nextIso);
             }}
             aria-label="Country dial code"
-            className="h-12 w-[108px] bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer truncate"
+            className="h-12 w-[124px] bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer truncate"
             style={{ backgroundImage: "none" }}
           >
             {PHONE_CODE_OPTIONS.map((o) => (
