@@ -426,7 +426,7 @@ export default function PreOrderPage() {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <SEO title={"Pre-order aiOn - Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Ships Q3 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
+      <SEO title={"Pre-order aiOn - Reserve your Founder Edition Ring"} description={"Reserve your aiOn smart wellness ring. Free Vitality app included. Founder Edition limited to 2,000. Shipping starts mid-December 2026. A general wellness product, not a medical device."} path="/preorder" image="/og-preorder.jpg" />
       <Header />
 
       <main className="pt-32 pb-32">
@@ -477,7 +477,7 @@ export default function PreOrderPage() {
                   .
                 </h1>
                 <p className="text-[16px] text-ink-soft max-w-xl mx-auto">
-                  Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of everyday wellness. No payment today, your place is held.
+                  Be among the first {FOUNDER_CAP.toLocaleString()} to wear the future of everyday wellness. No payment today, your place is held. Shipping starts mid-December 2026.
                 </p>
                 <p className="text-[12px] text-ink-muted max-w-xl mx-auto mt-4">
                   aiOn Ring is intended for general wellness purposes only and is not a medical device.
