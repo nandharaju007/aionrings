@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,14 +59,31 @@ export function SizingKitRequest() {
 
   if (sent)
     return (
-      <div role="status" className="space-y-3">
-        <Check className="h-8 w-8 text-primary" />
-        <h4 className="text-lg font-medium">Sizing kit requested</h4>
-        <p className="text-sm">Your delivery address has been saved for our team.</p>
-        <p className="text-sm text-muted-foreground">
+      <div role="status" className="mx-auto max-w-2xl py-6 text-center">
+        <div
+          className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full"
+          style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
+        >
+          <Check className="h-10 w-10 text-white" />
+        </div>
+        <h4 className="mb-4 text-4xl font-light tracking-tight text-ink md:text-5xl">
+          Thank you, {address.firstName.trim() || "friend"}.
+        </h4>
+        <p className="mx-auto mb-10 max-w-lg text-[16px] text-ink-soft">
+          Your sizing kit request has been received. We'll ship it to the address you provided.
+        </p>
+        <p className="mx-auto mb-8 max-w-md text-[13px] text-ink-soft">
           When your kit arrives, try the sample rings. Then return to the site and order your aiOn ring in the size that
           fits.
         </p>
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Link
+            to="/"
+            className="rounded-full border border-border bg-white px-8 py-3 text-[14px] font-medium text-ink shadow-sm transition-colors hover:border-primary/40"
+          >
+            Back to home
+          </Link>
+        </div>
       </div>
     );
 
