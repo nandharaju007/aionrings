@@ -9,7 +9,7 @@ import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
 import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
-import { validateEmail } from "@/lib/email";
+import { validatePreorder } from "@/lib/preorder-validation";
 import { PhysicalRingSizer } from "@/components/PhysicalRingSizer";
 
 
@@ -266,42 +266,6 @@ const INITIAL: FormState = {
 };
 
 
-type FieldKey = keyof FormState | "ring_size";
-
-function normalizePhoneForSubmission(code: string, phone: string) {
-  const dialCode = code.replace(/\D+/g, "");
-  let digits = phone.replace(/\D+/g, "");
-
-  if (!digits || !dialCode) return "";
-
-  const raw = phone.trim();
-  if (raw.startsWith("+")) return `+${digits}`;
-  if (digits.startsWith("00")) return `+${digits.slice(2)}`;
-
-  // If the customer typed the selected country code in the phone field too,
-  // avoid submitting it twice. Example: US +1 + "1 555 123 4567".
-  if (digits.startsWith(dialCode) && digits.length + dialCode.length > 15) {
-    digits = digits.slice(dialCode.length);
-  }
-
-  // North American numbers are commonly typed as 1 + 10 digits.
-  if (dialCode === "1" && digits.length === 11 && digits.startsWith("1")) {
-    digits = digits.slice(1);
-  }
-
-  return `+${dialCode}${digits}`;
-}
-
-function emailError(v: string): string | undefined {
-  const check = validateEmail(v);
-  if (check.ok) return undefined;
-  return check.message;
-}
-function isPhoneNumberValid(code: string, phone: string) {
-  const normalizedDigits = normalizePhoneForSubmission(code, phone).replace(/\D+/g, "");
-  return normalizedDigits.length >= 7 && normalizedDigits.length <= 15;
-}
-
 export default function PreOrderPage() {
   const [params] = useSearchParams();
   const referral = params.get("ref") || undefined;
@@ -351,30 +315,29 @@ export default function PreOrderPage() {
   const stepPreview = (d: number) => setPreviewIdx((i) => (i + d + RING_COLORS.length) % RING_COLORS.length);
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((p) => ({ ...p, [k]: v }));
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => {
+    setForm((p) => ({ ...p, [k]: v }));
+    markTouched(k);
+  };
   const markTouched = (k: string) => setTouched((p) => ({ ...p, [k]: true }));
-  const updateItem = (id: string, patch: Partial<RingItem>) =>
+  const updateItem = (id: string, patch: Partial<RingItem>) => {
+    Object.keys(patch).forEach(key => markTouched(`${id}.${key}`));
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
+  };
   const addItem = () => setItems((prev) => (prev.length >= 10 ? prev : [...prev, newItem()]));
   const removeItem = (id: string) => setItems((prev) => (prev.length <= 1 ? prev : prev.filter((it) => it.id !== id)));
 
   // Field-level errors, always computed; only shown once touched or on submit attempt.
-  const errors: Partial<Record<FieldKey, string>> = {};
-  if (!form.first_name.trim()) errors.first_name = "First name is required";
-  if (!form.last_name.trim()) errors.last_name = "Last name is required";
-  const emailIssue = emailError(form.email);
-  if (emailIssue) errors.email = emailIssue;
-  if (!isPhoneNumberValid(form.phone_code, form.phone)) errors.phone = "Enter a valid phone number";
-  if (!form.address.trim()) errors.address = "Address is required";
-  if (!form.city.trim()) errors.city = "City is required";
-  if (!form.state.trim()) errors.state = "State / region is required";
-  if (!form.zip_code.trim()) errors.zip_code = "ZIP / postal code is required";
-  if (!form.country.trim()) errors.country = "Country is required";
-  if (!form.referral_source.trim()) errors.referral_source = "Required, enter \"Self\" if no referral";
+  const validation = useMemo(() => validatePreorder(form, items, COUNTRIES), [form, items]);
+  const errors = validation.errors;
+  const canSubmit = !!validation.data;
 
-  const ringSizeMissing = items.some((i) => !i.ring_size);
-  if (ringSizeMissing) errors.ring_size = "Please select a ring size";
-  const canSubmit = Object.keys(errors).length === 0;
+  const revealErrors = () => {
+    const all: Record<string, boolean> = {};
+    Object.keys(form).forEach(key => { all[key] = true; });
+    items.forEach(item => ['ring_size', 'ring_color', 'quantity'].forEach(key => { all[`${item.id}.${key}`] = true; }));
+    setTouched(all);
+  };
 
   // Keep phone_code + iso in sync with country selection
   useEffect(() => {
@@ -389,11 +352,9 @@ export default function PreOrderPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting) return;
-    if (!canSubmit) {
-      // Reveal all errors
-      const all: Record<string, boolean> = { ring_size: true };
-      (Object.keys(form) as Array<keyof FormState>).forEach((k) => (all[k] = true));
-      setTouched(all);
+    const parsed = validatePreorder(form, items, COUNTRIES);
+    if (!parsed.data) {
+      revealErrors();
       return;
     }
     setSubmitting(true);
@@ -405,9 +366,7 @@ export default function PreOrderPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...form,
-            phone: normalizePhoneForSubmission(form.phone_code, form.phone),
-            items: items.map(({ ring_size, ring_color, quantity }) => ({ ring_size, ring_color, quantity })),
+            ...parsed.data,
             referral_source: form.referral_source.trim() || referral || "Self",
             partner_code: partner?.code ?? partnerCode,
           }),
@@ -560,7 +519,7 @@ export default function PreOrderPage() {
                       }} />
                     </section>
 
-                <form onSubmit={onSubmit} className="space-y-10">
+                <form noValidate onSubmit={onSubmit} className="space-y-10">
                   <Section title="Your rings">
                     {items.map((item, idx) => (
                       <div
@@ -589,7 +548,7 @@ export default function PreOrderPage() {
                                 key={s}
                                 onClick={() => {
                                   updateItem(item.id, { ring_size: s });
-                                  markTouched("ring_size");
+                                  markTouched(`${item.id}.ring_size`);
                                 }}
                                 className={`h-11 rounded-lg border text-[14px] font-medium transition-all ${item.ring_size === s ? "border-primary bg-primary/10 text-ink" : "border-border bg-white text-ink-soft hover:border-primary/40"}`}
                               >
@@ -597,8 +556,8 @@ export default function PreOrderPage() {
                               </button>
                             ))}
                           </div>
-                          {!item.ring_size && touched.ring_size && (
-                            <p className="mt-2 text-[12px] text-red-500">Please select a ring size</p>
+                          {errors[`${item.id}.ring_size`] && touched[`${item.id}.ring_size`] && (
+                            <p role="alert" className="mt-2 text-[12px] text-destructive">{errors[`${item.id}.ring_size`]}</p>
                           )}
                         </div>
 
@@ -629,6 +588,7 @@ export default function PreOrderPage() {
                               );
                             })}
                           </div>
+                          {errors[`${item.id}.ring_color`] && touched[`${item.id}.ring_color`] && <p role="alert" className="mt-2 text-[12px] text-destructive">{errors[`${item.id}.ring_color`]}</p>}
                         </div>
 
                         <div>
@@ -652,6 +612,7 @@ export default function PreOrderPage() {
                               <Plus className="w-4 h-4" />
                             </button>
                           </div>
+                          {errors[`${item.id}.quantity`] && touched[`${item.id}.quantity`] && <p role="alert" className="mt-2 text-[12px] text-destructive">{errors[`${item.id}.quantity`]}</p>}
                         </div>
                       </div>
                     ))}
@@ -703,7 +664,10 @@ export default function PreOrderPage() {
                       code={form.phone_code}
                       iso={form.phone_iso}
                       value={form.phone}
-                      onCodeChange={(code, iso) => setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }))}
+                      onCodeChange={(code, iso) => {
+                        setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }));
+                        markTouched("phone");
+                      }}
                       onChange={(v) => update("phone", v)}
                       onBlur={() => markTouched("phone")}
                       error={touched.phone ? errors.phone : undefined}
@@ -804,6 +768,12 @@ export default function PreOrderPage() {
 
                   <button
                     type="submit"
+                    onClick={(event) => {
+                      if (!canSubmit) {
+                        event.preventDefault();
+                        revealErrors();
+                      }
+                    }}
                     disabled={submitting}
                     className={`w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all inline-flex items-center justify-center gap-2 ${
                       canSubmit ? "cursor-pointer hover:brightness-110 hover:scale-[1.01]" : "opacity-60 cursor-not-allowed"
@@ -885,13 +855,14 @@ function Input({
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         required={required}
+        aria-invalid={!!error}
         placeholder={placeholder}
         maxLength={200}
         className={`mt-1.5 w-full h-12 rounded-xl border bg-white px-4 text-[15px] text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all ${
           error ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary"
         }`}
       />
-      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
+      {error && <p role="alert" className="mt-1 text-[12px] text-destructive">{error}</p>}
     </label>
   );
 }
@@ -943,6 +914,7 @@ function PhoneInput({
               onCodeChange(nextCode, nextIso);
             }}
             aria-label="Country dial code"
+            onBlur={onBlur}
             className="h-12 bg-transparent text-[14px] text-ink pl-3 pr-8 border-r border-border focus:outline-none appearance-none cursor-pointer"
             style={{ backgroundImage: "none" }}
           >
@@ -956,6 +928,7 @@ function PhoneInput({
         </div>
         <input
           type="tel"
+          aria-invalid={!!error}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onBlur={onBlur}
@@ -964,7 +937,7 @@ function PhoneInput({
           className="flex-1 h-12 bg-transparent px-3 text-[15px] text-ink placeholder-ink-muted focus:outline-none"
         />
       </div>
-      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
+      {error && <p role="alert" className="mt-1 text-[12px] text-destructive">{error}</p>}
     </label>
   );
 }
@@ -1024,6 +997,7 @@ function CountryInput({
             onFocus={() => setOpen(true)}
             onBlur={onBlur}
             required={required}
+            aria-invalid={!!error}
             placeholder={placeholder}
             maxLength={200}
             autoComplete="off"
@@ -1034,7 +1008,7 @@ function CountryInput({
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
         </div>
       </label>
-      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
+      {error && <p role="alert" className="mt-1 text-[12px] text-destructive">{error}</p>}
       {open && filtered.length > 0 && (
         <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-border bg-white shadow-lg">
           {filtered.map((c) => (

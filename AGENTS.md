@@ -1,4 +1,5 @@
 # Architecture rules
+- Reuse sizing-kit contact and address schemas in a pure pre-order validation helper with regression tests; this keeps live errors and pre-submit checks consistent without changing the external order service.
 - Keep photo-sizing geometry and reliability gates in the ring-sizer function's pure measurement module, with Vitest regressions under src/test; this separates arithmetic verification from unvalidated anatomical fit assumptions.
 - A palm-photo result must not show shoppers a US size unless sizing_settings.show_sizes is on; a database trigger only allows that after a passing /bench run on the current chart, because untested estimates misled real users.
 - Gate sizing-camera access with the shared device-identity helper, not viewport width, so resizing a laptop window cannot enable phone-only capture.

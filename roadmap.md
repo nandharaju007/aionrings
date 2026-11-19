@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Pre-order live validation
+- [x] Validate ring selections, personal details and shipping fields live, preserving layout and the existing order service.
+- [x] Test invalid submissions and valid confirmation on desktop and phone; save the changes. Confirmation POST was intercepted to avoid test orders; external Azure server validation is not accessible in this checkout.
 ## Publish launch campaign media
 - [x] Upload final corrected videos, latest product reveal and branded promotional photos.
 - [x] Verify the campaign page and downloads, save changes and request publishing.
