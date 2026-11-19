@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,17 @@ export function SizingKitRequest() {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const formRef = useRef<HTMLFormElement>(null);
+  const thanksRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!sent) return;
+    const node = thanksRef.current;
+    if (!node) return;
+    node.scrollIntoView({ block: "center", behavior: "instant" });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => node.scrollIntoView({ block: "center", behavior: "instant" }));
+    });
+  }, [sent]);
 
   const handleRequestClick = () => {
     if (busy) return;
@@ -71,7 +82,7 @@ export function SizingKitRequest() {
 
   if (sent)
     return (
-      <div role="status" className="mx-auto max-w-2xl py-6 text-center">
+      <div ref={thanksRef} role="status" className="mx-auto max-w-2xl py-6 text-center">
         <div
           className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full"
           style={{ background: "linear-gradient(135deg,#00A9E0,#1878E0,#6D28D9)" }}
