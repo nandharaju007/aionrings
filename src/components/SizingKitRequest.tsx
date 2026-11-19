@@ -98,15 +98,6 @@ export function SizingKitRequest() {
           When your kit arrives, try the sample rings. Then return to the site and order your aiOn ring in the size that
           fits.
         </p>
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => setSent(false)}
-            className="rounded-full border border-border bg-white px-8 py-3 text-[14px] font-medium text-ink shadow-sm transition-colors hover:border-primary/40"
-          >
-            Back
-          </button>
-        </div>
       </div>
     );
 
