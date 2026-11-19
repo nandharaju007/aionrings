@@ -19,20 +19,20 @@ const fields = [
     max: 200,
     placeholder: "123 Main Street, Apt 4",
   },
-  { key: "city", label: "City", autoComplete: "address-level2", max: 100, placeholder: "City" },
+  { key: "city", label: "City", autoComplete: "address-level2", max: 100, placeholder: "New York" },
   {
     key: "region",
     label: "State / province",
     autoComplete: "address-level1",
     max: 100,
-    placeholder: "State / province",
+    placeholder: "NY",
   },
   {
     key: "postcode",
     label: "Postal / ZIP code",
     autoComplete: "postal-code",
     max: 12,
-    placeholder: "Postal / ZIP code",
+    placeholder: "10001",
   },
 ] as const;
 
