@@ -15,7 +15,7 @@ export const preorderDetailsSchema = z.object({
   last_name: kitContactNames.shape.lastName,
   email: kitAddressSchema.shape.email,
   phone: z.string().trim().max(30, 'Phone number must be under 30 characters.')
-    .regex(/^\+?[0-9][0-9 ()-]*$/, 'Use digits, spaces, brackets, hyphens and a leading + only.'),
+    .regex(/^(?:\+?[0-9]|\([0-9])[0-9 ()-]*$/, 'Use digits, spaces, brackets, hyphens and a leading + only.'),
   phone_code: z.string(),
   phone_iso: z.string(),
   address: kitAddressSchema.shape.address,

@@ -279,6 +279,7 @@ export default function PreOrderPage() {
   });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
+  const orderFormRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<{ name: string; partner?: string | null } | null>(null);
   const [partner, setPartner] = useState<{ code: string; name: string } | null>(null);
@@ -337,6 +338,16 @@ export default function PreOrderPage() {
     Object.keys(form).forEach(key => { all[key] = true; });
     items.forEach(item => ['ring_size', 'ring_color', 'quantity'].forEach(key => { all[`${item.id}.${key}`] = true; }));
     setTouched(all);
+  };
+
+  const requestReservation = () => {
+    if (submitting) return;
+    const parsed = validatePreorder(form, items, COUNTRIES);
+    if (!parsed.data) {
+      revealErrors();
+      return;
+    }
+    orderFormRef.current?.requestSubmit();
   };
 
   // Keep phone_code + iso in sync with country selection
@@ -519,7 +530,18 @@ export default function PreOrderPage() {
                       }} />
                     </section>
 
-                <form noValidate onSubmit={onSubmit} className="space-y-10">
+                <form
+                  ref={orderFormRef}
+                  noValidate
+                  onSubmit={onSubmit}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && event.target instanceof HTMLInputElement) {
+                      event.preventDefault();
+                      requestReservation();
+                    }
+                  }}
+                  className="space-y-10"
+                >
                   <Section title="Your rings">
                     {items.map((item, idx) => (
                       <div
@@ -767,13 +789,8 @@ export default function PreOrderPage() {
                   )}
 
                   <button
-                    type="submit"
-                    onClick={(event) => {
-                      if (!canSubmit) {
-                        event.preventDefault();
-                        revealErrors();
-                      }
-                    }}
+                    type="button"
+                    onClick={requestReservation}
                     disabled={submitting}
                     className={`w-full h-14 rounded-full font-semibold text-white text-[15px] transition-all inline-flex items-center justify-center gap-2 ${
                       canSubmit ? "cursor-pointer hover:brightness-110 hover:scale-[1.01]" : "opacity-60 cursor-not-allowed"

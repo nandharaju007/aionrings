@@ -1,4 +1,7 @@
 # Sizing accuracy
+## Pre-order email and phone submission guards
+- [x] Apply sizing-kit pre-submit validation to button and keyboard submissions; invalid email and phone values generate zero native submissions and zero order requests on desktop and phone.
+- [x] Check all 197 supported dial codes, including national/international formats; valid confirmation verified with an intercepted POST, without saving test orders. Azure-side validation remains outside this checkout.
 ## Pre-order live validation
 - [x] Validate ring selections, personal details and shipping fields live, preserving layout and the existing order service.
 - [x] Test invalid submissions and valid confirmation on desktop and phone; save the changes. Confirmation POST was intercepted to avoid test orders; external Azure server validation is not accessible in this checkout.

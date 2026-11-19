@@ -20,8 +20,10 @@ describe('Pre-order validation', () => {
   it.each(['first_name', 'last_name', 'city', 'state'] as const)('rejects invalid characters in %s', key => {
     expect(check({ [key]: 'Jane123@' }).errors[key]).toBeDefined();
   });
-  it('rejects email typos', () => {
-    expect(check({ email: 'abc@123gmail.co' }).errors.email).toBeDefined();
+  it.each(['abc@123gmail.co', 'jane@gamil.com', 'jane', 'jane@', 'jane@example', 'jane@@example.com', 'jane doe@example.com', '.jane@example.com', 'jane..doe@example.com'])('blocks an order payload for invalid email %s', email => {
+    const result = check({ email });
+    expect(result.errors.email).toBeDefined();
+    expect(result.data).toBeUndefined();
   });
   it('rejects markup in addresses and referrals', () => {
     expect(check({ address: '<script>bad</script>' }).errors.address).toBeDefined();
@@ -52,13 +54,19 @@ describe('Pre-order validation', () => {
   it.each(PHONE_CODE_OPTIONS)('checks incomplete, overlong and valid mobile numbers for $iso', ({ iso, code }) => {
     for (const phone of ['', '1', '123', '9'.repeat(20)]) {
       expect(check({ phone, phone_iso: iso, phone_code: code }).errors.phone).toBeDefined();
+      expect(check({ phone, phone_iso: iso, phone_code: code }).data).toBeUndefined();
     }
     const example = getExampleNumber(iso as CountryCode, examples);
     if (example) {
       const resolved = parsePhoneNumberFromString(example.number);
       const error = check({ phone: example.number, phone_iso: iso, phone_code: code }).errors.phone;
       // Vatican mobile examples use Italy's numbering plan; match the sizing-kit country rule.
-      if (resolved?.country === iso) expect(error).toBeUndefined();
+      if (resolved?.country === iso) {
+        expect(error).toBeUndefined();
+        for (const phone of [example.number, example.formatNational()]) {
+          expect(check({ phone, phone_iso: iso, phone_code: code }).data?.phone).toBe(example.number);
+        }
+      }
       else expect(error).toBeDefined();
     }
   });
