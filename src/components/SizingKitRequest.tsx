@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { formatKitPhone, kitContactForSubmission, kitPhoneExample, phoneHasEnoughDigits } from "@/lib/kit-contact";
+import { formatKitPhone, kitContactForSubmission, kitPhoneExample } from "@/lib/kit-contact";
 import { COUNTRY_ISO2, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
 import sizingKitBox from "@/assets/sizing-kit-box.jpg.asset.json";
 
@@ -22,7 +22,7 @@ const fields = [
   { key: "city", label: "City", autoComplete: "address-level2", max: 100, placeholder: "City" },
   {
     key: "region",
-    label: "State / province (optional)",
+    label: "State / province",
     autoComplete: "address-level1",
     max: 100,
     placeholder: "State / province",
@@ -70,7 +70,6 @@ export function SizingKitRequest() {
     (Object.keys(touched) as FieldKey[]).forEach((key) => {
       if (!touched[key]) return;
       const message = parsed.errors[key];
-      if (key === "phone" && !phoneHasEnoughDigits(address.phone, phoneIso)) return;
       if (message) errors[key] = message;
     });
     return errors;
@@ -262,7 +261,7 @@ export function SizingKitRequest() {
                 <div className="mt-1.5 min-w-0">
                   <input
                     id={`kit-${field.key}`}
-                    required={field.key !== "region"}
+                    required
                     disabled={busy}
                     type={field.key === "email" ? "email" : "text"}
                     autoComplete={field.autoComplete}

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { kitContactForSubmission, kitPhoneForSubmission, phoneHasEnoughDigits } from '@/lib/kit-contact';
+import { kitContactForSubmission, kitPhoneForSubmission } from '@/lib/kit-contact';
+import { PHONE_CODE_OPTIONS } from '@/lib/dial-codes';
 
 describe('Sizing kit country-aware contact details', () => {
-  const values = { firstName: 'Jane', lastName: 'Doe', address: '123 Main Street', city: 'Toronto', region: '', postcode: 'M5V 1A1', country: 'Canada', email: 'jane@example.com', phone: '416 555 0123' };
+  const values = { firstName: 'Jane', lastName: 'Doe', address: '123 Main Street', city: 'Toronto', region: 'Ontario', postcode: 'M5V 1A1', country: 'Canada', email: 'jane@example.com', phone: '416 555 0123' };
 
   it('combines first and last names into the existing saved name', () => {
     expect(kitContactForSubmission(values, 'CA').data?.name).toBe('Jane Doe');
@@ -37,13 +38,18 @@ describe('Sizing kit country-aware contact details', () => {
     expect(kitPhoneForSubmission('+919876543210', 'IN')).toBe('+919876543210');
   });
 
-  it('holds the live phone error back until the number could be complete', () => {
-    expect(phoneHasEnoughDigits('9', 'US')).toBe(false);
-    expect(phoneHasEnoughDigits('415 555', 'US')).toBe(false);
-    expect(phoneHasEnoughDigits('415 555 267', 'US')).toBe(false);
-    expect(phoneHasEnoughDigits('415 555 2671', 'US')).toBe(true);
-    expect(phoneHasEnoughDigits('98765', 'IN')).toBe(false);
-    expect(phoneHasEnoughDigits('98765 4321', 'IN')).toBe(false);
-    expect(phoneHasEnoughDigits('98765 43210', 'IN')).toBe(true);
+  it('reports incomplete Indian numbers immediately and clears for ten valid digits', () => {
+    for (let digits = 1; digits < 10; digits++) {
+      expect(kitContactForSubmission({ ...values, phone: '9876543210'.slice(0, digits) }, 'IN').errors.phone).toBeDefined();
+    }
+    expect(kitContactForSubmission({ ...values, phone: '9876543210' }, 'IN').errors.phone).toBeUndefined();
+  });
+
+  it.each(PHONE_CODE_OPTIONS)('reports empty, short and overlong numbers for $iso', ({ iso }) => {
+    for (const phone of ['', '1', '123', '9'.repeat(20)]) {
+      const result = kitContactForSubmission({ ...values, phone }, iso);
+      expect(result.errors.phone).toBeDefined();
+      expect(result.data).toBeUndefined();
+    }
   });
 });

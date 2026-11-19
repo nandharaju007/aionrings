@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { kitAddressSchema } from '@/lib/kit-address';
 
 describe('Sizing kit address request', () => {
-  const address = { name: 'Kit Test', address: '123 Test Street', city: 'Toronto', postcode: 'M5V 1A1', country: 'Canada', email: 'Kit@Test.com', phone: '+1 (416) 555-0123' };
+  const address = { name: 'Kit Test', address: '123 Test Street', city: 'Toronto', region: 'Ontario', postcode: 'M5V 1A1', country: 'Canada', email: 'Kit@Test.com', phone: '+1 (416) 555-0123' };
 
   it('accepts a shipping address with email and phone', () => {
-    expect(kitAddressSchema.parse(address)).toEqual({ ...address, region: '', email: 'kit@test.com' });
+    expect(kitAddressSchema.parse(address)).toEqual({ ...address, email: 'kit@test.com' });
   });
 
   it('requires a full name with first and last name', () => {
@@ -32,8 +32,10 @@ describe('Sizing kit address request', () => {
     expect(kitAddressSchema.safeParse({ ...address, postcode: '90210' }).success).toBe(true);
   });
 
-  it('allows state / province to be empty but checks it when given', () => {
-    expect(kitAddressSchema.safeParse({ ...address, region: '' }).success).toBe(true);
+  it('requires state / province and validates its characters', () => {
+    expect(kitAddressSchema.safeParse({ ...address, region: '' }).success).toBe(false);
+    expect(kitAddressSchema.safeParse({ ...address, region: '   ' }).success).toBe(false);
+    expect(kitAddressSchema.safeParse({ ...address, region: undefined }).success).toBe(false);
     expect(kitAddressSchema.safeParse({ ...address, region: 'Ontario' }).success).toBe(true);
     expect(kitAddressSchema.safeParse({ ...address, region: 'Ontario #1' }).success).toBe(false);
   });

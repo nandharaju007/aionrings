@@ -20,9 +20,9 @@ export const kitAddressSchema = z.object({
     .max(100, 'City must be under 100 characters.')
     .regex(nameLike, 'City can only contain letters, spaces and hyphens.'),
   region: z.string().trim()
+    .min(1, 'Please enter your state / province.')
     .max(100, 'State / province must be under 100 characters.')
-    .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ'’.\- ]*$/, 'State / province can only contain letters, spaces and hyphens.')
-    .default(''),
+    .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ'’.\- ]*$/, 'State / province can only contain letters, spaces and hyphens.'),
   postcode: z.string().trim()
     .min(3, 'Please enter your postal / ZIP code.')
     .max(12, 'Postal / ZIP code must be under 12 characters.')
