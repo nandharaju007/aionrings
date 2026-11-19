@@ -20,6 +20,15 @@ export function kitPhoneExample(iso: string) {
   return getExampleNumber(iso as CountryCode, examples)?.formatNational() ?? 'Phone number';
 }
 
+const MIN_PHONE_DIGITS = 7;
+
+export function phoneHasEnoughDigits(value: string, iso: string) {
+  const digits = (value.match(/[0-9]/g) ?? []).length;
+  if (digits < MIN_PHONE_DIGITS) return false;
+  const minimum = getExampleNumber(iso as CountryCode, examples)?.nationalNumber.length ?? MIN_PHONE_DIGITS;
+  return digits >= Math.max(MIN_PHONE_DIGITS, Math.min(minimum, 12));
+}
+
 export function kitPhoneForSubmission(value: string, iso: string) {
   const phone = parsePhoneNumberFromString(value, iso as CountryCode);
   const type = phone?.getType();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { kitContactForSubmission, kitPhoneForSubmission } from '@/lib/kit-contact';
+import { kitContactForSubmission, kitPhoneForSubmission, phoneHasEnoughDigits } from '@/lib/kit-contact';
 
 describe('Sizing kit country-aware contact details', () => {
   const values = { firstName: 'Jane', lastName: 'Doe', address: '123 Main Street', city: 'Toronto', region: '', postcode: 'M5V 1A1', country: 'Canada', email: 'jane@example.com', phone: '416 555 0123' };
@@ -35,5 +35,15 @@ describe('Sizing kit country-aware contact details', () => {
   it('validates the Indian mobile prefix and international country code', () => {
     expect(kitPhoneForSubmission('1234567890', 'IN')).toBeUndefined();
     expect(kitPhoneForSubmission('+919876543210', 'IN')).toBe('+919876543210');
+  });
+
+  it('holds the live phone error back until the number could be complete', () => {
+    expect(phoneHasEnoughDigits('9', 'US')).toBe(false);
+    expect(phoneHasEnoughDigits('415 555', 'US')).toBe(false);
+    expect(phoneHasEnoughDigits('415 555 267', 'US')).toBe(false);
+    expect(phoneHasEnoughDigits('415 555 2671', 'US')).toBe(true);
+    expect(phoneHasEnoughDigits('98765', 'IN')).toBe(false);
+    expect(phoneHasEnoughDigits('98765 4321', 'IN')).toBe(false);
+    expect(phoneHasEnoughDigits('98765 43210', 'IN')).toBe(true);
   });
 });

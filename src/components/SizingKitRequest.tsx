@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { formatKitPhone, kitContactForSubmission, kitPhoneExample } from "@/lib/kit-contact";
+import { formatKitPhone, kitContactForSubmission, kitPhoneExample, phoneHasEnoughDigits } from "@/lib/kit-contact";
 import { COUNTRY_ISO2, PHONE_CODE_OPTIONS } from "@/lib/dial-codes";
 import sizingKitBox from "@/assets/sizing-kit-box.jpg.asset.json";
 
@@ -54,9 +54,31 @@ export function SizingKitRequest() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({});
   const formRef = useRef<HTMLFormElement>(null);
   const thanksRef = useRef<HTMLDivElement>(null);
+
+  const markTouched = useCallback((key: FieldKey) => {
+    setTouched((previous) => (previous[key] ? previous : { ...previous, [key]: true }));
+  }, []);
+
+  // Live validation: errors for a field appear as soon as the user has entered
+  // or left that field, instead of waiting for the submit click.
+  const visibleErrors = useMemo(() => {
+    const parsed = kitContactForSubmission(address, phoneIso);
+    const errors: Partial<Record<FieldKey, string>> = {};
+    (Object.keys(touched) as FieldKey[]).forEach((key) => {
+      if (!touched[key]) return;
+      const message = parsed.errors[key];
+      if (key === "phone" && !phoneHasEnoughDigits(address.phone, phoneIso)) return;
+      if (message) errors[key] = message;
+    });
+    return errors;
+  }, [address, phoneIso, touched]);
+
+  useEffect(() => {
+    if (!Object.keys(visibleErrors).length) setError("");
+  }, [visibleErrors]);
 
   useLayoutEffect(() => {
     if (!sent) return;
@@ -72,7 +94,7 @@ export function SizingKitRequest() {
     if (busy) return;
     const parsed = kitContactForSubmission(address, phoneIso);
     if (!parsed.data) {
-      setFieldErrors(parsed.errors);
+      setTouched(Object.fromEntries(fields.map((field) => [field.key, true])));
       setError("Please fix the highlighted fields above.");
       return;
     }
@@ -124,13 +146,13 @@ export function SizingKitRequest() {
           if (busy) return;
           const parsed = kitContactForSubmission(address, phoneIso);
           if (!parsed.data) {
-            setFieldErrors(parsed.errors);
+            setTouched(Object.fromEntries(fields.map((field) => [field.key, true])));
             setError("Please fix the highlighted fields above.");
             return;
           }
           setBusy(true);
           setError("");
-          setFieldErrors({});
+          setTouched({});
           try {
             const response = await fetch(
               "https://aionringcloudservice-csbbbub5bxc0c9cw.canadacentral-01.azurewebsites.net/api/sizing-kits",
@@ -151,7 +173,7 @@ export function SizingKitRequest() {
         }}
       >
         {fields.map((field) => {
-          const message = fieldErrors[field.key];
+          const message = visibleErrors[field.key];
           const paired = ["firstName", "lastName", "city", "region"].includes(field.key);
           const inputClass = `h-12 w-full min-w-0 rounded-xl border bg-background px-4 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 ${message ? "border-destructive" : "border-input focus:border-primary"}`;
           return (
@@ -178,8 +200,8 @@ export function SizingKitRequest() {
                         country,
                         phone: iso ? formatKitPhone(previous.phone, iso) : previous.phone,
                       }));
-                      setFieldErrors((previous) => ({ ...previous, country: undefined, phone: undefined }));
                     }}
+                    onBlur={() => markTouched("country")}
                   >
                     {PHONE_CODE_OPTIONS.map((option) => (
                       <option key={option.iso} value={option.country}>
@@ -205,8 +227,8 @@ export function SizingKitRequest() {
                           ...previous,
                           phone: formatKitPhone(previous.phone, event.target.value),
                         }));
-                        setFieldErrors((previous) => ({ ...previous, phone: undefined }));
                       }}
+                      onBlur={() => markTouched("phone")}
                     >
                       {PHONE_CODE_OPTIONS.map((option) => (
                         <option key={option.iso} value={option.iso}>
@@ -230,8 +252,9 @@ export function SizingKitRequest() {
                     onChange={(event) => {
                       const value = event.target.value;
                       setAddress((previous) => ({ ...previous, phone: formatKitPhone(value, phoneIso) }));
-                      if (message) setFieldErrors((previous) => ({ ...previous, phone: undefined }));
+                      markTouched("phone");
                     }}
+                    onBlur={() => markTouched("phone")}
                     className="h-12 min-w-0 flex-1 bg-transparent px-4 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                 </div>
@@ -251,8 +274,9 @@ export function SizingKitRequest() {
                     onChange={(event) => {
                       const value = event.target.value;
                       setAddress((previous) => ({ ...previous, [field.key]: value }));
-                      if (message) setFieldErrors((previous) => ({ ...previous, [field.key]: undefined }));
+                      markTouched(field.key);
                     }}
+                    onBlur={() => markTouched(field.key)}
                     className={inputClass}
                   />
                 </div>
