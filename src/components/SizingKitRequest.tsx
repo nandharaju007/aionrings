@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -100,12 +99,13 @@ export function SizingKitRequest() {
           fits.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={() => setSent(false)}
             className="rounded-full border border-border bg-white px-8 py-3 text-[14px] font-medium text-ink shadow-sm transition-colors hover:border-primary/40"
           >
-            Back to home
-          </Link>
+            Back
+          </button>
         </div>
       </div>
     );
