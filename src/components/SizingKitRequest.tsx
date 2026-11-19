@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, ChevronDown, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,18 @@ export function SizingKitRequest() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleRequestClick = () => {
+    if (busy) return;
+    const parsed = kitContactForSubmission(address, phoneIso);
+    if (!parsed.data) {
+      setFieldErrors(parsed.errors);
+      setError("Please fix the highlighted fields above.");
+      return;
+    }
+    formRef.current?.requestSubmit();
+  };
 
   if (sent)
     return (
@@ -101,6 +113,7 @@ export function SizingKitRequest() {
         Try the sample sizes first. Order your aiOn ring once you know your fit.
       </p>
       <form
+        ref={formRef}
         className="mt-5 grid grid-cols-2 gap-3"
         noValidate
         onSubmit={async (event) => {
@@ -255,7 +268,7 @@ export function SizingKitRequest() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={busy} className="col-span-2 h-12 w-full">
+        <Button type="button" onClick={handleRequestClick} disabled={busy} className="col-span-2 h-12 w-full">
           {busy ? <Loader2 className="animate-spin" /> : <Package />}
           {busy ? "Saving…" : "Request my sizing kit"}
         </Button>
