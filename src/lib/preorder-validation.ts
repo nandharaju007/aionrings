@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { kitAddressSchema } from '@/lib/kit-address';
-import { kitContactNames, kitPhoneForSubmission } from '@/lib/kit-contact';
-import { PHONE_CODE_OPTIONS } from '@/lib/dial-codes';
+import { internationalName, internationalLocality, internationalPostal, PREORDER_PHONE_OPTIONS, preorderPhoneForSubmission, validateShippingAddress } from '@/lib/international-address';
 
 export const preorderRingSchema = z.object({
   id: z.string().min(1),
@@ -11,17 +10,17 @@ export const preorderRingSchema = z.object({
 });
 
 export const preorderDetailsSchema = z.object({
-  first_name: kitContactNames.shape.firstName,
-  last_name: kitContactNames.shape.lastName,
+  first_name: internationalName,
+  last_name: internationalName,
   email: kitAddressSchema.shape.email,
   phone: z.string().trim().max(30, 'Phone number must be under 30 characters.')
-    .regex(/^(?:\+?[0-9]|\([0-9])[0-9 ()-]*$/, 'Use digits, spaces, brackets, hyphens and a leading + only.'),
+    .regex(/^(?:\+?[0-9]|\([0-9])[0-9 ().-]*$/, 'Use digits, spaces, brackets, dots, hyphens and a leading + only.'),
   phone_code: z.string(),
   phone_iso: z.string(),
   address: kitAddressSchema.shape.address,
-  city: kitAddressSchema.shape.city,
-  state: kitAddressSchema.shape.region,
-  zip_code: kitAddressSchema.shape.postcode,
+  city: internationalLocality,
+  state: internationalLocality,
+  zip_code: internationalPostal,
   country: z.string().trim().min(1, 'Please select your country.').max(100),
   referral_source: z.string().trim().min(1, 'Required, enter "Self" if no referral').max(100, 'Referral must be under 100 characters.')
     .regex(/^[^<>\u0000-\u001f\u007f]+$/, 'Referral must be plain text, without markup or control characters.'),
@@ -46,11 +45,12 @@ export function validatePreorder(form: PreorderDetails, items: PreorderRing[], c
     }
   }
   if (!countries.includes(form.country.trim())) errors.country = 'Please select a country from the list.';
-  const option = PHONE_CODE_OPTIONS.find(option => option.iso === form.phone_iso && option.code === form.phone_code);
-  const phone = option ? kitPhoneForSubmission(form.phone, option.iso) : undefined;
+  Object.assign(errors, validateShippingAddress(form));
+  const option = PREORDER_PHONE_OPTIONS.find(option => option.iso === form.phone_iso && option.code === form.phone_code);
+  const phone = option ? preorderPhoneForSubmission(form.phone, option.iso) : undefined;
   if (!phone) errors.phone ??= form.phone_iso === 'IN'
     ? 'Enter a 10-digit Indian mobile number starting with 6, 7, 8 or 9 (+91).'
-    : 'Enter a valid mobile number for the selected country dial code.';
+    : 'Enter a valid phone number for the selected country dial code.';
   return {
     errors,
     data: details.success && rings.success && phone && !Object.keys(errors).length

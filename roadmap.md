@@ -1,4 +1,8 @@
 # Sizing accuracy
+## Worldwide preorder delivery addresses
+- [x] Add country-aware address requirements and postal validation while preserving the existing order payload and personal-details layout.
+- [x] Verify 724 regression tests and US plus seven international confirmation flows on desktop and phone using intercepted requests.
+- [ ] Verify actual Azure persistence and admin readback for international orders (blocked: external service code and safe test-order cleanup are unavailable; no test customer orders were created).
 ## Pre-order email and phone submission guards
 - [x] Apply sizing-kit pre-submit validation to button and keyboard submissions; invalid email and phone values generate zero native submissions and zero order requests on desktop and phone.
 - [x] Check all 197 supported dial codes, including national/international formats; valid confirmation verified with an intercepted POST, without saving test orders. Azure-side validation remains outside this checkout.

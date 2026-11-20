@@ -61,7 +61,7 @@ describe('Pre-order validation', () => {
       const resolved = parsePhoneNumberFromString(example.number);
       const error = check({ phone: example.number, phone_iso: iso, phone_code: code }).errors.phone;
       // Vatican mobile examples use Italy's numbering plan; match the sizing-kit country rule.
-      if (resolved?.country === iso) {
+      if (resolved?.country === iso || (iso === 'VA' && resolved?.country === 'IT')) {
         expect(error).toBeUndefined();
         for (const phone of [example.number, example.formatNational()]) {
           expect(check({ phone, phone_iso: iso, phone_code: code }).data?.phone).toBe(example.number);

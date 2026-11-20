@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ringMidnight from "@/assets/ring-finish-midnight.png";
 import ringSilver from "@/assets/ring-finish-silver.png";
 import ringRose from "@/assets/ring-finish-rose.png";
-import { DIAL_CODES, PHONE_CODE_OPTIONS, COUNTRY_ISO2 } from "@/lib/dial-codes";
+import { addressRules, SHIPPING_COUNTRIES as COUNTRIES, PREORDER_PHONE_OPTIONS as PHONE_CODE_OPTIONS } from "@/lib/international-address";
 import { validatePreorder } from "@/lib/preorder-validation";
 import { PhysicalRingSizer } from "@/components/PhysicalRingSizer";
 
@@ -23,203 +23,6 @@ const RING_COLORS = [
   { id: "rose", name: "Rose Gold", image: ringRose, swatch: "linear-gradient(135deg,#F3C4AE,#C98D6E)" },
 ];
 
-// Standard list of country names for the searchable Country field below.
-const COUNTRIES = [
-  "Afghanistan",
-  "Albania",
-  "Algeria",
-  "Andorra",
-  "Angola",
-  "Antigua and Barbuda",
-  "Argentina",
-  "Armenia",
-  "Australia",
-  "Austria",
-  "Azerbaijan",
-  "Bahamas",
-  "Bahrain",
-  "Bangladesh",
-  "Barbados",
-  "Belarus",
-  "Belgium",
-  "Belize",
-  "Benin",
-  "Bhutan",
-  "Bolivia",
-  "Bosnia and Herzegovina",
-  "Botswana",
-  "Brazil",
-  "Brunei",
-  "Bulgaria",
-  "Burkina Faso",
-  "Burundi",
-  "Cabo Verde",
-  "Cambodia",
-  "Cameroon",
-  "Canada",
-  "Central African Republic",
-  "Chad",
-  "Chile",
-  "China",
-  "Colombia",
-  "Comoros",
-  "Congo (Congo-Brazzaville)",
-  "Costa Rica",
-  "Croatia",
-  "Cuba",
-  "Cyprus",
-  "Czechia (Czech Republic)",
-  "Democratic Republic of the Congo",
-  "Denmark",
-  "Djibouti",
-  "Dominica",
-  "Dominican Republic",
-  "Ecuador",
-  "Egypt",
-  "El Salvador",
-  "Equatorial Guinea",
-  "Eritrea",
-  "Estonia",
-  'Eswatini (fmr. "Swaziland")',
-  "Ethiopia",
-  "Fiji",
-  "Finland",
-  "France",
-  "Gabon",
-  "Gambia",
-  "Georgia",
-  "Germany",
-  "Ghana",
-  "Greece",
-  "Grenada",
-  "Guatemala",
-  "Guinea",
-  "Guinea-Bissau",
-  "Guyana",
-  "Haiti",
-  "Holy See",
-  "Honduras",
-  "Hungary",
-  "Iceland",
-  "India",
-  "Indonesia",
-  "Iran",
-  "Iraq",
-  "Ireland",
-  "Israel",
-  "Italy",
-  "Jamaica",
-  "Japan",
-  "Jordan",
-  "Kazakhstan",
-  "Kenya",
-  "Kiribati",
-  "Kuwait",
-  "Kyrgyzstan",
-  "Laos",
-  "Latvia",
-  "Lebanon",
-  "Lesotho",
-  "Liberia",
-  "Libya",
-  "Liechtenstein",
-  "Lithuania",
-  "Luxembourg",
-  "Madagascar",
-  "Malawi",
-  "Malaysia",
-  "Maldives",
-  "Mali",
-  "Malta",
-  "Marshall Islands",
-  "Mauritania",
-  "Mauritius",
-  "Mexico",
-  "Micronesia",
-  "Moldova",
-  "Monaco",
-  "Mongolia",
-  "Montenegro",
-  "Morocco",
-  "Mozambique",
-  "Myanmar (formerly Burma)",
-  "Namibia",
-  "Nauru",
-  "Nepal",
-  "Netherlands",
-  "New Zealand",
-  "Nicaragua",
-  "Niger",
-  "Nigeria",
-  "North Korea",
-  "North Macedonia",
-  "Norway",
-  "Oman",
-  "Pakistan",
-  "Palau",
-  "Palestine State",
-  "Panama",
-  "Papua New Guinea",
-  "Paraguay",
-  "Peru",
-  "Philippines",
-  "Poland",
-  "Portugal",
-  "Qatar",
-  "Romania",
-  "Russia",
-  "Rwanda",
-  "Saint Kitts and Nevis",
-  "Saint Lucia",
-  "Saint Vincent and the Grenadines",
-  "Samoa",
-  "San Marino",
-  "Sao Tome and Principe",
-  "Saudi Arabia",
-  "Senegal",
-  "Serbia",
-  "Seychelles",
-  "Sierra Leone",
-  "Singapore",
-  "Slovakia",
-  "Slovenia",
-  "Solomon Islands",
-  "Somalia",
-  "South Africa",
-  "South Korea",
-  "South Sudan",
-  "Spain",
-  "Sri Lanka",
-  "Sudan",
-  "Suriname",
-  "Sweden",
-  "Switzerland",
-  "Syria",
-  "Tajikistan",
-  "Tanzania",
-  "Thailand",
-  "Timor-Leste",
-  "Togo",
-  "Tonga",
-  "Trinidad and Tobago",
-  "Tunisia",
-  "Turkey",
-  "Turkmenistan",
-  "Tuvalu",
-  "Uganda",
-  "Ukraine",
-  "United Arab Emirates",
-  "United Kingdom",
-  "United States",
-  "Uruguay",
-  "Uzbekistan",
-  "Vanuatu",
-  "Venezuela",
-  "Vietnam",
-  "Yemen",
-  "Zambia",
-  "Zimbabwe",
-];
 
 interface RingItem {
   id: string;
@@ -317,7 +120,18 @@ export default function PreOrderPage() {
   const totalRings = items.reduce((s, i) => s + (i.quantity || 0), 0);
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) => {
-    setForm((p) => ({ ...p, [k]: v }));
+    setForm((p) => {
+      if (k !== "country") return { ...p, [k]: v };
+      const country = String(v);
+      const rules = addressRules(country);
+      const phoneOption = PHONE_CODE_OPTIONS.find(option => option.iso === rules.iso);
+      return {
+        ...p, country,
+        // A customer's contact number can belong to a different country from delivery.
+        ...(!p.phone.trim() && phoneOption ? { phone_code: phoneOption.code, phone_iso: phoneOption.iso } : {}),
+        ...(rules.iso && !rules.postalUsed ? { zip_code: "" } : {}),
+      };
+    });
     markTouched(k);
   };
   const markTouched = (k: string) => setTouched((p) => ({ ...p, [k]: true }));
@@ -331,6 +145,7 @@ export default function PreOrderPage() {
   // Field-level errors, always computed; only shown once touched or on submit attempt.
   const validation = useMemo(() => validatePreorder(form, items, COUNTRIES), [form, items]);
   const errors = validation.errors;
+  const shippingRules = addressRules(form.country);
   const canSubmit = !!validation.data;
 
   const revealErrors = () => {
@@ -349,16 +164,6 @@ export default function PreOrderPage() {
     }
     orderFormRef.current?.requestSubmit();
   };
-
-  // Keep phone_code + iso in sync with country selection
-  useEffect(() => {
-    const code = DIAL_CODES[form.country];
-    const iso = (COUNTRY_ISO2 as Record<string, string>)[form.country];
-    if (code && iso && (code !== form.phone_code || iso !== form.phone_iso)) {
-      setForm((p) => ({ ...p, phone_code: code, phone_iso: iso }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.country]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -731,9 +536,19 @@ export default function PreOrderPage() {
 
 
                   <Section title="Shipping address">
+                    <CountryInput
+                      label="Country"
+                      placeholder="Select your country"
+                      value={form.country}
+                      onChange={(v) => update("country", v)}
+                      onBlur={() => markTouched("country")}
+                      error={touched.country ? errors.country : undefined}
+                      required
+                    />
                     <Input
                       label="Address"
-                      placeholder="123 Main Street, Apt 4"
+                      placeholder={shippingRules.iso === "US" ? "123 Main Street, Apt 4" : "Street address, building, apartment"}
+                      autoComplete="shipping street-address"
                       value={form.address}
                       onChange={(v) => update("address", v)}
                       onBlur={() => markTouched("address")}
@@ -742,44 +557,41 @@ export default function PreOrderPage() {
                     />
                     <div className="grid grid-cols-2 gap-3">
                       <Input
-                        label="City"
-                        placeholder="New York"
+                        label={shippingRules.cityRequired ? "City" : "City (optional)"}
+                        placeholder={shippingRules.iso === "US" ? "New York" : "City / town / locality"}
+                        autoComplete="shipping address-level2"
                         value={form.city}
                         onChange={(v) => update("city", v)}
                         onBlur={() => markTouched("city")}
                         error={touched.city ? errors.city : undefined}
-                        required
+                        required={shippingRules.cityRequired}
                       />
                       <Input
-                        label="State / Region"
-                        placeholder="NY"
+                        label={`${shippingRules.regionLabel}${shippingRules.regionRequired ? "" : " (optional)"}`}
+                        placeholder={shippingRules.iso === "US" ? "NY" : shippingRules.regionLabel}
+                        autoComplete="shipping address-level1"
+                        suggestions={shippingRules.regions}
                         value={form.state}
                         onChange={(v) => update("state", v)}
                         onBlur={() => markTouched("state")}
                         error={touched.state ? errors.state : undefined}
-                        required
+                        required={shippingRules.regionRequired}
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input
-                        label="ZIP / Postal code"
-                        placeholder="10001"
-                        value={form.zip_code}
-                        onChange={(v) => update("zip_code", v)}
-                        onBlur={() => markTouched("zip_code")}
-                        error={touched.zip_code ? errors.zip_code : undefined}
-                        required
-                      />
-                      <CountryInput
-                        label="Country"
-                        placeholder="Select your country"
-                        value={form.country}
-                        onChange={(v) => update("country", v)}
-                        onBlur={() => markTouched("country")}
-                        error={touched.country ? errors.country : undefined}
-                        required
-                      />
-                    </div>
+                    {shippingRules.postalUsed && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <Input
+                          label={`${shippingRules.postalLabel}${shippingRules.postalRequired ? "" : " (optional)"}`}
+                          placeholder={shippingRules.iso === "US" ? "10001" : shippingRules.postalExample}
+                          autoComplete="shipping postal-code"
+                          value={form.zip_code}
+                          onChange={(v) => update("zip_code", v)}
+                          onBlur={() => markTouched("zip_code")}
+                          error={touched.zip_code ? errors.zip_code : undefined}
+                          required={shippingRules.postalRequired}
+                        />
+                      </div>
+                    )}
                   </Section>
 
                   {error && (
@@ -853,6 +665,8 @@ function Input({
   placeholder,
   onBlur,
   error,
+  autoComplete,
+  suggestions,
 }: {
   label: string;
   value: string;
@@ -862,12 +676,16 @@ function Input({
   placeholder?: string;
   onBlur?: () => void;
   error?: string;
+  autoComplete?: string;
+  suggestions?: string[];
 }) {
   return (
     <label className="block">
       <span className="text-[13px] text-ink-soft">{label}</span>
       <input
         type={type}
+        autoComplete={autoComplete}
+        list={suggestions?.length ? `shipping-${autoComplete}` : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
@@ -879,6 +697,11 @@ function Input({
           error ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary"
         }`}
       />
+      {suggestions && suggestions.length > 0 && (
+        <datalist id={`shipping-${autoComplete}`}>
+          {suggestions.map(option => <option key={option} value={option} />)}
+        </datalist>
+      )}
       {error && <p role="alert" className="mt-1 text-[12px] text-destructive">{error}</p>}
     </label>
   );
@@ -959,10 +782,7 @@ function PhoneInput({
   );
 }
 
-// Searchable country dropdown, typing filters the list below the field; clicking a
-// suggestion fills it in. Still a plain text field underneath, so it submits/validates
-// exactly like the old Input did (a plain string), and free text still works if the
-// user types something not on the list.
+// Searchable country dropdown; only recognised countries pass submission validation.
 function CountryInput({
   label,
   value,
@@ -981,13 +801,15 @@ function CountryInput({
   error?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
-    const q = value.trim().toLowerCase();
+    const q = query.trim().toLowerCase();
     if (!q) return COUNTRIES;
     return COUNTRIES.filter((c) => c.toLowerCase().includes(q));
-  }, [value]);
+  }, [query]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -1009,9 +831,29 @@ function CountryInput({
             value={value}
             onChange={(e) => {
               onChange(e.target.value);
+              setQuery(e.target.value);
+              setActiveIndex(0);
               setOpen(true);
             }}
-            onFocus={() => setOpen(true)}
+            onFocus={() => { setQuery(""); setActiveIndex(0); setOpen(true); }}
+            role="combobox"
+            aria-expanded={open}
+            aria-controls="shipping-country-options"
+            aria-autocomplete="list"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setOpen(false);
+              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                e.preventDefault();
+                setOpen(true);
+                setActiveIndex(index => Math.max(0, Math.min(filtered.length - 1, index + (e.key === "ArrowDown" ? 1 : -1))));
+              }
+              if (e.key === "Enter" && open && filtered[activeIndex]) {
+                e.preventDefault();
+                onChange(filtered[activeIndex]);
+                setOpen(false);
+              }
+              if (e.key === "Tab") setOpen(false);
+            }}
             onBlur={onBlur}
             required={required}
             aria-invalid={!!error}
@@ -1027,10 +869,12 @@ function CountryInput({
       </label>
       {error && <p role="alert" className="mt-1 text-[12px] text-destructive">{error}</p>}
       {open && filtered.length > 0 && (
-        <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-border bg-white shadow-lg">
+        <div id="shipping-country-options" role="listbox" className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-border bg-white shadow-lg">
           {filtered.map((c) => (
             <button
               key={c}
+              role="option"
+              aria-selected={c === value}
               type="button"
               onClick={() => {
                 onChange(c);
